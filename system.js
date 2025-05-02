@@ -506,29 +506,32 @@ function initUiThemeContainerStyles(uiTheme, themeGameId, setTheme, callback) {
   getBaseBgColor(uiTheme, themeGameId, function (color) {
     getFontShadow(uiTheme, themeGameId, function (shadow) {
       const rootStyle = document.documentElement.style;
+      const needsRootStyle = !rootStyle.getPropertyValue(baseBgColorProp);
+      const settingTheme = setTheme && themeGameId === gameId;
 
-      if (!rootStyle.getPropertyValue(baseBgColorProp)) {
+      if (needsRootStyle || settingTheme)
         fastdom.mutate(() => {
-          addSystemSvgDropShadow(uiTheme, themeGameId, shadow);
-          rootStyle.setProperty(baseBgColorProp, color);
-          rootStyle.setProperty(shadowColorProp, shadow);
-          rootStyle.setProperty(svgShadowProp, `url(#dropShadow_${themeGameId !== gameId ? `${themeGameId}_` : ''}${parsedUiTheme})`);
-          rootStyle.setProperty(containerBgImageUrlProp, `url('images/ui/${themeGameId}/${uiTheme}/containerbg.png')`);
-          rootStyle.setProperty(borderImageUrlProp, `url('images/ui/${themeGameId}/${uiTheme}/border.png')`);
-        });
-      }
+          if (needsRootStyle) {
+            addSystemSvgDropShadow(uiTheme, themeGameId, shadow);
+            rootStyle.setProperty(baseBgColorProp, color);
+            rootStyle.setProperty(shadowColorProp, shadow);
+            rootStyle.setProperty(svgShadowProp, `url(#dropShadow_${themeGameId !== gameId ? `${themeGameId}_` : ''}${parsedUiTheme})`);
+            rootStyle.setProperty(containerBgImageUrlProp, `url('images/ui/${themeGameId}/${uiTheme}/containerbg.png')`);
+            rootStyle.setProperty(borderImageUrlProp, `url('images/ui/${themeGameId}/${uiTheme}/border.png')`);
+          }
 
-      if (setTheme && themeGameId === gameId) {
-        fastdom.mutate(() => {
-          rootStyle.setProperty('--base-bg-color', `var(${baseBgColorProp})`);
-          rootStyle.setProperty('--shadow-color', `var(${shadowColorProp})`);
-          rootStyle.setProperty('--svg-shadow', `var(${svgShadowProp})`);
-          rootStyle.setProperty('--container-bg-image-url', `var(${containerBgImageUrlProp})`);
-          rootStyle.setProperty('--border-image-url', `var(${borderImageUrlProp})`);
-        });
-      }
+          if (settingTheme) {
+            rootStyle.setProperty('--base-bg-color', `var(${baseBgColorProp})`);
+            rootStyle.setProperty('--shadow-color', `var(${shadowColorProp})`);
+            rootStyle.setProperty('--svg-shadow', `var(${svgShadowProp})`);
+            rootStyle.setProperty('--container-bg-image-url', `var(${containerBgImageUrlProp})`);
+            rootStyle.setProperty('--border-image-url', `var(${borderImageUrlProp})`);
+          }
 
-      if (callback)
+          if (callback)
+            callback(color, shadow);
+        });
+      else if (callback)
         callback(color, shadow);
     });
   });
@@ -566,43 +569,45 @@ function initUiThemeFontStyles(uiTheme, themeGameId, fontStyle, setTheme, callba
 
   const defaultAltFontStyleIndex = 1;
   const defaultFallbackAltFontStyleIndex = 3;
-  
+
   getFontColors(uiTheme, themeGameId, fontStyle, function (baseColors) {
     const altFontStyle = fontStyle !== defaultAltFontStyleIndex ? defaultAltFontStyleIndex : defaultAltFontStyleIndex - 1;
     const altColorCallback = function (altColors) {
       const rootStyle = document.documentElement.style;
-
-      if (!rootStyle.getPropertyValue(baseColorProp)) {
-        addSystemSvgGradient(uiTheme, themeGameId, baseColors);
-        addSystemSvgGradient(uiTheme, themeGameId, altColors, true);
+      const needsRootStyle = !rootStyle.getPropertyValue(baseColorProp);
+      const settingTheme = setTheme && themeGameId === gameId;
+      if (needsRootStyle || settingTheme)
         fastdom.mutate(() => {
-          rootStyle.setProperty(baseColorProp, getColorRgb(baseColors[8]));
-          rootStyle.setProperty(altColorProp, getColorRgb(altColors[8]));
-          rootStyle.setProperty(baseGradientProp, `linear-gradient(to bottom, ${getGradientText(baseColors)})`);
-          rootStyle.setProperty(baseGradientBProp, `linear-gradient(to bottom, ${getGradientText(baseColors, true)})`);
-          rootStyle.setProperty(altGradientProp, `linear-gradient(to bottom, ${getGradientText(altColors)})`);
-          rootStyle.setProperty(altGradientBProp, `linear-gradient(to bottom, ${getGradientText(altColors, true)})`);
-          rootStyle.setProperty(svgBaseGradientProp, `url(#baseGradient_${themeGameId !== gameId ? `${themeGameId}_` : ''}${parsedUiTheme})`);
-          rootStyle.setProperty(svgAltGradientProp, `url(#altGradient_${themeGameId !== gameId ? `${themeGameId}_` : ''}${parsedUiTheme})`);
-          rootStyle.setProperty(baseColorImageUrlProp, `url('images/ui/${themeGameId}/${uiTheme}/font${fontStyle + 1}.png')`);
-        });
-      }
+          if (needsRootStyle) {
+            addSystemSvgGradient(uiTheme, themeGameId, baseColors);
+            addSystemSvgGradient(uiTheme, themeGameId, altColors, true);
+            rootStyle.setProperty(baseColorProp, getColorRgb(baseColors[8]));
+            rootStyle.setProperty(altColorProp, getColorRgb(altColors[8]));
+            rootStyle.setProperty(baseGradientProp, `linear-gradient(to bottom, ${getGradientText(baseColors)})`);
+            rootStyle.setProperty(baseGradientBProp, `linear-gradient(to bottom, ${getGradientText(baseColors, true)})`);
+            rootStyle.setProperty(altGradientProp, `linear-gradient(to bottom, ${getGradientText(altColors)})`);
+            rootStyle.setProperty(altGradientBProp, `linear-gradient(to bottom, ${getGradientText(altColors, true)})`);
+            rootStyle.setProperty(svgBaseGradientProp, `url(#baseGradient_${themeGameId !== gameId ? `${themeGameId}_` : ''}${parsedUiTheme})`);
+            rootStyle.setProperty(svgAltGradientProp, `url(#altGradient_${themeGameId !== gameId ? `${themeGameId}_` : ''}${parsedUiTheme})`);
+            rootStyle.setProperty(baseColorImageUrlProp, `url('images/ui/${themeGameId}/${uiTheme}/font${fontStyle + 1}.png')`);
+          }
 
-      if (setTheme && themeGameId === gameId) {
-        fastdom.mutate(() => {
-          rootStyle.setProperty('--base-color', `var(${baseColorProp})`);
-          rootStyle.setProperty('--alt-color', `var(${altColorProp})`);
-          rootStyle.setProperty('--base-gradient', `var(${baseGradientProp})`);
-          rootStyle.setProperty('--base-gradient-b', `var(${baseGradientBProp})`);
-          rootStyle.setProperty('--alt-gradient', `var(${altGradientProp})`);
-          rootStyle.setProperty('--alt-gradient-b', `var(${altGradientBProp})`);
-          rootStyle.setProperty('--svg-base-gradient', `var(${svgBaseGradientProp})`);
-          rootStyle.setProperty('--svg-alt-gradient', `var(${svgAltGradientProp})`);
-          rootStyle.setProperty('--base-color-image-url', `var(${baseColorImageUrlProp})`);
-        });
-      }
+          if (settingTheme) {
+            rootStyle.setProperty('--base-color', `var(${baseColorProp})`);
+            rootStyle.setProperty('--alt-color', `var(${altColorProp})`);
+            rootStyle.setProperty('--base-gradient', `var(${baseGradientProp})`);
+            rootStyle.setProperty('--base-gradient-b', `var(${baseGradientBProp})`);
+            rootStyle.setProperty('--alt-gradient', `var(${altGradientProp})`);
+            rootStyle.setProperty('--alt-gradient-b', `var(${altGradientBProp})`);
+            rootStyle.setProperty('--svg-base-gradient', `var(${svgBaseGradientProp})`);
+            rootStyle.setProperty('--svg-alt-gradient', `var(${svgAltGradientProp})`);
+            rootStyle.setProperty('--base-color-image-url', `var(${baseColorImageUrlProp})`);
+          }
 
-      if (callback)
+          if (callback)
+            fastdom.measure(() => callback(baseColors, altColors));
+        });
+      else if (callback)
         callback(baseColors, altColors);
     };
     getFontColors(uiTheme, themeGameId, altFontStyle, function (altColors) {
@@ -679,11 +684,11 @@ let applyThemeStyles;
       background-image: var(--alt-gradient-b{THEME_PROP});
     }
     
-    .itemContainer .badgeItem.theme{THEME} > .badgeContainer > div, .imageItem.theme{THEME} > .imageThumbnailContainer {
+    .itemContainer .badgeItem.theme{THEME} > .badgeContainer > .badgeBorder, .imageItem.theme{THEME} > .imageThumbnailContainer {
       border-image-source: var(--border-image-url{THEME_PROP}) !important;
     }
     
-    .modalContent.itemContainer .badgeItem.locked.theme{THEME} > .badgeContainer > div:first-child {
+    .modalContent.itemContainer .badgeItem.locked.theme{THEME} > .badgeContainer > .badgeBorder {
       border-image-source: var(--border-image-url{THEME_PROP}) !important;
     }
     
@@ -1037,10 +1042,11 @@ function getSvgGradientStop(color, offset) {
   return ret;
 }
 
+const allSpacePattern = / /g;
 function addSystemSvgGradient(systemName, systemGameId, colors, alt) {
   if (!systemGameId)
     systemGameId = gameId;
-  const gradientId = `${alt ? 'alt' : 'base'}Gradient_${systemGameId !== gameId ? `${systemGameId}_` : ''}${systemName.replace(/ /g, '_')}`;
+  const gradientId = `${alt ? 'alt' : 'base'}Gradient_${systemGameId !== gameId ? `${systemGameId}_` : ''}${systemName.replace(allSpacePattern, '_')}`;
   if (!document.getElementById(gradientId)) {
     const svgDefs = document.getElementById('svgDefs');
     const svgGradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
@@ -1050,7 +1056,7 @@ function addSystemSvgGradient(systemName, systemGameId, colors, alt) {
     svgGradient.setAttribute('x2', '0%');
     svgGradient.setAttribute('y2', '100%');
     updateSvgGradient(svgGradient, colors);
-    fastdom.mutate(() => svgDefs.appendChild(svgGradient));
+    svgDefs.appendChild(svgGradient);
   }
 }
 

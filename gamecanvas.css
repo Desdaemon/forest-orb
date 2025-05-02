@@ -69,7 +69,7 @@ html {
   border-radius: 50%;
 }
 
-#apad > :nth-child(2) {
+#apad-enter {
   position: relative;
   right: var(--controls-size);
 }

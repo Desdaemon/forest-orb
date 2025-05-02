@@ -107,8 +107,8 @@ function initAccountSettingsModal() {
   const accountBadgeButton = document.getElementById('accountBadgeButton');
   const badgeButton = document.getElementById('badgeButton');
 
-  accountBadgeButton.innerHTML = getBadgeItem(badge || { badgeId: 'null' }, false, true, false, true).innerHTML;
-  badgeButton.innerHTML = getBadgeItem(badge || { badgeId: 'null' }, false, true).innerHTML;
+  accountBadgeButton.replaceChildren(getBadgeItem(badge || { badgeId: 'null' }, false, true, false, true));
+  badgeButton.replaceChildren(getBadgeItem(badge || { badgeId: 'null' }, false, true));
 
   if (badge?.overlayType & BadgeOverlayType.LOCATION) {
     handleBadgeOverlayLocationColorOverride(accountBadgeButton.querySelector('.badgeOverlay'), accountBadgeButton.querySelector('.badgeOverlay2'), cachedLocations);

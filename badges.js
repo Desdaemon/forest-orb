@@ -1040,7 +1040,7 @@ function getBadgeItem(badge, includeTooltip, emptyIcon, lockedIcon, scaled, filt
   let assignTooltip;
 
   if (badgeEl) {
-    badgeEl.classList.add('badge');
+    badgeEl.classList.add('badge', 'badgeBorder');
     if (scaled)
       badgeEl.classList.add('scaledBadge');
     setBadgeBackgroundImage = () => {
@@ -1085,16 +1085,29 @@ function getBadgeItem(badge, includeTooltip, emptyIcon, lockedIcon, scaled, filt
     badgeContainer.appendChild(badgeEl);
     if (!badge.unlocked) {
       item.classList.add('locked', 'disabled');
-      if (lockedIcon)
-        badgeContainer.appendChild(getSvgIcon('locked', true));
+      if (lockedIcon) { 
+        const lockedEl = getSvgIcon('locked', true);
+        lockedEl.classList.add('badgeBorder');
+        badgeContainer.appendChild(lockedEl);
+      }
     }
   } else if (badgeId !== 'null') {
     item.classList.add('locked', 'disabled');
-    if (lockedIcon)
-      badgeContainer.appendChild(getSvgIcon('locked', true));
+    if (lockedIcon) {
+      const lockedEl = getSvgIcon('locked', true);
+      lockedEl.classList.add('badgeBorder');
+      badgeContainer.appendChild(lockedEl);
+    }
     badgeContainer.appendChild(document.createElement('div'));
-  } else
-    badgeContainer.appendChild(emptyIcon ? getSvgIcon('ban', true) : document.createElement('div'));
+  } else { 
+    let banIcon;
+    if (emptyIcon) {
+      banIcon = getSvgIcon('ban', true);
+      banIcon.classList.add('badgeBorder');
+    } else
+      banIcon = document.createElement('div');
+    badgeContainer.appendChild(banIcon);
+  }
 
   if (parsedSystemName)
     applyThemeStyles(item, parsedSystemName, badge.game);

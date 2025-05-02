@@ -721,9 +721,7 @@
                 <button id="notificationSettingsButton" class="unselectable" type="button" data-i18n="[html]modal.settings.notificationSettings" onclick="openModal('notificationSettingsModal', null, 'settingsModal')">Notifications</button>
                 <button id="cacheSettingsButton" class="unselectable" type="button" data-i18n="[html]modal.settings.cacheSettings" onclick="openCacheSettingsModal('settingsModal')">Cache</button>
                 <button id="accountSettingsButton" class="unselectable accountRequired" type="button" data-i18n="[html]modal.settings.accountSettings">Account</button>
-                <?php if ($isMobile): ?>
-                  <button class="unselectable" type="button" data-i18n="[html]modal.settings.engineSettings" onclick="closeModal();simulateKeyboardInput('F1',112)">Engine (F1)</button>
-                <?php endif ?>
+                <button class="unselectable" type="button" data-i18n="[html]modal.settings.engineSettings" onclick="closeModal();simulateKeyboardInput('F1',112)">Engine (F1)</button>
               </li>
             </ul>
           </div>
