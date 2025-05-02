@@ -448,6 +448,7 @@ function setUiTheme(value, isInit) {
 }
 
 function setPartyTheme(value) {
+  const uiThemesModal = document.getElementById('uiThemesModal');
   const partyThemeButton = document.getElementById('partyThemeButton');
   partyThemeButton.innerHTML = getUiThemeOption(value).innerHTML;
   partyThemeButton.nextElementSibling.value = value;
@@ -455,8 +456,8 @@ function setPartyTheme(value) {
   initUiThemeContainerStyles(value);
   initUiThemeFontStyles(value, null, 0);
 
-  const lastSelectedThemeContainer = document.querySelector('.uiThemeContainer.partySelected');
-  const newSelectedTheme = document.querySelector(`.uiTheme[data-ui-theme="${value}"]`);
+  const lastSelectedThemeContainer = uiThemesModal.querySelector('.uiThemeContainer.partySelected');
+  const newSelectedTheme = uiThemesModal.querySelector(`.uiTheme[data-ui-theme="${value}"]`);
   if (lastSelectedThemeContainer)
     lastSelectedThemeContainer.classList.remove('partySelected');
   if (newSelectedTheme)
@@ -464,6 +465,7 @@ function setPartyTheme(value) {
 }
 
 function setScheduleTheme(value) {
+  const uiThemesModal = document.getElementById('uiThemesModal');
   const scheduleThemeButton = document.getElementById('scheduleThemeButton');
   scheduleThemeButton.innerHTML = getUiThemeOption(value).innerHTML;
   scheduleThemeButton.nextElementSibling.value = value;
@@ -471,8 +473,8 @@ function setScheduleTheme(value) {
   initUiThemeContainerStyles(value);
   initUiThemeFontStyles(value, null, 0);
 
-  const lastSelectedThemeContainer = document.querySelector('.uiThemeContainer.scheduleSelected');
-  const newSelectedTheme = document.querySelector(`.uiTheme[data-ui-theme="${value}"]`);
+  const lastSelectedThemeContainer = uiThemesModal.querySelector('.uiThemeContainer.scheduleSelected');
+  const newSelectedTheme = uiThemesModal.querySelector(`.uiTheme[data-ui-theme="${value}"]`);
   if (lastSelectedThemeContainer)
     lastSelectedThemeContainer.classList.remove('scheduleSelected');
   if (newSelectedTheme)

@@ -2317,18 +2317,19 @@ html[dir="rtl"] #chatBorder {
   margin-top: 2px;
 }
 
-/*
-.itemContainer .item > div,
-.modalContainer[data-last-modal-id$="createPartyModal"] .modalContent .item > div:not(.partySelected),
-.modalContainer[data-last-modal-id$="scheduleEditModal"] .modalContent .item > div:not(.scheduleSelected)
-{
+.modalContainer[data-last-modal-id$="createPartyModal"] .modalContent .item > .uiThemeContainer {
+  border: 2px solid transparent;
+  &.partySelected {
+    border-color: white;
+  }
 }
 
-.itemContainer .item > div.selected,
-.modalContainer[data-last-modal-id$="createPartyModal"] .modalContent .item > div.partySelected,
-.modalContainer[data-last-modal-id$="scheduleEditModal"] .modalContent .item > div.scheduleSelected
-{
-}*/
+.modalContainer[data-last-modal-id$="scheduleEditModal"] .modalContent .item > .uiThemeContainer {
+  border: 2px solid transparent;
+  &.scheduleSelected {
+    border-color: white;
+  }
+}
 
 .itemContainer .badgeItem > div {
   width: 98px;
@@ -2460,6 +2461,10 @@ html[dir="rtl"] #chatBorder {
 }
 
 .modalContainer[data-last-modal-id$="createPartyModal"] .uiThemeItem.auto, .modalContainer[data-last-modal-id$="createPartyModal"] .modalFooter, #createPartyModal:not([data-update]) .modalTitle .updateTitle, #createPartyModal[data-update] .modalTitle .createTitle {
+  display: none;
+}
+
+.modalContainer[data-last-modal-id$="scheduleEditModal"] .uiThemeItem.auto {
   display: none;
 }
 

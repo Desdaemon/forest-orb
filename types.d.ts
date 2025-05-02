@@ -26,6 +26,7 @@ interface YnoElements {
     scheduleTemplate: 'template'
     badgePresetSelection: 'select'
     badgePresetModal: 'div'
+    uiThemesModal: 'div'
 }
 
 interface Document {
