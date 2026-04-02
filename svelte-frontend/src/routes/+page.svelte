@@ -1,0 +1,114 @@
+<script lang="ts">
+    import { onMount, onDestroy } from "svelte";
+    import { getInfo, getSaveSyncTimestamp, type UserInfo } from "$lib/api";
+    import {
+        getInitPayload,
+        inferGameId,
+        inferGameName,
+        gameNameMap,
+    } from "$lib/init";
+    import {
+        initGameCanvas,
+        teardownGameCanvas,
+        setPlayerName,
+        initEasyRpgEngine,
+    } from "$lib/play";
+    import { applyTheme, cycleUiTheme } from "$lib/theme";
+    import Header from "$lib/components/Header.svelte";
+    import Controls from "$lib/components/Controls.svelte";
+    import CanvasArea from "$lib/components/CanvasArea.svelte";
+    import ChatBox from "$lib/components/ChatBox.svelte";
+    import ModalContainer from "$lib/components/ModalContainer.svelte";
+    import { modal, type ModalId } from "$lib/modalStore";
+
+    let info: UserInfo | null = $state(null);
+    let loading = $state(true);
+    let playerName = $state("");
+
+    const init = getInitPayload();
+    let gameId = $state(inferGameId(init));
+    let gameName = $derived(inferGameName(gameId, init));
+    let canvasEl = $state<HTMLCanvasElement | null>(null);
+
+    let chatboxVisible = $state(false);
+    let isFirefox = $state(false);
+
+    async function loadData() {
+        loading = true;
+        try {
+            info = await getInfo();
+        } catch (err) {
+            console.error("Failed to load data:", err);
+        } finally {
+            loading = false;
+        }
+    }
+
+    onMount(async () => {
+        if (typeof window !== "undefined") {
+            const urlGame = new URLSearchParams(window.location.search).get(
+                "game",
+            );
+            if (urlGame && urlGame in gameNameMap) {
+                gameId = urlGame as keyof typeof gameNameMap;
+            }
+            isFirefox = window.navigator.userAgent.includes("Firefox");
+        }
+
+        canvasEl = document.getElementById(
+            "canvas",
+        ) as HTMLCanvasElement | null;
+        if (canvasEl) {
+            initGameCanvas(canvasEl);
+            await initEasyRpgEngine();
+        }
+        applyTheme();
+        loadData();
+    });
+
+    onDestroy(() => {
+        teardownGameCanvas();
+    });
+
+    function applyPlayerName() {
+        setPlayerName(playerName);
+    }
+    function onToggleChat() {
+        chatboxVisible = !chatboxVisible;
+    }
+
+    function openModal(modalId: string) {
+        modal.open(modalId as ModalId);
+    }
+
+    $effect(() => {
+        if (typeof document !== "undefined") {
+            document.body.classList.toggle("browserFirefox", isFirefox);
+        }
+    });
+</script>
+
+<div id="root-wrapper">
+    <div id="background"></div>
+    <div id="backgroundOverlay"></div>
+    <div id="content">
+        <div id="top"></div>
+        <Header onToggleQuickTheme={cycleUiTheme} onOpenModal={openModal} {onToggleChat} />
+        <div id="layout">
+            <div id="mainContainer" class="container">
+                <div id="gameContainer">
+                    <Controls {onToggleChat} />
+                    <CanvasArea />
+                </div>
+            </div>
+            <ChatBox show={chatboxVisible} />
+            <ModalContainer />
+        </div>
+    </div>
+</div>
+
+<style>
+    #layout {
+        min-height: 100vh;
+    }
+</style>
