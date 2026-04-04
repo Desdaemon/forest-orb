@@ -22,8 +22,8 @@
   --modal-alt-gradient: var(--alt-gradient);
   --modal-base-gradient-b: var(--base-gradient-b);
   --modal-alt-gradient-b: var(--alt-gradient-b);
-  --modal-svg-base-gradient: var(--base-svg-gradient);
-  --modal-svg-alt-gradient: var(--alt-svg-gradient);
+  --modal-svg-base-gradient: var(--svg-base-gradient);
+  --modal-svg-alt-gradient: var(--svg-alt-gradient);
   --modal-svg-shadow: var(--svg-shadow);
   --modal-base-color-image-url: var(--base-color-image-url);
   --modal-container-bg-image-url: var(--container-bg-image-url);
@@ -35,8 +35,8 @@
   --party-shadow-color: var(--shadow-color);
   --party-base-gradient: var(--base-gradient);
   --party-alt-gradient: var(--alt-gradient);
-  --party-svg-base-gradient: var(--base-svg-gradient);
-  --party-svg-alt-gradient: var(--alt-svg-gradient);
+  --party-svg-base-gradient: var(--svg-base-gradient);
+  --party-svg-alt-gradient: var(--svg-alt-gradient);
   --party-svg-shadow: var(--svg-shadow);
   --party-container-bg-image-url: var(--container-bg-image-url);
   --party-border-image-url: var(--border-image-url);
