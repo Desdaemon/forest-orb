@@ -3,13 +3,16 @@
   import { getInfo, getSaveSyncTimestamp, type UserInfo } from '$lib/api';
   import { getInitPayload, inferGameId, inferGameName, gameNameMap } from '$lib/init';
   import { initGameCanvas, teardownGameCanvas, setPlayerName, initEasyRpgEngine } from '$lib/play';
-  import { applyTheme, cycleUiTheme } from '$lib/theme';
   import Header from '$lib/components/Header.svelte';
   import Controls from '$lib/components/Controls.svelte';
   import CanvasArea from '$lib/components/CanvasArea.svelte';
   import ChatBox from '$lib/components/ChatBox.svelte';
+  import ThemeContainer from '$lib/components/ThemeContainer.svelte';
   import ModalContainer from '$lib/components/ModalContainer.svelte';
-  import { modal, type ModalId } from '$lib/modalStore';
+  import { modal, type ModalId } from '$lib/stores/modal';
+  import '$lib/configHooks';
+  import { initConfig } from '$lib/stores/config';
+  import Tooltip from '$lib/components/Tooltip.svelte';
 
   let info: UserInfo | null = $state(null);
   let loading = $state(true);
@@ -17,10 +20,9 @@
 
   const init = getInitPayload();
   let gameId = $state(inferGameId(init));
-  let gameName = $derived(inferGameName(gameId, init));
   let canvasEl = $state<HTMLCanvasElement | null>(null);
 
-  let chatboxVisible = $state(false);
+  let chatboxVisible = $state(true);
   let isFirefox = $state(false);
 
   async function loadData() {
@@ -42,14 +44,15 @@
       }
       isFirefox = window.navigator.userAgent.includes('Firefox');
     }
+    await initConfig(gameId);
 
     canvasEl = document.getElementById('canvas') as HTMLCanvasElement | null;
     if (canvasEl) {
       initGameCanvas(canvasEl);
       await initEasyRpgEngine();
     }
-    applyTheme();
     loadData();
+
   });
 
   onDestroy(() => {
@@ -74,24 +77,27 @@
   });
 </script>
 
-<div id="root-wrapper">
-  <div id="background"></div>
-  <div id="backgroundOverlay"></div>
-  <div id="content">
-    <div id="top"></div>
-    <Header onToggleQuickTheme={cycleUiTheme} onOpenModal={openModal} {onToggleChat} />
-    <div id="layout">
-      <div id="mainContainer" class="container">
-        <div id="gameContainer">
-          <Controls {onToggleChat} />
-          <CanvasArea />
+<ThemeContainer {gameId}>
+  <div id="root-wrapper">
+    <div id="background"></div>
+    <div id="backgroundOverlay"></div>
+    <div id="content">
+      <div id="top"></div>
+      <Header onOpenModal={openModal} />
+      <div id="layout">
+        <div id="mainContainer" class="container">
+          <div id="gameContainer">
+            <Controls {onToggleChat} onOpenModal={openModal} />
+            <CanvasArea />
+          </div>
         </div>
+        <ChatBox show={chatboxVisible} />
+        <ModalContainer />
+        <Tooltip />
       </div>
-      <ChatBox show={chatboxVisible} />
-      <ModalContainer />
     </div>
   </div>
-</div>
+</ThemeContainer>
 
 <style>
   #layout {

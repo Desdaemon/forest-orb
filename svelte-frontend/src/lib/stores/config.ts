@@ -1,0 +1,75 @@
+import { writable } from 'svelte/store';
+import { defaultGlobalConfig, defaultUserConfig, loadConfigFromStorage, saveConfigToStorage } from '../play';
+import type { GlobalConfig, UserConfig } from '../settingsSchema';
+
+// A hook receives the raw stored value (or `undefined` if the key was absent) and the game id.
+export type ConfigHook = (value: unknown, gameId: string) => void | Promise<void>;
+
+const _hooks = new Map<string, ConfigHook>();
+let _gameId = '';
+
+/** Register a side-effect hook that fires for a config key on init and on every update. */
+export function registerConfigHook(key: string, hook: ConfigHook): void {
+  _hooks.set(key, hook);
+}
+
+export const globalConfig = writable<GlobalConfig>({ ...defaultGlobalConfig });
+export const userConfig = writable<UserConfig>({ ...defaultUserConfig });
+
+/** Load config from localStorage into the stores and run all registered hooks. */
+export async function initConfig(gameId: string): Promise<void> {
+  _gameId = gameId;
+  const stored: Record<string, unknown> = loadConfigFromStorage(gameId) ?? {};
+
+  globalConfig.set({ ...defaultGlobalConfig, ...stored });
+  userConfig.set({ ...defaultUserConfig, ...stored });
+
+  const pending: Promise<void>[] = [];
+  for (const [key, hook] of _hooks) {
+    try {
+      const result = hook(key in stored ? stored[key] : undefined, gameId);
+      if (result instanceof Promise) {
+        pending.push(result.catch(err => console.error(`configStore: hook error for "${key}"`, err)));
+      }
+    } catch (err) {
+      console.error(`configStore: hook error for "${key}"`, err);
+    }
+  }
+  await Promise.all(pending);
+}
+
+/** Update a typed GlobalConfig key, persist it, and run its hook if one is registered. */
+export function setGlobalSetting<K extends keyof GlobalConfig>(key: K, value: GlobalConfig[K]): void {
+  globalConfig.update(c => ({ ...c, [key]: value }));
+  saveConfigToStorage(_gameId, { [key]: value });
+  _runHook(key as string, value);
+}
+
+/** Update a typed UserConfig key, persist it, and run its hook if one is registered. */
+export function setUserSetting<K extends keyof UserConfig>(key: K, value: UserConfig[K]): void {
+  userConfig.update(c => ({ ...c, [key]: value }));
+  saveConfigToStorage(_gameId, { [key]: value });
+  _runHook(key as string, value);
+}
+
+/**
+ * Persist an arbitrary config key (e.g. one not present in the typed schema like `uiTheme` or
+ * `lang`) and run its hook if one is registered.
+ */
+export function setConfigValue(key: string, value: unknown): void {
+  saveConfigToStorage(_gameId, { [key]: value } as Partial<GlobalConfig & UserConfig>);
+  _runHook(key, value);
+}
+
+function _runHook(key: string, value: unknown): void {
+  const hook = _hooks.get(key);
+  if (!hook) return;
+  try {
+    const result = hook(value, _gameId);
+    if (result instanceof Promise) {
+      result.catch(err => console.error(`configStore: hook error for "${key}"`, err));
+    }
+  } catch (err) {
+    console.error(`configStore: hook error for "${key}"`, err);
+  }
+}

@@ -1,4 +1,4 @@
-export const allGameUiThemes: Record<string, string[]> = {
+export const allGameUiThemes = Object.freeze({
   '2kki': [
     'system1',
     'system2',
@@ -111,9 +111,9 @@ export const allGameUiThemes: Record<string, string[]> = {
     'natl_sys_PinkRibbon',
     'aediorugap_sys',
     'natl_sys2_NeonPink',
-    'natl_sys3_NeonBlue',
+    'natl_sys3_NeonBlue'
   ],
-  'amillusion': [
+  amillusion: [
     'fleur-2',
     'fleur',
     'bullemenu',
@@ -121,9 +121,9 @@ export const allGameUiThemes: Record<string, string[]> = {
     'rosas menu',
     'system EPACSE',
     'MenuChance',
-    'tournesol',
+    'tournesol'
   ],
-  'braingirl': [
+  braingirl: [
     'analog',
     'Vanilla',
     'Licorice',
@@ -136,9 +136,9 @@ export const allGameUiThemes: Record<string, string[]> = {
     'Floorgum',
     'moss',
     'Carpet',
-    'Raspberry',
+    'Raspberry'
   ],
-  'unconscious': [
+  unconscious: [
     'system',
     'system2',
     'maple-penmenu',
@@ -189,17 +189,17 @@ export const allGameUiThemes: Record<string, string[]> = {
     'eviled_system_neone',
     'maple-shamblingmenu',
     'rollaby_system_chess',
-    'witblos_hlamenutheme',
+    'witblos_hlamenutheme'
   ],
-  'deepdreams': [
+  deepdreams: [
     'system_sterling',
     'system_arabian',
     'system_crystalline',
     'system_kaleidoscope',
     'system_rainbow',
-    'system_spiderlily',
+    'system_spiderlily'
   ],
-  'flow': [
+  flow: [
     'system',
     'FCシムテム',
     'systemdot',
@@ -207,45 +207,16 @@ export const allGameUiThemes: Record<string, string[]> = {
     'system flower',
     'system sugar',
     'system rust',
-    'system smile',
+    'system smile'
   ],
-  'fog': [
-    'FOG_System',
-    'FOG_System_0001',
-    'FOG_System_0002',
-  ],
-  'genie': [
-    'system_Negtive',
-    'system_Home',
-    'system_Springs',
-  ],
-  'if': [
-    'sys-p',
-    'sys-p2',
-    'sys-p3',
-  ],
-  'mikan': [
-    's_1',
-    's_2',
-    's_3',
-  ],
-  'muma': [
-    'SYSTEM',
-  ],
-  'nostalgic': [
-    'imgbb4a4979529eec5',
-    'cute',
-    'mono',
-    'colorful',
-    '001',
-    '006',
-  ],
-  'oneshot': [
-    'system',
-    'system2',
-    'System3',
-  ],
-  'oversomnia': [
+  fog: ['FOG_System', 'FOG_System_0001', 'FOG_System_0002'],
+  genie: ['system_Negtive', 'system_Home', 'system_Springs'],
+  if: ['sys-p', 'sys-p2', 'sys-p3'],
+  mikan: ['s_1', 's_2', 's_3'],
+  muma: ['SYSTEM'],
+  nostalgic: ['imgbb4a4979529eec5', 'cute', 'mono', 'colorful', '001', '006'],
+  oneshot: ['system', 'system2', 'System3'],
+  oversomnia: [
     'window-a',
     'window-b',
     'window-c',
@@ -256,14 +227,10 @@ export const allGameUiThemes: Record<string, string[]> = {
     'window-h',
     'window-i',
     'window-j',
-    'window-temp1',
+    'window-temp1'
   ],
-  'prayers': [
-    'grey-and-chartreuse',
-    'chartreuse',
-    'customsystem',
-  ],
-  'sheawaits': [
+  prayers: ['grey-and-chartreuse', 'chartreuse', 'customsystem'],
+  sheawaits: [
     'system_sa1',
     'system_stripedpink',
     'system_rose',
@@ -273,9 +240,9 @@ export const allGameUiThemes: Record<string, string[]> = {
     'system_starrynight',
     'system_stripedblue',
     'system_sunset',
-    'system_heartglass',
+    'system_heartglass'
   ],
-  'someday': [
+  someday: [
     'green',
     'blue',
     'turquoise',
@@ -288,20 +255,10 @@ export const allGameUiThemes: Record<string, string[]> = {
     'swaltz',
     'zapnef',
     'monochrome_mk2',
-    'monochrome',
+    'monochrome'
   ],
-  'tsushin': [
-    'SystemM',
-    'System',
-    'SystemB',
-    'SystemC',
-    'SystemD',
-    'SystemF',
-    'SystemP',
-    'SystemS',
-    'SystemW',
-  ],
-  'ultraviolet': [
+  tsushin: ['SystemM', 'System', 'SystemB', 'SystemC', 'SystemD', 'SystemF', 'SystemP', 'SystemS', 'SystemW'],
+  ultraviolet: [
     'ss-システムviolet',
     'ss-システムmonochrome',
     'ss-システムsilver',
@@ -314,9 +271,9 @@ export const allGameUiThemes: Record<string, string[]> = {
     'ss-システムviolet II',
     'ss-システムgreen',
     'ss-システムeyes',
-    'ss-システムviolet III',
+    'ss-システムviolet III'
   ],
-  'unaccomplished': [
+  unaccomplished: [
     'system_N',
     'system_EEE',
     'system_0',
@@ -329,9 +286,9 @@ export const allGameUiThemes: Record<string, string[]> = {
     'system_ComP_Red',
     'system_ComP_Halloween',
     'system_ComP_PT',
-    'system_icea',
+    'system_icea'
   ],
-  'unevendream': [
+  unevendream: [
     '1247-0',
     '1247-0t',
     '1247-0k',
@@ -340,38 +297,37 @@ export const allGameUiThemes: Record<string, string[]> = {
     '1247-03',
     '1247-04',
     '1247-pc98',
-    'EBroxas_menu_1',
+    'EBroxas_menu_1'
   ],
-  'yume': [
-    '0000000000009',
-    '0000000000010',
-    '0000000000011',
-  ],
-};
+  yume: ['0000000000009', '0000000000010', '0000000000011']
+} as const);
+
+export type AllGameThemes = typeof allGameUiThemes;
+export type GameId = keyof AllGameThemes;
 
 export const allGameFullBgUiThemes: Record<string, string[]> = {
   '2kki': [],
-  'amillusion': ['fleur'],
-  'braingirl': [],
-  'unconscious': [],
-  'deepdreams': [],
-  'flow': [],
-  'fog': [],
-  'genie': [],
-  'if': [],
-  'mikan': [],
-  'muma': [],
-  'nostalgic': [],
-  'oneshot': [],
-  'oversomnia': [],
-  'prayers': ['grey-and-chartreuse', 'chartreuse', 'customsystem'],
-  'sheawaits': [],
-  'someday': [],
-  'tsushin': [],
-  'ultraviolet': ['ss-システムsilver'],
-  'unaccomplished': [],
-  'unevendream': [],
-  'yume': ['0000000000010'],
+  amillusion: ['fleur'],
+  braingirl: [],
+  unconscious: [],
+  deepdreams: [],
+  flow: [],
+  fog: [],
+  genie: [],
+  if: [],
+  mikan: [],
+  muma: [],
+  nostalgic: [],
+  oneshot: [],
+  oversomnia: [],
+  prayers: ['grey-and-chartreuse', 'chartreuse', 'customsystem'],
+  sheawaits: [],
+  someday: [],
+  tsushin: [],
+  ultraviolet: ['ss-システムsilver'],
+  unaccomplished: [],
+  unevendream: [],
+  yume: ['0000000000010']
 };
 
 /**
@@ -382,7 +338,8 @@ export function getGameFontStyleIndices(gameId: string): number[] {
   if (gameId === 'muma' || gameId === 'genie') return [0, 1];
   if (gameId === 'deepdreams') return [0, 1, 2];
   if (gameId === 'someday') return [0, 1, 3];
-  if (gameId === 'yume' || gameId === '2kki' || gameId === 'unconscious' || gameId === 'flow') return [0, 1, 2, 3, 4, 5, 6];
+  if (gameId === 'yume' || gameId === '2kki' || gameId === 'unconscious' || gameId === 'flow')
+    return [0, 1, 2, 3, 4, 5, 6];
   if (gameId === 'mikan') return [0, 1, 2, 3, 4];
   return [0, 1, 2, 3];
 }

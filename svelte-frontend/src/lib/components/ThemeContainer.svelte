@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { activatedThemes } from '$lib/uiThemeStore';
+  import { activatedThemes } from '$lib/stores/uiTheme';
   import ThemeDefinition from './ThemeDefinition.svelte';
 
   const {
     gameId,
-    children,
+    children
   }: {
     gameId: string;
     children?: Snippet;

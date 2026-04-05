@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { LL } from '$lib';
   import { onMount, tick } from 'svelte';
-  import { modal } from '$lib/modalStore';
-  import { selectedBadge } from '$lib/badgeStore';
+  import { modal } from '$lib/stores/modal';
+  import { selectedBadge } from '$lib/stores/badge';
   import { apiFetch } from '$lib/api';
   import Modal from '$lib/components/Modal.svelte';
   import BadgeItem from '$lib/components/BadgeItem.svelte';
@@ -218,9 +219,9 @@
   }
 
   function getSearchModeLabel(mode: 'name' | 'location' | 'artist') {
-    if (mode === 'location') return 'Location';
+    if (mode === 'location') return $LL.ui.modal.badges.fields.search.location();
     if (mode === 'artist') return 'Artist';
-    return 'Name';
+    return $LL.ui.modal.badges.fields.search.name();
   }
 
   function updateVirtualScroll() {
@@ -295,26 +296,28 @@
 
 <Modal aria-label="Badges" fullscreen>
   <div class="modalHeader">
-    <h1 class="modalTitle">Badge Gallery</h1>
+    <h1 class="modalTitle">{$LL.ui.modal.badges.title()}</h1>
     <div id="badgeControls" class="uiControls wrap">
       <div class="uiControl">
-        <label for="badgeUnlockStatus" class="unselectable">Unlock Status:&nbsp;</label>
+        <label for="badgeUnlockStatus" class="unselectable"
+          >{@html $LL.ui.modal.badges.fields.unlockStatus.label()}</label
+        >
         <select id="badgeUnlockStatus" bind:value={unlockFilter} onchange={updateFiltered}>
-          <option value="all">All</option>
-          <option value="unlocked">Unlocked</option>
-          <option value="locked">Locked</option>
+          <option value="all">{$LL.ui.modal.badges.fields.unlockStatus.values.all()}</option>
+          <option value="unlocked">{$LL.ui.modal.badges.fields.unlockStatus.values['1']()}</option>
+          <option value="locked">{$LL.ui.modal.badges.fields.unlockStatus.values['0']()}</option>
         </select>
       </div>
       <div class="uiControl">
-        <label for="badgeSortOrder" class="unselectable">Sort Order:&nbsp;</label>
+        <label for="badgeSortOrder" class="unselectable">{@html $LL.ui.modal.badges.fields.sortOrder.label()}</label>
         <select id="badgeSortOrder" bind:value={sortOrder} onchange={updateFiltered}>
-          <option value="badgeId">Default</option>
+          <option value="badgeId">{$LL.ui.modal.badges.fields.sortOrder.values.default()}</option>
           <option value="bp">BP</option>
           <option value="percent">Percent</option>
         </select>
       </div>
       <div class="uiControl">
-        <label for="badgeSearch" class="unselectable">Search:&nbsp;</label>
+        <label for="badgeSearch" class="unselectable">{@html $LL.ui.modal.badges.fields.search.label()}</label>
         <div class="badgeSearchControl">
           <input
             id="badgeSearch"

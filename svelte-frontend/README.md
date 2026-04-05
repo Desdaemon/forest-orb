@@ -1,42 +1,16 @@
-# sv
+# forest-svelte
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
-
-```sh
-# recreate this project
-pnpm dlx sv@0.13.2 create --template minimal --types ts --install pnpm svelte-frontend
-```
+Svelte reimplementation of forest-orb
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
 ```sh
-npm run dev
+# to start locally
+pnpm start
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# to share to LAN
+pnpm build
+# allow vite thru ufw firewall if on linux
+sufo ufw allow 4173 comment 'vite-preview'
+pnpm preview --host
 ```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.

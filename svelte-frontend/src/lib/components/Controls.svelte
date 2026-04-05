@@ -1,5 +1,20 @@
 <script lang="ts">
-  const { onToggleChat = () => {} } = $props<{ onToggleChat?: () => void }>();
+  import type { ModalId } from '$lib/stores/modal';
+  import { tooltipLabel } from './Tooltip.svelte';
+  import { LL } from '$lib';
+
+  const { onToggleChat = () => {}, onOpenModal = () => {} } = $props<{
+    onToggleChat?: () => void;
+    onOpenModal?: (modalId: ModalId) => void;
+  }>();
+
+  function handleThemeClick() {
+    onOpenModal('uiThemesModal');
+  }
+
+  function handleSettingsClick() {
+    onOpenModal('settingsModal');
+  }
 </script>
 
 <div id="controls">
@@ -10,8 +25,7 @@
     <button
       id="privateModeButton"
       class="iconButton toggleButton altToggleButton transparentToggleButton unselectable"
-      data-i18n="[title]tooltips.togglePrivateMode"
-      aria-label="Toggle private mode"
+      {...tooltipLabel($LL.ui.tooltips.togglePrivateMode())}
     >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         ><path
@@ -19,7 +33,7 @@
         /><path d="m9 4a1 1 90 0 0 0 5 1 1 90 0 0 0-5m-4 13c0-5 1-7 4-7s4 2 4 7q-4 2-8 0" /></svg
       >
     </button>
-    <button id="saveButton" class="iconButton unselectable" data-i18n="[title]tooltips.save" aria-label="Save game">
+    <button id="saveButton" class="iconButton unselectable" {...tooltipLabel($LL.ui.tooltips.save())}>
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         ><path
           d="m0 1.5q0-1.5 1.5-1.5h11.25l2.25 2.25v12.75q0 1.5-1.5 1.5h-12q-1.5 0-1.5-1.5v-13.5m4.5-1.5v3.75q0 0.75 0.75 0.75h4.5q0.75 0 0.75-0.75v-3.75m-1.75 1v2.5h0.75v-2.5h-0.75m-5.75 15.5v-6.75q0-0.75 0.75-0.75h7.5q0.75 0 0.75 0.75v6.75m-7.5-6h6m-6 2.25h6m-6 2.25h6"
@@ -29,9 +43,8 @@
     <button
       id="uiThemeButton"
       class="iconButton unselectable"
-      data-i18n="[title]tooltips.uiTheme"
-      aria-label="Cycle UI theme"
-      onclick={onToggleChat}
+      {...tooltipLabel($LL.ui.tooltips.uiTheme())}
+      onclick={handleThemeClick}
     >
       <svg viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         ><path
@@ -42,8 +55,7 @@
     <button
       id="chatButton"
       class="iconButton toggleButton offToggleButton unselectable"
-      data-i18n="[title]tooltips.toggleChat"
-      aria-label="Toggle chat"
+      {...tooltipLabel($LL.ui.tooltips.toggleChat())}
       onclick={onToggleChat}
     >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -52,7 +64,56 @@
         /><path d="m-2 16l22-14" /></svg
       >
     </button>
-    <!-- More buttons can be added here, same as legacy markup -->
+    <button id="screenshotButton" class="iconButton unselectable" {...tooltipLabel($LL.ui.tooltips.screenshot())}>
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        ><path
+          d="m3 8q0-1 1-1h1.5c1 0 1-2 2-2h3c1 0 1 2 2 2h1.5q1 0 1 1v4q0 1-1 1h-10q-1 0-1-1zm6-0.5a2 2 90 0 0 4 2 2 90 0 0 -4m-9-2.5v-2q0-1 1-1h2m12 0h2q1 0 1 1v2m0 8v2q0 1-1 1h-2m-12 0h-2q-1 0-1-1v-2"
+        ></path></svg
+      >
+    </button>
+    <button
+      id="myScreenshotsButton"
+      class="iconButton accountRequired unselectable"
+      {...tooltipLabel($LL.ui.tooltips.myScreenshots())}
+    >
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        ><path
+          d="m0 2h18v13h-18zv13-11.5 11.5zm2.5 10.5v-1.5l2.75-3 2.25 1.5 3.75-3.75 4.25 3.25v3.5zm0-6.75a0.75 0.75 90 0 0 3 0 0.75 0.75 90 0 0-3 0z"
+        ></path></svg
+      >
+    </button>
+    <button
+      id="settingsButton"
+      class="iconButton unselectable"
+      {...tooltipLabel($LL.ui.tooltips.settings())}
+      onclick={handleSettingsClick}
+    >
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        ><path
+          d="m9 5.5a1 1 90 0 0 0 7 1 1 90 0 0 0 -7m-7 5.5l-2-0.25v-3.5l2-0.25 0.75-1.5-1.25-1.75 2.25-2.25 1.75 1.25 1.5-0.75 0.25-2h3.5l0.25 2 1.5 0.75 1.75-1.25 2.25 2.25-1.25 1.75 0.75 1.5 2 0.25v3.5l-2 0.25-0.75 1.5 1.25 1.75-2.25 2.25-1.75-1.25-1.5 0.75-0.25 2h-3.5l-0.25-2-1.5-0.75-1.75 1.25-2.25-2.25 1.25-1.75-0.75-1.5"
+        /></svg
+      >
+    </button>
+    <button
+      id="muteButton"
+      class="iconButton toggleButton offToggleButton unselectable"
+      {...tooltipLabel($LL.ui.tooltips.toggleMute())}
+    >
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        ><path d="m0 7h3l4-4v12l-4-4h-3v-4m10 0q1 2 0 4m3-5.5q2 3.5 0 7m3-9.5q4 6 0 12" /><path d="m-2 16l22-14" /></svg
+      >
+    </button>
+    <button
+      id="hideLocationButton"
+      class="iconButton toggleButton offToggleButton unselectable"
+      {...tooltipLabel($LL.ui.tooltips.toggleHideLocation())}
+    >
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        ><path
+          d="m3 5q1-5 6-5t6 5-6 11q-7-6-6-11m6-2a1 1 0 0 0 0 5 1 1 0 0 0 0 -5m-2 11c-1 0-3 1-3 2s2 2 5 2 5-1 5-2-2-2-3-2"
+        /><path d="m-2 16l22-14" /></svg
+      >
+    </button>
   </div>
   <div id="rightControls">
     <div id="badgeHintControls"></div>

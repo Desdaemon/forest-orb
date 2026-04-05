@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { modal } from '$lib/modalStore';
+  import { modal } from '$lib/stores/modal';
   import type { Snippet } from 'svelte';
   import type { HTMLAttributes } from 'svelte/elements';
   const {
@@ -16,6 +16,15 @@
 </script>
 
 <div role="dialog" aria-modal="true" {...props} class={['modal', { fullscreenModal, wideModal }, props.class]}>
-  <button type="button" class="modalClose" onclick={modal.close} aria-label="Close modal">✖</button>
+  <div
+    tabindex="0"
+    class="modalClose"
+    onclick={modal.close}
+    onkeydown={(e) => e.key === 'Enter' && modal.close()}
+    aria-label="Close modal"
+    role="button"
+  >
+    ✖
+  </div>
   {@render children?.()}
 </div>

@@ -9,12 +9,10 @@ export type UserInfo = {
 import { getGameInitState } from './init';
 
 function getApiUrl() {
-  if (typeof window === 'undefined') return '/api';
+  if (typeof window === 'undefined') return '/connect/2kki/api';
   const initState = getGameInitState();
-  return initState.apiUrl ?? '/api';
+  return `/connect/${initState.gameId}/api`;
 }
-
-const API_BASE = typeof window === 'undefined' ? '/api' : getApiUrl();
 
 function getAuthToken() {
   if (typeof window === 'undefined') return '';
@@ -22,23 +20,12 @@ function getAuthToken() {
 }
 
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
-  // Local-only mock mode (no connect.ynoproject.net calls)
-  // Remove this branch when ready to enable real API.
-  if (typeof window !== 'undefined') {
-    if (path.startsWith('/info')) {
-      return Promise.resolve({ id: 'mock-user', name: 'Mock User', gameId: '2kki' } as unknown as T);
-    }
-    if (path.startsWith('/savesync')) {
-      return Promise.resolve({ timestamp: Date.now() } as unknown as T);
-    }
-  }
-
   const headers = new Headers(init.headers ?? {});
   headers.set('Content-Type', 'application/json');
   const sessionToken = getAuthToken();
   if (sessionToken) headers.set('Authorization', sessionToken);
 
-  const base = typeof window === 'undefined' ? '/api' : getApiUrl();
+  const base = getApiUrl();
   const response = await fetch(`${base}${path}`, {
     ...init,
     headers

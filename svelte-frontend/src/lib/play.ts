@@ -1,61 +1,8 @@
 import { getGameInitState, isBrowser } from './init';
 import { createEngineAPI } from './engine-api';
+import type { GlobalConfig, UserConfig } from './settingsSchema';
 
-export type GlobalConfig = {
-  lang: string;
-  name: string;
-  soundVolume: number;
-  musicVolume: number;
-  wikiLinkMode: number;
-  saveReminder: number;
-  badgeHints: boolean;
-  playBadgeHintSound: boolean;
-  chatTipIndex: number;
-  gameChat: boolean;
-  gameChatGlobal: boolean;
-  gameChatParty: boolean;
-  tabToChat: boolean;
-  mapChatHistoryLimit: number;
-  globalChatHistoryLimit: number;
-  partyChatHistoryLimit: number;
-  mobileControls: boolean;
-  mobileControlsType: string;
-  playMentionSound: boolean;
-  blurScreenshotEmbeds: boolean;
-  locationDisplay: boolean;
-  hideRankings: boolean;
-  hideSchedules: boolean;
-  autoDownloadScreenshots: boolean;
-  screenshotResolution: number;
-  preloads: boolean;
-  questionablePreloads: boolean;
-  rulesReviewed: boolean;
-  badgeToolsData: any;
-  pushNotificationToastDismissed: boolean;
-  unicodeFont: boolean;
-};
-
-export type UserConfig = {
-  privateMode: boolean;
-  singleplayerMode: boolean;
-  disableChat: boolean;
-  mute: boolean;
-  hideLocation: boolean;
-  nametagMode: number;
-  disablePlayerSounds: boolean;
-  immersionMode: boolean;
-  chatTabIndex: number;
-  playersTabIndex: number;
-  globalMessage: boolean;
-  hideGlobalMessageLocations: boolean;
-  filterMentions: boolean;
-  trackedLocationId: string | null;
-  last2kkiVersion?: string;
-  explorer?: boolean;
-  enableExplorer?: boolean;
-};
-
-export const defaultGlobalConfig: GlobalConfig = {
+export const defaultGlobalConfig = {
   lang: 'en',
   name: '',
   soundVolume: 100,
@@ -86,10 +33,14 @@ export const defaultGlobalConfig: GlobalConfig = {
   rulesReviewed: false,
   badgeToolsData: null,
   pushNotificationToastDismissed: false,
-  unicodeFont: false
-};
+  highContrast: false,
+  unicodeFont: false,
+  notifications: true,
+  notificationScreenPosition: 'bottomRight'
+} satisfies GlobalConfig;
 
-export const defaultUserConfig: UserConfig = {
+
+export const defaultUserConfig = {
   privateMode: false,
   singleplayerMode: false,
   disableChat: false,
@@ -104,7 +55,14 @@ export const defaultUserConfig: UserConfig = {
   hideGlobalMessageLocations: false,
   filterMentions: false,
   trackedLocationId: null
+} satisfies UserConfig;
+
+export type ConfigScope = 'global' | 'user';
+export type ConfigByScope = {
+  global: GlobalConfig;
+  user: UserConfig;
 };
+export type ConfigKey<TScope extends ConfigScope> = keyof ConfigByScope[TScope];
 
 export function loadConfigFromStorage(gameId: string) {
   if (typeof localStorage === 'undefined') return null;

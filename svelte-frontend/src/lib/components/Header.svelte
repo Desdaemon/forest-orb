@@ -1,23 +1,15 @@
 <script lang="ts">
-  import type { ModalId } from '$lib/modalStore';
-  import { selectedBadge } from '$lib/badgeStore';
+  import type { ModalId } from '$lib/stores/modal';
+  import { selectedBadge } from '$lib/stores/badge';
   import BadgeItem from './BadgeItem.svelte';
+  import { tooltipLabel } from './Tooltip.svelte';
+  import { LL } from '$lib';
 
   const {
-    onToggleChat = () => {},
     onOpenModal = () => {}
   }: {
-    onToggleChat?: () => void;
     onOpenModal?: (modalId: ModalId) => void;
   } = $props();
-
-  function handleThemeClick() {
-    onOpenModal('uiThemesModal');
-  }
-
-  function handleChatClick() {
-    onToggleChat();
-  }
 
   function handleSchedulesClick() {
     onOpenModal('schedulesModal');
@@ -45,8 +37,7 @@
     <button
       id="nexusButton"
       class="iconButton fillIcon unselectable"
-      data-i18n="[title]tooltips.nexus"
-      aria-label="[title]tooltips.nexus"
+      {...tooltipLabel($LL.ui.tooltips.nexus())}
       dir="ltr"
     >
       <svg height="48" viewBox="0 0 64 28" xmlns="http://www.w3.org/2000/svg">
@@ -74,8 +65,7 @@
     <button
       id="locationsButton"
       class="iconButton fillIcon unselectable hidden"
-      data-i18n="[title]tooltips.locations"
-      aria-label="[title]tooltips.locations"
+      {...tooltipLabel($LL.ui.tooltips.locations())}
       onclick={handleLocationsClick}
     >
       <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
@@ -87,8 +77,7 @@
     <button
       id="communityScreenshotsButton"
       class="iconButton fillIcon unselectable"
-      data-i18n="[title]tooltips.communityScreenshots"
-      aria-label="[title]tooltips.communityScreenshots"
+      {...tooltipLabel($LL.ui.tooltips.communityScreenshots())}
       onclick={handleCommunityScreenshotsClick}
     >
       <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
@@ -126,32 +115,6 @@
         ><path
           d="M18 3V18H0V3H3V4.5a.5.5 90 003 0V3H7.5V4.5a.5.5 90 003 0V3H12V4.5a.5.5 90 003 0V3ZM3.5 4.5a.5.5 90 002 0V1a.5.5 90 00-2 0ZM8 4.5a.5.5 90 002 0V1A.5.5 90 008 1Zm4.5 0a.5.5 90 002 0V1a.5.5 90 00-2 0ZM8 7H1.5v4H8Zm2 0v4h6.5V7ZM1.5 16.5H8v-4H1.5Zm8.5-4v4h6.5v-4Z"
         /></svg
-      >
-    </button>
-    <button
-      id="uiThemeButton"
-      class="iconButton unselectable"
-      data-i18n="[title]tooltips.uiTheme"
-      aria-label="[title]tooltips.uiTheme"
-      onclick={handleThemeClick}
-    >
-      <svg viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
-          d="m4.5 3c4.5-4.5 13.5-3 13.5-0.375m-4.125 6.375c-1.875 0-3.375 1.5-1.875 1.875m3 2.625c3 1.5-4.5 6-10.5 4.5-7.5-3-4.5-12 0-15m9-0.75a1.5 1.5 90 0 0 0 3.75 1.5 1.5 90 0 0 0-3.75m-6 0.75a1.5 1.5 90 0 0 0 3 1.5 1.5 90 0 0 0-3m-3.75 4.5a1.5 1.5 90 0 0 0 3 1.5 1.5 90 0 0 0-3m1.5 5.25a1.5 1.5 90 0 0 0 3 1.5 1.5 90 0 0 0-3m6-0.75a1.5 1.5 90 0 0-0.75 4.5q2.25 0 3-1.875m7.5-14.625q-6 4.5-7.5 10.5l1.5 0.75q4.5-3.75 6-11.25m-7.5 10.5c-3 0-1.5 3-3 4.5 6 0 4.5-3 4.5-3.75m-3.75 2.25c0.75 1.5 1.5 0 1.5 1.275"
-        /></svg
-      >
-    </button>
-    <button
-      id="chatButton"
-      class="iconButton toggleButton offToggleButton unselectable"
-      data-i18n="[title]tooltips.toggleChat"
-      aria-label="[title]tooltips.toggleChat"
-      onclick={handleChatClick}
-    >
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
-          d="m3 18l6-4.5h6q3 0 3-3v-7.5q0-3-3-3h-12q-3 0-3 3v7.5q0 3 3 3h1.5l-1.5 4.5m11.25-12.75a1.5 1.5 90 0 1 0 3 1.5 1.5 90 0 1 0 -3m-5.25 0a1.5 1.5 90 0 1 0 3 1.5 1.5 90 0 1 0 -3m-5.25 0a1.5 1.5 90 0 1 0 3 1.5 1.5 90 0 1 0 -3"
-        /><path d="m-2 16l22-14" /></svg
       >
     </button>
   </div>

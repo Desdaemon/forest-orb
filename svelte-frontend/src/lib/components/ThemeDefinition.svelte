@@ -5,16 +5,18 @@
   const {
     uiTheme,
     themeGameId,
-    gameId,
+    gameId
   }: {
     uiTheme: string;
     themeGameId: string;
     gameId: string;
   } = $props();
 
+  // Normalize like system theme helpers so class/var names are stable.
+  const parsedUiTheme = $derived(uiTheme.replace(/[ ()]/g, '_'));
   // $derived ensures Svelte 5 does not warn about capturing $props() values outside closures.
-  const themeSuffix = $derived(`_${themeGameId !== gameId ? `${themeGameId}___` : ''}${uiTheme}`);
-  const themePropSuffix = $derived(`-${themeGameId !== gameId ? `${themeGameId}-` : ''}${uiTheme}`);
+  const themeSuffix = $derived(`_${themeGameId !== gameId ? `${themeGameId}___` : ''}${parsedUiTheme}`);
+  const themePropSuffix = $derived(`-${themeGameId !== gameId ? `${themeGameId}-` : ''}${parsedUiTheme}`);
   const styleId = $derived(`theme${themeSuffix}`);
   const isFullBg = $derived((allGameFullBgUiThemes[themeGameId] ?? []).includes(uiTheme));
 
@@ -30,6 +32,11 @@
       filter: drop-shadow(1.5px 1.5px rgb(var(--shadow-color{THEME_PROP})));
     }
 
+    body.highContrast .theme{THEME} .infoLabel, body.highContrast .theme{THEME} .infoText, body.highContrast .toast.theme{THEME} .toastMessage, body.highContrast h1.theme{THEME}, body.highContrast .theme{THEME} h1, body.highContrast h2.theme{THEME}, body.highContrast .theme{THEME} h2, body.highContrast h3.theme{THEME}, body.highContrast .theme{THEME} h3, body.highContrast h4.theme{THEME}, body.highContrast .theme{THEME} h4, body.highContrast .theme{THEME} a:not(.listEntryAction), body.highContrast .theme{THEME} label {
+      background-image: var(--base-gradient-hc{THEME_PROP}) !important;
+      filter: drop-shadow(1.5px 1.5px rgba(var(--shadow-color-hc{THEME_PROP}), var(--shadow-opacity-hc{THEME_PROP}, 1)));
+    }
+
     .theme{THEME} a:not(.modalClose):not(.listEntryAction) {
       background-image: var(--alt-gradient{THEME_PROP}) !important;
     }
@@ -40,10 +47,22 @@
       filter: drop-shadow(1.5px 1.5px rgb(var(--shadow-color{THEME_PROP})));
     }
 
+    body.highContrast .nameText.theme{THEME}, body.highContrast .theme{THEME} .nameText, body.highContrast .theme{THEME} .partyListEntryMemberCountText, body.highContrast .theme{THEME} .themeText {
+      color: rgb(var(--base-color-hc{THEME_PROP}));
+      background-image: var(--base-gradient-hc{THEME_PROP}) !important;
+      filter: drop-shadow(1.5px 1.5px rgba(var(--shadow-color-hc{THEME_PROP}), var(--shadow-opacity-hc{THEME_PROP}, 1)));
+    }
+
     .theme{THEME} .nameMarker {
       color: rgb(var(--alt-color{THEME_PROP}));
       background-image: var(--alt-gradient{THEME_PROP}) !important;
       filter: drop-shadow(1.5px 1.5px rgb(var(--shadow-color{THEME_PROP})));
+    }
+
+    body.highContrast .theme{THEME} .nameMarker {
+      color: rgb(var(--alt-color-hc{THEME_PROP}));
+      background-image: var(--alt-gradient-hc{THEME_PROP}) !important;
+      filter: drop-shadow(1.5px 1.5px rgba(var(--shadow-color-hc{THEME_PROP}), var(--shadow-opacity-hc{THEME_PROP}, 1)));
     }
 
     .theme{THEME} .checkbox {
@@ -51,6 +70,11 @@
       border-image-source: var(--border-image-url{THEME_PROP}) !important;
       background-color: rgb(var(--base-bg-color{THEME_PROP})) !important;
       text-shadow: 1.5px 1.5px rgb(var(--shadow-color{THEME_PROP}));
+    }
+
+    body.highContrast .theme{THEME} .checkbox {
+      color: rgb(var(--base-color-hc{THEME_PROP})) !important;
+      text-shadow: 1.5px 1.5px rgba(var(--shadow-color-hc{THEME_PROP}), var(--shadow-opacity-hc{THEME_PROP}, 1));
     }
 
     .theme{THEME}.icon path, .theme{THEME} .icon path {
@@ -115,12 +139,21 @@
       filter: drop-shadow(1.5px 1.5px rgb(var(--shadow-color{THEME_PROP})));
     }
 
+    body.highContrast .tippy-box.theme{THEME} .tippy-content .tooltipContent {
+      background-image: var(--base-gradient-hc{THEME_PROP}) !important;
+      filter: drop-shadow(1.5px 1.5px rgba(var(--shadow-color-hc{THEME_PROP}), var(--shadow-opacity-hc{THEME_PROP}, 1)));
+    }
+
     .tippy-box.theme{THEME} .tippy-content .tooltipContent.noShadow {
       filter: unset;
     }
 
     .tippy-box.theme{THEME} .tippy-content .tooltipContent.altText {
       background-image: var(--alt-gradient{THEME_PROP}) !important;
+    }
+
+    body.highContrast .tippy-box.theme{THEME} .tippy-content .tooltipContent.altText {
+      background-image: var(--alt-gradient-hc{THEME_PROP}) !important;
     }
   `;
 
