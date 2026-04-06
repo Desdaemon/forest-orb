@@ -537,7 +537,7 @@
 </script>
 
 {#if show}
-  <div id="chatboxContainer" class="container">
+  <div id="chatboxContainer" class="container" role="presentation">
     <div id="chatbox" class="allChat">
       <div id="chatboxInfo">
         <div id="onlineInfo" class="info">
@@ -553,8 +553,8 @@
           ><span id="locationText" class="infoText nofilter"></span>
         </div>
       </div>
-      <div id="chatboxContent">
-        <div id="chatboxTabs">
+      <div id="chatboxContent" role="presentation">
+        <div id="chatboxTabs" role="tablist" aria-label="Chat tabs">
           <div
             id="chatboxTabChat"
             class="chatboxTab"
@@ -674,7 +674,9 @@
                   <path
                     d="M13.5 9a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0Zc0 1.657 1.007 3 2.25 3S18 10.657 18 9a9 9 0 10-2.636 6.364M13.5 9V5.25"
                   />
-                  <path d="M13.5 9a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0Zc0 1.657 1.007 3 2.25 3S18 10.657 18 9a9 9 0 10-2.636 6.364M13.5 9V5.25" />
+                  <path
+                    d="M13.5 9a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0Zc0 1.657 1.007 3 2.25 3S18 10.657 18 9a9 9 0 10-2.636 6.364M13.5 9V5.25"
+                  />
                 </svg>
               </button>
               <button
@@ -756,14 +758,18 @@
                     {#if !profile.account}
                       <span class="nameMarker">&lt;</span>
                     {/if}
-                    <span class={playerThemeClass ? `nameText ${playerThemeClass}` : 'nameText'}>{getPlayerDisplayName(profile)}</span>
+                    <span class={playerThemeClass ? `nameText ${playerThemeClass}` : 'nameText'}
+                      >{getPlayerDisplayName(profile)}</span
+                    >
                     {#if !profile.account}
                       <span class="nameMarker">&gt;</span>
                     {/if}
                   </div>
                 </div>
                 <div
-                  class={playerThemeClass ? `playerListEntryBadge badge ${playerThemeClass}` : 'playerListEntryBadge badge'}
+                  class={playerThemeClass
+                    ? `playerListEntryBadge badge ${playerThemeClass}`
+                    : 'playerListEntryBadge badge'}
                   class:hidden={!profile.badge}
                   style={profile.badge ? `background-image: url('${getPlayerBadgeImageUrl(profile.badge)}')` : ''}
                 ></div>

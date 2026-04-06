@@ -3,7 +3,13 @@
   import { onDestroy } from 'svelte';
   import { modal } from '$lib/stores/modal';
   import { allGameUiThemes, allGameFullBgUiThemes, getGameFontStyleIndices, type GameId } from '$lib/allGameUiThemes';
-  import { selectedUiTheme, selectedFontStyle, currentSystemName, selectTheme, setFontStyle } from '$lib/stores/uiTheme';
+  import {
+    selectedUiTheme,
+    selectedFontStyle,
+    currentSystemName,
+    selectTheme,
+    setFontStyle
+  } from '$lib/stores/uiTheme';
   import Modal from '$lib/components/Modal.svelte';
   import { setUserSetting } from '$lib/stores/config';
 

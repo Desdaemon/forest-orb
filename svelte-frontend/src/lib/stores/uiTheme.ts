@@ -181,11 +181,7 @@ function hslToRgb([h, s, l]: HslColor): RgbColor {
   else if (hp >= 5 && hp < 6) [r1, g1, b1] = [c, 0, x];
 
   const m = l - c / 2;
-  return [
-    Math.round((r1 + m) * 255),
-    Math.round((g1 + m) * 255),
-    Math.round((b1 + m) * 255)
-  ];
+  return [Math.round((r1 + m) * 255), Math.round((g1 + m) * 255), Math.round((b1 + m) * 255)];
 }
 
 function blendRgb(from: RgbColor, to: RgbColor, t: number): RgbColor {
@@ -266,10 +262,7 @@ function getReadableShadowColor(background: RgbColor, text: RgbColor, sourceShad
     const isLightText = getRelativeLuminance(text) > 0.5;
     const tintedCandidate = hslToRgb([textHue, clamp01(textSat * 0.35), isLightText ? 0.12 : 0.88]);
     const softenedExtreme = blendRgb(sourceShadow, tintedCandidate, 0.32);
-    if (
-      getContrastRatio(softenedExtreme, text) >= 1.08 &&
-      getLuminanceDistance(softenedExtreme, text) >= 0.035
-    ) {
+    if (getContrastRatio(softenedExtreme, text) >= 1.08 && getLuminanceDistance(softenedExtreme, text) >= 0.035) {
       return softenedExtreme;
     }
   }
@@ -291,9 +284,7 @@ function getReadableShadowColor(background: RgbColor, text: RgbColor, sourceShad
   }
 
   // Last resort: lightly nudge toward black/white instead of switching hard.
-  const softFallback = isLightText
-    ? blendRgb(sourceShadow, black, 0.24)
-    : blendRgb(sourceShadow, white, 0.24);
+  const softFallback = isLightText ? blendRgb(sourceShadow, black, 0.24) : blendRgb(sourceShadow, white, 0.24);
   if (getContrastRatio(softFallback, text) >= 1.08 && getLuminanceDistance(softFallback, text) >= 0.035) {
     return softFallback;
   }
@@ -314,13 +305,23 @@ interface HighContrastShadowOpacityDebug {
   rawOpacity: number;
 }
 
-function getHighContrastShadowOpacity(text: RgbColor, shadow: RgbColor, sourceShadow: RgbColor | undefined, debug: true): [string, HighContrastShadowOpacityDebug];
-function getHighContrastShadowOpacity(text: RgbColor, shadow: RgbColor, sourceShadow: RgbColor | undefined, debug?: boolean): [string, HighContrastShadowOpacityDebug | undefined];
 function getHighContrastShadowOpacity(
   text: RgbColor,
   shadow: RgbColor,
   sourceShadow: RgbColor | undefined,
-  debug?: boolean,
+  debug: true
+): [string, HighContrastShadowOpacityDebug];
+function getHighContrastShadowOpacity(
+  text: RgbColor,
+  shadow: RgbColor,
+  sourceShadow: RgbColor | undefined,
+  debug?: boolean
+): [string, HighContrastShadowOpacityDebug | undefined];
+function getHighContrastShadowOpacity(
+  text: RgbColor,
+  shadow: RgbColor,
+  sourceShadow: RgbColor | undefined,
+  debug?: boolean
 ): [string, HighContrastShadowOpacityDebug | undefined] {
   const tuning = highContrastShadowOpacityTuning;
   const contrast = getContrastRatio(text, shadow);
@@ -335,9 +336,12 @@ function getHighContrastShadowOpacity(
   const separationScore = contrastNorm * tuning.contrastWeight + distanceNorm * tuning.distanceWeight;
 
   // Vivid colors can look like doubled text; damp opacity more aggressively in that regime.
-  const saturationFactor = normalizeRange(textSat, tuning.saturationStart, tuning.saturationStart + tuning.saturationSpan);
-  const vividPenaltyBase =
-    tuning.vividPenaltyBase + (sourceIsExtreme ? tuning.vividPenaltyExtremeBonus : 0);
+  const saturationFactor = normalizeRange(
+    textSat,
+    tuning.saturationStart,
+    tuning.saturationStart + tuning.saturationSpan
+  );
+  const vividPenaltyBase = tuning.vividPenaltyBase + (sourceIsExtreme ? tuning.vividPenaltyExtremeBonus : 0);
   // sqrt(1 - separation) keeps penalties stronger for marginal separation and softer when clearly separated.
   const vividPenalty = saturationFactor * vividPenaltyBase * Math.sqrt(1 - separationScore);
 
@@ -348,18 +352,21 @@ function getHighContrastShadowOpacity(
   if (!debug) return [value, undefined];
 
   const reason = clampedOpacity <= tuning.floor + 1e-6 ? 'formula-floor' : 'formula';
-  return [value, {
+  return [
     value,
-    reason,
-    contrast,
-    distance,
-    textSaturation: textSat,
-    sourceShadowLuminance: sourceLuminance,
-    sourceShadowIsExtreme: sourceIsExtreme,
-    separationScore,
-    vividPenalty,
-    rawOpacity
-  }];
+    {
+      value,
+      reason,
+      contrast,
+      distance,
+      textSaturation: textSat,
+      sourceShadowLuminance: sourceLuminance,
+      sourceShadowIsExtreme: sourceIsExtreme,
+      separationScore,
+      vividPenalty,
+      rawOpacity
+    }
+  ];
 }
 
 interface HighContrastThemeStyle {
@@ -382,8 +389,7 @@ async function getHighContrastThemeStyle(
 
   const defaultAltFontStyleIndex = 1;
   const defaultFallbackAltFontStyleIndex = 3;
-  const altFontStyle =
-    fontStyle !== defaultAltFontStyleIndex ? defaultAltFontStyleIndex : defaultAltFontStyleIndex - 1;
+  const altFontStyle = fontStyle !== defaultAltFontStyleIndex ? defaultAltFontStyleIndex : defaultAltFontStyleIndex - 1;
   let altThemeColor = (await getFontColors(uiTheme, themeGameId, altFontStyle)).colors[8];
   if (colorsEqual(altThemeColor, baseThemeColor)) {
     const fallback =
@@ -393,17 +399,24 @@ async function getHighContrastThemeStyle(
     altThemeColor = (await getFontColors(uiTheme, themeGameId, fallback)).colors[8];
   }
 
-  const finalBaseText = getContrastRatio(baseThemeColor, themeBg) >= wcagAaNormalTextContrast
-    ? baseThemeColor
-    : adjustColorForContrast(baseThemeColor, themeBg, wcagAaNormalTextContrast);
+  const finalBaseText =
+    getContrastRatio(baseThemeColor, themeBg) >= wcagAaNormalTextContrast
+      ? baseThemeColor
+      : adjustColorForContrast(baseThemeColor, themeBg, wcagAaNormalTextContrast);
 
-  const finalAltText = getContrastRatio(altThemeColor, themeBg) >= wcagAaNormalTextContrast
-    ? altThemeColor
-    : getAccessibleAccentColor(themeBg, finalBaseText, altThemeColor);
+  const finalAltText =
+    getContrastRatio(altThemeColor, themeBg) >= wcagAaNormalTextContrast
+      ? altThemeColor
+      : getAccessibleAccentColor(themeBg, finalBaseText, altThemeColor);
 
   const sourceShadow = containerAssets.shadow;
   const finalShadow = getReadableShadowColor(themeBg, finalBaseText, sourceShadow);
-  const [shadowOpacity, opacityDebug] = getHighContrastShadowOpacity(finalBaseText, finalShadow, sourceShadow, DEBUG_HIGH_CONTRAST);
+  const [shadowOpacity, opacityDebug] = getHighContrastShadowOpacity(
+    finalBaseText,
+    finalShadow,
+    sourceShadow,
+    DEBUG_HIGH_CONTRAST
+  );
 
   return {
     baseText: finalBaseText,
@@ -419,9 +432,7 @@ function getSelectedThemeForGame(gameId: string): string | null {
   const availableThemes = getThemesForGame(gameId);
   const theme = get(selectedUiTheme);
   const isAuto = theme === 'auto';
-  const resolvedTheme = isAuto
-    ? (get(currentSystemName) ?? availableThemes[0])
-    : (theme ?? availableThemes[0]);
+  const resolvedTheme = isAuto ? (get(currentSystemName) ?? availableThemes[0]) : (theme ?? availableThemes[0]);
 
   if (!resolvedTheme || !availableThemes.includes(resolvedTheme)) return null;
   return resolvedTheme;
@@ -531,7 +542,9 @@ async function loadThemeImages(
 ): Promise<{ resolvedTheme: string; images: Record<string, HTMLImageElement> }> {
   const loadForTheme = async (themeName: string) => {
     const pairs = await Promise.all(
-      fileNames.map(async (fileName) => [fileName, await loadImage(getThemeAssetPath(themeGameId, themeName, fileName))] as const)
+      fileNames.map(
+        async (fileName) => [fileName, await loadImage(getThemeAssetPath(themeGameId, themeName, fileName))] as const
+      )
     );
     return Object.fromEntries(pairs) as Record<string, HTMLImageElement>;
   };
@@ -544,7 +557,10 @@ async function loadThemeImages(
   } catch (error) {
     const defaultTheme = getThemesForGame(themeGameId)[0];
     if (!defaultTheme || defaultTheme === uiTheme) throw error;
-    console.warn(`Failed to load theme assets for theme "${uiTheme}", falling back to default theme ${defaultTheme}.`, error);
+    console.warn(
+      `Failed to load theme assets for theme "${uiTheme}", falling back to default theme ${defaultTheme}.`,
+      error
+    );
     return {
       resolvedTheme: defaultTheme,
       images: await loadForTheme(defaultTheme)
@@ -588,11 +604,7 @@ async function getContainerThemeAssets(uiTheme: string, themeGameId: string): Pr
   return assets;
 }
 
-async function getFontColors(
-  uiTheme: string,
-  themeGameId: string,
-  fontStyle: number
-): Promise<FontThemeColors> {
+async function getFontColors(uiTheme: string, themeGameId: string, fontStyle: number): Promise<FontThemeColors> {
   if (!uiThemeFontColors[themeGameId]) uiThemeFontColors[themeGameId] = {};
   if (!uiThemeFontColors[themeGameId][uiTheme]) uiThemeFontColors[themeGameId][uiTheme] = {};
   const cached = uiThemeFontColors[themeGameId][uiTheme][fontStyle];
@@ -624,7 +636,7 @@ export async function initUiThemeContainerStyles(
   uiTheme: string,
   themeGameId: string,
   gameId: string,
-  setTheme: boolean,
+  setTheme: boolean
 ): Promise<void> {
   const parsedUiTheme = uiTheme.replace(/[ ()]/g, '_');
   const themeGamePropSuffix = themeGameId !== gameId ? `${themeGameId}-` : '';
@@ -632,17 +644,27 @@ export async function initUiThemeContainerStyles(
   const shadowColorProp = `--shadow-color-${themeGamePropSuffix}${parsedUiTheme}` as const;
   const highContrastShadowColorProp = `--shadow-color-hc-${themeGamePropSuffix}${parsedUiTheme}` as const;
   const highContrastShadowOpacityProp = `--shadow-opacity-hc-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastShadowOpacityProp = `--debug-hc-shadow-opacity-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastShadowOpacityReasonProp = `--debug-hc-shadow-opacity-reason-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastShadowContrastProp = `--debug-hc-shadow-contrast-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastShadowDistanceProp = `--debug-hc-shadow-luminance-distance-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastBaseTextSaturationProp = `--debug-hc-base-text-saturation-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastShadowOpacityProp =
+    `--debug-hc-shadow-opacity-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastShadowOpacityReasonProp =
+    `--debug-hc-shadow-opacity-reason-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastShadowContrastProp =
+    `--debug-hc-shadow-contrast-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastShadowDistanceProp =
+    `--debug-hc-shadow-luminance-distance-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastBaseTextSaturationProp =
+    `--debug-hc-base-text-saturation-${themeGamePropSuffix}${parsedUiTheme}` as const;
   const debugHighContrastSourceShadowProp = `--debug-hc-source-shadow-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastSourceShadowLuminanceProp = `--debug-hc-source-shadow-luminance-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastSourceShadowExtremeProp = `--debug-hc-source-shadow-is-extreme-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastSeparationScoreProp = `--debug-hc-shadow-separation-score-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastVividPenaltyProp = `--debug-hc-shadow-vivid-penalty-${themeGamePropSuffix}${parsedUiTheme}` as const;
-  const debugHighContrastRawOpacityProp = `--debug-hc-shadow-opacity-raw-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastSourceShadowLuminanceProp =
+    `--debug-hc-source-shadow-luminance-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastSourceShadowExtremeProp =
+    `--debug-hc-source-shadow-is-extreme-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastSeparationScoreProp =
+    `--debug-hc-shadow-separation-score-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastVividPenaltyProp =
+    `--debug-hc-shadow-vivid-penalty-${themeGamePropSuffix}${parsedUiTheme}` as const;
+  const debugHighContrastRawOpacityProp =
+    `--debug-hc-shadow-opacity-raw-${themeGamePropSuffix}${parsedUiTheme}` as const;
   const svgShadowProp = `--svg-shadow-${themeGamePropSuffix}${parsedUiTheme}` as const;
   const containerBgImageUrlProp = `--container-bg-image-url-${themeGamePropSuffix}${parsedUiTheme}` as const;
   const borderImageUrlProp = `--border-image-url-${themeGamePropSuffix}${parsedUiTheme}` as const;
@@ -686,8 +708,14 @@ export async function initUiThemeContainerStyles(
       root.setProperty(debugHighContrastShadowDistanceProp, highContrastStyle.debug.distance.toFixed(4));
       root.setProperty(debugHighContrastBaseTextSaturationProp, highContrastStyle.debug.textSaturation.toFixed(4));
       root.setProperty(debugHighContrastSourceShadowProp, getColorRgb(highContrastStyle.sourceShadow));
-      root.setProperty(debugHighContrastSourceShadowLuminanceProp, highContrastStyle.debug.sourceShadowLuminance.toFixed(4));
-      root.setProperty(debugHighContrastSourceShadowExtremeProp, highContrastStyle.debug.sourceShadowIsExtreme ? '1' : '0');
+      root.setProperty(
+        debugHighContrastSourceShadowLuminanceProp,
+        highContrastStyle.debug.sourceShadowLuminance.toFixed(4)
+      );
+      root.setProperty(
+        debugHighContrastSourceShadowExtremeProp,
+        highContrastStyle.debug.sourceShadowIsExtreme ? '1' : '0'
+      );
       root.setProperty(debugHighContrastSeparationScoreProp, highContrastStyle.debug.separationScore.toFixed(4));
       root.setProperty(debugHighContrastVividPenaltyProp, highContrastStyle.debug.vividPenalty.toFixed(4));
       root.setProperty(debugHighContrastRawOpacityProp, highContrastStyle.debug.rawOpacity.toFixed(4));
@@ -745,7 +773,7 @@ export async function initUiThemeFontStyles(
   themeGameId: string,
   gameId: string,
   fontStyle: number,
-  setTheme: boolean,
+  setTheme: boolean
 ): Promise<void> {
   const parsedUiTheme = uiTheme.replace(/[ ()]/g, '_');
   const themeGamePropSuffix = themeGameId !== gameId ? `${themeGameId}-` : '';
@@ -760,7 +788,8 @@ export async function initUiThemeFontStyles(
   const altGradientProp = `--alt-gradient-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
   const altGradientBProp = `--alt-gradient-b-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
   const highContrastBaseGradientProp = `--base-gradient-hc-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
-  const highContrastBaseGradientBProp = `--base-gradient-b-hc-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
+  const highContrastBaseGradientBProp =
+    `--base-gradient-b-hc-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
   const highContrastAltGradientProp = `--alt-gradient-hc-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
   const highContrastAltGradientBProp = `--alt-gradient-b-hc-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
   const svgBaseGradientProp = `--svg-base-gradient-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
@@ -833,12 +862,30 @@ export async function initUiThemeFontStyles(
   }
 
   if (setTheme && themeGameId === gameId) {
-    root.setProperty('--base-color', get(highContrastMode) ? `var(${highContrastBaseColorProp})` : `var(${baseColorProp})`);
-    root.setProperty('--alt-color', get(highContrastMode) ? `var(${highContrastAltColorProp})` : `var(${altColorProp})`);
-    root.setProperty('--base-gradient', get(highContrastMode) ? `var(${highContrastBaseGradientProp})` : `var(${baseGradientProp})`);
-    root.setProperty('--base-gradient-b', get(highContrastMode) ? `var(${highContrastBaseGradientBProp})` : `var(${baseGradientBProp})`);
-    root.setProperty('--alt-gradient', get(highContrastMode) ? `var(${highContrastAltGradientProp})` : `var(${altGradientProp})`);
-    root.setProperty('--alt-gradient-b', get(highContrastMode) ? `var(${highContrastAltGradientBProp})` : `var(${altGradientBProp})`);
+    root.setProperty(
+      '--base-color',
+      get(highContrastMode) ? `var(${highContrastBaseColorProp})` : `var(${baseColorProp})`
+    );
+    root.setProperty(
+      '--alt-color',
+      get(highContrastMode) ? `var(${highContrastAltColorProp})` : `var(${altColorProp})`
+    );
+    root.setProperty(
+      '--base-gradient',
+      get(highContrastMode) ? `var(${highContrastBaseGradientProp})` : `var(${baseGradientProp})`
+    );
+    root.setProperty(
+      '--base-gradient-b',
+      get(highContrastMode) ? `var(${highContrastBaseGradientBProp})` : `var(${baseGradientBProp})`
+    );
+    root.setProperty(
+      '--alt-gradient',
+      get(highContrastMode) ? `var(${highContrastAltGradientProp})` : `var(${altGradientProp})`
+    );
+    root.setProperty(
+      '--alt-gradient-b',
+      get(highContrastMode) ? `var(${highContrastAltGradientBProp})` : `var(${altGradientBProp})`
+    );
     root.setProperty('--svg-base-gradient', `var(${svgBaseGradientProp})`);
     root.setProperty('--svg-alt-gradient', `var(${svgAltGradientProp})`);
     root.setProperty('--base-color-image-url', `var(${baseColorImageUrlProp})`);
@@ -859,11 +906,13 @@ export async function setUiTheme(uiTheme: string, gameId: string, fontStyle: num
   document.querySelectorAll<HTMLElement>('.container').forEach((el) => el.classList.toggle('fullBg', isFullBg));
   document.getElementById('header')?.classList.toggle('fullBg', isFullBg);
   document.body.classList.toggle('fullBg', isFullBg);
-
 }
 
 /** Add a theme to the activated set (no-op if already present) and select it. */
-export function selectTheme<Game extends GameId, Theme extends AllGameThemes[GameId][number]>(gameId: Game, uiTheme: Theme | 'auto'): void {
+export function selectTheme<Game extends GameId, Theme extends AllGameThemes[GameId][number]>(
+  gameId: Game,
+  uiTheme: Theme | 'auto'
+): void {
   const isAuto = uiTheme === 'auto';
   const resolvedTheme = isAuto ? (get(currentSystemName) ?? (allGameUiThemes[gameId] ?? [])[0] ?? uiTheme) : uiTheme;
 
@@ -883,7 +932,6 @@ export async function setFontStyle(gameId: string, fontStyle: number): Promise<v
   if (!resolvedTheme) return;
   await initUiThemeFontStyles(resolvedTheme, gameId, gameId, fontStyle, true);
   selectedFontStyle.set(fontStyle);
-
 }
 
 export async function setHighContrastMode(enabled: boolean, gameId: string): Promise<void> {
@@ -920,7 +968,7 @@ export async function activateTheme(uiTheme: string, themeGameId: string, gameId
 
   await Promise.all([
     initUiThemeContainerStyles(uiTheme, themeGameId, gameId, false),
-    initUiThemeFontStyles(uiTheme, themeGameId, gameId, 0, false),
+    initUiThemeFontStyles(uiTheme, themeGameId, gameId, 0, false)
   ]);
   // });
 }

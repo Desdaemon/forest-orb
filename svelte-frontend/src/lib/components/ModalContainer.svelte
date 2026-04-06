@@ -1,6 +1,7 @@
 <script lang="ts">
   import { modal, type ModalId } from '$lib/stores/modal';
   import { onDestroy, onMount } from 'svelte';
+  import Modal from './Modal.svelte';
 
   const MODAL_ANIM_MS = 200;
 
@@ -69,30 +70,31 @@
       {#if activeModal === 'schedulesModal'}
         {@const { default: SchedulesModal } = await import('$lib/modals/SchedulesModal.svelte')}
         <SchedulesModal />
-      {/if}
-      {#if activeModal === 'locationsModal'}
+      {:else if activeModal === 'locationsModal'}
         {@const { default: LocationsModal } = await import('$lib/modals/LocationsModal.svelte')}
         <LocationsModal />
-      {/if}
-      {#if activeModal === 'communityScreenshotsModal'}
+      {:else if activeModal === 'communityScreenshotsModal'}
         {@const { default: CommunityScreenshotsModal } = await import('$lib/modals/CommunityScreenshotsModal.svelte')}
         <CommunityScreenshotsModal />
-      {/if}
-      {#if activeModal === 'rankingsModal'}
+      {:else if activeModal === 'rankingsModal'}
         {@const { default: RankingsModal } = await import('$lib/modals/RankingsModal.svelte')}
         <RankingsModal />
-      {/if}
-      {#if activeModal === 'badgesModal'}
+      {:else if activeModal === 'badgesModal'}
         {@const { default: BadgesModal } = await import('$lib/modals/BadgesModal.svelte')}
         <BadgesModal />
-      {/if}
-      {#if activeModal === 'uiThemesModal'}
+      {:else if activeModal === 'uiThemesModal'}
         {@const { default: UiThemesModal } = await import('$lib/modals/UiThemesModal.svelte')}
         <UiThemesModal />
-      {/if}
-      {#if activeModal === 'settingsModal'}
+      {:else if activeModal === 'settingsModal'}
         {@const { default: SettingsModal } = await import('$lib/modals/SettingsModal.svelte')}
         <SettingsModal />
+      {:else if activeModal}
+        {@const { default: Modal } = await import ('$lib/components/Modal.svelte')}
+        <Modal aria-label={activeModal}>
+          <div class="modalHeader">
+            Unknown modal {activeModal}
+          </div>
+        </Modal>
       {/if}
 
       <!-- Recreated modals from index.php -->

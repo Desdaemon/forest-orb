@@ -31,8 +31,7 @@ declare global {
     | 'tsushin'
     | 'nostalgic'
     | 'if'
-    | 'unaccomplished'
-
+    | 'unaccomplished';
 }
 
-export { };
+export {};

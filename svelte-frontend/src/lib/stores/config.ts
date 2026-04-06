@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import { defaultGlobalConfig, defaultUserConfig, loadConfigFromStorage, saveConfigToStorage } from '../play';
-import type { GlobalConfig, UserConfig } from '../settingsSchema';
+import type { GlobalConfig, GlobalToggles, UserConfig, UserToggles } from '../settingsSchema';
 
 // A hook receives the raw stored value (or `undefined` if the key was absent) and the game id.
 export type ConfigHook = (value: unknown, gameId: string) => void | Promise<void>;
@@ -27,9 +27,9 @@ export async function initConfig(gameId: string): Promise<void> {
   const pending: Promise<void>[] = [];
   for (const [key, hook] of _hooks) {
     try {
-      const result = hook(key in stored ? stored[key] : undefined, gameId);
+      const result = hook(stored[key], gameId);
       if (result instanceof Promise) {
-        pending.push(result.catch(err => console.error(`configStore: hook error for "${key}"`, err)));
+        pending.push(result.catch((err) => console.error(`configStore: hook error for "${key}"`, err)));
       }
     } catch (err) {
       console.error(`configStore: hook error for "${key}"`, err);
@@ -40,16 +40,34 @@ export async function initConfig(gameId: string): Promise<void> {
 
 /** Update a typed GlobalConfig key, persist it, and run its hook if one is registered. */
 export function setGlobalSetting<K extends keyof GlobalConfig>(key: K, value: GlobalConfig[K]): void {
-  globalConfig.update(c => ({ ...c, [key]: value }));
+  globalConfig.update((c) => ({ ...c, [key]: value }));
   saveConfigToStorage(_gameId, { [key]: value });
   _runHook(key as string, value);
 }
 
+export function toggleGlobal<K extends GlobalToggles>(key: K) {
+  globalConfig.update(c => {
+    const val = !c[key];
+    saveConfigToStorage(_gameId, { [key]: val });
+    _runHook(key, val);
+    return { ...c, [key]: val };
+  });
+}
+
 /** Update a typed UserConfig key, persist it, and run its hook if one is registered. */
 export function setUserSetting<K extends keyof UserConfig>(key: K, value: UserConfig[K]): void {
-  userConfig.update(c => ({ ...c, [key]: value }));
+  userConfig.update((c) => ({ ...c, [key]: value }));
   saveConfigToStorage(_gameId, { [key]: value });
   _runHook(key as string, value);
+}
+
+export function toggleUser<K extends UserToggles>(key: K) {
+  userConfig.update(c => {
+    const val = !c[key];
+    saveConfigToStorage(_gameId, { [key]: val });
+    _runHook(key, val);
+    return { ...c, [key]: val };
+  });
 }
 
 /**
@@ -67,7 +85,7 @@ function _runHook(key: string, value: unknown): void {
   try {
     const result = hook(value, _gameId);
     if (result instanceof Promise) {
-      result.catch(err => console.error(`configStore: hook error for "${key}"`, err));
+      result.catch((err) => console.error(`configStore: hook error for "${key}"`, err));
     }
   } catch (err) {
     console.error(`configStore: hook error for "${key}"`, err);

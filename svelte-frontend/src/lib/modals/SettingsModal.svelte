@@ -219,10 +219,6 @@
     gap: 4px 6px;
   }
 
-  .settingsTabs .subTab {
-    max-width: 100%;
-  }
-
   .formControls {
     width: 100%;
   }

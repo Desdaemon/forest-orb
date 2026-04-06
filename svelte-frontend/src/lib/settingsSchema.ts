@@ -1,6 +1,10 @@
 import type { TranslationFunctions } from '../i18n/i18n-types';
+import type { defaultGlobalConfig, defaultUserConfig } from './play';
 
-const literal = (text: string): I18nText => () => text;
+const literal =
+  (text: string): I18nText =>
+  () =>
+    text;
 
 interface UserConfigExtras {
   uiTheme?: string;
@@ -8,71 +12,89 @@ interface UserConfigExtras {
 
 export const settingsTabs = [
   { id: 'general', label: literal('General') },
-  { id: 'chat', label: LL => LL.ui.modal.settings.chatSettings() },
-  { id: 'screenshots', label: LL => LL.ui.modal.settings.screenshotSettings() },
-  { id: 'notifications', label: LL => LL.ui.modal.settings.notificationSettings() },
-  { id: 'cache', label: LL => LL.ui.modal.settings.cacheSettings() },
-  { id: 'account', label: LL => LL.ui.modal.settings.accountSettings() }
-] as const satisfies { id: string, label: (LL: TranslationFunctions) => string }[]
+  { id: 'chat', label: (LL) => LL.ui.modal.settings.chatSettings() },
+  { id: 'screenshots', label: (LL) => LL.ui.modal.settings.screenshotSettings() },
+  { id: 'notifications', label: (LL) => LL.ui.modal.settings.notificationSettings() },
+  { id: 'cache', label: (LL) => LL.ui.modal.settings.cacheSettings() },
+  { id: 'account', label: (LL) => LL.ui.modal.settings.accountSettings() }
+] as const satisfies { id: string; label: (LL: TranslationFunctions) => string }[];
 
 const tabFields = {
   general(tab) {
     return {
-      immersionMode: tab.ubool(LL => LL.ui.modal.settings.fields.toggleImmersionMode.label()),
-      singleplayerMode: tab.ubool(LL => LL.ui.modal.settings.fields.toggleSingleplayerMode.label()),
+      immersionMode: tab.ubool((LL) => LL.ui.modal.settings.fields.toggleImmersionMode.label()),
+      singleplayerMode: tab.ubool((LL) => LL.ui.modal.settings.fields.toggleSingleplayerMode.label()),
       highContrast: tab.gbool(literal('High Contrast Mode (WCAG AA)')),
-      locationDisplay: tab.gbool(LL => LL.ui.modal.settings.fields.toggleLocationDisplay()),
-      hideRankings: tab.gbool(LL => LL.ui.modal.settings.fields.toggleRankings(), { invert: true }),
-      hideSchedules: tab.gbool(LL => LL.ui.modal.settings.fields.toggleSchedules(), { invert: true }),
-      preloads: tab.gbool(LL => LL.ui.modal.settings.fields.togglePreloads.label()),
-      unicodeFont: tab.gbool(LL => LL.ui.modal.settings.fields.unicodeFont())
-    }
+      locationDisplay: tab.gbool((LL) => LL.ui.modal.settings.fields.toggleLocationDisplay()),
+      hideRankings: tab.gbool((LL) => LL.ui.modal.settings.fields.toggleRankings(), { invert: true }),
+      hideSchedules: tab.gbool((LL) => LL.ui.modal.settings.fields.toggleSchedules(), { invert: true }),
+      preloads: tab.gbool((LL) => LL.ui.modal.settings.fields.togglePreloads.label()),
+      unicodeFont: tab.gbool((LL) => LL.ui.modal.settings.fields.unicodeFont())
+    };
   },
 
   chat(tab) {
     return {
       overlay: group({
-        gameChat: tab.gbool(LL => LL.ui.modal.chatSettings.fields.toggleGameChat.label()),
-        gameChatGlobal: tab.gbool(LL => LL.ui.modal.chatSettings.fields.toggleGameChat.global(), {
+        gameChat: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.toggleGameChat.label()),
+        gameChatGlobal: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.toggleGameChat.global(), {
           indent: true
         }),
-        gameChatParty: tab.gbool(LL => LL.ui.modal.chatSettings.fields.toggleGameChat.party(), {
+        gameChatParty: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.toggleGameChat.party(), {
           indent: true
         })
       }),
-      tabToChat: tab.gbool(LL => LL.ui.modal.chatSettings.fields.toggleTabToChat()),
-      playMentionSound: tab.gbool(LL => LL.ui.modal.chatSettings.fields.togglePlayMentionSound()),
-      blurScreenshotEmbeds: tab.gbool(LL => LL.ui.modal.chatSettings.fields.blurScreenshotEmbeds()),
+      tabToChat: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.toggleTabToChat()),
+      playMentionSound: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.togglePlayMentionSound()),
+      blurScreenshotEmbeds: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.blurScreenshotEmbeds()),
       history: group({
-        mapChatHistoryLimit: tab.gsel(LL => LL.ui.modal.chatSettings.fields.mapChatHistoryLimit.label(), chatHistoryOptions),
-        globalChatHistoryLimit: tab.gsel(LL => LL.ui.modal.chatSettings.fields.globalChatHistoryLimit.label(), chatHistoryOptions),
-        partyChatHistoryLimit: tab.gsel(LL => LL.ui.modal.chatSettings.fields.partyChatHistoryLimit.label(), chatHistoryOptions)
+        mapChatHistoryLimit: tab.gsel(
+          (LL) => LL.ui.modal.chatSettings.fields.mapChatHistoryLimit.label(),
+          chatHistoryOptions
+        ),
+        globalChatHistoryLimit: tab.gsel(
+          (LL) => LL.ui.modal.chatSettings.fields.globalChatHistoryLimit.label(),
+          chatHistoryOptions
+        ),
+        partyChatHistoryLimit: tab.gsel(
+          (LL) => LL.ui.modal.chatSettings.fields.partyChatHistoryLimit.label(),
+          chatHistoryOptions
+        )
       })
     };
   },
 
   screenshots(tab) {
     return {
-      autoDownloadScreenshots: tab.gbool(LL => LL.ui.modal.screenshotSettings.fields.autoDownloadScreenshots()),
-      screenshotResolution: tab.gsel(LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.label(), [
-        { label: LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['1'](), value: 1 },
-        { label: LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['2'](), value: 2 },
-        { label: LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['3'](), value: 3 },
-        { label: LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['4'](), value: 4 }
-      ])
+      autoDownloadScreenshots: tab.gbool((LL) => LL.ui.modal.screenshotSettings.fields.autoDownloadScreenshots()),
+      screenshotResolution: tab.gsel(
+        (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.label(),
+        [
+          { label: (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['1'](), value: 1 },
+          { label: (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['2'](), value: 2 },
+          { label: (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['3'](), value: 3 },
+          { label: (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['4'](), value: 4 }
+        ]
+      )
     };
   },
 
   notifications(tab) {
     return {
-      notifications: tab.gbool(LL => LL.ui.modal.notificationSettings.fields.toggleNotifications()),
+      notifications: tab.gbool((LL) => LL.ui.modal.notificationSettings.fields.toggleNotifications()),
       notificationScreenPosition: tab.gsel(
-        LL => LL.ui.modal.notificationSettings.fields.screenPosition.label(),
+        (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.label(),
         [
-          { label: LL => LL.ui.modal.notificationSettings.fields.screenPosition.values.bottomLeft(), value: 'bottomLeft' },
-          { label: LL => LL.ui.modal.notificationSettings.fields.screenPosition.values.bottomRight(), value: 'bottomRight' },
-          { label: LL => LL.ui.modal.notificationSettings.fields.screenPosition.values.topLeft(), value: 'topLeft' },
-          { label: LL => LL.ui.modal.notificationSettings.fields.screenPosition.values.topRight(), value: 'topRight' }
+          {
+            label: (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.values.bottomLeft(),
+            value: 'bottomLeft'
+          },
+          {
+            label: (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.values.bottomRight(),
+            value: 'bottomRight'
+          },
+          { label: (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.values.topLeft(), value: 'topLeft' },
+          { label: (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.values.topRight(), value: 'topRight' }
         ],
         { size: 4 }
       )
@@ -90,7 +112,7 @@ const tabFields = {
 
 // --- configuration end ---
 
-export type SettingsTabId = typeof settingsTabs[number]['id'];
+export type SettingsTabId = (typeof settingsTabs)[number]['id'];
 type ConfigScope = 'global' | 'user';
 type ConfigPrimitive = string | number | boolean | null;
 type ConfigKey<TScope extends ConfigScope> = string;
@@ -129,12 +151,10 @@ type SelectSeed<TScope extends ConfigScope> = Omit<SelectField<TScope, ConfigKey
   key?: ConfigKey<TScope>;
 };
 
-type SettingDefinition =
-  | ToggleSeed<'global' | 'user'>
-  | SelectSeed<'global' | 'user'>
+type SettingDefinition = ToggleSeed<'global' | 'user'> | SelectSeed<'global' | 'user'>;
 
 type ResolvedSettingDefinition =
-  ToggleField<'global' | 'user', ConfigKey<'global' | 'user'>>
+  | ToggleField<'global' | 'user', ConfigKey<'global' | 'user'>>
   | SelectField<'global' | 'user', ConfigKey<'global' | 'user'>>;
 
 export type SettingField = ResolvedSettingDefinition & {
@@ -215,16 +235,15 @@ type SettingsGroupNode<Fields extends Record<string, any>> = {
 
 type SettingsSchemaInput = Record<SettingsTabId, Record<string, SettingsNode<any>>>;
 
-type InferNode<TName extends string, TNode> =
-  TNode extends { kind: 'group'; fields: infer TFields }
+type InferNode<TName extends string, TNode> = TNode extends { kind: 'group'; fields: infer TFields }
   ? TFields extends Record<string, SettingsNode<infer Ignored>>
-  ? { kind: 'group'; fields: InferFields<TFields> }
-  : never
+    ? { kind: 'group'; fields: InferFields<TFields> }
+    : never
   : TNode extends ToggleSeed<infer TScope>
-  ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
-  : TNode extends SelectSeed<infer TScope>
-  ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
-  : TNode;
+    ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
+    : TNode extends SelectSeed<infer TScope>
+      ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
+      : TNode;
 
 type InferFields<TFields extends Record<string, SettingsNode<any>>> = {
   [K in keyof TFields]: InferNode<K & string, TFields[K]>;
@@ -272,22 +291,21 @@ export type SettingsSchema = typeof settingsSchema;
 type FieldValue<TField> = TField extends { kind: 'toggle' }
   ? boolean
   : TField extends { options: Array<{ value: infer TValue }> }
-  ? TValue
-  : never;
+    ? TValue
+    : never;
 
 // Recursively extract leaf seeds from raw tab fields using SettingsGroupNode's type
 // parameter directly, avoiding deferred InferNode conditional types
 type FlattenSeeds<T> = {
-  [K in keyof T]:
-  // If it's a group, recursively flatten its fields
+  [K in keyof T]: // If it's a group, recursively flatten its fields
   T[K] extends SettingsGroupNode<infer F>
-  ? FlattenSeeds<F>
-  // If it's a toggle or select seed, convert it to a full field definition with the key
-  : Omit<T[K], 'key'> & { key: K & string }
+    ? FlattenSeeds<F>
+    : // If it's a toggle or select seed, convert it to a full field definition with the key
+      Omit<T[K], 'key'> & { key: K & string };
 }[keyof T];
 
 type TabFieldsNodeUnion = {
-  [Tab in SettingsTabId]: FlattenSeeds<ReturnType<(typeof tabFields)[Tab]>>
+  [Tab in SettingsTabId]: FlattenSeeds<ReturnType<(typeof tabFields)[Tab]>>;
 }[SettingsTabId];
 
 type ScopedSettingsField<TScope extends ConfigScope> = Extract<TabFieldsNodeUnion, { scope: TScope; key: string }>;
@@ -296,8 +314,11 @@ type InferConfigFromScopedFields<TScope extends ConfigScope> = {
   [TKey in ScopedSettingsField<TScope>['key']]: FieldValue<Extract<ScopedSettingsField<TScope>, { key: TKey }>>;
 };
 
-export type GlobalConfig = InferConfigFromScopedFields<'global'>;
-export type UserConfig = InferConfigFromScopedFields<'user'> & UserConfigExtras;
+type TogglesOf<T> = keyof { [K in keyof T]: T[K] extends boolean ? true : never };
+export type GlobalConfig = typeof defaultGlobalConfig & InferConfigFromScopedFields<'global'>;
+export type GlobalToggles = TogglesOf<GlobalConfig>;
+export type UserConfig = typeof defaultUserConfig & InferConfigFromScopedFields<'user'> & UserConfigExtras;
+export type UserToggles = TogglesOf<UserConfig>;
 
 export const settingsFieldsByTab = {
   general: flattenTab(settingsSchema.general),
@@ -311,21 +332,21 @@ export const settingsFieldsByTab = {
 export const cacheActions = [
   {
     type: 'location' as const,
-    label: LL => LL.ui.modal.cacheSettings.fields.locationCache(),
-    actionLabel: LL => LL.ui.modal.cacheSettings.clear()
+    label: (LL) => LL.ui.modal.cacheSettings.fields.locationCache(),
+    actionLabel: (LL) => LL.ui.modal.cacheSettings.clear()
   },
   {
     type: 'map' as const,
-    label: LL => LL.ui.modal.cacheSettings.fields.mapCache(),
-    actionLabel: LL => LL.ui.modal.cacheSettings.clear()
+    label: (LL) => LL.ui.modal.cacheSettings.fields.mapCache(),
+    actionLabel: (LL) => LL.ui.modal.cacheSettings.clear()
   },
   {
     type: 'locationColor' as const,
-    label: LL => LL.ui.modal.cacheSettings.fields.locationColorCache(),
-    actionLabel: LL => LL.ui.modal.cacheSettings.clear()
+    label: (LL) => LL.ui.modal.cacheSettings.fields.locationColorCache(),
+    actionLabel: (LL) => LL.ui.modal.cacheSettings.clear()
   }
 ] satisfies {
   label: (LL: TranslationFunctions) => string;
   type: 'location' | 'map' | 'locationColor';
   actionLabel: (LL: TranslationFunctions) => string;
-}[]
+}[];

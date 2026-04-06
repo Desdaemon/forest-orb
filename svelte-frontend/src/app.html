@@ -31,7 +31,7 @@
           yume: 'Yume Nikki'
         };
 
-        var pathGame = (window.location.pathname.split('/').filter(Boolean)[0] || '');
+        var pathGame = window.location.pathname.split('/').filter(Boolean)[0] || '';
         var queryGame = new URLSearchParams(window.location.search).get('game') || '';
         var candidateGame = pathGame || queryGame;
         var gameId = Object.prototype.hasOwnProperty.call(gameNameMap, candidateGame) ? candidateGame : '2kki';

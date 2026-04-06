@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { allGameFullBgUiThemes } from '$lib/allGameUiThemes';
 
   const {
@@ -17,8 +16,9 @@
   // $derived ensures Svelte 5 does not warn about capturing $props() values outside closures.
   const themeSuffix = $derived(`_${themeGameId !== gameId ? `${themeGameId}___` : ''}${parsedUiTheme}`);
   const themePropSuffix = $derived(`-${themeGameId !== gameId ? `${themeGameId}-` : ''}${parsedUiTheme}`);
-  const styleId = $derived(`theme${themeSuffix}`);
+  // const styleId = $derived(`theme${themeSuffix}`);
   const isFullBg = $derived((allGameFullBgUiThemes[themeGameId] ?? []).includes(uiTheme));
+  let css = $state('');
 
   // Mirrors themeStyleTemplate from system.js
   const themeStyleTemplate = `
@@ -185,18 +185,48 @@
     }
   `;
 
-  onMount(() => {
-    if (document.getElementById(styleId)) return;
+  const DEBUG: boolean = false;
 
-    const css = themeStyleTemplate
+  let alt,
+    systemGameId = gameId,
+    systemName = '';
+  const gradientId = $derived(
+    `${alt ? 'alt' : 'base'}Gradient_${systemGameId !== gameId ? `${systemGameId}_` : ''}${systemName.replace(/[ ()]/g, '_')}`
+  );
+
+  $effect(() => {
+    css = themeStyleTemplate
       .replaceAll('{THEME}', themeSuffix)
       .replaceAll('{THEME_PROP}', themePropSuffix)
       .replace(/\{FULL_BG\|(.*?)\}/, isFullBg ? '$1' : '');
-
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = css;
-    document.head.appendChild(style);
-    // Intentionally no cleanup on destroy: once injected, the style persists.
   });
+
+  type Color = [number, number, number];
+
+  function rgbString(color: Color) {
+    return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+  }
 </script>
+
+<svelte:head>
+  <svelte:element this={'style'}>
+    {@html css}
+  </svelte:element>
+</svelte:head>
+
+{#snippet svgGradient(systemName: string, systemGameId: string, colors: Color[], alt: boolean)}
+  {@const id = `${alt ? 'alt' : 'base'}Gradient_${systemGameId !== gameId ? `${systemGameId}_` : ''}${systemName.replace(/[ ()]/g, '_')}`}
+  <linearGradient xmlns="http://www.w3.org/2000/svg" {id} x1="0%" y1="0%" x2="0%" y2="100%">
+    {#each colors as color, idx}
+      {@const offset = idx === 0 ? 0 : Math.floor(((idx + 1) / colors.length) * 10000) / 100}
+      <stop stop-color={rgbString(color)} offset="{offset}%" />
+    {/each}
+  </linearGradient>
+{/snippet}
+
+{#snippet svgDropShadow(systemName: string, systemGameId: string, color: Color)}
+  {@const id = `dropShadow_${systemGameId !== gameId ? `${systemGameId}_` : ''}${systemName.replace(/[ ()]/g, '_')}`}
+  <filter xmlns="http://www.w3.org/2000/svg" {id}>
+    <feDropShadow x="1" dy="1" stdDeviation="0.2" flood-color={rgbString(color)} />
+  </filter>
+{/snippet}

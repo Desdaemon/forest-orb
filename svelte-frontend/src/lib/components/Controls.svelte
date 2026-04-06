@@ -1,7 +1,8 @@
 <script lang="ts">
-  import type { ModalId } from '$lib/stores/modal';
+  import { modal, type ModalId } from '$lib/stores/modal';
   import { tooltipLabel } from './Tooltip.svelte';
   import { LL } from '$lib';
+  import { toggleUser as toggleForGame, userConfig } from '$lib/stores/config';
 
   const { onToggleChat = () => {}, onOpenModal = () => {} } = $props<{
     onToggleChat?: () => void;
@@ -17,28 +18,35 @@
   }
 </script>
 
-<div id="controls">
-  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
-    <defs id="svgDefs"></defs>
-  </svg>
-  <div id="leftControls">
+<div id="controls" role="toolbar">
+  <div id="leftControls" role="presentation">
     <button
       id="privateModeButton"
-      class="iconButton toggleButton altToggleButton transparentToggleButton unselectable"
+      class={[
+        'iconButton toggleButton altToggleButton transparentToggleButton unselectable',
+        { toggled: $userConfig.privateMode }
+      ]}
+      onclick={() => toggleForGame('privateMode')}
       {...tooltipLabel($LL.ui.tooltips.togglePrivateMode())}
     >
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
           d="m5 0a1 1 90 0 0 0 5 1 1 90 0 0 0-5m-4 13c0-5 1-7 4-7 0.375 0 0.5 0 1.25 0.125-0.25 1.625 1.25 3.125 2.5 3.125q0.125 0.25 0.125 0.5c-1.75 0-3.625 1-3.875 4.125q-2.375 0-4-0.875m12-13a1 1 90 0 1 0 5 1 1 90 0 1 0-5m4 13c0-5-1-7-4-7-0.375 0-0.5 0-1.25 0.125 0.25 1.625-1.25 3.125-2.5 3.125q-0.125 0.25-0.125 0.5c1.75 0 3.625 1 3.875 4.125q2.375 0 4-0.875"
-        /><path d="m9 4a1 1 90 0 0 0 5 1 1 90 0 0 0-5m-4 13c0-5 1-7 4-7s4 2 4 7q-4 2-8 0" /></svg
+        />
+        <path d="m9 4a1 1 90 0 0 0 5 1 1 90 0 0 0-5m-4 13c0-5 1-7 4-7s4 2 4 7q-4 2-8 0" /></svg
       >
     </button>
-    <button id="saveButton" class="iconButton unselectable" {...tooltipLabel($LL.ui.tooltips.save())}>
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
+    <button
+      id="saveButton"
+      class="iconButton unselectable"
+      {...tooltipLabel($LL.ui.tooltips.save())}
+      onclick={() => modal.open('saveModal')}
+    >
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
           d="m0 1.5q0-1.5 1.5-1.5h11.25l2.25 2.25v12.75q0 1.5-1.5 1.5h-12q-1.5 0-1.5-1.5v-13.5m4.5-1.5v3.75q0 0.75 0.75 0.75h4.5q0.75 0 0.75-0.75v-3.75m-1.75 1v2.5h0.75v-2.5h-0.75m-5.75 15.5v-6.75q0-0.75 0.75-0.75h7.5q0.75 0 0.75 0.75v6.75m-7.5-6h6m-6 2.25h6m-6 2.25h6"
-        /></svg
-      >
+        />
+      </svg>
     </button>
     <button
       id="uiThemeButton"
@@ -55,8 +63,12 @@
     <button
       id="chatButton"
       class="iconButton toggleButton offToggleButton unselectable"
+      class:toggled={$userConfig.disableChat}
       {...tooltipLabel($LL.ui.tooltips.toggleChat())}
-      onclick={onToggleChat}
+      onclick={() => {
+        toggleForGame('disableChat');
+        onToggleChat?.();
+      }}
     >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         ><path
@@ -97,6 +109,8 @@
     <button
       id="muteButton"
       class="iconButton toggleButton offToggleButton unselectable"
+      class:toggled={$userConfig.mute}
+      onclick={() => toggleForGame('mute')}
       {...tooltipLabel($LL.ui.tooltips.toggleMute())}
     >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -106,6 +120,8 @@
     <button
       id="hideLocationButton"
       class="iconButton toggleButton offToggleButton unselectable"
+      class:toggled={$userConfig.hideLocation}
+      onclick={() => toggleForGame('hideLocation')}
       {...tooltipLabel($LL.ui.tooltips.toggleHideLocation())}
     >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -115,7 +131,7 @@
       >
     </button>
   </div>
-  <div id="rightControls">
+  <div id="rightControls" role="presentation">
     <div id="badgeHintControls"></div>
     <div id="mapControls"></div>
     <div id="explorerControls"></div>

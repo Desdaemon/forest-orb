@@ -136,10 +136,9 @@
       return;
     }
     const game = badge.game;
-    loadLocalizedBadges($locale)
-      .then((localizedByGame) => {
-        localizedBadge = localizedByGame[game]?.[badgeId] || null;
-      });
+    loadLocalizedBadges($locale).then((localizedByGame) => {
+      localizedBadge = localizedByGame[game]?.[badgeId] || null;
+    });
   });
 
   const titleText = $derived.by(() => {

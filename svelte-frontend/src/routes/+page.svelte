@@ -52,7 +52,6 @@
       await initEasyRpgEngine();
     }
     loadData();
-
   });
 
   onDestroy(() => {
@@ -78,15 +77,15 @@
 </script>
 
 <ThemeContainer {gameId}>
-  <div id="root-wrapper">
-    <div id="background"></div>
-    <div id="backgroundOverlay"></div>
-    <div id="content">
-      <div id="top"></div>
+  <div id="root-wrapper" role="presentation">
+    <div id="background" role="presentation"></div>
+    <div id="backgroundOverlay" role="presentation"></div>
+    <div id="content" role="presentation">
+      <div id="top" role="presentation"></div>
       <Header onOpenModal={openModal} />
-      <div id="layout">
-        <div id="mainContainer" class="container">
-          <div id="gameContainer">
+      <div id="layout" role="main">
+        <div id="mainContainer" class="container" role="presentation">
+          <div id="gameContainer" role="presentation">
             <Controls {onToggleChat} onOpenModal={openModal} />
             <CanvasArea />
           </div>

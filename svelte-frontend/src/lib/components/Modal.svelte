@@ -3,9 +3,9 @@
   import type { Snippet } from 'svelte';
   import type { HTMLAttributes } from 'svelte/elements';
   import { scale } from 'svelte/transition';
-  
+
   let modalEl = $state<HTMLDivElement | null>(null);
-  
+
   const {
     children,
     fullscreen: fullscreenModal,
@@ -17,7 +17,7 @@
     wide?: boolean;
     'aria-label': string;
   } & HTMLAttributes<HTMLDivElement> = $props();
-  
+
   function handleOutroEnd() {
     modalEl?.dispatchEvent(new CustomEvent('YNO_OUTROEND', { bubbles: true }));
   }

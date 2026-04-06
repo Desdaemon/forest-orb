@@ -252,7 +252,11 @@ async function getOrQuery2kkiLocations(
   }
 }
 
-function query2kkiLocations(mapId: string, prevMapId: string, prevLocationsStr?: string): Promise<Legacy2kkiLocation[] | null> {
+function query2kkiLocations(
+  mapId: string,
+  prevMapId: string,
+  prevLocationsStr?: string
+): Promise<Legacy2kkiLocation[] | null> {
   const prevLocations = decodePrevLocations(prevLocationsStr, prevMapId);
   return getOrQuery2kkiLocations(mapId, prevMapId === '0000' ? null : prevMapId, prevLocations);
 }
@@ -324,9 +328,11 @@ function getMapLocationsFromArray(locations: Array<string | MapTitle>, x?: numbe
     const coordLocation = normalized.find((location) => {
       if (!location.coords) return false;
       const xMatch =
-        (location.coords.x1 === -1 && location.coords.x2 === -1) || (location.coords.x1 <= (x as number) && location.coords.x2 >= (x as number));
+        (location.coords.x1 === -1 && location.coords.x2 === -1) ||
+        (location.coords.x1 <= (x as number) && location.coords.x2 >= (x as number));
       const yMatch =
-        (location.coords.y1 === -1 && location.coords.y2 === -1) || (location.coords.y1 <= (y as number) && location.coords.y2 >= (y as number));
+        (location.coords.y1 === -1 && location.coords.y2 === -1) ||
+        (location.coords.y1 <= (y as number) && location.coords.y2 >= (y as number));
       return xMatch && yMatch;
     });
 
@@ -422,7 +428,9 @@ async function loadLocationState(gameId: string, lang: string): Promise<Location
   }
 
   try {
-    const localizedRes = await fetchFirstAvailableJson<LocationConfigResponse>(getPathCandidates(gameId, `${lang}.json`));
+    const localizedRes = await fetchFirstAvailableJson<LocationConfigResponse>(
+      getPathCandidates(gameId, `${lang}.json`)
+    );
     const localizedConfig = localizedRes.data;
     const langMapLocations = localizedConfig.mapLocations || {};
     massageMapLocations(langMapLocations, localizedConfig.locationUrlTitles || null);
@@ -519,7 +527,10 @@ export const locationResolver = {
     try {
       const { localizedMapLocations, urlRoot } = await ensureInitialized({ gameId, lang });
       const resolvedLocations = getLocationsArray(localizedMapLocations, mapId, prevMapId, input.x, input.y);
-      const resolved = resolvedLocations.map((location) => location.title).filter(Boolean).join(' | ');
+      const resolved = resolvedLocations
+        .map((location) => location.title)
+        .filter(Boolean)
+        .join(' | ');
 
       if (resolved) {
         const first = resolvedLocations[0];

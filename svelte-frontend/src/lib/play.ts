@@ -37,8 +37,7 @@ export const defaultGlobalConfig = {
   unicodeFont: false,
   notifications: true,
   notificationScreenPosition: 'bottomRight'
-} satisfies GlobalConfig;
-
+};
 
 export const defaultUserConfig = {
   privateMode: false,
@@ -55,7 +54,7 @@ export const defaultUserConfig = {
   hideGlobalMessageLocations: false,
   filterMentions: false,
   trackedLocationId: null
-} satisfies UserConfig;
+};
 
 export type ConfigScope = 'global' | 'user';
 export type ConfigByScope = {
@@ -84,12 +83,7 @@ export function saveConfigToStorage(gameId: string, config: Partial<GlobalConfig
 
 // Canvas rendering from legacy play.js behavior streamline
 let canvasEl: HTMLCanvasElement | null = null;
-let ctx: CanvasRenderingContext2D | null = null;
 let animFrame: number | null = null;
-let posX = 48;
-let posY = 48;
-let velX = 2;
-let velY = 1.5;
 
 function resizeCanvas() {
   if (!canvasEl) return;
@@ -124,6 +118,8 @@ let easyrpgPlayerLoadFuncs: Array<() => void> = [];
 let initBlocker: Promise<void> = Promise.resolve();
 
 export async function initEasyRpgEngine() {
+  if (easyrpgPlayer) return;
+
   const createFunc = (window as any).createEasyRpgPlayer;
   if (typeof createFunc !== 'function') {
     return new Promise((resolve) => setTimeout(() => resolve(initEasyRpgEngine()), 100));

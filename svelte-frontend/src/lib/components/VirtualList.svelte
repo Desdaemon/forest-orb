@@ -7,6 +7,7 @@
 
 <script lang="ts" generics="TItem = unknown">
   import { onMount, tick, type Snippet } from 'svelte';
+  import type { Attachment } from 'svelte/attachments';
   import type { HTMLAttributes } from 'svelte/elements';
 
   let {
@@ -104,36 +105,38 @@
     onScrollStateChange?.(isScrolledToBottom());
   }
 
-  function measureRow(node: HTMLElement, index: number) {
-    let rowIndex = index;
+  class RowMeasure {
+    #observer = new ResizeObserver(function observe(entries) {
+      for (const entry of entries) RowMeasure.measureRowUpdateHeight(entry);
+    });
 
-    const updateHeight = () => {
+    attach(rowIndex: number): Attachment<HTMLElement> {
+      return (elm: HTMLElement) => {
+        elm.dataset.__vindex = `${rowIndex}`;
+        this.#observer.observe(elm);
+        return () => {
+          delete elm.dataset.__vindex;
+          this.#observer.unobserve(elm);
+        };
+      };
+    }
+
+    destroy() {
+      this.#observer.disconnect();
+    }
+
+    static measureRowUpdateHeight({ target: node }: ResizeObserverEntry) {
       const nextHeight = Math.ceil(node.getBoundingClientRect().height);
       if (!nextHeight) return;
+      const rowIndex = +(node as HTMLElement).dataset.__vindex!;
       if (measuredHeights.get(rowIndex) === nextHeight) return;
       const nextMap = new Map(measuredHeights);
       nextMap.set(rowIndex, nextHeight);
       measuredHeights = nextMap;
-    };
-
-    updateHeight();
-
-    const observer = new ResizeObserver(() => {
-      updateHeight();
-    });
-
-    observer.observe(node);
-
-    return {
-      update(nextIndex: number) {
-        rowIndex = nextIndex;
-        updateHeight();
-      },
-      destroy() {
-        observer.disconnect();
-      }
-    };
+    }
   }
+
+  const measurer = new RowMeasure();
 
   onMount(() => {
     if (!containerEl) return;
@@ -198,7 +201,11 @@
     <div style="position: relative; height: {totalHeight}px;">
       {#each visibleItems as item, localIndex (visibleStart + localIndex)}
         {@const index = visibleStart + localIndex}
-        <div role="listitem" style="position: absolute; inset-inline: 0; top: {offsets[index]}px;" use:measureRow={index}>
+        <div
+          role="listitem"
+          style="position: absolute; inset-inline: 0; top: {offsets[index]}px;"
+          {@attach measurer.attach(index)}
+        >
           {@render row?.(item, index)}
         </div>
       {/each}

@@ -58,13 +58,8 @@
   const currentGameId = inferGameId(getInitPayload());
 
   let descriptionExpanded = $state(false);
-  let playerLiked = $state(false);
-  let followerCount = $state(0);
-
-  $effect(() => {
-    playerLiked = Boolean(schedule.playerLiked);
-    followerCount = Number(schedule.followerCount || 0);
-  });
+  let playerLiked = $derived(schedule.playerLiked);
+  let followerCount = $derived(schedule.followerCount || 0);
 
   const resolvedTheme = $derived.by(() => {
     const themesByGame = allGameUiThemes as unknown as Record<string, readonly string[]>;
@@ -260,32 +255,71 @@
 
     <div class="themeText scheduleHeader">
       {#if canEdit()}
-        <button class="icon iconButton fillIcon unselectable toggleButton offToggleButton" style="padding-inline-end: 12px;" onclick={handleEdit} aria-label="Edit schedule" title="Edit schedule">
+        <button
+          class="icon iconButton fillIcon unselectable toggleButton offToggleButton"
+          style="padding-inline-end: 12px;"
+          onclick={handleEdit}
+          aria-label="Edit schedule"
+          title="Edit schedule"
+        >
           <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="m12.25 3h-8.25q-2 0-2 2v10q0 2 2 2h10q2 0 2-2v-7.75l-2 2.25v3.5c0 2 0 2-2 2h-6c-2 0-2 0-2-2v-6c0-2 0-2 2-2h4.5l1.75-2m3.75-2l-7 8-1 3 3-1 7-8q0-2-2-2m-0.875 1l2 2-0.8125 0.9375-2-2m-5.3125 6.0625l2 2m-2.75 0.25l0.5 0.5" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path
+              d="m12.25 3h-8.25q-2 0-2 2v10q0 2 2 2h10q2 0 2-2v-7.75l-2 2.25v3.5c0 2 0 2-2 2h-6c-2 0-2 0-2-2v-6c0-2 0-2 2-2h4.5l1.75-2m3.75-2l-7 8-1 3 3-1 7-8q0-2-2-2m-0.875 1l2 2-0.8125 0.9375-2-2m-5.3125 6.0625l2 2m-2.75 0.25l0.5 0.5"
+              stroke="#000000"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
             <path d="m-2 16l22-14"></path>
           </svg>
         </button>
       {/if}
 
       {#if canCancel()}
-        <button class="deleteIcon icon iconButton" style="padding-inline-end: 12px" onclick={handleCancel} aria-label="Cancel schedule" title="Cancel schedule">
-          <svg viewBox="0 0 18 18" width="24" height="24"><path d="m3.5 2h11q2 0 2 3h-15q0-3 2-3m4-2h2q2 0 2 2h-5q0-2 2-2m-5.5 5 1 13h10l1-13m-8.5 11-0.5-9m3 9v-9m2.5 9 0.5-9"></path></svg>
+        <button
+          class="deleteIcon icon iconButton"
+          style="padding-inline-end: 12px"
+          onclick={handleCancel}
+          aria-label="Cancel schedule"
+          title="Cancel schedule"
+        >
+          <svg viewBox="0 0 18 18" width="24" height="24"
+            ><path
+              d="m3.5 2h11q2 0 2 3h-15q0-3 2-3m4-2h2q2 0 2 2h-5q0-2 2-2m-5.5 5 1 13h10l1-13m-8.5 11-0.5-9m3 9v-9m2.5 9 0.5-9"
+            ></path></svg
+          >
         </button>
       {/if}
 
       <div class="likeContainer" style="display: flex; align-items: center;">
-        <button class="likeIcon icon iconButton toggleButton altToggleButton" class:fillIcon={playerLiked} onclick={handleFollow} aria-label={playerLiked ? 'Unfollow schedule' : 'Follow schedule'} title={playerLiked ? 'Unfollow schedule' : 'Follow schedule'}>
+        <button
+          class="likeIcon icon iconButton toggleButton altToggleButton"
+          class:fillIcon={playerLiked}
+          onclick={handleFollow}
+          aria-label={playerLiked ? 'Unfollow schedule' : 'Follow schedule'}
+          title={playerLiked ? 'Unfollow schedule' : 'Follow schedule'}
+        >
           <svg viewBox="0 0 18 18" width="24" height="24">
-            <path d="m16.65 2c-1.875-2.025-4.875-1.95-6.825 0.075l-0.825 0.975-0.825-0.975c-1.95-2.025-4.95-2.1-6.75-0.075h-0.075c-1.8 1.95-1.8 5.25 0.15 7.275l4.05 4.425 3.45 3.675 3.3-3.6 4.2-4.5c1.95-2.025 1.95-5.325 0.15-7.275z"></path>
+            <path
+              d="m16.65 2c-1.875-2.025-4.875-1.95-6.825 0.075l-0.825 0.975-0.825-0.975c-1.95-2.025-4.95-2.1-6.75-0.075h-0.075c-1.8 1.95-1.8 5.25 0.15 7.275l4.05 4.425 3.45 3.675 3.3-3.6 4.2-4.5c1.95-2.025 1.95-5.325 0.15-7.275z"
+            ></path>
           </svg>
         </button>
-        <span class="infoLabel likeCount unselectable" style="margin-inline-start: 8px; font-size: 1.2em;">{followerCount}</span>
+        <span class="infoLabel likeCount unselectable" style="margin-inline-start: 8px; font-size: 1.2em;"
+          >{followerCount}</span
+        >
       </div>
     </div>
   </div>
 
-  <div class="scheduleDescription" class:expanded={descriptionExpanded} onclick={toggleDescription} onkeydown={e => e.key === 'Enter' && toggleDescription()} role="button" tabindex="0">
+  <div
+    class="scheduleDescription"
+    class:expanded={descriptionExpanded}
+    onclick={toggleDescription}
+    onkeydown={(e) => e.key === 'Enter' && toggleDescription()}
+    role="button"
+    tabindex="0"
+  >
     <span class="themeText" data-role="description">
       {@html descriptionHtml}
     </span>
@@ -294,7 +328,9 @@
   <div style="padding-bottom: 4px; font-size: 0.9em;" data-role="links">
     {#if links.length}
       {#each links as link, idx}
-        <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>{idx < links.length - 1 ? ' | ' : ''}
+        <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>{idx < links.length - 1
+          ? ' | '
+          : ''}
       {/each}
     {/if}
   </div>

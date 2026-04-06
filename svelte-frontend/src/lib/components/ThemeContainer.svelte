@@ -18,8 +18,12 @@
   <style> elements injected by ThemeDefinition persist for the lifetime of
   the page.
 -->
-{#each $activatedThemes as theme (`${theme.gameId}/${theme.uiTheme}`)}
-  <ThemeDefinition uiTheme={theme.uiTheme} themeGameId={theme.gameId} {gameId} />
-{/each}
 
 {@render children?.()}
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
+  <defs id="svgDefs">
+    {#each $activatedThemes as theme (`${theme.gameId}/${theme.uiTheme}`)}
+      <ThemeDefinition uiTheme={theme.uiTheme} themeGameId={theme.gameId} {gameId} />
+    {/each}
+  </defs>
+</svg>
