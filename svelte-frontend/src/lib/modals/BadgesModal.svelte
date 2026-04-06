@@ -3,7 +3,7 @@
   import { onMount, tick } from 'svelte';
   import { modal } from '$lib/stores/modal';
   import { selectedBadge } from '$lib/stores/badge';
-  import { apiFetch } from '$lib/api';
+  // import { apiFetch } from '$lib/api';
   import Modal from '$lib/components/Modal.svelte';
   import BadgeItem from '$lib/components/BadgeItem.svelte';
 
@@ -316,7 +316,7 @@
           <option value="percent">Percent</option>
         </select>
       </div>
-      <div class="uiControl">
+      <div class="uiControl badgeSearchRow">
         <label for="badgeSearch" class="unselectable">{@html $LL.ui.modal.badges.fields.search.label()}</label>
         <div class="badgeSearchControl">
           <input
@@ -398,6 +398,7 @@
         <div style="position: relative; width: 100%; height: {totalHeight}px;">
           <div
             class="badgeVirtualGrid"
+            role="list"
             style="position: absolute; top: {topOffset}px; left: 0; right: 0; display: grid; grid-template-columns: repeat({columnCount}, minmax(110px, 1fr)); gap: 10px;"
           >
             {#each visibleBadges as badge (badge.badgeId)}
@@ -426,13 +427,54 @@
   }
 
   #badgeControls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    justify-content: center;
+    align-items: end;
+    column-gap: 28px;
     row-gap: 10px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  #badgeControls > .uiControl {
+    min-width: 0;
+  }
+
+  #badgeControls .badgeSearchRow {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  #badgeControls .badgeSearchRow > label {
+    margin: 0;
+    white-space: nowrap;
   }
 
   .badgeSearchControl {
     position: relative;
-    min-width: min(520px, calc(100vw - 180px));
+    width: min(540px, calc(100vw - 280px));
+    min-width: 0;
     max-width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    #badgeControls {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 8px;
+    }
+
+    #badgeControls .badgeSearchRow {
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .badgeSearchControl {
+      width: 100%;
+    }
   }
 
   .badgeSearchControl input {

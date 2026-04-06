@@ -4,6 +4,47 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="text-scale" content="scale" />
+    <script>
+      (function () {
+        var gameNameMap = {
+          '2kki': 'Yume 2kki',
+          amillusion: 'Amillusion',
+          braingirl: 'Braingirl',
+          unconscious: 'Collective Unconscious',
+          deepdreams: 'Deep Dreams',
+          flow: '.flow',
+          fog: 'FOG',
+          genie: 'Dream Genie',
+          if: 'If',
+          mikan: 'Mikan Muzou',
+          muma: 'Muma Rope',
+          nostalgic: 'nostAlgic',
+          oversomnia: 'Oversomnia',
+          oneshot: 'OneShot',
+          prayers: 'Answered Prayers',
+          sheawaits: 'She Awaits',
+          someday: 'Someday',
+          tsushin: 'Yume Tsushin',
+          ultraviolet: 'Ultra Violet',
+          unaccomplished: 'Unaccomplished',
+          unevendream: 'Uneven Dream',
+          yume: 'Yume Nikki'
+        };
+
+        var pathGame = (window.location.pathname.split('/').filter(Boolean)[0] || '');
+        var queryGame = new URLSearchParams(window.location.search).get('game') || '';
+        var candidateGame = pathGame || queryGame;
+        var gameId = Object.prototype.hasOwnProperty.call(gameNameMap, candidateGame) ? candidateGame : '2kki';
+        var userAgent = window.navigator.userAgent || '';
+
+        window.YNO_INIT = Object.assign({}, window.YNO_INIT || {}, {
+          gameId: gameId,
+          gameName: gameNameMap[gameId],
+          isMobile: /Mobile/.test(userAgent),
+          isFirefox: /Firefox/.test(userAgent)
+        });
+      })();
+    </script>
     %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover">

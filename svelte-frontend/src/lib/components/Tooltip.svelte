@@ -6,11 +6,16 @@
   const TOOLTIP_HIDE_EVENT = 'ynoproject:tooltip-hide';
 
   type TooltipContent = string | Snippet;
+  type TooltipOptions = {
+    themeClass?: string;
+  };
 
-  export function tooltip(content: TooltipContent): Attachment {
+  export function tooltip(content: TooltipContent, options?: TooltipOptions): Attachment {
     return (el) => {
       const show = () => {
-        window.dispatchEvent(new CustomEvent(TOOLTIP_SHOW_EVENT, { detail: { anchor: el, content } }));
+        window.dispatchEvent(
+          new CustomEvent(TOOLTIP_SHOW_EVENT, { detail: { anchor: el, content, themeClass: options?.themeClass } })
+        );
       };
 
       const hide = () => {
@@ -41,81 +46,192 @@
 
 <script lang="ts">
   import { computePosition, flip, offset, shift } from '@floating-ui/dom';
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
+  import { cubicOut } from 'svelte/easing';
+  import type { TransitionConfig } from 'svelte/transition';
   import type { Snippet as TooltipSnippet } from 'svelte';
 
-  const TOOLTIP_SHOW_EVENT = 'ynoproject:tooltip-show';
-  const TOOLTIP_HIDE_EVENT = 'ynoproject:tooltip-hide';
+  const DEBUG_CTRL_CLICK_FREEZE_ENABLED = true;
+  const SHOW_DELAY_MS = 300;
+  const HIDE_GRACE_MS = 80;
 
   let tooltipEl = $state<HTMLElement | null>(null);
   let content = $state<string | TooltipSnippet | null>(null);
+  let themeClass = $state('');
   let isVisible = $state(false);
   let left = $state(0);
   let top = $state(0);
+  let shownAbove: boolean;
   let activeAnchor = $state<HTMLElement | null>(null);
+  let pendingShow = $state<{ anchor: HTMLElement; content: string | TooltipSnippet; themeClass?: string } | null>(null);
   let showTimeout: ReturnType<typeof setTimeout> | null = null;
-  let hoveredAnchor = $state<HTMLElement | null>(null);
+  let hideTimeout: ReturnType<typeof setTimeout> | null = null;
+  let tooltipHovered = $state(false);
+  let tooltipFrozen = $state(false);
 
-  async function show(anchor: HTMLElement, nextContent: string | TooltipSnippet) {
-    if (!tooltipEl)
+  function clearHideTimeout() {
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+      hideTimeout = null;
+    }
+  }
+
+  function isAnchorStillEligible(anchor: HTMLElement): boolean {
+    return anchor.matches(':hover') || document.activeElement === anchor;
+  }
+
+  function forceHide() {
+    clearHideTimeout();
+    tooltipHovered = false;
+    activeAnchor = null;
+    isVisible = false;
+  }
+
+  async function showNow(anchor: HTMLElement, nextContent: string | TooltipSnippet, nextThemeClass?: string) {
+    activeAnchor = anchor;
+    content = nextContent;
+    themeClass = nextThemeClass || '';
+    isVisible = true;
+
+    let attempts = 0;
+    do {
+      await tick();
+      attempts++;
+    } while (!tooltipEl);
+
+    if (attempts > 1) {
+      console.error(`Tooltip: waited ${attempts} ticks for tooltip element to be available`);
+    }
+
+    const { x, y } = await computePosition(anchor, tooltipEl, {
+      strategy: 'fixed',
+      placement: 'top',
+      middleware: [offset(6), flip(), shift({ padding: 4 })]
+    });
+
+    shownAbove = y < anchor.getBoundingClientRect().y;
+    left = x;
+    top = y;
+  }
+
+  function scheduleHide(anchorToHide: HTMLElement | null) {
+    if (tooltipFrozen) {
       return;
+    }
 
-    hoveredAnchor = anchor;
+    clearHideTimeout();
+    hideTimeout = setTimeout(() => {
+      if (tooltipFrozen) {
+        return;
+      }
+      if (tooltipHovered) {
+        return;
+      }
+      if (anchorToHide && activeAnchor !== anchorToHide) {
+        return;
+      }
+      if (activeAnchor && isAnchorStillEligible(activeAnchor)) {
+        return;
+      }
+      forceHide();
+    }, HIDE_GRACE_MS);
+  }
+
+  async function show(anchor: HTMLElement, nextContent: string | TooltipSnippet, nextThemeClass?: string) {
+    if (tooltipFrozen) {
+      return;
+    }
 
     // Clear any pending hide
+    clearHideTimeout();
+
+    // A newer hover should always supersede previously queued anchors.
+    pendingShow = null;
+
     if (showTimeout) {
       clearTimeout(showTimeout);
       showTimeout = null;
+    }
+
+    if (isVisible && activeAnchor && activeAnchor !== anchor) {
+      pendingShow = { anchor, content: nextContent, themeClass: nextThemeClass };
+      forceHide();
+      return;
     }
 
     // Delay before showing
     showTimeout = setTimeout(async () => {
-      // Only show if still hovering the same anchor
-      if (hoveredAnchor !== anchor) {
-        showTimeout = null;
-        return;
-      }
-
-      activeAnchor = anchor;
-      content = nextContent;
-      isVisible = true;
-
-      if (!tooltipEl) return;
-
-      const { x, y } = await computePosition(anchor, tooltipEl, {
-        strategy: 'fixed',
-        placement: 'top',
-        middleware: [offset(8), flip(), shift({ padding: 4 })]
-      });
-
-      left = x;
-      top = y;
+      await showNow(anchor, nextContent, nextThemeClass);
       showTimeout = null;
-    }, 300);
+    }, SHOW_DELAY_MS);
   }
 
   function hide(anchor?: HTMLElement) {
-    if (anchor) {
-      hoveredAnchor = null;
+    if (tooltipFrozen) {
+      return;
     }
-    
+
     if (showTimeout) {
       clearTimeout(showTimeout);
       showTimeout = null;
     }
-    
-    if (anchor && anchor !== activeAnchor)
-      return;
 
-    activeAnchor = null;
-    isVisible = false;
-    content = null;
+    const anchorToHide = anchor ?? activeAnchor;
+    scheduleHide(anchorToHide);
   }
+
+  function onTooltipMouseEnter() {
+    tooltipHovered = true;
+    clearHideTimeout();
+  }
+
+  function onTooltipMouseLeave() {
+    tooltipHovered = false;
+    if (tooltipFrozen) return;
+    scheduleHide(activeAnchor);
+  }
+
+  function onTooltipOutroEnd() {
+    if (isVisible) return;
+    content = null;
+    themeClass = '';
+
+    const nextShow = pendingShow;
+    pendingShow = null;
+    if (!nextShow || showTimeout) return;
+
+    void showNow(nextShow.anchor, nextShow.content, nextShow.themeClass);
+  }
+
+  function onTooltipClick(event: MouseEvent) {
+    if (!(DEBUG_CTRL_CLICK_FREEZE_ENABLED && event.ctrlKey && isVisible)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    tooltipFrozen = !tooltipFrozen;
+    if (tooltipFrozen) clearHideTimeout();
+  }
+
+  $effect(() => {
+    if (!tooltipEl) return;
+
+    const el = tooltipEl;
+    el.addEventListener('click', onTooltipClick);
+
+    return () => {
+      el.removeEventListener('click', onTooltipClick);
+    };
+  });
 
   onMount(() => {
     const onShow = (event: Event) => {
-      const custom = event as CustomEvent<{ anchor: HTMLElement; content: string | TooltipSnippet }>;
-      void show(custom.detail.anchor, custom.detail.content);
+      const custom = event as CustomEvent<{
+        anchor: HTMLElement;
+        content: string | TooltipSnippet;
+        themeClass?: string;
+      }>;
+      void show(custom.detail.anchor, custom.detail.content, custom.detail.themeClass);
     };
 
     const onHide = (event: Event) => {
@@ -127,53 +243,62 @@
     window.addEventListener(TOOLTIP_HIDE_EVENT, onHide as EventListener);
 
     return () => {
+      if (showTimeout) clearTimeout(showTimeout);
+      clearHideTimeout();
       window.removeEventListener(TOOLTIP_SHOW_EVENT, onShow as EventListener);
       window.removeEventListener(TOOLTIP_HIDE_EVENT, onHide as EventListener);
     };
   });
+
+  function scaleAwayFromMouse(node: HTMLElement, params?: { duration?: number; start?: number }): TransitionConfig {
+    const { duration = 180, start = 0.7 } = params || {};
+    const transformOrigin = shownAbove ? 'center bottom' : 'center top';
+
+    return {
+      duration,
+      easing: cubicOut,
+      css: (t) => {
+        const scaleValue = start + (1 - start) * t;
+        return `
+          transform-origin: ${transformOrigin};
+          transform: scale(${scaleValue});
+          opacity: ${t};
+        `;
+      }
+    };
+  }
 </script>
 
-<div
-  class="tooltip"
-  class:hidden={!isVisible}
-  style:left="{left}px"
-  style:top="{top}px"
-  bind:this={tooltipEl}
->
-  {#if typeof content === 'string'}
-    {content}
-  {:else if content}
-    {@render content()}
-  {/if}
-</div>
+{#if content && isVisible}
+  <div
+    role="tooltip"
+    class={`tooltip${themeClass ? ` ${themeClass}` : ''}`}
+    class:frozen={tooltipFrozen}
+    style:left="{left}px"
+    style:top="{top}px"
+    onmouseenter={onTooltipMouseEnter}
+    onmouseleave={onTooltipMouseLeave}
+    onoutroend={onTooltipOutroEnd}
+    transition:scaleAwayFromMouse
+    bind:this={tooltipEl}
+  >
+    {#if typeof content === 'string'}
+      {content}
+    {:else}
+      {@render content()}
+    {/if}
+  </div>
+{/if}
 
 <style>
-  @keyframes tooltipFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes tooltipFadeOut {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-
   .tooltip {
     width: max-content;
     max-width: min(80vw, 350px);
     position: fixed;
     left: 0;
     top: 0;
-    z-index: 9999;
-    pointer-events: none;
+    z-index: 11000;
+    pointer-events: auto;
     padding: 6px 8px;
     font-size: 14px;
     font-weight: normal;
@@ -181,17 +306,77 @@
     color: #d4c8d8;
     background: var(--container-bg-image-url, #3d3239) !important;
     border: 6px solid transparent;
-    border-image: var(--border-image-url, linear-gradient(45deg, #8b7a8f 25%, transparent 25%, transparent 75%, #8b7a8f 75%, #8b7a8f), linear-gradient(45deg, #8b7a8f 25%, transparent 25%, transparent 75%, #8b7a8f 75%, #8b7a8f)) 8 repeat !important;
+    border-image: var(
+        --border-image-url,
+        linear-gradient(45deg, #8b7a8f 25%, transparent 25%, transparent 75%, #8b7a8f 75%, #8b7a8f),
+        linear-gradient(45deg, #8b7a8f 25%, transparent 25%, transparent 75%, #8b7a8f 75%, #8b7a8f)
+      )
+      8 repeat !important;
     border-image-width: 2 !important;
     box-shadow: none;
     text-shadow: none;
     image-rendering: pixelated;
-    white-space: nowrap;
-    animation: tooltipFadeIn 150ms ease-in-out forwards;
+    white-space: normal;
   }
 
-  .tooltip.hidden {
-    animation: tooltipFadeOut 150ms ease-in-out forwards;
-    pointer-events: none;
+  .tooltip::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 24px;
+  }
+
+  .tooltip :global(.tooltipContent) {
+    display: inline;
+    background-image: var(--base-gradient) !important;
+    filter: drop-shadow(1.5px 1.5px rgb(var(--shadow-color)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .tooltip :global(.tooltipContent.noShadow) {
+    filter: unset;
+  }
+
+  .tooltip :global(.tooltipContent.altText) {
+    background-image: var(--alt-gradient) !important;
+  }
+
+  .tooltip :global(.tooltipTitle) {
+    margin: 0 0 8px 0;
+    text-align: center;
+  }
+
+  .tooltip :global(.tooltipSpacer) {
+    margin-top: 4px;
+  }
+
+  .tooltip :global(.tooltipLocation) {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .tooltip :global(.tooltipLabel),
+  .tooltip :global(.tooltipContent:first-child) {
+    font-size: 16px;
+  }
+
+  .tooltip :global(.tooltipFooter) {
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  .tooltip :global(.tooltipTitle + .tooltipFooter) {
+    margin-top: 0;
+  }
+
+  .tooltip :global(.tooltipCornerText) {
+    display: flex;
+    justify-content: right;
+    font-size: x-small;
   }
 </style>

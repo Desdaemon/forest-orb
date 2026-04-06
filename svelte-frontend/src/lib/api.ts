@@ -26,7 +26,7 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
   if (sessionToken) headers.set('Authorization', sessionToken);
 
   const base = getApiUrl();
-  const response = await fetch(`${base}${path}`, {
+  const response = await fetch(`${base}/${path}`, {
     ...init,
     headers
   });

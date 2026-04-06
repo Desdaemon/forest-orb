@@ -1,4 +1,42 @@
+<script module lang="ts">
+  import { getInitPayload, inferGameId, isBrowser } from '$lib/init';
+  import { activateTheme, allGameUiThemes } from '$lib/stores/uiTheme';
+  export { loadLocalizedBadges, type LocalizedBadge } from '$lib/badgeLocalization';
+
+  const currentGameId = inferGameId(getInitPayload());
+  const activatedThemeKeys = new Set<string>();
+
+  function getDefaultThemeForGame(gameId?: string): string {
+    if (!gameId) return '';
+    const themesByGame = allGameUiThemes as unknown as Record<string, readonly string[]>;
+    const themes = themesByGame[gameId] ?? [];
+    return themes[0] ?? '';
+  }
+
+  function getThemeClass(theme: string, themeGameId: string): string {
+    if (!theme || !themeGameId) return '';
+    const normalized = theme.replace(/[ ()]/g, '_');
+    const prefix = themeGameId !== currentGameId ? `${themeGameId}___` : '';
+    return `theme_${prefix}${normalized}`;
+  }
+
+  function ensureThemeActivated(theme: string, themeGameId: string): void {
+    if (!theme || !themeGameId) return;
+    const key = `${themeGameId}/${currentGameId}/${theme}`;
+    if (activatedThemeKeys.has(key)) return;
+    activatedThemeKeys.add(key);
+    void activateTheme(theme, themeGameId, currentGameId).catch((err) => {
+      console.warn('BadgeItem: failed to activate theme', theme, themeGameId, err);
+      activatedThemeKeys.delete(key);
+    });
+  }
+</script>
+
 <script lang="ts">
+  import { locale } from '../../i18n/i18n-svelte';
+  import { tooltip } from '$lib/components/Tooltip.svelte';
+  import BadgeTooltip from '$lib/components/BadgeTooltip.svelte';
+  import { loadLocalizedBadges, type LocalizedBadge } from '$lib/badgeLocalization';
   import type { HTMLAttributes } from 'svelte/elements';
 
   export const OverlayType = {
@@ -53,7 +91,8 @@
     lockedIcon?: boolean;
     scaled?: boolean;
     selected?: boolean;
-  } & HTMLAttributes<HTMLDivElement> = $props();
+    onclick?(): void;
+  } & Omit<HTMLAttributes<HTMLDivElement>, 'onclick'> = $props();
 
   const badge = $derived(
     typeof badgeProp === 'string' ? ({ badgeId: badgeProp } as Badge) : (badgeProp ?? { badgeId: 'null' })
@@ -77,16 +116,64 @@
     hasMask ? `url('${badgeUrl.replace('.', hasDual ? '_mask_fg.' : '_mask.')}')` : `url('${badgeUrl}')`
   );
   const badgeMask2Value = $derived(hasMask ? `url('${badgeUrl.replace('.', '_mask_bg.')}')` : `url('${badgeUrl}')`);
+  const badgeTheme = $derived.by(() => getDefaultThemeForGame(badge.game));
+  const badgeThemeClass = $derived.by(() => (badge.game && badgeTheme ? getThemeClass(badgeTheme, badge.game) : ''));
+
+  const LOCKED_TEXT = '???';
+  const LOCATION_LABEL = 'Location:';
+  const NO_BADGE_TEXT = 'No Badge';
+
+  function formatBadgeTitle(title: string, bp?: number): string {
+    return typeof bp === 'number' ? `${title} - ${bp} BP` : title;
+  }
+
+  const canRevealBadgeInfo = $derived((badge.unlocked || !badge.secret) && badgeId !== 'null');
+
+  let localizedBadge: LocalizedBadge | null = $state(null);
+  $effect(() => {
+    if (!isBrowser) return;
+    if (badge.badgeId === 'null' || !badge.game) {
+      return;
+    }
+    const game = badge.game;
+    loadLocalizedBadges($locale)
+      .then((localizedByGame) => {
+        localizedBadge = localizedByGame[game]?.[badgeId] || null;
+      });
+  });
+
+  const titleText = $derived.by(() => {
+    if (badgeId === 'null') return NO_BADGE_TEXT;
+    if (!canRevealBadgeInfo) return LOCKED_TEXT;
+    return localizedBadge?.name || badgeId;
+  });
+
+  const tooltipAriaLabel = $derived(formatBadgeTitle(titleText, badge.bp));
+
+  $effect(() => {
+    if (!badge.game) return;
+    if (!badgeTheme) return;
+    ensureThemeActivated(badgeTheme, badge.game);
+  });
 </script>
 
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
+  role={typeof props.onclick === 'function' ? 'button' : 'img'}
+  tabindex={typeof props.onclick === 'function' ? 0 : undefined}
   {...props}
+  {@attach tooltip(badgeTooltip, { themeClass: badgeThemeClass || undefined })}
+  aria-label={tooltipAriaLabel}
+  onkeydown={(e) => e.key === 'Enter' && props.onclick?.()}
+  onclick={() => props.onclick?.()}
   class={[
     'badgeItem item unselectable',
+    `badge_${badgeId}`,
     {
       locked: shouldLockItem,
       disabled: shouldLockItem
     },
+    badgeThemeClass,
     props.class
   ]}
 >
@@ -135,3 +222,7 @@
     {/if}
   </div>
 </div>
+
+{#snippet badgeTooltip()}
+  <BadgeTooltip {badge} />
+{/snippet}

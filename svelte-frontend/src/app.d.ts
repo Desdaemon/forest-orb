@@ -8,6 +8,31 @@ declare global {
     // interface PageState {}
     // interface Platform {}
   }
+
+  type AllGames =
+    | '2kki'
+    | 'yume'
+    | 'unconscious'
+    | 'flow'
+    | 'fog'
+    | 'prayers'
+    | 'deepdreams'
+    | 'someday'
+    | 'amillusion'
+    | 'unevendream'
+    | 'braingirl'
+    | 'muma'
+    | 'genie'
+    | 'mikan'
+    | 'ultraviolet'
+    | 'sheawaits'
+    | 'oneshot'
+    | 'oversomnia'
+    | 'tsushin'
+    | 'nostalgic'
+    | 'if'
+    | 'unaccomplished'
+
 }
 
-export {};
+export { };

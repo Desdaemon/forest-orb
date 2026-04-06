@@ -76,14 +76,13 @@
   }
 </script>
 
-<Modal id="settingsModal" aria-label="Settings">
+<Modal id="settingsModal" aria-label="Settings" fullscreen>
   <div class="modalHeader">
     <h1 class="modalTitle">{$LL.ui.modal.settings.title()}</h1>
-    <div class="subTabs settingsTabs">
+    <div class="modalTabsContainer settingsTabs">
       {#each settingsTabs as tab}
-        <button type="button" class="subTab" class:active={activeTab === tab.id} onclick={() => (activeTab = tab.id)}>
+        <button type="button" class="modalTab" class:active={activeTab === tab.id} onclick={() => (activeTab = tab.id)}>
           <small class="subTabLabel infoLabel unselectable">{tab.label($LL)}</small>
-          <div class="subTabBg"></div>
         </button>
       {/each}
     </div>

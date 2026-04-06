@@ -108,10 +108,10 @@ function buildLocationUrl(urlRoot: string, value?: string): string | null {
   return `${root}${value}`;
 }
 
-async function send2kkiApiRequest(url: string): Promise<unknown> {
+async function send2kkiApiRequest<T>(url: string): Promise<T | null> {
   const pendingRequest = pending2kkiRequests.get(url);
   if (pendingRequest) {
-    return pendingRequest;
+    return pendingRequest as Promise<T | null>;
   }
 
   const request = fetch(url, { cache: 'no-store' })
@@ -172,9 +172,8 @@ async function queryAndSet2kkiLocation(
     }
   }
   const url = buildExplorerProxyUrl('getMapLocationNames', params);
-  const response = await send2kkiApiRequest(url);
+  const responseLocations = await send2kkiApiRequest<Legacy2kkiLocation[]>(url);
 
-  const responseLocations = Array.isArray(response) ? (response as Legacy2kkiLocation[]) : null;
   if (responseLocations && responseLocations.length) {
     const locations: Legacy2kkiLocation[] = [];
     let location = responseLocations[0];
@@ -259,7 +258,7 @@ function query2kkiLocations(mapId: string, prevMapId: string, prevLocationsStr?:
 }
 
 function logResolvedMapName(mapId: string, prevMapId: string, mapName: string, source: string): void {
-  console.info(`[locationResolver:${source}] mapId=${mapId} prevMapId=${prevMapId} -> ${mapName}`);
+  // console.info(`[locationResolver:${source}] mapId=${mapId} prevMapId=${prevMapId} -> ${mapName}`);
 }
 
 function toAltMapIds(mapId: string): string[] {

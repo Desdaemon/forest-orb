@@ -95,9 +95,10 @@
   });
 
   const senderClass = $derived.by(() => {
-    const accountClass = isAccount ? ' account' : '';
-    const themeClass = senderThemeClass ? ` ${senderThemeClass}` : '';
-    return `messageSender${accountClass}${themeClass}`;
+    // const accountClass = isAccount ? ' account' : '';
+    // const themeClass = senderThemeClass ? ` ${senderThemeClass}` : '';
+    // return `messageSender${accountClass}${themeClass}`;
+    return ['messageSender', senderThemeClass, { account: isAccount }];
   });
 
   const nameTextClass = $derived.by(() => (senderThemeClass ? `nameText ${senderThemeClass}` : 'nameText'));
@@ -124,9 +125,9 @@
     <div class="messageHeader">
       {#if isGlobal || isParty}
         {#if hasLocation}
-          <bdi class="playerLocation"
+          <bdi class="playerLocation" role="presentation"
             >{#if locationLink}<a href={locationLink} target="_blank" rel="noopener noreferrer">{locationText}</a
-            >{:else}{locationText}{/if}</bdi
+              >{:else}{locationText}{/if}</bdi
           >
         {:else}
           <span></span>

@@ -39,6 +39,9 @@
   import { activateTheme } from '$lib/stores/uiTheme';
   import ChatMessageItem from './ChatMessageItem.svelte';
   import VirtualList, { type VirtualListController } from './VirtualList.svelte';
+  import BadgeItem from './BadgeItem.svelte';
+
+  const { gameId: currentGameId } = getGameInitState();
 
   const { show = false }: { show?: boolean } = $props();
 
@@ -239,6 +242,56 @@
     unseenNewMessageCount = 0;
   }
 
+  function clearVisibleMessages() {
+    if (chatScope === 'map') {
+      messages = messages.filter((message) => message.type !== 'map');
+    } else if (chatScope === 'global') {
+      messages = messages.filter((message) => message.type !== 'global' && message.type !== 'party');
+    } else {
+      messages = [];
+      parties = [];
+    }
+
+    seenMessageIds = new Set(messages.map((message) => message.msgId).filter(Boolean));
+    unseenNewMessageCount = 0;
+  }
+
+  function onChatScopeTabKeydown(event: KeyboardEvent, scope: 'all' | 'map' | 'global') {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    chatScope = scope;
+  }
+
+  function onMainTabKeydown(event: KeyboardEvent, tab: ChatTab) {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    setTab(tab);
+  }
+
+  function getPlayerDisplayName(player: ChatPlayerProfile): string {
+    return player.name || player.uuid || 'Unknown';
+  }
+
+  function getPlayerBadgeImageUrl(badge: string): string {
+    return `images/badge/${badge}.png`;
+  }
+
+  function getPlayerSpriteUrl(player: ChatPlayerProfile): string {
+    const spriteUrl =
+      (player.spriteUrl as string | undefined) ||
+      (player.spriteImg as string | undefined) ||
+      (player.sprite as string | undefined);
+    return typeof spriteUrl === 'string' ? spriteUrl : '';
+  }
+
+  function getPlayerThemeClass(player: ChatPlayerProfile): string {
+    const raw = (player.systemName || '').trim();
+    if (!raw) return '';
+    const normalized = raw.replace(/'|\s$/g, '');
+    if (!normalized) return '';
+    return `theme_${normalized.replace(/[ ()]/g, '_')}`;
+  }
+
   function appendMessage(input: ChatMessageInput, options: AppendMessageOptions = {}) {
     const shouldTrackAsNew = options.trackAsNew ?? true;
     const shouldScrollToBottom =
@@ -337,7 +390,7 @@
     const normalized = systemName.replace(/'|\s$/g, '');
     if (!normalized) return;
     try {
-      activateTheme(normalized, getGameInitState().gameId);
+      activateTheme(normalized, getGameInitState().gameId, currentGameId);
     } catch (err) {
       // Theme initialization should never block chat history/messages.
       console.warn('Failed to activate player theme:', normalized, err);
@@ -502,92 +555,139 @@
       </div>
       <div id="chatboxContent">
         <div id="chatboxTabs">
-          <button
+          <div
             id="chatboxTabChat"
             class="chatboxTab"
             class:active={activeTab === 'chat'}
+            role="tab"
+            tabindex="0"
+            aria-selected={activeTab === 'chat'}
             data-tab-section="chat"
             onclick={() => setTab('chat')}
-            type="button"
+            onkeydown={(event) => onMainTabKeydown(event, 'chat')}
           >
             <span class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.chat">Chat</span>
-          </button>
-          <button
+          </div>
+          <div
             id="chatboxTabPlayers"
             class="chatboxTab"
             class:active={activeTab === 'players'}
+            role="tab"
+            tabindex="0"
+            aria-selected={activeTab === 'players'}
             data-tab-section="players"
             onclick={() => setTab('players')}
-            type="button"
+            onkeydown={(event) => onMainTabKeydown(event, 'players')}
           >
             <span class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.players">Players</span>
-          </button>
-          <button
+          </div>
+          <div
             id="chatboxTabParties"
             class="chatboxTab"
             class:active={activeTab === 'parties'}
+            role="tab"
+            tabindex="0"
+            aria-selected={activeTab === 'parties'}
             data-tab-section="parties"
             onclick={() => setTab('parties')}
-            type="button"
+            onkeydown={(event) => onMainTabKeydown(event, 'parties')}
           >
             <span class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.parties">Parties</span>
-          </button>
+          </div>
         </div>
         <div id="chat" class="chatboxTabSection" class:hidden={activeTab !== 'chat'}>
-          <div id="chatControlsBar" class="chatControlsBar">
-            <div class="chatScopeTabs" role="tablist" aria-label="Chat filters">
-              <button
-                type="button"
-                class="chatScopeButton"
+          <div id="chatHeader" class="tabHeader">
+            <div id="chatTabs" class="subTabs" role="tablist" aria-label="Chat filters">
+              <div
+                id="chatTabAll"
+                class="chatTab subTab"
                 class:active={chatScope === 'all'}
+                role="tab"
+                tabindex="0"
+                aria-selected={chatScope === 'all'}
                 onclick={() => (chatScope = 'all')}
+                onkeydown={(event) => onChatScopeTabKeydown(event, 'all')}
               >
-                All
-              </button>
-              <button
-                type="button"
-                class="chatScopeButton"
+                <small class="chatTabLabel subTabLabel infoLabel unselectable">All</small>
+                <div class="subTabBg"></div>
+              </div>
+              <div
+                id="chatTabMap"
+                class="chatTab subTab"
                 class:active={chatScope === 'map'}
+                role="tab"
+                tabindex="0"
+                aria-selected={chatScope === 'map'}
                 onclick={() => (chatScope = 'map')}
+                onkeydown={(event) => onChatScopeTabKeydown(event, 'map')}
               >
-                Map
-              </button>
-              <button
-                type="button"
-                class="chatScopeButton"
+                <small class="chatTabLabel subTabLabel infoLabel unselectable">Map</small>
+                <div class="subTabBg"></div>
+              </div>
+              <div
+                id="chatTabGlobal"
+                class="chatTab subTab"
                 class:active={chatScope === 'global'}
+                role="tab"
+                tabindex="0"
+                aria-selected={chatScope === 'global'}
                 onclick={() => (chatScope = 'global')}
+                onkeydown={(event) => onChatScopeTabKeydown(event, 'global')}
               >
-                Global
-              </button>
+                <small class="chatTabLabel subTabLabel infoLabel unselectable">Global</small>
+                <div class="subTabBg"></div>
+              </div>
             </div>
-            <div class="chatControlToggles">
+            <div id="chatButtons" class="tabButtons">
               <button
-                type="button"
-                class="chatControlIcon"
-                class:active={!hideLocations}
+                id="globalMessageLocationsButton"
+                class="iconButton toggleButton offToggleButton unselectable"
+                class:toggled={hideLocations}
                 aria-label="Toggle locations"
                 onclick={() => (hideLocations = !hideLocations)}
               >
-                ◎
+                <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
+                  <path
+                    d="m9 0a1 1 0 0 0 0 18 1 1 0 0 0 0-18v18q-10-9 0-18 10 9 0 18m-7.5-4q7.5-3 15 0m-15-10q7.5 2 15 0m-16.5 5h18"
+                  /><path d="m-2 16l22-14" />
+                </svg>
               </button>
               <button
-                type="button"
-                class="chatControlIcon"
-                class:active={!hideTimestamps}
+                id="messageTimestampsButton"
+                class="iconButton toggleButton offToggleButton unselectable"
+                class:toggled={hideTimestamps}
                 aria-label="Toggle timestamps"
                 onclick={() => (hideTimestamps = !hideTimestamps)}
               >
-                ◷
+                <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
+                  <path d="m9 0a1 1 0 0 0 0 18 1 1 0 0 0 0-18m0 3v6l4 4" /><path d="m-2 16l22-14" />
+                </svg>
               </button>
               <button
-                type="button"
-                class="chatControlIcon"
-                class:active={mentionsOnly}
+                id="mentionFilterButton"
+                class="iconButton toggleButton offToggleButton unselectable"
+                class:toggled={mentionsOnly}
                 aria-label="Show mentions only"
                 onclick={() => (mentionsOnly = !mentionsOnly)}
               >
-                @
+                <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
+                  <path
+                    d="M13.5 9a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0Zc0 1.657 1.007 3 2.25 3S18 10.657 18 9a9 9 0 10-2.636 6.364M13.5 9V5.25"
+                  />
+                  <path d="M13.5 9a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0Zc0 1.657 1.007 3 2.25 3S18 10.657 18 9a9 9 0 10-2.636 6.364M13.5 9V5.25" />
+                </svg>
+              </button>
+              <button
+                id="clearChatButton"
+                class="iconButton unselectable"
+                aria-label="Clear chat"
+                onclick={clearVisibleMessages}
+              >
+                <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
+                  <path
+                    d="m3 18l6-4.5h6q3 0 3-3v-7.5q0-3-3-3h-12q-3 0-3 3v7.5q0 3 3 3h1.5l-1.5 4.5m9.5-14.75l-7 7m0-7l7 7"
+                  />
+                </svg>
               </button>
             </div>
           </div>
@@ -637,20 +737,36 @@
               <div class="messageContainer"><div class="message">No players loaded.</div></div>
             {/snippet}
             {#snippet row(player)}
-              <div class="messageContainer">
-                <div class="message">
-                  <bdi>{(player as ChatPlayerProfile).name || (player as ChatPlayerProfile).uuid}</bdi>
-                  <small class="infoLabel">{(player as ChatPlayerProfile).uuid}</small>
-                  {#if (player as ChatPlayerProfile).systemName}
-                    <small class="infoLabel">theme: {(player as ChatPlayerProfile).systemName}</small>
+              {@const profile = player as ChatPlayerProfile}
+              {@const spriteUrl = getPlayerSpriteUrl(profile)}
+              {@const playerThemeClass = getPlayerThemeClass(profile)}
+              <div
+                class={playerThemeClass ? `playerListEntry listEntry ${playerThemeClass}` : 'playerListEntry listEntry'}
+                data-uuid={profile.uuid}
+                data-name={profile.name || ''}
+                data-system-name={profile.systemName || ''}
+              >
+                <div class="listEntryMain">
+                  {#if spriteUrl}
+                    <img class="playerListEntrySprite listEntrySprite" src={spriteUrl} alt="" loading="lazy" />
+                  {:else}
+                    <div class="playerListEntrySprite listEntrySprite" aria-hidden="true"></div>
                   {/if}
-                  {#if (player as ChatPlayerProfile).badge}
-                    <small class="infoLabel">badge: {(player as ChatPlayerProfile).badge}</small>
-                  {/if}
-                  {#if (player as ChatPlayerProfile).rank}
-                    <small class="infoLabel">rank: {(player as ChatPlayerProfile).rank}</small>
-                  {/if}
+                  <div class="nameTextContainer">
+                    {#if !profile.account}
+                      <span class="nameMarker">&lt;</span>
+                    {/if}
+                    <span class={playerThemeClass ? `nameText ${playerThemeClass}` : 'nameText'}>{getPlayerDisplayName(profile)}</span>
+                    {#if !profile.account}
+                      <span class="nameMarker">&gt;</span>
+                    {/if}
+                  </div>
                 </div>
+                <div
+                  class={playerThemeClass ? `playerListEntryBadge badge ${playerThemeClass}` : 'playerListEntryBadge badge'}
+                  class:hidden={!profile.badge}
+                  style={profile.badge ? `background-image: url('${getPlayerBadgeImageUrl(profile.badge)}')` : ''}
+                ></div>
               </div>
             {/snippet}
           </VirtualList>
@@ -697,50 +813,6 @@
     position: relative;
   }
 
-  #chat .chatControlsBar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: -30px 6px 6px;
-    padding: 2px 8px;
-    border: 2px solid rgba(251, 156, 52, 0.95);
-    border-radius: 12px;
-    background-color: rgba(var(--shadow-color), 0.75);
-    box-shadow: 0 0 0 1px rgba(67, 31, 6, 0.85), 0 0 8px rgba(251, 156, 52, 0.35);
-    z-index: 3;
-  }
-
-  #chat .chatScopeTabs,
-  #chat .chatControlToggles {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  #chat .chatScopeButton,
-  #chat .chatControlIcon {
-    min-height: 22px;
-    padding: 0 8px;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    color: rgb(var(--base-color));
-    font-weight: 600;
-    line-height: 1;
-  }
-
-  #chat .chatControlIcon {
-    min-width: 24px;
-    padding: 0 6px;
-    font-size: 15px;
-  }
-
-  #chat .chatScopeButton.active,
-  #chat .chatControlIcon.active {
-    background: rgba(var(--base-bg-color), 0.85);
-    box-shadow: inset 0 0 0 1px rgba(var(--base-color), 0.4);
-  }
-
   #chat .newMessagesButton {
     position: absolute;
     inset-inline-start: 50%;
@@ -755,17 +827,5 @@
   #chat .newMessagesButton .arrow {
     font-size: 0.95em;
     line-height: 1;
-  }
-
-  :global(body.highContrast) #chat .chatControlsBar {
-    border-color: rgba(var(--base-color), 0.55);
-    background-color: rgba(var(--base-bg-color), 0.78);
-    box-shadow: inset 0 0 0 1px rgba(var(--base-color), 0.22);
-  }
-
-  :global(body.highContrast) #chat .chatScopeButton.active,
-  :global(body.highContrast) #chat .chatControlIcon.active {
-    background: rgba(var(--base-bg-color), 0.92);
-    box-shadow: inset 0 0 0 1px rgba(var(--base-color), 0.3);
   }
 </style>

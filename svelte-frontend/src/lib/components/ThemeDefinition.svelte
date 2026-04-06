@@ -134,7 +134,18 @@
       {FULL_BG|background-origin: border-box; background-size: cover;}
     }
 
+    .tooltip.theme{THEME} {
+      border-image-source: var(--border-image-url{THEME_PROP}) !important;
+      background-image: var(--container-bg-image-url{THEME_PROP}) !important;
+      {FULL_BG|background-origin: border-box; background-size: cover;}
+    }
+
     .tippy-box.theme{THEME} .tippy-content .tooltipContent {
+      background-image: var(--base-gradient{THEME_PROP}) !important;
+      filter: drop-shadow(1.5px 1.5px rgb(var(--shadow-color{THEME_PROP})));
+    }
+
+    .tooltip.theme{THEME} .tooltipContent {
       background-image: var(--base-gradient{THEME_PROP}) !important;
       filter: drop-shadow(1.5px 1.5px rgb(var(--shadow-color{THEME_PROP})));
     }
@@ -144,7 +155,16 @@
       filter: drop-shadow(1.5px 1.5px rgba(var(--shadow-color-hc{THEME_PROP}), var(--shadow-opacity-hc{THEME_PROP}, 1)));
     }
 
+    body.highContrast .tooltip.theme{THEME} .tooltipContent {
+      background-image: var(--base-gradient-hc{THEME_PROP}) !important;
+      filter: drop-shadow(1.5px 1.5px rgba(var(--shadow-color-hc{THEME_PROP}), var(--shadow-opacity-hc{THEME_PROP}, 1)));
+    }
+
     .tippy-box.theme{THEME} .tippy-content .tooltipContent.noShadow {
+      filter: unset;
+    }
+
+    .tooltip.theme{THEME} .tooltipContent.noShadow {
       filter: unset;
     }
 
@@ -152,7 +172,15 @@
       background-image: var(--alt-gradient{THEME_PROP}) !important;
     }
 
+    .tooltip.theme{THEME} .tooltipContent.altText {
+      background-image: var(--alt-gradient{THEME_PROP}) !important;
+    }
+
     body.highContrast .tippy-box.theme{THEME} .tippy-content .tooltipContent.altText {
+      background-image: var(--alt-gradient-hc{THEME_PROP}) !important;
+    }
+
+    body.highContrast .tooltip.theme{THEME} .tooltipContent.altText {
       background-image: var(--alt-gradient-hc{THEME_PROP}) !important;
     }
   `;

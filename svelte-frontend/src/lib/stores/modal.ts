@@ -75,13 +75,21 @@ export const modal = {
           open: true
         };
       }
+      // Don't set open: false yet — let the container finish transitions first
       return {
+        ...state,
         activeModal: null,
-        modalData: undefined,
-        stack: [],
-        open: false
+        modalData: {},
+        stack: []
       };
     });
+  },
+
+  finalizeClose() {
+    update((state) => ({
+      ...state,
+      open: false
+    }));
   },
 
   confirm(message: string, onOk: () => void, onCancel?: () => void) {

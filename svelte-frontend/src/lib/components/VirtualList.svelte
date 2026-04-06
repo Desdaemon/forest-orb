@@ -191,14 +191,14 @@
   });
 </script>
 
-<div {...props} bind:this={containerEl} onscroll={onScroll}>
+<div role="list" {...props} bind:this={containerEl} onscroll={onScroll}>
   {#if itemCount === 0}
     {@render empty?.()}
   {:else}
     <div style="position: relative; height: {totalHeight}px;">
       {#each visibleItems as item, localIndex (visibleStart + localIndex)}
         {@const index = visibleStart + localIndex}
-        <div style="position: absolute; inset-inline: 0; top: {offsets[index]}px;" use:measureRow={index}>
+        <div role="listitem" style="position: absolute; inset-inline: 0; top: {offsets[index]}px;" use:measureRow={index}>
           {@render row?.(item, index)}
         </div>
       {/each}
