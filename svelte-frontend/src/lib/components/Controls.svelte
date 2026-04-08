@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { type ModalId } from '$lib/stores/modal';
+  import type { ModalId } from '$lib/stores/modal';
   import { tooltipLabel } from './Tooltip.svelte';
   import { LL } from '$lib';
   import { disableChat, hideLocation, mute, privateMode } from '$lib/config';
@@ -95,11 +95,11 @@
       {...tooltipLabel($LL.ui.tooltips.uiTheme())}
       onclick={handleThemeClick}
     >
-      <svg viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
+      <svg viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
           d="m4.5 3c4.5-4.5 13.5-3 13.5-0.375m-4.125 6.375c-1.875 0-3.375 1.5-1.875 1.875m3 2.625c3 1.5-4.5 6-10.5 4.5-7.5-3-4.5-12 0-15m9-0.75a1.5 1.5 90 0 0 0 3.75 1.5 1.5 90 0 0 0-3.75m-6 0.75a1.5 1.5 90 0 0 0 3 1.5 1.5 90 0 0 0-3m-3.75 4.5a1.5 1.5 90 0 0 0 3 1.5 1.5 90 0 0 0-3m1.5 5.25a1.5 1.5 90 0 0 0 3 1.5 1.5 90 0 0 0-3m6-0.75a1.5 1.5 90 0 0-0.75 4.5q2.25 0 3-1.875m7.5-14.625q-6 4.5-7.5 10.5l1.5 0.75q4.5-3.75 6-11.25m-7.5 10.5c-3 0-1.5 3-3 4.5 6 0 4.5-3 4.5-3.75m-3.75 2.25c0.75 1.5 1.5 0 1.5 1.275"
-        /></svg
-      >
+        />
+      </svg>
     </button>
     <button
       id="chatButton"
@@ -111,11 +111,12 @@
         onToggleChat?.();
       }}
     >
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
           d="m3 18l6-4.5h6q3 0 3-3v-7.5q0-3-3-3h-12q-3 0-3 3v7.5q0 3 3 3h1.5l-1.5 4.5m11.25-12.75a1.5 1.5 90 0 1 0 3 1.5 1.5 90 0 1 0 -3m-5.25 0a1.5 1.5 90 0 1 0 3 1.5 1.5 90 0 1 0 -3m-5.25 0a1.5 1.5 90 0 1 0 3 1.5 1.5 90 0 1 0 -3"
-        /><path d="m-2 16l22-14" /></svg
-      >
+        />
+        <path d="m-2 16l22-14" />
+      </svg>
     </button>
     <button id="screenshotButton" class="iconButton unselectable" {...tooltipLabel($LL.ui.tooltips.screenshot())}>
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
@@ -129,11 +130,11 @@
       class="iconButton accountRequired unselectable"
       {...tooltipLabel($LL.ui.tooltips.myScreenshots())}
     >
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
           d="m0 2h18v13h-18zv13-11.5 11.5zm2.5 10.5v-1.5l2.75-3 2.25 1.5 3.75-3.75 4.25 3.25v3.5zm0-6.75a0.75 0.75 90 0 0 3 0 0.75 0.75 90 0 0-3 0z"
-        ></path></svg
-      >
+        />
+      </svg>
     </button>
     <button
       id="settingsButton"
@@ -154,9 +155,10 @@
       onclick={mute.toggle}
       {...tooltipLabel($LL.ui.tooltips.toggleMute())}
     >
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path d="m0 7h3l4-4v12l-4-4h-3v-4m10 0q1 2 0 4m3-5.5q2 3.5 0 7m3-9.5q4 6 0 12" /><path d="m-2 16l22-14" /></svg
-      >
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path d="m0 7h3l4-4v12l-4-4h-3v-4m10 0q1 2 0 4m3-5.5q2 3.5 0 7m3-9.5q4 6 0 12" />
+        <path d="m-2 16l22-14" />
+      </svg>
     </button>
     <button
       id="hideLocationButton"
@@ -165,11 +167,12 @@
       onclick={hideLocation.toggle}
       {...tooltipLabel($LL.ui.tooltips.toggleHideLocation())}
     >
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
           d="m3 5q1-5 6-5t6 5-6 11q-7-6-6-11m6-2a1 1 0 0 0 0 5 1 1 0 0 0 0 -5m-2 11c-1 0-3 1-3 2s2 2 5 2 5-1 5-2-2-2-3-2"
-        /><path d="m-2 16l22-14" /></svg
-      >
+        />
+        <path d="m-2 16l22-14" />
+      </svg>
     </button>
   </div>
   <div id="rightControls" role="presentation">
@@ -183,11 +186,11 @@
         onclick={handleEventsClick}
         {...tooltipLabel($LL.ui.tooltips.events())}
       >
-        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-          ><path
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+          <path
             d="m0 9l6.5-1.5-1.5-2.5 2.5 1.5 1.5-6.5 1.5 6.5 2.5-1.5-1.5 2.5 6.5 1.5-6.5 1.5 1.5 2.5-2.5-1.5-1.5 6.5-1.5-6.5-2.5 1.5 1.5-2.5-6.5-1.5m7.75-6q-4.75 0-4.75 4.75m7.25-4.75q4.75 0 4.75 4.75m-7.25 7.25q-4.75 0-4.75-4.75m7.2656 4.75q4.7344 0 4.7344-4.75m-6-2.75a1 1 90 0 0 3 1 1 90 0 0 -3"
-          /></svg
-        >
+          />
+        </svg>
       </button>
     </div>
     <button
@@ -197,11 +200,11 @@
       aria-label="Toggle Fullscreen"
       onclick={handleFullscreenClick}
     >
-      <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
+      <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
           d="M13.5 13.5H10m3.5 0V10m0 3.5l-4-4m.5-8h3.5m0 0V5m0-3.5l-4 4M5 1.5H1.5m0 0V5m0-3.5l4 4m-4 4.5v3.5m0 0H5m-3.5 0l4-4"
-        ></path></svg
-      >
+        />
+      </svg>
     </button>
   </div>
 </div>

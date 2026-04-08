@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { getInfo, getSaveSyncTimestamp, type UserInfo } from '$lib/api';
   import { getInitPayload, inferGameId, inferGameName, gameNameMap } from '$lib/init';
   import { setPlayerName, initEasyRpgEngine } from '$lib/play';
