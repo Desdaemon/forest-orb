@@ -145,11 +145,18 @@
     {#if !isSystem}
       <div class={senderClass}>
         {#if isGlobal}
-          <span class="chatTypeIcon">[G]</span>
+          <span class="chatTypeIcon">
+            <div class="globalIcon icon fillIcon">
+              <svg viewBox="0 0 18 18">
+                <path
+                  d="m0.5 6h6l8.625-3.75q0.375 0 0.375 0.375v12.75q0 0.375-0.375 0.375l-8.625-3.75h-3c-3.75 0-3.75-6 0-6m12.375 1.5h0.375q0.75 0 0.75 0.75v1.5q0 0.75-0.75 0.75h-0.375v-3m-9.75 4.875-0.9375 2.8125q-0.1875 0.5625-0.5625 0.5625h-1.6875q-0.1875 0 0-0.5625l0.9375-2.8125h2.25"
+                />
+              </svg>
+            </div>
+          </span>
         {:else if isParty}
           <span class="chatTypeIcon">[P]</span>
-        {/if}
-        <span class={nameMarkerClass}>{startMarker}</span><bdi class={nameTextClass}>{resolvedSenderLabel}</bdi
+        {/if}<span class={nameMarkerClass}>{startMarker}</span><bdi class={nameTextClass}>{resolvedSenderLabel}</bdi
         >{#if badgeId}<span class="badge nameBadge" style={badgeStyle} aria-hidden="true"></span>{/if}<span
           class={nameMarkerClass}>{endMarker}</span
         >

@@ -1,6 +1,6 @@
-import { getGameInitState, isBrowser } from './init';
+import { getGameInitState } from './init';
 import { createEngineAPI } from './engine-api';
-import type { GlobalConfig, UserConfig } from './settingsSchema';
+import type { GlobalConfig, UserConfig } from './config';
 
 export const defaultGlobalConfig = {
   lang: 'en',
@@ -53,8 +53,15 @@ export const defaultUserConfig = {
   globalMessage: false,
   hideGlobalMessageLocations: false,
   filterMentions: false,
-  trackedLocationId: null
+  trackedLocationId: null,
+
+  // 2kki only
+  last2kkiVersion: null,
+  explorer: false,
+  enableExplorer: false,
 };
+
+export const LATIN_EX_LANGS = ['vi', 'ru', 'uk'];
 
 export type ConfigScope = 'global' | 'user';
 export type ConfigByScope = {
@@ -62,6 +69,7 @@ export type ConfigByScope = {
   user: UserConfig;
 };
 export type ConfigKey<TScope extends ConfigScope> = keyof ConfigByScope[TScope];
+export type AllConfigKeys = keyof typeof defaultGlobalConfig | keyof typeof defaultUserConfig;
 
 export function loadConfigFromStorage(gameId: string) {
   if (typeof localStorage === 'undefined') return null;
@@ -79,38 +87,6 @@ export function saveConfigToStorage(gameId: string, config: Partial<GlobalConfig
   if (typeof localStorage === 'undefined') return;
   const existing = loadConfigFromStorage(gameId) || {};
   localStorage.setItem(`ynoproject_config_${gameId}`, JSON.stringify({ ...existing, ...config }));
-}
-
-// Canvas rendering from legacy play.js behavior streamline
-let canvasEl: HTMLCanvasElement | null = null;
-let animFrame: number | null = null;
-
-function resizeCanvas() {
-  if (!canvasEl) return;
-  const w = Math.max(320, Math.floor(window.innerWidth * 0.95));
-  const h = Math.max(240, Math.floor(window.innerHeight * 0.65));
-  canvasEl.width = w;
-  canvasEl.height = h;
-}
-
-export function initGameCanvas(canvas: HTMLCanvasElement) {
-  // if (!canvas) return;
-  // canvasEl = canvas;
-  // ctx = canvas.getContext('2d');
-  // if (!ctx) return;
-  // resizeCanvas();
-  // window.addEventListener('resize', resizeCanvas);
-  // if (animFrame !== null) window.cancelAnimationFrame(animFrame);
-  // animFrame = window.requestAnimationFrame(renderFrame);
-}
-
-export function teardownGameCanvas() {
-  if (!isBrowser) return;
-  if (animFrame !== null) window.cancelAnimationFrame(animFrame);
-  window.removeEventListener('resize', resizeCanvas);
-  canvasEl = null;
-  ctx = null;
-  animFrame = null;
 }
 
 let easyrpgPlayer: any = null;
@@ -160,10 +136,6 @@ export async function initEasyRpgEngine() {
     } catch (err) {
       console.error('easyrpgPlayer hook error', err);
     }
-  }
-
-  if (canvasEl) {
-    canvasEl.focus();
   }
 
   return easyrpgPlayer;

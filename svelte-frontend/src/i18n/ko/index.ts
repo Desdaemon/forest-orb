@@ -1,0 +1,1255 @@
+import type { BaseTranslation, Translation } from '../i18n-types';
+
+const ko = {
+  translationComplete: '1',
+  version: {
+    '2kki': {
+      label: '유메2키 버전 {VERSION}',
+      substitutes: {
+        ' Patch ': ' 패치 ',
+        '?': '?'
+      }
+    }
+  },
+  ui: {
+    account: {
+      login: '로그인',
+      logout: '로그아웃'
+    },
+    fontStyle: {
+      label: '폰트 스타일:',
+      values: {
+        style1: '스타일 1',
+        style2: '스타일 2',
+        style3: '스타일 3',
+        style4: '스타일 4',
+        style5: '스타일 5',
+        style6: '스타일 6',
+        style7: '스타일 7'
+      }
+    },
+    chatbox: {
+      location: '현위치',
+      nextLocation: 'Next Loc:&nbsp;',
+      immersionMode: '몰입 모드',
+      reconnect: '재연결',
+      tab: {
+        chat: '채팅',
+        players: '플레이어',
+        parties: '파티 목록'
+      },
+      chat: {
+        tab: {
+          all: '전체',
+          map: '로컬',
+          global: '글로벌',
+          party: '파티'
+        },
+        nickname: {
+          header: '채팅을 시작하기 전에 닉네임을 반드시 설정해 주세요',
+          rule: {
+            maxLength: '* 최대 10자까지 가능합니다',
+            alphanumeric: '* 알파벳 문자만 가능합니다'
+          }
+        }
+      },
+      players: {
+        tab: {
+          map: '로컬',
+          friends: '친구',
+          party: '파티 멤버'
+        }
+      }
+    },
+    instruction: {
+      translation: '번역 작업이 필요합니다',
+      noGameLoc: '* 게임 번역을 지원하지 않습니다'
+    },
+    '2kki': {
+      hostedWithPermission: '본 서버는 유메2키 개발진의 허가를 받아 운영됩니다.'
+    },
+    disclaimer: {
+      pendingApproval: 'Pending approval from developer/publisher',
+      hostedWithPermission: 'Hosted with permission from the developer(s)',
+      originalCreation: 'Original creation by the YNOproject community'
+    },
+    modal: {
+      common: {
+        save: 'Save',
+        apply: 'Apply'
+      },
+      confirm: {
+        ok: '확인',
+        cancel: '취소'
+      },
+      login: {
+        title: '로그인',
+        fields: {
+          username: '아이디',
+          password: '비밀번호'
+        },
+        submit: '확인',
+        registerPrompt: '계정이 없으신가요?&nbsp;',
+        register: '계정 만들기'
+      },
+      register: {
+        title: '계정 만들기',
+        fields: {
+          email: '이메일 주소',
+          username: '아이디',
+          password: '비밀번호',
+          confirmPassword: '비밀번호 확인'
+        },
+        submit: '확인',
+        loginPrompt: '이미 계정을 가지고 계신가요?&nbsp;',
+        login: '로그인'
+      },
+      settings: {
+        title: '옵션',
+        fields: {
+          lang: '언어',
+          locationVisibility: {
+            label: '인게임 장소 표시하기',
+            values: {
+              private: '비공개',
+              friends: '친구만',
+              public: '전체 공개'
+            }
+          },
+          nametagMode: {
+            label: '이름표',
+            values: {
+              none: '없음',
+              classic: '기본',
+              compact: '확장',
+              slim: '슬림'
+            }
+          },
+          wikiLinkMode: {
+            label: 'Wiki Link Popup',
+            values: {
+              always: 'Always',
+              fullscreen: 'Fullscreen Only',
+              never: 'Never'
+            }
+          },
+          saveReminder: {
+            label: '세이브 리마인더 알람',
+            interval: {
+              minutes: '{{interval}}분마다',
+              never: '보내지 않음'
+            }
+          },
+          soundVolume: '소리 볼륨',
+          musicVolume: '음악 볼륨',
+          togglePlayerSounds: '다른 플레이어의 소리 듣기',
+          toggleEnableBadgeHints: {
+            label: 'Badge Hints',
+            helpText:
+              "Badge hints become available once you have unlocked the 'Badge Collector Amulet EX' badge. When enabled, an icon will appear in the top right when you enter a location with at least one badge you haven't unlocked."
+          },
+          togglePlayBadgeHintSound: 'Play Badge Hint Sound',
+          toggleEnableExplorer: {
+            label: '유메2키 내비게이터',
+            helpText:
+              '유메2키 내비게이터는 현재 위치와 연결된 장소들을 한눈에 볼 수 있는 유메2키 익스플로러와 연동된 기능입니다. 이 기능은 당신의 경험에 크게 영향을 미칠 수 있으므로 이 기능을 활성화하기 전 대부분의 장소를 탐색하는 것을 강력히 추천해 드립니다. 유메2키 내비게이터는 로그인 해야 사용할 수 있습니다.'
+          },
+          toggleImmersionMode: {
+            label: '몰입 모드',
+            helpText: '보다 몰입감 높은 경험을 제공하기 위해 플레이어 수, 글로벌 채팅 및 맵을 표시하지 않습니다.'
+          },
+          timeTrialinfo: {
+            label: '타임 어택'
+          },
+          toggleMobileControls: '모바일 컨트롤러 표시',
+          mobileControlsType: {
+            label: '모바일 컨트롤러 타입',
+            default: '기본',
+            joystick: '조이스틱',
+            dpad: '십자키'
+          },
+          toggleLocationDisplay: '맵 타이틀 팝업 표시',
+          toggleRankings: '랭킹',
+          togglePreloads: {
+            label: '프리로드',
+            helpText:
+              '빈번하게 사용되는 게임 애셋을 우선적으로 불러와 필요할 때 사용할 수 있도록 합니다. 체크 후 새로고침을 해야 적용됩니다.'
+          },
+          toggleQuestionablePreloads: 'PC 배경화면을 프리로드 하기',
+          toggleSchedules: 'Events',
+          unicodeFont: 'Alternate Font',
+          toggleSingleplayerMode: {
+            label: 'Singleplayer Mode',
+            helpText:
+              'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
+          }
+        },
+        blocklist: '차단 목록',
+        chatSettings: '채팅',
+        screenshotSettings: '스크린샷',
+        notificationSettings: '알람',
+        cacheSettings: 'Cache',
+        accountSettings: '계정',
+        engineSettings: 'Engine (F1)'
+      },
+      blocklist: {
+        title: '차단 목록',
+        empty: '차단 목록이 비어있습니다'
+      },
+      chatSettings: {
+        title: '채팅 설정',
+        fields: {
+          toggleGameChat: {
+            label: '인게임 채팅을 게임 화면 위에 표시',
+            global: '글로벌 채팅을 게임 화면 위에 표시',
+            party: '파티 채팅을 게임 화면 위에 표시'
+          },
+          toggleTabToChat: '탭을 눌러 채팅하기',
+          togglePlayMentionSound: '멘션 알람 켜기',
+          chatHistoryLimit: {
+            values: {
+              '0': '제한 없음',
+              '25': '25개',
+              '50': '50개',
+              '100': '100개',
+              '250': '250개',
+              '500': '500개',
+              '1000': '1000개',
+              '2500': '2500개'
+            }
+          },
+          mapChatHistoryLimit: {
+            label: '로컬 채팅 내역 한도'
+          },
+          globalChatHistoryLimit: {
+            label: '글로벌 채팅 내역 한도'
+          },
+          partyChatHistoryLimit: {
+            label: '파티 채팅 내역 한도'
+          },
+          blurScreenshotEmbeds: 'Blur All Screenshots'
+        }
+      },
+      screenshotSettings: {
+        title: '스크린샷 설정',
+        fields: {
+          autoDownloadScreenshots: '자동으로 스크린샷 다운로드하기',
+          screenshotResolution: {
+            label: '스크린샷 해상도',
+            values: {
+              '1': '1x - 320x240',
+              '2': '2x - 640x480',
+              '3': '3x - 960x720',
+              '4': '4x - 1280x960'
+            }
+          }
+        }
+      },
+      notificationSettings: {
+        title: '알람 설정',
+        fields: {
+          toggleNotifications: '알람',
+          screenPosition: {
+            label: '표시 장소',
+            values: {
+              bottomLeft: '좌측 하단',
+              bottomRight: '우측 하단',
+              topLeft: '좌측 상단',
+              topRight: '우측 상단'
+            }
+          },
+          system: {
+            label: '시스템',
+            fields: {
+              siteUpdates: '사이트 업데이트',
+              error: '에러 발생',
+              pushNotifications: 'Desktop Notifications'
+            }
+          },
+          account: {
+            label: '계정',
+            fields: {
+              loggedIn: '로그인',
+              loggedOut: '로그아웃',
+              passwordUpdate: '비밀번호 변경됨'
+            }
+          },
+          players: {
+            label: '플레이어',
+            fields: {
+              playerBlocked: '플레이어 차단',
+              playerUnblocked: '플레이어 차단 해제'
+            }
+          },
+          friends: {
+            label: '친구',
+            fields: {
+              add: '친구 추가됨',
+              remove: '친구 삭제함',
+              accept: '친구 신청 수락됨',
+              reject: '친구 신청 거절됨',
+              cancel: '친구 신청 취소됨',
+              incoming: '친구 신청 수신',
+              playerOnline: '온라인 친구',
+              playerOffline: '오프라인 친구'
+            }
+          },
+          parties: {
+            label: '파티',
+            fields: {
+              create: '파티 생성함',
+              update: '파티 업데이트함',
+              join: '파티 참가함',
+              leave: '파티 퇴장함',
+              remove: '파티에서 지워짐',
+              disband: '파티 해산함',
+              playerJoin: '파티에 플레이어가 참가함',
+              playerLeave: '파티에 플레이어가 퇴장함',
+              playerOnline: '파티 멤버 온라인',
+              playerOffline: '파티 멤버 오프라인',
+              kickPlayer: '파티에서 플레이어를 강퇴함',
+              transferPartyOwner: '플레이어를 파티 리더로 임명함'
+            }
+          },
+          events: {
+            label: '탐험',
+            fields: {
+              complete: '탐험 성공',
+              freeComplete: '자유 탐험 성공',
+              vmComplete: '자판기를 찾음',
+              listUpdated: '탐험 리스트 업데이트'
+            }
+          },
+          badges: {
+            label: '배지',
+            fields: {
+              badgeUnlocked: '배지 해금'
+            }
+          },
+          timeTrials: {
+            label: 'Time Trials',
+            fields: {
+              goalReached: 'Goal Reached'
+            }
+          },
+          screenshots: {
+            label: '스크린샷',
+            fields: {
+              screenshotTaken: '스크린샷 촬영됨'
+            }
+          },
+          saveSync: {
+            label: '세이브 동기화',
+            fields: {
+              saveUploading: '세이브 데이터 업로드 중',
+              saveUploaded: '세이브 데이터 업로드 완료',
+              saveDownloading: '세이브 데이터 다운로드 중',
+              saveDownloaded: '세이브 데이터 다운로드 완료',
+              saveUpToDate: '세이브 데이터 업데이트',
+              saveCleared: '세이브 데이터 삭제됨',
+              saveReminder: '세이브 리마인더'
+            }
+          },
+          schedules: {
+            label: 'Events',
+            fields: {
+              upcomingSchedules: 'Upcoming Events'
+            }
+          }
+        }
+      },
+      cacheSettings: {
+        title: 'Cache Settings',
+        clear: 'Clear',
+        fields: {
+          locationCache: 'Location Cache',
+          mapCache: 'Map Cache',
+          locationColorCache: 'Location Color Cache'
+        }
+      },
+      accountSettings: {
+        title: '계정 설정',
+        fields: {
+          badge: '배지',
+          changePassword: '비밀번호 변경',
+          clearSaveSync: '동기화된 세이브 삭제하기'
+        }
+      },
+      password: {
+        title: '비밀번호 변경',
+        fields: {
+          oldPassword: '이전 비밀번호',
+          newPassword: '새로운 비밀번호',
+          newConfirmPassword: '새로운 비밀번호 확인'
+        },
+        submit: '결정'
+      },
+      badges: {
+        title: '배지',
+        manageBadgeGallery: '배지 갤러리 편집',
+        fields: {
+          unlockStatus: {
+            label: '잠금 상태:&nbsp;',
+            values: {
+              '0': '잠김',
+              '1': '해금',
+              all: '전체',
+              recentUnlock: '최근에 해금'
+            }
+          },
+          sortOrder: {
+            label: '정렬 순:&nbsp;',
+            values: {
+              default: '기본'
+            }
+          },
+          search: {
+            label: '검색:&nbsp;',
+            name: '이름:',
+            location: '장소:'
+          }
+        }
+      },
+      badgeGallery: {
+        title: '배지 갤러리 편집',
+        badgeGalleryRowProgress: '다음 행 업그레이드 (BP)',
+        badgeGalleryColProgress: '다음 열 업그레이드 (배지)',
+        removeMode: {
+          activate: '배지 삭제하기',
+          deactivate: '완료'
+        },
+        manageBadgePreset: 'Manage Presets'
+      },
+      badgePreset: {
+        title: 'Manage Badge Presets',
+        selectPreset: 'Select Preset',
+        presetName: 'Preset {{index}}'
+      },
+      save: {
+        title: '세이브 데이터 관리',
+        reload: '변경 사항을 저장 후 새로고침',
+        info: '만약 번역을 적용한 세이브 파일을 불러오셨다면, EasyRPG에서 번역을 적용하지 않은 상태에서 한 번 더 저장한 후 파일을 불러와 주십시오. 그렇지 않으면 오류가 표시됩니다.'
+      },
+      uiTheme: {
+        title: 'UI 테마',
+        auto: '자동'
+      },
+      createParty: {
+        title: {
+          create: '파티 생성',
+          update: '파티 편집'
+        },
+        fields: {
+          partyName: '파티 이름',
+          description: '설명',
+          public: '공개',
+          password: '비밀번호',
+          theme: '메뉴 타입'
+        },
+        showPassword: '비밀번호 보이기',
+        hidePassword: '비밀번호 숨기기',
+        submit: '확인'
+      },
+      joinPrivateParty: {
+        title: '비공개 파티 참가',
+        fields: {
+          password: '비밀번호'
+        },
+        showPassword: '비밀번호 보이기',
+        hidePassword: '비밀번호 숨기기',
+        incorrectPassword: '비밀번호가 올바르지 않습니다. 다시 시도해주세요',
+        submit: '확인'
+      },
+      events: {
+        title: '탐험',
+        rankExp: '다음 랭크',
+        weekExp: '이번 주의 경험치',
+        tabs: {
+          locations: '장소 찾기',
+          vms: '자판기 찾기'
+        }
+      },
+      rankings: {
+        title: '랭킹',
+        player: 'Player'
+      },
+      screenshot: {
+        title: '나의 스크린샷',
+        download: '다운로드',
+        save: '나의 스크린샷에 저장',
+        share: 'Share in Chat'
+      },
+      myScreenshots: {
+        title: '나의 스크린샷 목록',
+        screenshotSlotProgress: '다음 슬롯 확장 (BP)',
+        empty: '아직 스크린샷을 저장하지 않았습니다'
+      },
+      communityScreenshots: {
+        title: '커뮤니티 스크린샷',
+        scrollToRefresh: '위쪽으로 스크롤하여 새로고침하기',
+        fields: {
+          game: {
+            label: '게임명:&nbsp;',
+            values: {
+              all: '전체'
+            }
+          },
+          sortOrder: {
+            values: {
+              recent: '최신순',
+              likes: '인기순'
+            }
+          },
+          interval: {
+            values: {
+              day: '오늘',
+              week: '이번 주',
+              month: '이번 달',
+              year: '올해',
+              all: '전체'
+            }
+          }
+        }
+      },
+      schedule: {
+        title: 'Events',
+        ongoing: 'Ongoing Events',
+        party: 'Party Events',
+        future: 'Future Events',
+        official: 'Official Events',
+        noResults: 'No events have been scheduled.',
+        doSchedule: 'Schedule an Event'
+      },
+      scheduleEdit: {
+        title: 'Edit Event',
+        save: 'Save',
+        cancel: 'Cancel Event',
+        fields: {
+          name: 'Event Name',
+          description: 'Description',
+          datetime: 'Event Date and Time',
+          recurring: 'Recurring Event',
+          theme: '메뉴 타입',
+          interval: {
+            title: 'Interval',
+            days: 'days',
+            months: 'months',
+            years: 'years'
+          },
+          restrictParty: 'Limit to Party',
+          official: 'Official Event',
+          resetOrganizer: 'Reset Organizer',
+          platforms: {
+            title: 'External Links',
+            discord: 'Discord',
+            youtube: 'YouTube',
+            twitch: 'Twitch',
+            niconico: 'Nicovideo',
+            openrec: 'Openrec',
+            bilibili: 'Bilibili'
+          }
+        }
+      },
+      report: {
+        title: 'Report',
+        submit: 'Submit',
+        fields: {
+          reason: {
+            '1': 'Slurs, harmful or inappropriate language',
+            '2': 'Harassment, bullying, stalking',
+            '3': 'Inappropriate names',
+            '4': 'Ban evasion',
+            '5': 'Cheating, abusing exploits',
+            '6': 'Underage player',
+            '7': 'Spam',
+            title: 'Reason',
+            placeholder: 'Custom reason (max 50 characters)',
+            other: 'Other (specify)'
+          }
+        }
+      },
+      rules: {
+        title: '규칙',
+        rule1: '상대방에게 공손하고 예의 바르게 행동해 주십시오.',
+        rule2: '19금 대화는 금지입니다(후방주의물, 고어, 기타 등등).',
+        rule3: '정치적 발언은 금지입니다.',
+        rule4: '선동적인 언행은 금지입니다(비난 포함).',
+        rule5: '어느 경우더라도 치트는 사용하지 마십시오.',
+        rule6: '문제가 있으면 운영진에게 알려 주십시오.'
+      },
+      explorerUndiscoveredLocations: {
+        title: '미발견 장소',
+        complete: '축하합니다!! 방문할 수 있는 모든 장소를 발견하셨습니다!'
+      },
+      locations: {
+        title: '장소 찾기',
+        fields: {
+          visited: {
+            values: {
+              all: 'All',
+              visited: 'Visited',
+              unvisited: 'Unvisited'
+            }
+          },
+          sortOrder: {
+            values: {
+              newest: 'Newest',
+              oldest: 'Oldest',
+              shallowest: 'Shallowest',
+              deepest: 'Deepest',
+              alpha: 'Alphabetical',
+              players: 'Player Count'
+            }
+          }
+        }
+      }
+    },
+    tooltips: {
+      togglePrivateMode: '비공개 모드 활성화',
+      save: '세이브 데이터 관리',
+      uiTheme: 'UI 테마',
+      toggleChat: '채팅 표시',
+      toggleExplorer: '유메2키 내비게이터 활성화',
+      screenshot: '스크린샷 찍기',
+      myScreenshots: '나의 스크린샷',
+      settings: '옵션',
+      toggleMute: '음소거',
+      toggleHideLocation: 'Toggle Location Sharing',
+      toggleGlobalMessage: '글로벌 채팅 활성화',
+      chat: {
+        toggleNextLocation: 'Show/Hide Next Expedition Location',
+        toggleGlobalMessageLocations: '채팅 메시지 장소 보이기/숨기기',
+        toggleMessageTimestamps: '채팅 메시지 타임 스탬프 보이기/숨기기',
+        filterMentions: 'Show Mentions Only',
+        clearChat: '채팅 기록 삭제하기'
+      },
+      parties: {
+        createParty: '파티 생성',
+        disbandParty: '파티 해산'
+      },
+      events: '탐험',
+      locations: '장소 찾기',
+      communityScreenshots: '커뮤니티 스크린샷',
+      rankings: '랭킹',
+      schedules: 'Events',
+      nexus: '넥서스로 돌아가기',
+      explorerUndiscoveredLocations: '미발견 장소 보기',
+      timeTrial: 'Time Trial Mode는 새 게임을 시작한 직후, 쉬프트와 오른쪽 방향키를 동시에 누르고 있으면 활성화됩니다.',
+      mobileControlsType:
+        '컨트롤러 타입을 기본으로 변경합니다. <br>이외의 타입은 모바일 전체 화면에서만 이용할 수 있습니다.'
+    },
+    placeholders: {
+      scheduleDescription:
+        'Markdown syntax is accepted, use {\\{l:World,optional link name}} to insert a link to yume.wiki'
+    },
+    reviewRules: '규칙 다시 보기'
+  },
+  messages: {
+    games: {
+      ynoproject: 'YNOproject',
+      yume: 'ゆめにっき(유메닛키)',
+      '2kki': 'ゆめ２っき(유메2키)',
+      unconscious: 'Collective Unconscious',
+      flow: '.flow',
+      fog: 'FOG',
+      prayers: 'Answered Prayers(이루어진 기도들)',
+      deepdreams: 'Deep Dreams(딥 드림즈)',
+      someday: 'Someday',
+      amillusion: 'Amillusion',
+      unevendream: 'Uneven Dream',
+      braingirl: 'Braingirl',
+      muma: 'Muma|Rope',
+      genie: 'Dream Genie',
+      mikan: '未完夢像(미완몽상)',
+      ultraviolet: 'Ultra Violet',
+      sheawaits: 'She Awaits',
+      oneshot: 'OneShot',
+      oversomnia: 'Oversomnia',
+      tsushin: 'Yume Tsushin',
+      nostalgic: 'nostAlgic',
+      if: 'If',
+      unaccomplished: 'Unaccomplished'
+    },
+    leavePage: '저장하지 않은 게임 진행 상황이 손실됩니다. 정말 창을 닫으시겠습니까?',
+    logout: '정말 로그아웃 하시겠습니까?',
+    loadingInstruct:
+      '. <br /> <br /> 사이트가 오랜 시간 동안 로딩 중인 것 같습니다. 이 문제가 지속된다면 Ctrl+F5 키를 누르거나 브라우저의 캐시를 삭제해 주십시오(쿠키는 지우지 마세요!). F12 키를 눌러 개발자 도구의 console 창을 통해 오류를 확인할 수 있습니다.',
+    requestNotifications: 'Receive notifications for followed events and expedition refreshes?',
+    connStatus: {
+      '0': '연결 끊김',
+      '1': '연결됨',
+      '2': '연결 중...',
+      '3': '비공개 모드',
+      '4': 'Singleplayer'
+    },
+    lastOnline: {
+      template: '마지막 접속\n{INTERVAL} 전',
+      longTime: '오래 전',
+      interval: {
+        short: '방금',
+        minutes: {
+          singular: '{VALUE} 분',
+          plural: '{VALUE} 분'
+        },
+        hours: {
+          singular: '{VALUE} 시간',
+          plural: '{VALUE} 시간'
+        },
+        days: {
+          singular: '{VALUE} 일',
+          plural: '{VALUE} 일'
+        }
+      }
+    },
+    location: {
+      template: '{LOCATION} ({LOCATION_EN})',
+      queryingLocation: '위치 검색 중...',
+      unknownLocation: '알 수 없는 장소',
+      '2kki': {
+        template: '{LOCATION_JP} ({LOCATION})'
+      },
+      connType: {
+        '1': 'One-Way',
+        '2': 'No Entry',
+        '4': 'Unlock',
+        '8': 'Locked',
+        '16': 'Dead End',
+        '32': 'Isolated',
+        '64': 'Requires Effect ({PARAMS})',
+        '128': '{PARAMS} Chance',
+        '256': '{PARAMS}',
+        '512': 'Shortcut',
+        '1024': 'Exit Point',
+        '2048': 'Seasonal ({PARAMS})'
+      },
+      depth: ' ({DEPTH})',
+      playing: '{GAME} 플레이 중'
+    },
+    locationDisplay: {
+      template: '{LOCATION}',
+      '2kki': {
+        template: '{LOCATION_JP}（{LOCATION}）'
+      }
+    },
+    playersOnline: {
+      singular: '{COUNT}명이 온라인입니다',
+      plural: '{COUNT}명이 온라인입니다'
+    },
+    playersInMap: {
+      singular: '현 위치에 {COUNT}명이 있습니다',
+      plural: '현 위치에 {COUNT}명이 있습니다'
+    },
+    playerList: {
+      unnamed: '익명의 플레이어',
+      muted: '채팅 금지됨',
+      actions: {
+        approveFriend: '친구 신청 수락',
+        rejectFriend: '친구 신청 거절',
+        cancelFriend: '친구 신청 취소',
+        partyKick: '파티에서 강퇴하기',
+        transferPartyOwner: '파티 리더로 임명하기'
+      }
+    },
+    roles: {
+      mod: '서버 매니저',
+      dev: '서버 개발자'
+    },
+    timestamp: {
+      time: '{TIME}',
+      timeAndWeekday: '{TIME} ({WEEKDAY})'
+    },
+    context: {
+      ping: {
+        label: '{PLAYER} 멘션'
+      },
+      addFriend: {
+        label: '{PLAYER} 친구 신청'
+      },
+      removeFriend: {
+        label: '{PLAYER} 친구 삭제'
+      },
+      block: {
+        label: '{PLAYER} 차단',
+        confirm: '정말로 {PLAYER} 님을 차단하시겠습니까?'
+      },
+      unblock: {
+        label: '{PLAYER} 차단',
+        confirm: '정말로 {PLAYER} 님을 차단 해제하시겠습니까?'
+      },
+      report: {
+        label: 'Report {PLAYER}'
+      },
+      admin: {
+        ban: {
+          label: '{PLAYER} 추방',
+          confirm: '정말로 <{PLAYER}> 님을 추방하시겠습니까?',
+          success: '{PLAYER} 님을 추방했습니다'
+        },
+        unban: {
+          label: '{PLAYER} 추방 해제',
+          confirm: '정말로 <{PLAYER}> 님을 추방 해제하시겠습니까?',
+          success: '{PLAYER} 님을 추방 해제했습니다'
+        },
+        mute: {
+          label: '{PLAYER} 채팅 금지',
+          confirm: '정말로 <{PLAYER}> 님의 채팅 사용을 금지하시겠습니까?',
+          success: '{PLAYER} 님은 채팅 금지 상태가 되었습니다'
+        },
+        unmute: {
+          label: '{PLAYER} 채팅 허용',
+          confirm: '정말로 <{PLAYER}> 님의 채팅 사용을 허가하시겠습니까?',
+          success: '{PLAYER} 님은 채팅 허용 상태가 되었습니다'
+        },
+        grantBadge: {
+          label: '배지 수여',
+          prompt: '{PLAYER} 님에게 배지를 수여하기 위해 배지 ID를 입력해주세요',
+          success: '{BADGE}를 {PLAYER} 님에게 성공적으로 수여했습니다',
+          fail: '입력한 배지 ID와 일치하는 항목이 존재하지 않습니다'
+        },
+        revokeBadge: {
+          label: '배지 회수',
+          prompt: '{PLAYER} 님에게 배지를 회수하기 위해 배지 ID를 입력해주세요',
+          success: '{BADGE}를 {PLAYER} 님에게서 성공적으로 회수했습니다',
+          fail: '입력한 배지 ID와 일치하는 항목이 존재하지 않습니다'
+        },
+        tempban: {
+          label: 'Tempban {PLAYER}',
+          prompt: 'When to unban {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempbanned.'
+        },
+        tempmute: {
+          label: 'Tempmute {PLAYER}',
+          prompt: 'When to unmute {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempmuted.'
+        }
+      }
+    },
+    account: {
+      login: {
+        errors: {
+          invalidLogin: '아이디 혹은 비밀번호가 올바르지 않습니다'
+        }
+      },
+      register: {
+        errors: {
+          confirmPasswordMismatch: '확인용 비밀번호가 일치하지 않습니다',
+          invalidCredentials: '닉네임이나 비밀번호에 공백 또는 사용할 수 없는 문자가 있습니다',
+          emailTaken: '해당 이메일은 이미 사용하고 있습니다',
+          usernameTaken: '해당 아이디는 이미 사용하고 있습니다'
+        }
+      },
+      password: {
+        errors: {
+          confirmPasswordMismatch: '새로운 비밀번호가 일치하지 않습니다',
+          badLogin: '로그인 비밀번호가 올바르지 않습니다',
+          internalServerError: '에러가 발생했습니다. 나중에 다시 시도해주세요.'
+        }
+      }
+    },
+    chat: {
+      globalMessage: '글로벌 메시지'
+    },
+    friends: {
+      friend: '친구',
+      categories: {
+        incoming: '받은 친구 신청 - {COUNT}',
+        outgoing: '보낸 친구 신청 - {COUNT}',
+        online: '온라인 - {COUNT}',
+        offline: '오프라인 - {COUNT}'
+      }
+    },
+    parties: {
+      emptyMessage: '활성화된 파티가 없습니다',
+      yourParty: '현재 가입된 파티',
+      defaultPartyName: '{OWNER}님의 파티',
+      partyOwner: '파티 리더',
+      confirmDisband: '정말 파티를 해산하시겠습니까? 이 결정은 되돌릴 수 없습니다.',
+      confirmTransferPartyOwner: '정말 {PLAYER} 님을 파티 리더로 임명하시겠습니까?',
+      offlineMemberSuffix: 'Member offline',
+      categories: {
+        online: '온라인 - {COUNT}',
+        offline: '오프라인 - {COUNT}'
+      },
+      actions: {
+        viewPartyDetails: '파티 자세히 보기',
+        joinParty: '파티 참가',
+        joinPrivateParty: '비공개 파티 참가',
+        leaveParty: '파티 퇴장'
+      }
+    },
+    chatTips: {
+      template: '팁: {CONTENT}',
+      tips: {
+        backupReminder:
+          '정기적으로 세이브 파일을 다운로드하여 로컬 백업을 유지하는 것을 권장 드립니다. 이렇게 하면 브라우저 데이터가 지워져도 진행률이 손실되지 않습니다.',
+        menuTheme: '플레이어들의 닉네임 색은 적용하고 있는 메뉴 타입에 따라서 결정됩니다.',
+        playersInMap:
+          "채팅창 위에 있는 '~명이 온라인입니다.' 부분을 클릭하면 현재 자신이 위치하고 있는 맵에 몇 명의 플레이어가 있는지 알 수 있습니다.",
+        markdownSupport:
+          '특수 문자를 이용해서 채팅 글씨의 모양을 바꿀 수 있습니다. 현재 가능한 목록 : **굵게** (\\*\\*예시\\*\\*), *기울임* (\\*예시\\*, \\_예시\\_), __밑줄__ (\\_\\_예시\\_\\_), ~~취소선~~ (\\~\\~예시\\~\\~), ||스포일러|| (\\|\\|예시\\|\\|).',
+        tabToChat:
+          "PC로 플레이 할 경우, 탭(Tab) 키를 눌러서 인게임과 채팅 간의 조작을 전환할 수 있습니다. 이 기능은 설정의 '채팅'에서 '탭을 눌러 채팅하기'를 체크 해제하여 비활성화할 수 있습니다.",
+        chatTabNotifications:
+          "'로컬' 이나 '글로벌' 채팅 탭을 선택했을 때, 다른 탭에서 새로운 메시지가 작성되면 탭이 굵게 표시됩니다.",
+        clearChat:
+          "'채팅 기록 삭제하기' 버튼을 누르면 채팅 내역을 지울 수 있습니다. '전체' 탭이 아닌 다른 탭에서 삭제하였을 경우 해당 탭에 속해있는 채팅만 삭제됩니다.",
+        chatHistoryLimit:
+          "채팅 내역이 너무 길다면 게임 플레이 시, 성능 상의 문제가 발생할 수 있습니다. 설정의 '채팅'에서 '채팅 내역 한도' 옵션을 이용한다면 수동으로 채팅 내역을 삭제할 필요 없이, 제한된 숫자 이상의 과거 채팅 이력이 자동으로 삭제됩니다.",
+        parties:
+          '파티는 모험을 하는데에 있어 여러 사람들과 무리를 짓기 가장 좋은 방법입니다. 파티에 가입하면 멤버들의 위치를 확인하고 파티 내부 개인 채팅으로 대화할 수 있습니다.',
+        immersionMode:
+          '사람들이 모여 있는 장소가 표시되어서 신경 쓰인다면, 몰입 모드를 사용해보세요. 해당 모드는 글로벌 채팅, 플레이어 리스트, 플레이어 수 옵션을 제한하여 사람들을 찾는 데에 더 몰입감을 준답니다!',
+        friendsMenu:
+          '랭킹을 제외한 다른 곳에서 플레이어의 닉네임을 PC의 경우 오른쪽 클릭, 모바일의 경우 길게 누르면 창이 열리며 해당 플레이어에게 친구 신청을 보내거나, 멘션하거나, 차단할 수 있습니다.',
+        easySettingsMenu:
+          'PC의 경우, 게임 플레이 중 F1 키를 눌러 설정 메뉴를 통해 키를 재설정하거나 여러 가지 설정을 관리할 수 있습니다.',
+        floatingControls:
+          "If you're playing on a touchscreen device and don't like the default controls, try the floating styles of controls available from the Mobile Controls Type in Settings.",
+        recentBadges:
+          'Accidentally dismissed a badge unlock notification? You can always review badges unlocked in the current session by selecting Recently Unlocked in the Badges listing.',
+        desktopHotkeys:
+          "If you're playing on a PC, Alt+Enter can also toggle fullscreen mode, F7 by default takes a screenshot of the game, and the T key opens the in-game chat input.",
+        badgeControls:
+          'In the Badge Gallery menu, you can drag and drop badges to rearrange them, or quickly remove many badges at once using the Remove Badges mode.',
+        cacheSettings:
+          'Having trouble with location completion or outdated maps? The Cache menu allows you to clear the relevant cache and retrieve the latest data.',
+        openSource:
+          'YNOproject는 오픈소스를 기반으로 운영하고 있습니다. 소스코드는 https://github.com/ynoproject/ 에서 확인할 수 있습니다.'
+      }
+    },
+    save: {
+      slot: {
+        title: '파일 {SLOT_ID}',
+        readingLabel: '파일 데이터를 읽는 중...',
+        emptyLabel: '비어있음',
+        errorLabel: '에러'
+      },
+      upload: {
+        tooltip: '세이브 파일 불러오기',
+        invalidSaveFile: '올바른 세이브 파일을 선택해주세요 (.lsd 확장자).'
+      },
+      download: {
+        tooltip: '세이브 파일 다운로드',
+        emptySlot: '이런! 슬롯에 세이브 파일이 비어있는 것 같습니다.'
+      },
+      delete: {
+        tooltip: '세이브 파일 삭제',
+        confirmDelete: '정말로 {SLOT_ID}번 슬롯의 세이브 데이터를 삭제하시겠습니까?'
+      }
+    },
+    saveSync: {
+      confirmClearSaveSync:
+        '정말 이 게임의 세이브 동기화 데이터를 지우시겠습니까? 세이브 데이터의 로컬 복사본이 없다면 이 결정은 되돌릴 수 없습니다.'
+    },
+    toast: {
+      system: {
+        siteUpdates: '사이트가 업데이트 되었습니다: 새로고침을 눌러 사이트 변경사항을 적용해주세요',
+        error:
+          '이런! 무언가 오류가 발생했습니다. 개발자 콘솔을 열어서 세부 내용을 확인해주세요. 콘솔 창을 열기 위해서 F12를 누르거나 우측 상단의 옵션을 열어 기타 도구-> 개발자 콘솔을 눌러주세요.'
+      },
+      account: {
+        loggedIn: '{USER}로 로그인 했습니다',
+        loggedOut: '로그아웃 하였습니다',
+        passwordUpdated: '비밀번호를 성공적으로 변경하였습니다'
+      },
+      players: {
+        playerBlocked: '{PLAYER} 님이 차단되었습니다',
+        playerUnblocked: '{PLAYER} 님이 차단 해제되었습니다'
+      },
+      friends: {
+        add: '{PLAYER} 님에게 친구 신청을 보냈습니다.',
+        remove: '{PLAYER} 님을 친구 목록에서 삭제했습니다.',
+        accept: '{PLAYER} 님의 친구 신청을 수락했습니다.',
+        reject: '{PLAYER} 님의 친구 신청을 거절했습니다.',
+        cancel: '{PLAYER} 님에게 보낸 친구 신청을 취소했습니다.',
+        incoming: '{PLAYER} 님이 보낸 친구 신청이 수신되었습니다.',
+        playerOnline: '{PLAYER} 님이 온라인입니다',
+        playerOffline: '{PLAYER} 님이 오프라인입니다'
+      },
+      parties: {
+        create: '{PARTY}가 생성되었습니다',
+        update: '{PARTY}를 업데이트 했습니다',
+        join: '{PARTY}에 참가하였습니다',
+        leave: '{PARTY}에서 퇴장했습니다',
+        remove: '{PARTY}에서 지워졌습니다',
+        disband: '{PARTY}가 해산되었습니다',
+        playerJoin: '{PLAYER} 님이 파티에 참가했습니다',
+        playerLeave: '{PLAYER} 님이 파티에서 퇴장했습니다',
+        playerOnline: '{PLAYER} 님이 온라인입니다',
+        playerOffline: '{PLAYER} 님이 오프라인입니다',
+        kickPlayer: '{PLAYER} 님이 파티에서 강퇴당했습니다',
+        transferPartyOwner: '{PLAYER} 님이 파티 리더로 임명되었습니다'
+      },
+      events: {
+        complete: '탐험 성공!\n{LOCATION}를 방문하여, {EXP}를 획득했습니다',
+        freeComplete: '탐험 성공!\n{LOCATION}를 방문하였습니다',
+        vmComplete: '자판기 발견!\n{EXP}를 획득했습니다',
+        listUpdated: '탐험 리스트가 업데이트 되었습니다'
+      },
+      badges: {
+        badgeUnlocked: '새로운 배지를 해금하였습니다!'
+      },
+      screenshots: {
+        screenshotTaken: '스크린샷이 촬영되었습니다'
+      },
+      saveSync: {
+        saveUploading: '{SLOT}번 슬롯에 세이브 데이터를 업로드합니다...',
+        saveUploaded: '{SLOT}번 슬롯에 세이브 데이터가 업로드 되었습니다.',
+        saveDownloading: '{SLOT}번 슬롯의 세이브 데이터를 다운로드합니다...',
+        saveDownloaded: '{SLOT}번 슬롯의 세이브 데이터를 다운로드했습니다.',
+        saveUpToDate: '세이브 데이터가 업데이트 되었습니다.',
+        saveCleared:
+          '계정에 동기화된 세이브가 삭제되었습니다. 이것은 디바이스 로컬 스토리지 세이브에는 영향을 끼치지 않습니다.',
+        saveReminder: '진행 상황이 손실되지 않도록 자주 저장하고 세이브 파일을 백업하는 것을 잊지 마세요.'
+      },
+      timeTrials: {
+        timeTrialsComplete: 'Goal! {CATEGORY} completed in {TIME}.'
+      }
+    },
+    events: {
+      exp: '{POINTS} 경험치',
+      expRank: '랭크: {RANK}',
+      period: '시즌 {ORDINAL}',
+      periodEnds: '종료일: {DATE}',
+      current: '현재 목표',
+      shortcut: '잠금 해제 가능한 지름길을 통해 도달할 수 있습니다',
+      toggleTracked: 'Toggle Location Tracking',
+      availableUntilDate: '탐험 마감 기한\n{DATE}',
+      types: {
+        '0': '일일',
+        '1': '주간',
+        '2': '주말',
+        '3': '스페셜',
+        '-1': '자유 탐험'
+      },
+      expRanks: {
+        '0': '초보',
+        '1': '중급',
+        '2': '브론즈',
+        '3': '실버',
+        '4': '골드',
+        '5': '플래티넘',
+        '6': '다이아'
+      }
+    },
+    badges: {
+      null: '배지 없음',
+      allCategory: '전체',
+      badgeTitle: '{TITLE} - {BP} BP',
+      locked: '???',
+      location: '장소 :&nbsp;',
+      goalProgress: '{CURRENT}/{TOTAL}',
+      percentUnlocked: '{PERCENT}%의 플레이어들이 이 배지를 가지고 있습니다',
+      time: '{MINUTES}분 {SECONDS}초',
+      artCredit: '배지 디자인 : {ARTIST}',
+      search: {
+        modifier: {
+          template: '&nbsp;({MODIFIER})',
+          exactMatch: 'Exact Match'
+        }
+      },
+      sortOrder: {
+        template: '{TYPE} ({ORDER})',
+        types: {
+          bp: 'BP',
+          percent: '해금률'
+        },
+        asc: '오름차순',
+        desc: '내림차순'
+      }
+    },
+    badgeGallery: {
+      label: '{PLAYER}님의 배지 갤러리',
+      loading: '로딩 중...',
+      bp: '{BP} BP',
+      count: '{COUNT} 개의 배지 보유',
+      empty: 'Badge gallery not set'
+    },
+    badgePreset: {
+      empty: 'This preset is empty.'
+    },
+    rankings: {
+      categories: {
+        badgeCount: {
+          label: '배지',
+          valueLabel: '# 개의 배지',
+          value: '{NUMBER}'
+        },
+        bp: {
+          label: 'BP (배지 포인트)',
+          valueLabel: 'BP',
+          value: '{NUMBER} BP'
+        },
+        exp: {
+          label: '경험치',
+          valueLabel: '경험치',
+          value: '{NUMBER} 경험치'
+        },
+        eventLocationCount: {
+          label: '탐험',
+          valueLabel: '# 번의 탐험',
+          value: '{NUMBER}'
+        },
+        freeEventLocationCount: {
+          label: '자유 탐험',
+          valueLabel: '# 번의 자유 탐험',
+          value: '{NUMBER}'
+        },
+        eventLocationCompletion: {
+          label: '탐험 성공',
+          valueLabel: '성공률',
+          value: '{PERCENT}%'
+        },
+        eventVmCount: {
+          label: '자판기 찾기',
+          valueLabel: '# 개의 자판기',
+          value: '{NUMBER}'
+        },
+        timeTrial: {
+          label: '타임 어택',
+          valueLabel: '성공 시간',
+          value: '{MINUTES}분 {SECONDS}초'
+        },
+        minigame: {
+          label: '미니게임',
+          valueLabel: '점수',
+          value: '{NUMBER}'
+        }
+      },
+      subCategories: {
+        '2': '모든 이펙트 얻기',
+        all: '전체',
+        nasu: 'NASU',
+        rby: '빨강/파랑/노랑 (미니게임 B)',
+        rby_ex: '빨강/파랑/노랑 (미니게임 B) - EX 버전',
+        fuji_ex: 'FUJI EX (후지 EX)',
+        hozo: 'HOZO',
+        cartoonboy: 'Cartoon Boy',
+        ta_be: 'TA_BE_',
+        ta_be_hardcore: 'TA_BE_ - 하드 모드',
+        panerabbit: 'PANErabbit'
+      }
+    },
+    locations: {
+      author: 'By {AUTHOR}',
+      versionAdded: 'Added {VERSION}',
+      versionUpdated: 'Updated {VERSION}',
+      track: {
+        tooltip: {
+          on: 'Track Location',
+          off: 'Untrack Location'
+        }
+      }
+    },
+    screenshots: {
+      playerScreenshot: '{USER} 님의 스크린샷',
+      limit: '슬롯 {COUNT}/{LIMIT} 사용 중',
+      public: {
+        tooltip: {
+          on: '공개로 설정',
+          off: '비공개로 설정'
+        }
+      },
+      spoiler: {
+        label: '스포일러',
+        tooltip: {
+          on: '스포일러 표시',
+          off: '스포일러 제거'
+        }
+      },
+      like: {
+        tooltip: {
+          on: '좋아요',
+          off: '좋아요 취소'
+        }
+      },
+      delete: {
+        tooltip: '스크린샷 삭제',
+        confirm: '정말 이 스크린샷을 삭제하시겠습니까?'
+      }
+    },
+    schedules: {
+      organizer: 'Organized by&nbsp;{NAME}',
+      invalidPlatformLink: 'Platform must have a valid URL',
+      confirmCancel: 'Are you sure you want to cancel this event?',
+      wrongEditGame: 'Cannot edit outside of {GAME}',
+      platforms: {
+        discord: 'Discord',
+        youtube: 'YouTube',
+        twitch: 'Twitch',
+        niconico: 'Nicovideo',
+        openrec: 'Openrec',
+        bilibili: 'Bilibili'
+      },
+      intervals: {
+        perDay: 'Every day',
+        days: 'Every {INTERVAL} days',
+        perWeek: 'Every {WEEKDAY}',
+        weeks: 'Every {INTERVAL} weeks',
+        perMonth: 'Every month',
+        months: 'Every {INTERVAL} months',
+        perYear: 'Every year',
+        years: 'Every {INTERVAL} years'
+      }
+    },
+    '2kki': {
+      explorerLink: {
+        generic: '유메2키 익스플로러 열기',
+        multi: '유메2키 익스플로러에서 {LOCATION} 보기'
+      }
+    },
+    modSettings: {
+      title: '매니저 설정',
+      actions: {
+        resetPassword: {
+          label: '비밀번호 재설정하기',
+          playerPrompt: '비밀번호 재설정이 필요한 계정의 아이디를 입력해주세요',
+          success: '{PLAYER}님의 새로운 비밀번호가 {PASSWORD}로 설정되었습니다'
+        },
+        changeUsername: {
+          label: '계정 닉네임 변경',
+          playerPrompt: '변경할 계정의 기존 닉네임을 입력해주세요',
+          namePrompt: '{PLAYER}님의 새 닉네임을 입력해주세요',
+          success: '{PLAYER}님의 닉네임이 {NAME}으로 변경되었습니다',
+          error: '{PLAYER}님의 닉네임 변경에 실패하였습니다 (이미 사용 중인 닉네임입니다)'
+        },
+        ban: {
+          label: '플레이어 차단 설정',
+          playerPrompt: '차단할 플레이어의 닉네임을 입력해주세요'
+        },
+        unban: {
+          label: '플레이어 차단 해제',
+          playerPrompt: '차단 해제할 플레이어의 닉네임을 입력해주세요'
+        },
+        mute: {
+          label: '플레이어 채팅 금지 설정',
+          playerPrompt: '채팅을 금지할 플레이어의 닉네임을 입력해주세요'
+        },
+        unmute: {
+          label: '플레이어 채팅 금지 해제',
+          playerPrompt: '채팅을 허용할 플레이어의 닉네임을 입력해주세요'
+        },
+        grantBadge: {
+          label: '배지 수여하기',
+          playerPrompt: '배지를 수여할 플레이어의 닉네임을 입력해주세요'
+        },
+        revokeBadge: {
+          label: '배지 해제하기',
+          playerPrompt: '배지를 해제할 플레이어의 닉네임을 입력해주세요'
+        },
+        tempban: {
+          label: 'Tempban a Player',
+          playerPrompt: 'Enter the name of the account to tempban',
+          timePrompt: 'Enter the datetime when the ban expires (UTC time)'
+        },
+        tempmute: {
+          label: 'Tempmute a Player',
+          playerPrompt: 'Enter the name of the account to tempmute',
+          timePrompt: 'Enter the datetime when the mute expires (UTC time)'
+        }
+      }
+    }
+  }
+} satisfies Translation;
+
+export default ko;

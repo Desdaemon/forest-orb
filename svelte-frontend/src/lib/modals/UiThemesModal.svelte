@@ -3,15 +3,9 @@
   import { onDestroy } from 'svelte';
   import { modal } from '$lib/stores/modal';
   import { allGameUiThemes, allGameFullBgUiThemes, getGameFontStyleIndices, type GameId } from '$lib/allGameUiThemes';
-  import {
-    selectedUiTheme,
-    selectedFontStyle,
-    currentSystemName,
-    selectTheme,
-    setFontStyle
-  } from '$lib/stores/uiTheme';
+  import { selectedUiTheme, selectedFontStyle, currentSystemName, setFontStyle } from '$lib/stores/uiTheme';
   import Modal from '$lib/components/Modal.svelte';
-  import { setUserSetting } from '$lib/stores/config';
+  import { globalConfig, setGlobalSetting, setUserSetting, toggleGlobal } from '$lib/stores/config';
 
   let modalData = $state<Record<string, any>>({});
   const unsubscribeModal = modal.subscribe((state) => {
@@ -128,8 +122,8 @@
       </div>
     {/each}
   </div>
-  <div class="modalFooter">
-    <div class="uiControl">
+  <div class="modalFooter grid">
+    <div class="col-6 col-sm-12">
       <label for="fontStyle" class="unselectable">{$LL.ui.fontStyle.label()}</label>
       <select id="fontStyle" class="fontStyle" value={currentFontStyle} onchange={handleFontStyleChange}>
         {#each fontStyleIndices as idx}
@@ -137,5 +131,66 @@
         {/each}
       </select>
     </div>
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <div
+      role="checkbox"
+      tabindex="0"
+      aria-checked={$globalConfig.highContrast}
+      class="col-6 col-sm-12 toggleRow"
+      onclick={() => toggleGlobal('highContrast')}
+    >
+      <label for="highContrast" class="unselectable">{$LL.ui.highContrast()}</label>
+      <button
+        type="button"
+        id="highContrast"
+        class={['checkboxButton unselectable', { toggled: $globalConfig.highContrast }]}
+        aria-label={$LL.ui.highContrast()}
+      >
+        <span></span>
+      </button>
+    </div>
   </div>
 </Modal>
+
+<style lang="scss">
+  $breakpoints: (
+    sm: 480px
+  );
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+  }
+
+  @for $i from 1 through 12 {
+    .col-#{$i} {
+      grid-column: span #{$i};
+    }
+  }
+
+  @each $name, $size in $breakpoints {
+    @media (max-width: $size) {
+      @for $i from 1 through 12 {
+        .col-#{$name}-#{$i} {
+          grid-column: span #{$i};
+        }
+      }
+    }
+  }
+
+  #chat {
+    position: relative;
+  }
+  .toggleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+    transition: background-color 120ms ease;
+  }
+
+  .toggleRow:hover {
+    background-color: rgba(127, 127, 127, 0.14);
+  }
+</style>

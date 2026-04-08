@@ -4,6 +4,7 @@
   import BadgeItem from './BadgeItem.svelte';
   import { tooltipLabel } from './Tooltip.svelte';
   import { LL } from '$lib';
+  import { globalConfig } from '$lib/stores/config';
 
   const {
     onOpenModal = () => {}
@@ -84,16 +85,19 @@
         />
       </svg>
     </button>
-    <button
-      id="rankingsButton"
-      class="iconButton fillIcon unselectable"
-      {...tooltipLabel($LL.ui.tooltips.rankings())}
-      onclick={handleRankingsClick}
-    >
-      <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="32" height="32" role="presentation">
-        <path d="m0 18v-11h5.75v11m0.5 0v-16h5.5v16m0.5-6h5.75v6h-5.75v-6" />
-      </svg>
-    </button>
+    {#if !$globalConfig.hideRankings}
+      <button
+        id="rankingsButton"
+        class="iconButton fillIcon unselectable"
+        {...tooltipLabel($LL.ui.tooltips.rankings())}
+        onclick={handleRankingsClick}
+      >
+        <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="32" height="32" role="presentation">
+          <path d="m0 18v-11h5.75v11m0.5 0v-16h5.5v16m0.5-6h5.75v6h-5.75v-6" />
+        </svg>
+      </button>
+    {/if}
+    {#if !$globalConfig.hideSchedules}
     <button
       id="schedulesButton"
       class="iconButton fillIcon unselectable"
@@ -115,5 +119,6 @@
         />
       </svg>
     </button>
+    {/if}
   </div>
 </div>

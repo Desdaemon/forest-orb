@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { modal, type ModalId } from '$lib/stores/modal';
+  import { onMount } from 'svelte';
+  import { type ModalId } from '$lib/stores/modal';
   import { tooltipLabel } from './Tooltip.svelte';
   import { LL } from '$lib';
-  import { toggleUser as toggleForGame, userConfig } from '$lib/stores/config';
+  import { disableChat, hideLocation, mute, privateMode } from '$lib/config';
 
   const { onToggleChat = () => {}, onOpenModal = () => {} } = $props<{
     onToggleChat?: () => void;
@@ -16,6 +17,51 @@
   function handleSettingsClick() {
     onOpenModal('settingsModal');
   }
+
+  function handleEventsClick() {
+    onOpenModal('eventsModal');
+  }
+
+  type FullscreenLayout = HTMLElement & {
+    webkitRequestFullscreen?: () => Promise<void> | void;
+  };
+
+  type FullscreenDocument = Document & {
+    webkitFullscreenElement?: Element | null;
+    webkitExitFullscreen?: () => Promise<void> | void;
+  };
+
+  let fullscreenSupported = $state(true);
+
+  function handleFullscreenClick() {
+    if (typeof document === 'undefined') return;
+
+    const layout = document.getElementById('layout') as FullscreenLayout | null;
+    if (!layout) return;
+
+    const fullscreenDocument = document as FullscreenDocument;
+    if (layout.requestFullscreen) {
+      if (!document.fullscreenElement) {
+        void layout.requestFullscreen();
+      } else {
+        void document.exitFullscreen?.();
+      }
+      return;
+    }
+
+    if (layout.webkitRequestFullscreen) {
+      if (!fullscreenDocument.webkitFullscreenElement) {
+        void layout.webkitRequestFullscreen();
+      } else {
+        void fullscreenDocument.webkitExitFullscreen?.();
+      }
+    }
+  }
+
+  onMount(() => {
+    const layout = document.getElementById('layout') as FullscreenLayout | null;
+    fullscreenSupported = Boolean(layout && (layout.requestFullscreen || layout.webkitRequestFullscreen));
+  });
 </script>
 
 <div id="controls" role="toolbar">
@@ -24,9 +70,9 @@
       id="privateModeButton"
       class={[
         'iconButton toggleButton altToggleButton transparentToggleButton unselectable',
-        { toggled: $userConfig.privateMode }
+        { toggled: $privateMode }
       ]}
-      onclick={() => toggleForGame('privateMode')}
+      onclick={privateMode.toggle}
       {...tooltipLabel($LL.ui.tooltips.togglePrivateMode())}
     >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
@@ -36,12 +82,7 @@
         <path d="m9 4a1 1 90 0 0 0 5 1 1 90 0 0 0-5m-4 13c0-5 1-7 4-7s4 2 4 7q-4 2-8 0" /></svg
       >
     </button>
-    <button
-      id="saveButton"
-      class="iconButton unselectable"
-      {...tooltipLabel($LL.ui.tooltips.save())}
-      onclick={() => modal.open('saveModal')}
-    >
+    <button id="saveButton" class="iconButton unselectable" {...tooltipLabel($LL.ui.tooltips.save())}>
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
         <path
           d="m0 1.5q0-1.5 1.5-1.5h11.25l2.25 2.25v12.75q0 1.5-1.5 1.5h-12q-1.5 0-1.5-1.5v-13.5m4.5-1.5v3.75q0 0.75 0.75 0.75h4.5q0.75 0 0.75-0.75v-3.75m-1.75 1v2.5h0.75v-2.5h-0.75m-5.75 15.5v-6.75q0-0.75 0.75-0.75h7.5q0.75 0 0.75 0.75v6.75m-7.5-6h6m-6 2.25h6m-6 2.25h6"
@@ -63,10 +104,10 @@
     <button
       id="chatButton"
       class="iconButton toggleButton offToggleButton unselectable"
-      class:toggled={$userConfig.disableChat}
+      class:toggled={$disableChat}
       {...tooltipLabel($LL.ui.tooltips.toggleChat())}
       onclick={() => {
-        toggleForGame('disableChat');
+        disableChat.toggle();
         onToggleChat?.();
       }}
     >
@@ -100,17 +141,17 @@
       {...tooltipLabel($LL.ui.tooltips.settings())}
       onclick={handleSettingsClick}
     >
-      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-        ><path
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
           d="m9 5.5a1 1 90 0 0 0 7 1 1 90 0 0 0 -7m-7 5.5l-2-0.25v-3.5l2-0.25 0.75-1.5-1.25-1.75 2.25-2.25 1.75 1.25 1.5-0.75 0.25-2h3.5l0.25 2 1.5 0.75 1.75-1.25 2.25 2.25-1.25 1.75 0.75 1.5 2 0.25v3.5l-2 0.25-0.75 1.5 1.25 1.75-2.25 2.25-1.75-1.25-1.5 0.75-0.25 2h-3.5l-0.25-2-1.5-0.75-1.75 1.25-2.25-2.25 1.25-1.75-0.75-1.5"
-        /></svg
-      >
+        />
+      </svg>
     </button>
     <button
       id="muteButton"
       class="iconButton toggleButton offToggleButton unselectable"
-      class:toggled={$userConfig.mute}
-      onclick={() => toggleForGame('mute')}
+      class:toggled={$mute}
+      onclick={mute.toggle}
       {...tooltipLabel($LL.ui.tooltips.toggleMute())}
     >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -120,8 +161,8 @@
     <button
       id="hideLocationButton"
       class="iconButton toggleButton offToggleButton unselectable"
-      class:toggled={$userConfig.hideLocation}
-      onclick={() => toggleForGame('hideLocation')}
+      class:toggled={$hideLocation}
+      onclick={hideLocation.toggle}
       {...tooltipLabel($LL.ui.tooltips.toggleHideLocation())}
     >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -135,8 +176,27 @@
     <div id="badgeHintControls"></div>
     <div id="mapControls"></div>
     <div id="explorerControls"></div>
-    <div id="eventControls" class="accountRequired" style="display: none"></div>
-    <button id="controls-fullscreen" class="iconButton unselectable" aria-label="Toggle Fullscreen">
+    <div id="eventControls" class="accountRequired" style="display: none">
+      <button
+        id="eventsButton"
+        class="iconButton unselectable"
+        onclick={handleEventsClick}
+        {...tooltipLabel($LL.ui.tooltips.events())}
+      >
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+          ><path
+            d="m0 9l6.5-1.5-1.5-2.5 2.5 1.5 1.5-6.5 1.5 6.5 2.5-1.5-1.5 2.5 6.5 1.5-6.5 1.5 1.5 2.5-2.5-1.5-1.5 6.5-1.5-6.5-2.5 1.5 1.5-2.5-6.5-1.5m7.75-6q-4.75 0-4.75 4.75m7.25-4.75q4.75 0 4.75 4.75m-7.25 7.25q-4.75 0-4.75-4.75m7.2656 4.75q4.7344 0 4.7344-4.75m-6-2.75a1 1 90 0 0 3 1 1 90 0 0 -3"
+          /></svg
+        >
+      </button>
+    </div>
+    <button
+      id="controls-fullscreen"
+      class="iconButton unselectable"
+      class:hidden={!fullscreenSupported}
+      aria-label="Toggle Fullscreen"
+      onclick={handleFullscreenClick}
+    >
       <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         ><path
           d="M13.5 13.5H10m3.5 0V10m0 3.5l-4-4m.5-8h3.5m0 0V5m0-3.5l-4 4M5 1.5H1.5m0 0V5m0-3.5l4 4m-4 4.5v3.5m0 0H5m-3.5 0l4-4"

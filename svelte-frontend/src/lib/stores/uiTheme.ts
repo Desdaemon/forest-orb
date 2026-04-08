@@ -49,6 +49,12 @@ interface FontThemeColors {
   colors: RgbColor[];
 }
 
+export interface ThemeDefinitionData {
+  baseColors: RgbColor[];
+  altColors: RgbColor[];
+  shadow: RgbColor;
+}
+
 const uiThemeContainerAssets: Record<string, Record<string, ContainerThemeAssets>> = {};
 const uiThemeFontColors: Record<string, Record<string, Record<number, FontThemeColors>>> = {};
 
@@ -69,6 +75,8 @@ type HslColor = [number, number, number];
 const black: RgbColor = [0, 0, 0];
 const white: RgbColor = [255, 255, 255];
 const wcagAaNormalTextContrast = 4.5;
+const defaultAltFontStyleIndex = 1;
+const defaultFallbackAltFontStyleIndex = 3;
 
 // Shadow-opacity tuning parameters:
 // - Keep a non-zero floor so pixel-font shadows remain visible.
@@ -453,66 +461,6 @@ function getGradientText(colors: [number, number, number][], smooth?: boolean): 
   return ret;
 }
 
-function getSvgGradientStop(color: [number, number, number], offset: number): SVGStopElement {
-  const stop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-  stop.setAttribute('stop-color', `rgb(${getColorRgb(color)})`);
-  stop.setAttribute('offset', `${offset}%`);
-  return stop;
-}
-
-function updateSvgGradient(gradient: SVGLinearGradientElement, colors: [number, number, number][]) {
-  gradient.innerHTML = '';
-  let lastColor = colors[0];
-  gradient.appendChild(getSvgGradientStop(lastColor, 0));
-  colors.forEach((color, c) => {
-    if (color[0] !== lastColor[0] || color[1] !== lastColor[1] || color[2] !== lastColor[2]) {
-      const offset = Math.floor(((c + 1) / colors.length) * 10000) / 100;
-      gradient.appendChild(getSvgGradientStop(color, offset));
-      lastColor = color;
-    }
-  });
-}
-
-function addSystemSvgGradient(
-  uiTheme: string,
-  themeGameId: string,
-  gameId: string,
-  colors: [number, number, number][],
-  alt?: boolean
-) {
-  const gradientId = `${alt ? 'alt' : 'base'}Gradient_${themeGameId !== gameId ? `${themeGameId}_` : ''}${uiTheme.replace(/[ ()]/g, '_')}`;
-  if (document.getElementById(gradientId)) return;
-  const svgDefs = document.getElementById('svgDefs');
-  if (!svgDefs) return;
-  const svgGradient = document.createElementNS(
-    'http://www.w3.org/2000/svg',
-    'linearGradient'
-  ) as SVGLinearGradientElement;
-  svgGradient.id = gradientId;
-  svgGradient.setAttribute('x1', '0%');
-  svgGradient.setAttribute('y1', '0%');
-  svgGradient.setAttribute('x2', '0%');
-  svgGradient.setAttribute('y2', '100%');
-  updateSvgGradient(svgGradient, colors);
-  svgDefs.appendChild(svgGradient);
-}
-
-function addSystemSvgDropShadow(uiTheme: string, themeGameId: string, gameId: string, color: string) {
-  const dropShadowFilterId = `dropShadow_${themeGameId !== gameId ? `${themeGameId}_` : ''}${uiTheme.replace(/[ ()]/g, '_')}`;
-  if (document.getElementById(dropShadowFilterId)) return;
-  const svgDefs = document.getElementById('svgDefs');
-  if (!svgDefs) return;
-  const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
-  filter.id = dropShadowFilterId;
-  const feDropShadow = document.createElementNS('http://www.w3.org/2000/svg', 'feDropShadow');
-  feDropShadow.setAttribute('dx', '1');
-  feDropShadow.setAttribute('dy', '1');
-  feDropShadow.setAttribute('stdDeviation', '0.2');
-  feDropShadow.setAttribute('flood-color', `rgb(${color})`);
-  filter.appendChild(feDropShadow);
-  svgDefs.appendChild(filter);
-}
-
 // ---------- async image loaders (mirror system.js) ----------
 
 function getThemeAssetPath(themeGameId: string, uiTheme: string, fileName: string): string {
@@ -630,6 +578,31 @@ async function getFontColors(uiTheme: string, themeGameId: string, fontStyle: nu
   return fontThemeColors;
 }
 
+export async function getThemeDefinitionData(
+  uiTheme: string,
+  themeGameId: string,
+  fontStyle: number = 0
+): Promise<ThemeDefinitionData> {
+  const baseFontColors = await getFontColors(uiTheme, themeGameId, fontStyle);
+  const baseColors = baseFontColors.colors;
+  const altFontStyle = fontStyle !== defaultAltFontStyleIndex ? defaultAltFontStyleIndex : defaultAltFontStyleIndex - 1;
+  let altColors = (await getFontColors(uiTheme, themeGameId, altFontStyle)).colors;
+  if (colorsEqual(altColors[8], baseColors[8])) {
+    const fallback =
+      fontStyle !== defaultFallbackAltFontStyleIndex
+        ? defaultFallbackAltFontStyleIndex
+        : defaultFallbackAltFontStyleIndex - 1;
+    altColors = (await getFontColors(uiTheme, themeGameId, fallback)).colors;
+  }
+
+  const containerAssets = await getContainerThemeAssets(uiTheme, themeGameId);
+  return {
+    baseColors,
+    altColors,
+    shadow: containerAssets.shadow
+  };
+}
+
 // ---------- init functions (mirror system.js) ----------
 
 export async function initUiThemeContainerStyles(
@@ -675,7 +648,6 @@ export async function initUiThemeContainerStyles(
 
   const root = document.documentElement.style;
   if (!root.getPropertyValue(baseBgColorProp)) {
-    addSystemSvgDropShadow(uiTheme, themeGameId, gameId, shadow);
     root.setProperty(baseBgColorProp, color);
     root.setProperty(shadowColorProp, shadow);
     root.setProperty(
@@ -795,30 +767,11 @@ export async function initUiThemeFontStyles(
   const svgBaseGradientProp = `--svg-base-gradient-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
   const svgAltGradientProp = `--svg-alt-gradient-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
   const baseColorImageUrlProp = `--base-color-image-url-${themeGamePropSuffix}${parsedUiTheme}${fsSuffix}` as const;
-
-  const defaultAltFontStyleIndex = 1;
-  const defaultFallbackAltFontStyleIndex = 3;
-
   const baseFontColors = await getFontColors(uiTheme, themeGameId, fontStyle);
-  const baseColors = baseFontColors.colors;
-  const altFontStyle = fontStyle !== defaultAltFontStyleIndex ? defaultAltFontStyleIndex : defaultAltFontStyleIndex - 1;
-  let altColors = (await getFontColors(uiTheme, themeGameId, altFontStyle)).colors;
-  if (
-    altColors[8][0] === baseColors[8][0] &&
-    altColors[8][1] === baseColors[8][1] &&
-    altColors[8][2] === baseColors[8][2]
-  ) {
-    const fallback =
-      fontStyle !== defaultFallbackAltFontStyleIndex
-        ? defaultFallbackAltFontStyleIndex
-        : defaultFallbackAltFontStyleIndex - 1;
-    altColors = (await getFontColors(uiTheme, themeGameId, fallback)).colors;
-  }
+  const { baseColors, altColors } = await getThemeDefinitionData(uiTheme, themeGameId, fontStyle);
 
   const root = document.documentElement.style;
   if (!root.getPropertyValue(baseColorProp)) {
-    addSystemSvgGradient(uiTheme, themeGameId, gameId, baseColors);
-    addSystemSvgGradient(uiTheme, themeGameId, gameId, altColors, true);
     root.setProperty(baseColorProp, getColorRgb(baseColors[8]));
     root.setProperty(altColorProp, getColorRgb(altColors[8]));
     root.setProperty(baseGradientProp, `linear-gradient(to bottom, ${getGradientText(baseColors)})`);

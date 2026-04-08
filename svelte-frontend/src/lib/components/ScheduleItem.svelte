@@ -222,7 +222,6 @@
     if (!onFollow) return;
     try {
       const nextCount = await onFollow(schedule);
-      playerLiked = !playerLiked;
       if (typeof nextCount === 'number' && Number.isFinite(nextCount)) {
         followerCount = nextCount;
       } else {

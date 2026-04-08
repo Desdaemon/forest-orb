@@ -1,0 +1,1256 @@
+import type { BaseTranslation, Translation } from '../i18n-types';
+
+const vi = {
+  translationComplete: '1',
+  version: {
+    '2kki': {
+      label: 'Yume 2kki phiên bản {VERSION}',
+      substitutes: {
+        ' Patch ': ' patch ',
+        '?': '?'
+      }
+    }
+  },
+  ui: {
+    account: {
+      login: 'Đăng nhập',
+      logout: 'Đăng xuất'
+    },
+    fontStyle: {
+      label: 'Kiểu chữ:',
+      values: {
+        style1: 'Kiểu 1',
+        style2: 'Kiểu 2',
+        style3: 'Kiểu 3',
+        style4: 'Kiểu 4',
+        style5: 'Kiểu 5',
+        style6: 'Kiểu 6',
+        style7: 'Kiểu 7'
+      }
+    },
+    chatbox: {
+      location: 'Địa điểm:&nbsp;',
+      nextLocation: 'Đ. điểm kế tiếp:&nbsp;',
+      immersionMode: 'Chế độ Đắm chìm',
+      reconnect: 'Kết nối lại',
+      tab: {
+        chat: 'Chat',
+        players: 'Người chơi',
+        parties: 'Nhóm'
+      },
+      chat: {
+        tab: {
+          all: 'Tất cả',
+          map: 'Map',
+          global: 'Chung',
+          party: 'Nhóm'
+        },
+        nickname: {
+          header: 'Bạn cần đặt tên để sử dụng tính năng chat.',
+          rule: {
+            maxLength: '* Tối đa 10 ký tự',
+            alphanumeric: '* Chỉ bao gồm chữ cái và số'
+          }
+        }
+      },
+      players: {
+        tab: {
+          map: 'Map',
+          friends: 'Bạn bè',
+          party: 'Nhóm'
+        }
+      }
+    },
+    instruction: {
+      translation: 'Đóng góp cho bản dịch',
+      noGameLoc: '* Không có bản dịch cho trò chơi này'
+    },
+    '2kki': {
+      hostedWithPermission: 'Đã được sự cho phép của đội ngũ tác giả Yume 2kki'
+    },
+    disclaimer: {
+      pendingApproval: 'Pending approval from developer/publisher',
+      hostedWithPermission: 'Hosted with permission from the developer(s)',
+      originalCreation: 'Original creation by the YNOproject community'
+    },
+    modal: {
+      common: {
+        save: 'Lưu',
+        apply: 'Áp dụng'
+      },
+      confirm: {
+        ok: 'OK',
+        cancel: 'Hủy'
+      },
+      login: {
+        title: 'Đăng Nhập',
+        fields: {
+          username: 'Tên người dùng',
+          password: 'Mật khẩu'
+        },
+        submit: 'Đăng nhập',
+        registerPrompt: 'Không có tài khoản?&nbsp;',
+        register: 'Đăng ký'
+      },
+      register: {
+        title: 'Đăng Ký',
+        fields: {
+          email: 'Email',
+          username: 'Tên người dùng',
+          password: 'Mật khẩu',
+          confirmPassword: 'Nhập lại mật khẩu'
+        },
+        submit: 'Đăng ký',
+        loginPrompt: 'Đã có tài khoản?&nbsp;',
+        login: 'Đăng nhập'
+      },
+      settings: {
+        title: 'Cài Đặt',
+        fields: {
+          lang: 'Ngôn ngữ',
+          locationVisibility: {
+            label: 'In-Game Location Visibility',
+            values: {
+              private: 'Private',
+              friends: 'Friends',
+              public: 'Public'
+            }
+          },
+          nametagMode: {
+            label: 'Tên người chơi',
+            values: {
+              none: 'Ẩn',
+              classic: 'Rút gọn',
+              compact: 'Đầy đủ',
+              slim: 'Phông nhỏ'
+            }
+          },
+          wikiLinkMode: {
+            label: 'Xem wiki trực tiếp trên trang',
+            values: {
+              always: 'Luôn luôn',
+              fullscreen: 'Chỉ khi toàn màn hình',
+              never: 'Không bao giờ'
+            }
+          },
+          saveReminder: {
+            label: 'Tần suất nhắc lưu trò chơi',
+            interval: {
+              minutes: 'Mỗi {interval} phút',
+              never: 'Đừng nhắc'
+            }
+          },
+          soundVolume: 'Âm lượng âm thanh',
+          musicVolume: 'Âm lượng nhạc',
+          togglePlayerSounds: 'Âm thanh người chơi',
+          toggleEnableBadgeHints: {
+            label: 'Badge Hints',
+            helpText:
+              "Badge hints become available once you have unlocked the 'Badge Collector Amulet EX' badge. When enabled, an icon will appear in the top right when you enter a location with at least one badge you haven't unlocked."
+          },
+          togglePlayBadgeHintSound: 'Play Badge Hint Sound',
+          toggleEnableExplorer: {
+            label: 'Yume 2kki Navigator',
+            helpText:
+              'Yume 2kki Navigator là chức năng tích hợp Yume 2kki Explorer giúp bạn nhanh chóng xem những kết nối từ địa điểm của bạn. Tính năng này có thể ảnh hưởng lớn đến trải nghiệm trò chơi và chúng tôi khuyến nghị bạn tự khám phá hầu hết trò chơi trước khi sử dụng tính năng này. Bạn phải đăng nhập để sử dụng Yume 2kki Navigator.'
+          },
+          toggleImmersionMode: {
+            label: 'Chế độ Đắm chìm',
+            helpText: 'Ẩn số người chơi, hộp chat chung và map để đem đến trải nghiệm đắm chìm'
+          },
+          timeTrialinfo: {
+            label: 'Thử thách Hẹn giờ'
+          },
+          toggleMobileControls: 'Hiện điều khiển cho thiết bị di động',
+          mobileControlsType: {
+            label: 'Kiểu điều khiển cho thiết bị di động',
+            default: 'D-Pad',
+            joystick: 'Joystick nổi',
+            dpad: 'D-Pad nổi'
+          },
+          toggleLocationDisplay: 'Hiện tên địa điểm trong cửa sổ',
+          toggleRankings: 'Bảng xếp hạng',
+          togglePreloads: {
+            label: 'Tải sẵn tài nguyên',
+            helpText:
+              'Tải sẵn những tài nguyên được sử dụng thường xuyên để đảm bảo có thể sử dụng khi cần; yêu cầu tải lại trang'
+          },
+          toggleQuestionablePreloads: 'Tải sẵn hình nền PC',
+          toggleSchedules: 'Sự kiện',
+          unicodeFont: 'Đổi font giao diện',
+          toggleSingleplayerMode: {
+            label: 'Chế độ Một người',
+            helpText:
+              'Khi Chế độ Riêng tư kích hoạt, bạn sẽ không nhìn thấy bất kì ai bao gồm bạn bè và thành viên cùng nhóm. Khuyên dùng khi bạn muốn hoàn toàn tự lực khám phá.'
+          }
+        },
+        blocklist: 'Danh sách chặn',
+        chatSettings: 'Chat',
+        screenshotSettings: 'Chụp màn hình',
+        notificationSettings: 'Thông báo',
+        cacheSettings: 'Cache',
+        accountSettings: 'Tài khoản',
+        engineSettings: 'Engine (F1)'
+      },
+      blocklist: {
+        title: 'Danh sách chặn',
+        empty: 'Danh sách chặn của bạn hiện đang trống'
+      },
+      chatSettings: {
+        title: 'Cài đặt Chat',
+        fields: {
+          toggleGameChat: {
+            label: 'Chat Overlay trong game',
+            global: 'Overlay chat chung',
+            party: 'Overlay chat nhóm'
+          },
+          toggleTabToChat: 'Nhấn Tab để chat',
+          togglePlayMentionSound: 'Phát âm báo gắn thẻ',
+          chatHistoryLimit: {
+            values: {
+              '0': 'Không giới hạn',
+              '25': '25',
+              '50': '50',
+              '100': '100',
+              '250': '250',
+              '500': '500',
+              '1000': '1000',
+              '2500': '2500'
+            }
+          },
+          mapChatHistoryLimit: {
+            label: 'Giới hạn Lịch sử chat map'
+          },
+          globalChatHistoryLimit: {
+            label: 'Giới hạn Lịch sử chat chung'
+          },
+          partyChatHistoryLimit: {
+            label: 'Giới hạn Lịch sử chat nhóm'
+          },
+          blurScreenshotEmbeds: 'Làm mờ mọi ảnh chụp màn hình'
+        }
+      },
+      screenshotSettings: {
+        title: 'Cài đặt Chụp màn hình',
+        fields: {
+          autoDownloadScreenshots: 'Tự động tải xuống ảnh chụp',
+          screenshotResolution: {
+            label: 'Độ phân giải ảnh chụp màn hình',
+            values: {
+              '1': '1x - 320x240',
+              '2': '2x - 640x480',
+              '3': '3x - 960x720',
+              '4': '4x - 1280x960'
+            }
+          }
+        }
+      },
+      notificationSettings: {
+        title: 'Cài Đặt Thông Báo',
+        fields: {
+          toggleNotifications: 'Thông báo',
+          screenPosition: {
+            label: 'Vị trí cửa sổ',
+            values: {
+              bottomLeft: 'Góc dưới bên trái',
+              bottomRight: 'Góc dưới bên phải',
+              topLeft: 'Góc trên bên trái',
+              topRight: 'Góc trên bên phải'
+            }
+          },
+          system: {
+            label: 'Hệ thống',
+            fields: {
+              siteUpdates: 'Trang được cập nhật',
+              error: 'Đã xảy ra lỗi',
+              pushNotifications: 'Thông báo trên desktop'
+            }
+          },
+          account: {
+            label: 'Tài khoản',
+            fields: {
+              loggedIn: 'Đã đăng nhập',
+              loggedOut: 'Đã đăng xuất',
+              passwordUpdate: 'Đã cập nhật mật khẩu'
+            }
+          },
+          players: {
+            label: 'Người chơi',
+            fields: {
+              playerBlocked: 'Đã chặn người chơi',
+              playerUnblocked: 'Đã bỏ chặn người chơi'
+            }
+          },
+          friends: {
+            label: 'Bạn bè',
+            fields: {
+              add: 'Đã kết bạn',
+              remove: 'Đã hủy kết bạn',
+              accept: 'Đã chấp nhận lời mời kết bạn',
+              reject: 'Đã xóa lời mời kết bạn',
+              cancel: 'Đã hủy lời mời kết bạn',
+              incoming: 'Có lời mời kết bạn',
+              playerOnline: 'Bạn bè đang online',
+              playerOffline: 'Bạn bè đã offline'
+            }
+          },
+          parties: {
+            label: 'Nhóm',
+            fields: {
+              create: 'Tạo nhóm',
+              update: 'Cập nhật nhóm',
+              join: 'Tham gia nhóm',
+              leave: 'Rời khỏi nhóm',
+              remove: 'Bị xóa khỏi nhóm',
+              disband: 'Giải tán nhóm',
+              playerJoin: 'Người chơi tham gia nhóm',
+              playerLeave: 'Người chơi rời khỏi nhóm',
+              playerOnline: 'Người chơi đang online',
+              playerOffline: 'Người chơi đã offline',
+              kickPlayer: 'Xóa người chơi khỏi nhóm',
+              transferPartyOwner: 'Chỉ định người chơi làm trưởng nhóm'
+            }
+          },
+          events: {
+            label: 'Thám hiểm',
+            fields: {
+              complete: 'Đã hoàn thành thám hiểm',
+              freeComplete: 'Đã hoàn thành thám hiểm tự do',
+              vmComplete: 'Đã tìm thấy máy bán hàng',
+              listUpdated: 'Đã cập nhật danh sách thám hiểm'
+            }
+          },
+          badges: {
+            label: 'Huy hiệu',
+            fields: {
+              badgeUnlocked: 'Đã mở khóa huy hiệu'
+            }
+          },
+          timeTrials: {
+            label: 'Time Trials',
+            fields: {
+              goalReached: 'Goal Reached'
+            }
+          },
+          screenshots: {
+            label: 'Chụp màn hình',
+            fields: {
+              screenshotTaken: 'Đã chụp ảnh màn hình'
+            }
+          },
+          saveSync: {
+            label: 'Đồng bộ Tiến trình',
+            fields: {
+              saveUploading: 'Đang tải lên bản lưu',
+              saveUploaded: 'Đã tải lên bản lưu',
+              saveDownloading: 'Đang tải xuống bản lưu',
+              saveDownloaded: 'Đã tải xuống bản lưu',
+              saveUpToDate: 'Bản lưu là phiên bản mới nhất',
+              saveCleared: 'Bản lưu đã được xóa',
+              saveReminder: 'Nhắc nhở lưu'
+            }
+          },
+          schedules: {
+            label: 'Sự kiện',
+            fields: {
+              upcomingSchedules: 'Sự kiện sắp diễn ra'
+            }
+          }
+        }
+      },
+      cacheSettings: {
+        title: 'Cài Đặt Cache',
+        clear: 'Xóa',
+        fields: {
+          locationCache: 'Cache địa điểm',
+          mapCache: 'Cache bản đồ',
+          locationColorCache: 'Cache màu địa điểm'
+        }
+      },
+      accountSettings: {
+        title: 'Cài Đặt Tài Khoản',
+        fields: {
+          badge: 'Huy hiệu',
+          changePassword: 'Đổi mật khẩu',
+          clearSaveSync: 'Xóa dữ liệu đồng bộ'
+        }
+      },
+      password: {
+        title: 'Đổi Mật khẩu',
+        fields: {
+          oldPassword: 'Mật khẩu cũ',
+          newPassword: 'Mật khẩu mới',
+          newConfirmPassword: 'Xác nhận lại mật khẩu mới'
+        },
+        submit: 'Xác nhận'
+      },
+      badges: {
+        title: 'Huy Hiệu',
+        manageBadgeGallery: 'Quản lý Kho Huy hiệu',
+        fields: {
+          unlockStatus: {
+            label: 'Trạng thái:&nbsp;',
+            values: {
+              '0': 'Chưa thu thập',
+              '1': 'Đã thu thập',
+              all: 'Tất cả',
+              recentUnlock: 'Mới thu thập'
+            }
+          },
+          sortOrder: {
+            label: 'Thứ tự lọc:&nbsp;',
+            values: {
+              default: 'Mặc định'
+            }
+          },
+          search: {
+            label: 'Tìm kiếm:&nbsp;',
+            name: 'Tên:',
+            location: 'Địa điểm:'
+          }
+        }
+      },
+      badgeGallery: {
+        title: 'Quản lý Kho Huy hiệu',
+        badgeGalleryRowProgress: 'Cập nhật hàng tiếp theo (BP)',
+        badgeGalleryColProgress: 'Cập nhật cột tiếp theo (Huy hiệu)',
+        removeMode: {
+          activate: 'Gỡ huy hiệu',
+          deactivate: 'Hoàn tất'
+        },
+        manageBadgePreset: 'Khuôn mẫu'
+      },
+      badgePreset: {
+        title: 'Khuôn mẫu huy hiệu',
+        selectPreset: 'Chọn khuôn mẫu',
+        presetName: 'Mẫu {{index}}'
+      },
+      save: {
+        title: 'Quản lý Dữ liệu lưu',
+        reload: 'Lưu thay đổi và tải lại',
+        info: 'Đối với việc nhập bản lưu, nếu lần lưu cuối là trên một bản dịch trò chơi sử dụng RPG_RT, trò chơi sẽ hiện lỗi đến khi bạn lưu trò chơi trên EasyRPG mà không dùng bản dịch nào.'
+      },
+      uiTheme: {
+        title: 'Phông Nền',
+        auto: 'TỰ ĐỘNG'
+      },
+      createParty: {
+        title: {
+          create: 'Tạo nhóm',
+          update: 'Chỉnh sửa nhóm'
+        },
+        fields: {
+          partyName: 'Tên nhóm',
+          description: 'Mô tả',
+          public: 'Công khai',
+          password: 'Mật khẩu',
+          theme: 'Nền'
+        },
+        showPassword: 'Hiện mật khẩu',
+        hidePassword: 'Ẩn mật khẩu',
+        submit: 'Xong'
+      },
+      joinPrivateParty: {
+        title: 'Tham gia nhóm kín',
+        fields: {
+          password: 'Mật khẩu'
+        },
+        showPassword: 'Hiện mật khẩu',
+        hidePassword: 'Ẩn mật khẩu',
+        incorrectPassword: 'Sai mật khẩu: Hãy thử lại.',
+        submit: 'Xong'
+      },
+      events: {
+        title: 'Thám Hiểm',
+        rankExp: 'Cấp Tiếp Theo',
+        weekExp: 'ExP Tuần Này',
+        tabs: {
+          locations: 'Địa Điểm',
+          vms: 'Thám Hiểm Máy Bán Hàng'
+        }
+      },
+      rankings: {
+        title: 'Bảng Xếp Hạng',
+        player: 'Người chơi'
+      },
+      screenshot: {
+        title: 'Ảnh chụp màn hình của bạn',
+        download: 'Tải xuống',
+        save: 'Lưu vào Ảnh của tôi',
+        share: 'Chia sẻ vào chat'
+      },
+      myScreenshots: {
+        title: 'Ảnh của tôi',
+        screenshotSlotProgress: 'Cập nhật số chỗ tiếp theo (BP)',
+        empty: 'Bạn chưa lưu ảnh chụp màn hình nào.'
+      },
+      communityScreenshots: {
+        title: 'Ảnh của cộng đồng',
+        scrollToRefresh: 'Lướt về đầu trang để làm mới',
+        fields: {
+          game: {
+            label: 'Trò chơi:&nbsp;',
+            values: {
+              all: 'Tất cả'
+            }
+          },
+          sortOrder: {
+            values: {
+              recent: 'Mới nhất',
+              likes: 'Được thích nhiều nhất'
+            }
+          },
+          interval: {
+            values: {
+              day: 'Hôm nay',
+              week: 'Tuần này',
+              month: 'Tháng này',
+              year: 'Năm nay',
+              all: 'Từ trước đến nay'
+            }
+          }
+        }
+      },
+      schedule: {
+        title: 'Sự Kiện',
+        ongoing: 'Đang diễn ra',
+        party: 'Sự kiện nhóm',
+        future: 'Sắp diễn ra',
+        official: 'Sự kiện chính thức',
+        noResults: 'Chưa có sự kiện nào được lên lịch.',
+        doSchedule: 'Lên lịch sự kiện mới'
+      },
+      scheduleEdit: {
+        title: 'Chỉnh sửa Sự kiện',
+        save: 'Lưu',
+        cancel: 'Hủy sự kiện',
+        fields: {
+          name: 'Tên sự kiện',
+          description: 'Mô tả',
+          datetime: 'Thời gian diễn ra',
+          recurring: 'Sự kiện lặp lại',
+          theme: 'Nền',
+          interval: {
+            title: 'Lặp lại mỗi',
+            days: 'ngày',
+            months: 'tháng',
+            years: 'năm'
+          },
+          restrictParty: 'Chỉ dành cho Nhóm',
+          official: 'Sự kiện chính thức',
+          resetOrganizer: 'Đặt lại người tổ chức',
+          platforms: {
+            title: 'Liên kết ngoài',
+            discord: 'Discord',
+            youtube: 'YouTube',
+            twitch: 'Twitch',
+            niconico: 'Nicovideo',
+            openrec: 'Openrec',
+            bilibili: 'Bilibili'
+          }
+        }
+      },
+      report: {
+        title: 'Báo cáo',
+        submit: 'Gửi',
+        fields: {
+          reason: {
+            '1': 'Dùng ngôn từ miệt thị, độc hại hoặc không phù hợp',
+            '2': 'Quấy rối, bắt nạt, rình rập',
+            '3': 'Dùng tên không phù hợp',
+            '4': 'Trốn lệnh cấm (ban evasion)',
+            '5': 'Gian lận, lợi dụng lỗ hổng trò chơi',
+            '6': 'Người chơi dưới độ tuổi quy định',
+            '7': 'Spam',
+            title: 'Lý do',
+            placeholder: 'Lý do khác (tối đa 50 ký tự)',
+            other: 'Khác (nêu rõ)'
+          }
+        }
+      },
+      rules: {
+        title: 'Nội quy',
+        rule1: 'Hãy cư xử lịch sự và tôn trọng người khác.',
+        rule2: 'Không bàn về những chủ đề 18+ (NSFW, máu me,...).',
+        rule3: 'Không bàn về chính trị.',
+        rule4: 'Không phát ngôn gây tranh cãi (bao gồm từ lóng).',
+        rule5: 'Không gian lận bằng bất kỳ lý do nào.',
+        rule6: 'Nếu gặp vấn đề, thông báo cho các kiểm duyệt viên.'
+      },
+      explorerUndiscoveredLocations: {
+        title: 'Địa điểm chưa khám phá',
+        complete: 'Bạn đã khám phá hết tất cả địa điểm! Chúc mừng!!'
+      },
+      locations: {
+        title: 'Địa Điểm',
+        fields: {
+          visited: {
+            values: {
+              all: 'Tất cả',
+              visited: 'Đã đến',
+              unvisited: 'Chưa đến'
+            }
+          },
+          sortOrder: {
+            values: {
+              newest: 'Mới nhất',
+              oldest: 'Cũ nhất',
+              shallowest: 'Nông nhất',
+              deepest: 'Sâu nhất',
+              alpha: 'Thứ tự bảng chữ cái',
+              players: 'Số người chơi'
+            }
+          }
+        }
+      }
+    },
+    tooltips: {
+      togglePrivateMode: 'Bật Chế độ Riêng tư',
+      save: 'Quản lý Dữ liệu lưu',
+      uiTheme: 'Phông nền',
+      toggleChat: 'Bật/Tắt Chat',
+      toggleExplorer: 'Bật/Tắt Yume 2kki Navigator',
+      screenshot: 'Chụp ảnh màn hình',
+      myScreenshots: 'Ảnh của tôi',
+      settings: 'Cài đặt',
+      toggleMute: 'Bật/Tắt tiếng',
+      toggleHideLocation: 'Bật/Tắt Chia sẻ Địa điểm',
+      toggleGlobalMessage: 'Bật/Tắt Chế độ Chat Chung',
+      chat: {
+        toggleNextLocation: 'Hiện/Ẩn Địa điểm kế tiếp trong Thám hiểm',
+        toggleGlobalMessageLocations: 'Hiện/Ẩn Địa điểm trong Chat',
+        toggleMessageTimestamps: 'Hiện/Ẩn Thời điểm gửi tin nhắn',
+        filterMentions: 'Show Mentions Only',
+        clearChat: 'Xóa Chat'
+      },
+      parties: {
+        createParty: 'Tạo nhóm',
+        disbandParty: 'Giải tán nhóm'
+      },
+      events: 'Thám hiểm',
+      locations: 'Địa điểm',
+      communityScreenshots: 'Ảnh của cộng đồng',
+      rankings: 'Bảng xếp hạng',
+      schedules: 'Sự kiện',
+      nexus: 'Quay về Nexus',
+      explorerUndiscoveredLocations: 'Xem địa điểm chưa khám phá',
+      timeTrial:
+        'Để bật chế độ Thử thách Hẹn giờ, ấn giữ Shift + -> ngay sau khi chọn Bắt đầu và trước khi có gì khác xuất hiện trên màn hình.',
+      mobileControlsType:
+        'Các kiểu điều khiển khác thay thế cho kiểu D-Pad mặc định.<br>Kiểu điều khiển nổi chỉ có tác dụng khi bật toàn màn hình trên điện thoại.'
+    },
+    placeholders: {
+      scheduleDescription:
+        'Có thể dùng ký hiệu định dạng văn bản. Bạn có thể dùng {\\{l:World,tên tùy chọn cho liên kết}} để chèn liên kết đến yume.wiki'
+    },
+    reviewRules: 'Xem Nội quy'
+  },
+  messages: {
+    games: {
+      ynoproject: 'YNOproject',
+      yume: 'Yume Nikki',
+      '2kki': 'Yume 2kki',
+      unconscious: 'Collective Unconscious',
+      flow: '.flow',
+      fog: 'FOG',
+      prayers: 'Answered Prayers',
+      deepdreams: 'Deep Dreams',
+      someday: 'Someday',
+      amillusion: 'Amillusion',
+      unevendream: 'Uneven Dream',
+      braingirl: 'Braingirl',
+      muma: 'Muma|Rope',
+      genie: 'Dream Genie',
+      mikan: 'Mikan Muzou',
+      ultraviolet: 'Ultra Violet',
+      sheawaits: 'She Awaits',
+      oneshot: 'OneShot',
+      oversomnia: 'Oversomnia',
+      tsushin: 'Yume Tsushin',
+      nostalgic: 'nostAlgic',
+      if: 'If',
+      unaccomplished: 'Unaccomplished'
+    },
+    leavePage: 'Bạn có chắc muốn rời khỏi trang? Toàn bộ tiến trình không được lưu trong game sẽ bị mất.',
+    logout: 'Bạn có chắc muốn đăng xuất?',
+    loadingInstruct:
+      '. <br /> <br /> Dường như trang đang mất khá lâu để tải; nếu vấn đề tiếp diễn bạn có thể phải bấm CTRL+F5 hoặc xóa bộ đệm trình duyệt (nhưng đừng xóa cookies!). Bạn có thể kiểm tra lỗi trong Bảng điều khiển (Console) bằng phím F12.',
+    requestNotifications: 'Nhận thông báo về các sự kiện đã theo dõi và cập nhật chuyến Thám hiểm?',
+    connStatus: {
+      '0': 'Không có kết nối',
+      '1': 'Đã kết nối',
+      '2': 'Đang kết nối...',
+      '3': 'Riêng tư',
+      '4': 'Một người'
+    },
+    lastOnline: {
+      template: 'Online lần cuối\n{INTERVAL} trước',
+      longTime: 'rất lâu về trước',
+      interval: {
+        short: 'ít hơn 1 phút',
+        minutes: {
+          singular: '{VALUE} phút',
+          plural: '{VALUE} phút'
+        },
+        hours: {
+          singular: '{VALUE} giờ',
+          plural: '{VALUE} giờ'
+        },
+        days: {
+          singular: '{VALUE} ngày',
+          plural: '{VALUE} ngày'
+        }
+      }
+    },
+    location: {
+      template: '{LOCATION} ({LOCATION_EN})',
+      queryingLocation: 'Đang tìm địa điểm...',
+      unknownLocation: 'Không rõ Địa điểm',
+      '2kki': {
+        template: '{LOCATION}'
+      },
+      connType: {
+        '1': 'Một chiều',
+        '2': 'Không quay lại được',
+        '4': 'Mở khóa',
+        '8': 'Cần mở khóa',
+        '16': 'Đường cụt',
+        '32': 'Khu biệt lập',
+        '64': 'Cần hiệu ứng ({PARAMS})',
+        '128': 'Xác suất {PARAMS}',
+        '256': '{PARAMS}',
+        '512': 'Đường tắt',
+        '1024': 'Đường ra',
+        '2048': 'Theo mùa ({PARAMS})'
+      },
+      depth: ' ({DEPTH})',
+      playing: 'Đang chơi {GAME}'
+    },
+    locationDisplay: {
+      template: '{LOCATION}',
+      '2kki': {
+        template: '{LOCATION}'
+      }
+    },
+    playersOnline: {
+      singular: '{COUNT} Người chơi Online',
+      plural: '{COUNT} Người chơi Online'
+    },
+    playersInMap: {
+      singular: '{COUNT} Người chơi trong Map',
+      plural: '{COUNT} Người chơi trong Map'
+    },
+    playerList: {
+      unnamed: 'Không tên',
+      muted: 'Muted',
+      actions: {
+        approveFriend: 'Chấp nhận lời mời',
+        rejectFriend: 'Xóa lời mời',
+        cancelFriend: 'Hủy lời mời',
+        partyKick: 'Xóa khỏi nhóm',
+        transferPartyOwner: 'Chỉ định làm trưởng nhóm'
+      }
+    },
+    roles: {
+      mod: 'Kiểm duyệt viên',
+      dev: 'Lập trình viên'
+    },
+    timestamp: {
+      time: '{TIME}',
+      timeAndWeekday: '{TIME} ({WEEKDAY})'
+    },
+    context: {
+      ping: {
+        label: 'Gắn thẻ {PLAYER}'
+      },
+      addFriend: {
+        label: 'Kết bạn với {PLAYER}'
+      },
+      removeFriend: {
+        label: 'Hủy kết bạn với {PLAYER}'
+      },
+      block: {
+        label: 'Chặn {PLAYER}',
+        confirm: 'Bạn có chắc chắn muốn chặn {PLAYER}?'
+      },
+      unblock: {
+        label: 'Bỏ chặn {PLAYER}',
+        confirm: 'Bạn có chắc chắn muốn bỏ chặn {PLAYER}?'
+      },
+      report: {
+        label: 'Báo cáo {PLAYER}'
+      },
+      admin: {
+        ban: {
+          label: 'Ban {PLAYER}',
+          confirm: 'Bạn có chắc bạn muốn ban {PLAYER}?',
+          success: '{PLAYER} đã bị ban.'
+        },
+        unban: {
+          label: 'Unban {PLAYER}',
+          confirm: 'Bạn có chắc bạn muốn unban {PLAYER}?',
+          success: '{PLAYER} đã được unban.'
+        },
+        mute: {
+          label: 'Mute {PLAYER}',
+          confirm: 'Bạn có chắc bạn muốn mute {PLAYER}?',
+          success: '{PLAYER} đã bị mute.'
+        },
+        unmute: {
+          label: 'Unmute {PLAYER}',
+          confirm: 'Bạn có chắc bạn muốn unmute {PLAYER}?',
+          success: '{PLAYER} đã được unmute.'
+        },
+        grantBadge: {
+          label: 'Ban tặng Huy hiệu',
+          prompt: 'Nhập ID huy hiệu để ban tặng cho {PLAYER}.',
+          success: '{BADGE} đã được ban tặng cho {PLAYER}.',
+          fail: 'Không tìm thấy huy hiệu nào với ID đã nhập.'
+        },
+        revokeBadge: {
+          label: 'Thu hồi Huy hiệu',
+          prompt: 'Nhập ID huy hiệu để thu hồi từ {PLAYER}.',
+          success: '{BADGE} đã được thu hồi từ {PLAYER}.',
+          fail: 'Không tìm thấy huy hiệu nào với ID đã nhập.'
+        },
+        tempban: {
+          label: 'Tempban {PLAYER}',
+          prompt: 'When to unban {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempbanned.'
+        },
+        tempmute: {
+          label: 'Tempmute {PLAYER}',
+          prompt: 'When to unmute {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempmuted.'
+        }
+      }
+    },
+    account: {
+      login: {
+        errors: {
+          invalidLogin: 'Sai tên người dùng hoặc mật khẩu.'
+        }
+      },
+      register: {
+        errors: {
+          confirmPasswordMismatch: 'Mật khẩu không trùng khớp.',
+          invalidCredentials: 'Tên người dùng hoặc mật khẩu trống hoặc chứa ký tự không hợp lệ.',
+          emailTaken: 'Địa chỉ email đã được sử dụng.',
+          usernameTaken: 'Tên người dùng đã được sử dụng.'
+        }
+      },
+      password: {
+        errors: {
+          confirmPasswordMismatch: 'Mật khẩu mới và mật khẩu xác nhận lại không khớp.',
+          badLogin: 'Sai mật khẩu đăng nhập.',
+          internalServerError: 'Đã có lỗi xảy ra: vui lòng thử lại sau.'
+        }
+      }
+    },
+    chat: {
+      globalMessage: 'Tin nhắn Chung'
+    },
+    friends: {
+      friend: 'Bạn bè',
+      categories: {
+        incoming: 'Lời mời kết bạn - {COUNT}',
+        outgoing: 'Lời mời đã gửi - {COUNT}',
+        online: 'Online - {COUNT}',
+        offline: 'Offline - {COUNT}'
+      }
+    },
+    parties: {
+      emptyMessage: 'Hiện không có nhóm hoạt động.',
+      yourParty: 'Nhóm của bạn',
+      defaultPartyName: 'Nhóm của {OWNER}',
+      partyOwner: 'Trưởng Nhóm',
+      confirmDisband: 'Bạn có chắc chắn muốn giải tán nhóm? Hành động này không thể hoàn tác.',
+      confirmTransferPartyOwner: 'Bạn có chắc chắn muốn chỉ định {PLAYER} làm trưởng nhóm?',
+      offlineMemberSuffix: 'Thành viên offline',
+      categories: {
+        online: 'Online - {COUNT}',
+        offline: 'Offline - {COUNT}'
+      },
+      actions: {
+        viewPartyDetails: 'Xem chi tiết nhóm',
+        joinParty: 'Tham gia nhóm',
+        joinPrivateParty: 'Tham gia nhóm kín',
+        leaveParty: 'Rời khỏi nhóm'
+      }
+    },
+    chatTips: {
+      template: 'MẸO: {CONTENT}',
+      tips: {
+        backupReminder:
+          'Bạn nên giữ một bản lưu trong máy bằng cách thường xuyên tải bản lưu xuống. Như vậy, nếu dữ liệu trình duyệt bị xóa, tiến trình của bạn sẽ không bị mất.',
+        menuTheme:
+          'Màu của tên bạn và phông nền trong danh sách người chơi được dựa trên kiểu menu trong trò chơi của bạn.',
+        playersInMap:
+          'Bạn có thể chuyển giữa việc xem số người chơi online và số người chơi trong map bằng cách bấm vào dòng chữ.',
+        markdownSupport:
+          'Bạn có thể định dạng tin nhắn bằng cách cho tin nhắn vào giữa những ký tự nhất định. Những định dạng hiện có: **in đậm** (\\*\\*chữ\\*\\*), *in nghiêng* (\\*chữ\\*, \\_chữ\\_), __gạch dưới__ (\\_\\_chữ\\_\\_), ~~gạch bỏ~~ (\\~\\~chữ\\~\\~), và ||bôi đen|| (\\|\\|chữ\\|\\|).',
+        tabToChat:
+          "Nếu bạn đang chơi trên máy tính, bạn có thể nhấn phím Tab để chuyển đổi nhập liệu giữa khung chat và trò chơi. Tính năng này có thể tắt được trong cài đặt 'Nhấn Tab để chat'.",
+        chatTabNotifications:
+          "Khi bạn ở trong khung chat khác ngoài khung 'Tất cả', nếu có tin nhắn mới từ các thẻ khác, tiêu đề thẻ sẽ được in đậm để thông báo cho bạn.",
+        clearChat:
+          "Khi bạn ấn Xóa Chat ở góc trên bên phải của khung, nếu bạn không trong thẻ 'Tất cả', chỉ tin nhắn trong thẻ bạn đã chọn sẽ bị xóa.",
+        chatHistoryLimit:
+          'Nếu lịch sử chat của bạn quá dài, hiệu suất có thể bị ảnh hưởng. Trong mục Cài đặt Chat, bạn có thể giới hạn số tin nhắn để tránh vấn đề này mà không phải xóa chat thủ công.',
+        parties:
+          'Nhóm là tính năng hữu ích để tránh lạc mất nhau trong khi thám hiểm. Bạn có thể thấy được địa điểm các thành viên khác đang ở và trò chuyện với họ trong chat kín.',
+        immersionMode:
+          'Nếu bạn thích được đắm chìm trong trò chơi hơn là xã giao, hãy thử Chế độ Đắm chìm. Tính năng sẽ tắt chat chung, danh sách người chơi và số người chơi, như vậy sẽ thú vị hơn khi bạn vô tình tìm được người khác khi đang khám phá.',
+        friendsMenu:
+          'Khi ấn chuột phải trên máy tính, hoặc ấn giữ với thiết bị di động vào icon của một người chơi bên ngoài cửa sổ Bảng xếp hạng, một hộp thoại sẽ bật lên, cho phép bạn gửi lời mời kết bạn, gắn thẻ họ hoặc chặn họ.',
+        easySettingsMenu:
+          'Nếu bạn đang chơi trên máy tính, bạn có thể ấn phím F1 khi đang chơi để mở menu cài đặt, giúp bạn thay đổi cách gán phím và một số cài đặt khác.',
+        floatingControls:
+          'Nếu bạn chơi trên thiết bị di động và bạn không thích phím chữ thập mặc định, bạn có thể thay đổi kiểu điều khiển thành các kiểu nổi ở trong Cài đặt.',
+        recentBadges:
+          "Bạn có thể chọn 'Mới thu thập' cho Trạng thái trong danh sách huy hiệu để xem lại tất cả các huy hiệu bạn đã thu thập trong phiên hiện tại.",
+        desktopHotkeys:
+          'Nếu bạn chơi trên máy tính, Alt+Enter sẽ bật tắt chế độ toàn màn hình, F7 mặc định sẽ chụp màn hình trò chơi, và phím T sẽ mở hộp chat trong trò chơi.',
+        badgeControls:
+          "Trong Kho Huy hiệu, bạn có thể kéo thả huy hiệu để thay đổi vị trí của chúng, hoặc nhấn 'Gỡ huy hiệu' để gỡ cùng lúc nhiều huy hiệu.",
+        cacheSettings:
+          'Nếu bạn gặp khó khăn trong việc hoàn thành các kì Thám hiểm hoặc bản đồ không cập nhật, trong menu Cache bạn có thể xóa cache thủ công để cập nhật dữ liệu mới nhất.',
+        openSource: 'YNOproject là dự án mã nguồn mở và có thể truy cập kho lưu trữ tại https://github.com/ynoproject/'
+      }
+    },
+    save: {
+      slot: {
+        title: 'Tệp {SLOT_ID}',
+        readingLabel: 'Đang đọc dữ liệu...',
+        emptyLabel: 'Trống',
+        errorLabel: 'Lỗi'
+      },
+      upload: {
+        tooltip: 'Tải bản lưu lên',
+        invalidSaveFile: 'Hãy chọn bản lưu hợp lệ (đuôi .lsd).'
+      },
+      download: {
+        tooltip: 'Tải bản lưu xuống',
+        emptySlot: 'Úi! Vị trí đã chọn không có bản lưu nào.'
+      },
+      delete: {
+        tooltip: 'Xóa bản lưu',
+        confirmDelete: 'Bạn có chắc chắn muốn xóa bản lưu của tệp {SLOT_ID}?'
+      }
+    },
+    saveSync: {
+      confirmClearSaveSync:
+        'Bạn có chắc chắn muốn xóa dữ liệu lưu đồng bộ cho trò chơi này? Hành động này không thể hoàn tác trừ khi bạn có một bản dự phòng cho bản lưu.'
+    },
+    toast: {
+      system: {
+        siteUpdates: 'Trang đã được cập nhật. Tải lại trang để áp dụng thay đổi mới nhất.',
+        error:
+          "Úi chà! Hình như có gì đó sai sai. Xem Bảng điều khiển (Console) của trình duyệt để biết thêm chi tiết. Để mở Bảng điều khiển, nhấn F12 hoặc nhấn chuột phải rồi chọn 'Kiểm tra'."
+      },
+      account: {
+        loggedIn: 'Bạn đã đăng nhập với tư cách {USER}.',
+        loggedOut: 'Bạn đã đăng xuất.',
+        passwordUpdated: 'Đã cập nhật mật khẩu thành công.'
+      },
+      players: {
+        playerBlocked: 'Đã chặn {PLAYER}.',
+        playerUnblocked: 'Đã bỏ chặn {PLAYER}.'
+      },
+      friends: {
+        add: 'Bạn đã gửi lời mời kết bạn đến {PLAYER}.',
+        remove: 'Bạn đã hủy kết bạn với {PLAYER}.',
+        accept: 'Đã chấp nhận lời mời kết bạn của {PLAYER}.',
+        reject: 'Đã xóa lời mời kết bạn của {PLAYER}.',
+        cancel: 'Đã hủy lời mời kết bạn đến {PLAYER}.',
+        incoming: 'Bạn có lời mời kết bạn từ {PLAYER}.',
+        playerOnline: '{PLAYER} đang online.',
+        playerOffline: '{PLAYER} đã offline.'
+      },
+      parties: {
+        create: '{PARTY} đã được tạo.',
+        update: '{PARTY} đã được cập nhật.',
+        join: 'Bạn đã tham gia {PARTY}.',
+        leave: 'Bạn đã rời khỏi {PARTY}.',
+        remove: 'Bạn đã bị xóa khỏi {PARTY}.',
+        disband: '{PARTY} đã giải tán.',
+        playerJoin: '{PLAYER} đã tham gia nhóm.',
+        playerLeave: '{PLAYER} đã rời khỏi nhóm.',
+        playerOnline: '{PLAYER} đang online.',
+        playerOffline: '{PLAYER} đã offline.',
+        kickPlayer: '{PLAYER} đã bị xóa khỏi nhóm.',
+        transferPartyOwner: '{PLAYER} đã được chỉ định làm trưởng nhóm.'
+      },
+      events: {
+        complete: 'Đã hoàn thành chuyến thám hiểm!\nVì đã đến {LOCATION}, bạn nhận được {EXP}.',
+        freeComplete: 'Đã hoàn thành chuyến thám hiểm! Bạn đã đến {LOCATION}.',
+        vmComplete: 'Đã tìm thấy máy bán hàng!\nBạn nhận được {EXP}.',
+        listUpdated: 'Danh sách thám hiểm đã được cập nhật.'
+      },
+      badges: {
+        badgeUnlocked: 'Bạn đã mở khóa huy hiệu mới!'
+      },
+      screenshots: {
+        screenshotTaken: 'Đã chụp ảnh màn hình. Nhấn để lưu.'
+      },
+      saveSync: {
+        saveUploading: 'Đang tải dữ liệu bản lưu từ vị trí {SLOT}...',
+        saveUploaded: 'Dữ liệu bản lưu của bạn từ vị trí {SLOT} đã được tải lên.',
+        saveDownloading: 'Đang cập nhật dữ liệu bản lưu vào vị trí {SLOT}...',
+        saveDownloaded: 'Vị trí lưu {SLOT} đã được cập nhật.',
+        saveUpToDate: 'Dữ liệu bản lưu đang ở phiên bản mới nhất.',
+        saveCleared:
+          'Dữ liệu Đồng bộ Tiến trình đã bị xóa. Điều này sẽ không ảnh hưởng đến bản lưu có sẵn trên bất cứ thiết bị nào của bạn.',
+        saveReminder: 'Đừng quên lưu trò chơi thường xuyên và sao lưu bản lưu của bạn để không mất tiến trình trò chơi.'
+      },
+      timeTrials: {
+        timeTrialsComplete: 'Goal! {CATEGORY} completed in {TIME}.'
+      }
+    },
+    events: {
+      exp: '{POINTS} ExP',
+      expRank: 'Hạng: {RANK}',
+      period: 'Mùa {ORDINAL}',
+      periodEnds: 'Kết thúc vào {DATE}',
+      current: 'Hiện tại',
+      shortcut: 'Có thể đến được qua lối tắt được mở khóa',
+      toggleTracked: 'Bật/Tắt Chỉ đường',
+      availableUntilDate: 'Khả dụng đến\n{DATE}',
+      types: {
+        '0': 'Hàng ngày',
+        '1': 'Hàng tuần',
+        '2': 'Cuối tuần',
+        '3': 'Đặc biệt',
+        '-1': 'Tự do'
+      },
+      expRanks: {
+        '0': 'Nhập môn',
+        '1': 'Trung',
+        '2': 'Đồng',
+        '3': 'Bạc',
+        '4': 'Vàng',
+        '5': 'Bạch kim',
+        '6': 'Kim cương'
+      }
+    },
+    badges: {
+      null: 'Không có',
+      allCategory: 'Tất cả',
+      badgeTitle: '{TITLE} - {BP} BP',
+      locked: '???',
+      location: 'Địa điểm:&nbsp;',
+      goalProgress: '{CURRENT}/{TOTAL}',
+      percentUnlocked: '{PERCENT}% người chơi có huy hiệu này',
+      time: '{MINUTES}:{SECONDS}',
+      artCredit: 'Được vẽ bởi {ARTIST}',
+      search: {
+        modifier: {
+          template: '&nbsp;({MODIFIER})',
+          exactMatch: 'Exact Match'
+        }
+      },
+      sortOrder: {
+        template: '{TYPE} ({ORDER})',
+        types: {
+          bp: 'BP',
+          percent: 'Tỷ lệ mở khóa'
+        },
+        asc: 'Tăng dần',
+        desc: 'Giảm dần'
+      }
+    },
+    badgeGallery: {
+      label: 'Kho Huy hiệu của {PLAYER}',
+      loading: 'Đang tải...',
+      bp: '{BP} BP',
+      count: '{COUNT} Huy hiệu',
+      empty: 'Badge gallery not set'
+    },
+    badgePreset: {
+      empty: 'Khuôn mẫu trống'
+    },
+    rankings: {
+      categories: {
+        badgeCount: {
+          label: 'Huy Hiệu',
+          valueLabel: 'Số lượng',
+          value: '{NUMBER}'
+        },
+        bp: {
+          label: 'BP (Điểm Huy hiệu)',
+          valueLabel: 'BP',
+          value: '{NUMBER} BP'
+        },
+        exp: {
+          label: 'ExP',
+          valueLabel: 'ExP',
+          value: '{NUMBER} ExP'
+        },
+        eventLocationCount: {
+          label: 'Thám hiểm',
+          valueLabel: 'Số chuyến',
+          value: '{NUMBER}'
+        },
+        freeEventLocationCount: {
+          label: 'Thám hiểm Tự do',
+          valueLabel: 'Số chuyến',
+          value: '{NUMBER}'
+        },
+        eventLocationCompletion: {
+          label: 'Tỷ lệ hoàn thành Thám hiểm',
+          valueLabel: 'Tỷ lệ',
+          value: '{PERCENT}%'
+        },
+        eventVmCount: {
+          label: 'Thám Hiểm Máy Bán Hàng',
+          valueLabel: 'Số lượng',
+          value: '{NUMBER}'
+        },
+        timeTrial: {
+          label: 'Thử thách Hẹn giờ',
+          valueLabel: 'Thời gian hoàn thành',
+          value: '{MINUTES}:{SECONDS}'
+        },
+        minigame: {
+          label: 'Minigame',
+          valueLabel: 'Điểm',
+          value: '{NUMBER}'
+        }
+      },
+      subCategories: {
+        '2': 'Tất cả Hiệu ứng',
+        all: 'Tất cả',
+        nasu: 'NASU',
+        rby: 'Red Blue Yellow (Mini Game B)',
+        rby_ex: 'Red Blue Yellow (Mini Game B) - Bản EX',
+        fuji_ex: 'FUJI EX',
+        hozo: 'HOZO',
+        cartoonboy: 'Cartoon Boy',
+        ta_be: 'TA_BE_',
+        ta_be_hardcore: 'TA_BE_ - Hardcore Mode',
+        panerabbit: 'PANErabbit'
+      }
+    },
+    locations: {
+      author: 'Tác giả: {AUTHOR}',
+      versionAdded: 'Được thêm vào {VERSION}',
+      versionUpdated: 'Cập nhật lần cuối vào {VERSION}',
+      track: {
+        tooltip: {
+          on: 'Chỉ đường',
+          off: 'Ngưng chỉ đường'
+        }
+      }
+    },
+    screenshots: {
+      playerScreenshot: 'Ảnh của {USER}',
+      limit: 'Đã dùng {COUNT}/{LIMIT} slot',
+      public: {
+        tooltip: {
+          on: 'Đặt ảnh công khai',
+          off: 'Đặt ảnh riêng tư'
+        }
+      },
+      spoiler: {
+        label: 'Spoiler',
+        tooltip: {
+          on: 'Đánh dấu là spoiler',
+          off: 'Bỏ spoiler'
+        }
+      },
+      like: {
+        tooltip: {
+          on: 'Thích',
+          off: 'Bỏ thích'
+        }
+      },
+      delete: {
+        tooltip: 'Xóa',
+        confirm: 'Bạn có chắc chắn muốn xóa ảnh này?'
+      }
+    },
+    schedules: {
+      organizer: 'Được tổ chức bởi&nbsp;{NAME}',
+      invalidPlatformLink: 'Nền tảng phải có URL hợp lệ',
+      confirmCancel: 'Bạn có chắc chắn muốn hủy bỏ sự kiện này?',
+      wrongEditGame: 'Không thể chỉnh sửa ngoài {GAME}',
+      platforms: {
+        discord: 'Discord',
+        youtube: 'YouTube',
+        twitch: 'Twitch',
+        niconico: 'Nicovideo',
+        openrec: 'Openrec',
+        bilibili: 'Bilibili'
+      },
+      intervals: {
+        perDay: 'Mỗi ngày',
+        days: 'Mỗi {INTERVAL} ngày',
+        perWeek: '{WEEKDAY} mỗi tuần',
+        weeks: 'Mỗi {INTERVAL} tuần',
+        perMonth: 'Mỗi tháng',
+        months: 'Mỗi {INTERVAL} tháng',
+        perYear: 'Mỗi năm',
+        years: 'Mỗi {INTERVAL} năm'
+      }
+    },
+    '2kki': {
+      explorerLink: {
+        generic: 'Xem trong Yume 2kki Explorer',
+        multi: 'Xem {LOCATION} trong Yume 2kki Explorer'
+      }
+    },
+    modSettings: {
+      title: 'Cài đặt cho Kiểm duyệt viên',
+      actions: {
+        resetPassword: {
+          label: 'Đặt lại mật khẩu',
+          playerPrompt: 'Nhập tên người dùng cần đặt lại mật khẩu',
+          success: 'Mật khẩu mới cho {PLAYER} là {PASSWORD}'
+        },
+        changeUsername: {
+          label: 'Thay đổi Tên người dùng',
+          playerPrompt: 'Nhập tên người dùng cần đổi',
+          namePrompt: 'Nhập tên người dùng mới cho {PLAYER}',
+          success: 'Tên người dùng {PLAYER} đã được đổi thành {NAME}',
+          error: 'Đổi tên người dùng cho {PLAYER} thất bại; tên có thể đã được sử dụng'
+        },
+        ban: {
+          label: 'Ban Người chơi',
+          playerPrompt: 'Nhập tên người chơi để ban'
+        },
+        unban: {
+          label: 'Bỏ ban Người chơi',
+          playerPrompt: 'Nhập tên người chơi để bỏ ban'
+        },
+        mute: {
+          label: 'Mute Người chơi',
+          playerPrompt: 'Nhập tên người chơi để mute'
+        },
+        unmute: {
+          label: 'Bỏ mute Người chơi',
+          playerPrompt: 'Nhập tên người chơi để bỏ mute'
+        },
+        grantBadge: {
+          label: 'Trao Huy hiệu',
+          playerPrompt: 'Nhập tên người chơi để trao huy hiệu'
+        },
+        revokeBadge: {
+          label: 'Thu hồi Huy hiệu',
+          playerPrompt: 'Nhập tên người chơi để thu hồi huy hiệu'
+        },
+        tempban: {
+          label: 'Tempban a Player',
+          playerPrompt: 'Enter the name of the account to tempban',
+          timePrompt: 'Enter the datetime when the ban expires (UTC time)'
+        },
+        tempmute: {
+          label: 'Tempmute a Player',
+          playerPrompt: 'Enter the name of the account to tempmute',
+          timePrompt: 'Enter the datetime when the mute expires (UTC time)'
+        }
+      }
+    }
+  }
+} satisfies Translation;
+
+export default vi;

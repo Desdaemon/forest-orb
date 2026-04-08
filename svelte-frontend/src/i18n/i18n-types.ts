@@ -34,6 +34,10 @@ type RootTranslation = {
 	 * 1
 	 */
 	translationComplete: string
+	/**
+	 * E​n​g​l​i​s​h
+	 */
+	name: string
 	version: {
 		'2kki': {
 			/**
@@ -100,6 +104,10 @@ type RootTranslation = {
 				style7: string
 			}
 		}
+		/**
+		 * H​i​g​h​ ​C​o​n​t​r​a​s​t
+		 */
+		highContrast: string
 		chatbox: {
 			/**
 			 * L​o​c​a​t​i​o​n​:​&​n​b​s​p​;
@@ -380,9 +388,10 @@ type RootTranslation = {
 						label: string
 						interval: {
 							/**
-							 * {​{​i​n​t​e​r​v​a​l​}​}​ ​m​i​n​u​t​e​s
+							 * {​i​n​t​e​r​v​a​l​}​ ​m​i​n​u​t​e​s
+							 * @param {unknown} interval
 							 */
-							minutes: string
+							minutes: RequiredParams<'interval'>
 							/**
 							 * N​e​v​e​r
 							 */
@@ -493,6 +502,10 @@ type RootTranslation = {
 					 * A​l​t​e​r​n​a​t​e​ ​F​o​n​t
 					 */
 					unicodeFont: string
+					/**
+					 * H​i​g​h​ ​C​o​n​t​r​a​s​t​ ​M​o​d​e
+					 */
+					highContrast: string
 					toggleSingleplayerMode: {
 						/**
 						 * S​i​n​g​l​e​p​l​a​y​e​r​ ​M​o​d​e
@@ -3555,6 +3568,10 @@ export type TranslationFunctions = {
 	 * 1
 	 */
 	translationComplete: () => LocalizedString
+	/**
+	 * English
+	 */
+	name: () => LocalizedString
 	version: {
 		'2kki': {
 			/**
@@ -3620,6 +3637,10 @@ export type TranslationFunctions = {
 				style7: () => LocalizedString
 			}
 		}
+		/**
+		 * High Contrast
+		 */
+		highContrast: () => LocalizedString
 		chatbox: {
 			/**
 			 * Location:&nbsp;
@@ -3900,9 +3921,9 @@ export type TranslationFunctions = {
 						label: () => LocalizedString
 						interval: {
 							/**
-							 * {{interval}} minutes
+							 * {interval} minutes
 							 */
-							minutes: (arg0: number | string | boolean) => LocalizedString
+							minutes: (arg: { interval: unknown }) => LocalizedString
 							/**
 							 * Never
 							 */
@@ -4013,6 +4034,10 @@ export type TranslationFunctions = {
 					 * Alternate Font
 					 */
 					unicodeFont: () => LocalizedString
+					/**
+					 * High Contrast Mode
+					 */
+					highContrast: () => LocalizedString
 					toggleSingleplayerMode: {
 						/**
 						 * Singleplayer Mode

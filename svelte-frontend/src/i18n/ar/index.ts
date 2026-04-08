@@ -1,0 +1,1254 @@
+import type { BaseTranslation, Translation } from '../i18n-types';
+
+const ar = {
+  translationComplete: '0',
+  version: {
+    '2kki': {
+      label: 'Yume 2kki (يومي تووكي) نسخة {VERSION}',
+      substitutes: {
+        ' Patch ': ' تصليح ',
+        '?': '؟'
+      }
+    }
+  },
+  ui: {
+    account: {
+      login: 'تسجيل الدخول',
+      logout: 'تسجيل الخروج'
+    },
+    fontStyle: {
+      label: ':نمط الخط',
+      values: {
+        style1: 'نمط 1',
+        style2: 'نمط 2',
+        style3: 'نمط 3',
+        style4: 'نمط 4',
+        style5: 'نمط 5',
+        style6: 'نمط 6',
+        style7: 'نمط 7'
+      }
+    },
+    chatbox: {
+      location: 'الموقع:&nbsp',
+      nextLocation: 'Next Loc:&nbsp;',
+      immersionMode: 'نمط الانغمار',
+      reconnect: 'أعد الاتصال',
+      tab: {
+        chat: 'الحديث',
+        players: 'اللاعبين',
+        parties: 'الحفلات'
+      },
+      chat: {
+        tab: {
+          all: 'الكل',
+          map: 'الخريطة',
+          global: 'العالمي',
+          party: 'الحفلة'
+        },
+        nickname: {
+          header: 'يجب عليك وضع اسم مستعار قبل ان تتمكن من المحادثة',
+          rule: {
+            maxLength: '* الحد الأقصى 10 رمزا',
+            alphanumeric: '* يسمح فقط بالحروف الأبجدية والأرقام'
+          }
+        }
+      },
+      players: {
+        tab: {
+          map: 'الخريطة',
+          friends: 'Friends',
+          party: 'الحفلة'
+        }
+      }
+    },
+    instruction: {
+      translation: 'مطلوب عمل الترجمة',
+      noGameLoc: '* ترجمة اللعبة غير مدعومة'
+    },
+    '2kki': {
+      hostedWithPermission: 'استضافت بإذن من مطورين Yume 2kki'
+    },
+    disclaimer: {
+      pendingApproval: 'Pending approval from developer/publisher',
+      hostedWithPermission: 'Hosted with permission from the developer(s)',
+      originalCreation: 'Original creation by the YNOproject community'
+    },
+    modal: {
+      common: {
+        save: 'Save',
+        apply: 'Apply'
+      },
+      confirm: {
+        ok: 'موافق',
+        cancel: 'الغاء'
+      },
+      login: {
+        title: 'تسجيل الدخول',
+        fields: {
+          username: 'اسم المستخدم',
+          password: 'كلمة السر'
+        },
+        submit: 'إرسال',
+        registerPrompt: 'لا تملك حسابا؟&nbsp;',
+        register: 'تسجيل'
+      },
+      register: {
+        title: 'تسجيل',
+        fields: {
+          email: 'البريد الإلكتروني',
+          username: 'اسم المستخدم',
+          password: 'كلمة السر',
+          confirmPassword: 'تأكيد كلمة السر'
+        },
+        submit: 'إرسال',
+        loginPrompt: 'تملك حسابا بالفعل؟&nbsp;',
+        login: 'تسجيل الدخول'
+      },
+      settings: {
+        title: 'الإعدادات',
+        fields: {
+          lang: 'اللغة',
+          locationVisibility: {
+            label: 'رؤية الموقع داخل اللعبة',
+            values: {
+              private: 'خاص',
+              friends: 'أصدقاء',
+              public: 'عام'
+            }
+          },
+          nametagMode: {
+            label: 'أسماء اللاعبين',
+            values: {
+              none: 'بلا أسماء',
+              classic: 'تقليدي',
+              compact: 'مكثف',
+              slim: 'رفيع'
+            }
+          },
+          wikiLinkMode: {
+            label: 'Wiki Link Popup',
+            values: {
+              always: 'Always',
+              fullscreen: 'Fullscreen Only',
+              never: 'Never'
+            }
+          },
+          saveReminder: {
+            label: 'إشعار للحفظ',
+            interval: {
+              minutes: '{{interval}} minutes',
+              never: 'Never'
+            }
+          },
+          soundVolume: 'المؤثرات الصوتية',
+          musicVolume: 'صوت الموسيقى',
+          togglePlayerSounds: 'أصوات اللاعبين',
+          toggleEnableBadgeHints: {
+            label: 'Badge Hints',
+            helpText:
+              "Badge hints become available once you have unlocked the 'Badge Collector Amulet EX' badge. When enabled, an icon will appear in the top right when you enter a location with at least one badge you haven't unlocked."
+          },
+          togglePlayBadgeHintSound: 'Play Badge Hint Sound',
+          toggleEnableExplorer: {
+            label: 'ملاح يومي تووكي',
+            helpText:
+              'الملاح هو تكامل لمستكشف يومي تووكي الذي يسمح لك بمشاهدة اتصالات موقعك في لمحة. قد تؤثر هذه الميزة بشكل كبير على تجربتك ويوصى بشدة باستكشاف معظم اللعبة بشكل أعمى قبل تفعيل الميزة. يجب عليك تسجيل الدخول لاستخدام الملاح'
+          },
+          toggleImmersionMode: {
+            label: 'نمط الانغمار',
+            helpText: 'يقوم بإيقاف تشغيل عدد اللاعبين والمحادثة العالمية والخرائط لمنحك تجربة غامرة أكثر'
+          },
+          timeTrialinfo: {
+            label: 'سباق الزمن'
+          },
+          toggleMobileControls: 'عرض ضوابط الهاتف',
+          mobileControlsType: {
+            label: 'Mobile Controls Type',
+            default: 'D-Pad',
+            joystick: 'Floating Joystick',
+            dpad: 'Floating D-Pad'
+          },
+          toggleLocationDisplay: 'عرض الموقع',
+          toggleRankings: 'المراكز',
+          togglePreloads: {
+            label: 'التحميل المسبق',
+            helpText:
+              'قم بتحميل رسومات اللعبة المستخدمة بشكل متكرر مسبقًا للتأكد من توفرها عند الحاجة؛ يتطلب إعادة تحميل الصفحة'
+          },
+          toggleQuestionablePreloads: 'التحميل المسبق لخلفيات الكمبيوتر',
+          toggleSchedules: 'Events',
+          unicodeFont: 'Alternate Font',
+          toggleSingleplayerMode: {
+            label: 'Singleplayer Mode',
+            helpText:
+              'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
+          }
+        },
+        blocklist: 'قائمة الحظر',
+        chatSettings: 'المحادثة',
+        screenshotSettings: 'لقطات الشاشة',
+        notificationSettings: 'التنبيهات',
+        cacheSettings: 'Cache',
+        accountSettings: 'الحساب',
+        engineSettings: 'Engine (F1)'
+      },
+      blocklist: {
+        title: 'قائمة الحظر',
+        empty: 'قائمة الحظر الخاصة بك فارغة حاليا'
+      },
+      chatSettings: {
+        title: 'إعدادات المحادثة',
+        fields: {
+          toggleGameChat: {
+            label: 'تراكب المحادثة داخل اللعبة',
+            global: 'تراكب المحادثة العالمية',
+            party: 'تراكب محادثة الحفلة'
+          },
+          toggleTabToChat: 'اضغط على Tab للمحادثة',
+          togglePlayMentionSound: 'تشغيل صوت الإشارة',
+          chatHistoryLimit: {
+            values: {
+              '0': 'غير محدود',
+              '25': '25',
+              '50': '50',
+              '100': '100',
+              '250': '250',
+              '500': '500',
+              '1000': '1000',
+              '2500': '2500'
+            }
+          },
+          mapChatHistoryLimit: {
+            label: 'حد حفظ محادثة الخريطة'
+          },
+          globalChatHistoryLimit: {
+            label: 'حد حفظ المحادثة العالمية'
+          },
+          partyChatHistoryLimit: {
+            label: 'حد حفظ محادثة الحفلة'
+          },
+          blurScreenshotEmbeds: 'Blur All Screenshots'
+        }
+      },
+      screenshotSettings: {
+        title: 'إعدادات لقطة الشاشة',
+        fields: {
+          autoDownloadScreenshots: 'تنزيل لقطات الشاشة تلقائيًا',
+          screenshotResolution: {
+            label: 'دقة تنزيل لقطة الشاشة',
+            values: {
+              '1': '1x - 320x240',
+              '2': '2x - 640x480',
+              '3': '3x - 960x720',
+              '4': '4x - 1280x960'
+            }
+          }
+        }
+      },
+      notificationSettings: {
+        title: 'إعدادات التنبيهات',
+        fields: {
+          toggleNotifications: 'التنبيهات',
+          screenPosition: {
+            label: 'الموضع على الشاشة',
+            values: {
+              bottomLeft: 'أسفل اليسار',
+              bottomRight: 'أسفل اليمين',
+              topLeft: 'أعلى اليسار',
+              topRight: 'أعلى اليمين'
+            }
+          },
+          system: {
+            label: 'نظام',
+            fields: {
+              siteUpdates: 'تم تحديث الموقع',
+              error: 'يوجد خلل',
+              pushNotifications: 'Desktop Notifications'
+            }
+          },
+          account: {
+            label: 'الحساب',
+            fields: {
+              loggedIn: 'تسجيل الدخول',
+              loggedOut: 'تسجيل الخروج',
+              passwordUpdate: 'تم تحديث كلمة السر'
+            }
+          },
+          players: {
+            label: 'اللاعبين',
+            fields: {
+              playerBlocked: 'اللاعب محسوم',
+              playerUnblocked: 'الغاء حسم اللاعب'
+            }
+          },
+          friends: {
+            label: 'الأصدقاء',
+            fields: {
+              add: 'تمت إضافة الصديق',
+              remove: 'تمت إزالة الصديق',
+              accept: 'تم قبول طلب الصداقة',
+              reject: 'تم رفض طلب الصداقة',
+              cancel: 'تم إلغاء طلب الصداقة',
+              incoming: 'طلب صداقة قادم',
+              playerOnline: 'صديق متصل',
+              playerOffline: 'صديق غير متصل'
+            }
+          },
+          parties: {
+            label: 'حفلات',
+            fields: {
+              create: 'تم إنشاء الحفلة',
+              update: 'تم تحديث الحفلة',
+              join: 'تم الانضمام إلى الحفلة',
+              leave: 'تم الخروج من الحفلة',
+              remove: 'تم الحذف من الحفلة',
+              disband: 'تم تفكيك الحفلة',
+              playerJoin: 'إنضم لاعب إلى الحفلة',
+              playerLeave: 'خرج لاعب من الحفلة',
+              playerOnline: 'عضو الحفلة متصل',
+              playerOffline: 'عضو الحفلة غير متصل',
+              kickPlayer: 'تم الحذف اللاعب من الحفلة',
+              transferPartyOwner: 'تم ترقية اللاعب إلى قائد الحفلة'
+            }
+          },
+          events: {
+            label: 'الرحلات الاستكشافية',
+            fields: {
+              complete: 'اكتملت الرحلة الاستكشافية',
+              freeComplete: 'اكتملت الرحلة الاستكشافية المجانية',
+              vmComplete: 'وجدت آلة البيع',
+              listUpdated: 'تم تحديث قائمة الرحلات الاستكشافية'
+            }
+          },
+          badges: {
+            label: 'شارات',
+            fields: {
+              badgeUnlocked: 'تم الحصول على الشارة'
+            }
+          },
+          timeTrials: {
+            label: 'Time Trials',
+            fields: {
+              goalReached: 'Goal Reached'
+            }
+          },
+          screenshots: {
+            label: 'لقطات الشاشة',
+            fields: {
+              screenshotTaken: 'تم التقاط لقطة الشاشة'
+            }
+          },
+          saveSync: {
+            label: 'مزامنة ملف الحفظ',
+            fields: {
+              saveUploading: 'وضع ملف الحفظ',
+              saveUploaded: 'تم وضع ملف الحفظ',
+              saveDownloading: 'تحميل ملف الحفظ',
+              saveDownloaded: 'تم تحميل ملف الحفظ',
+              saveUpToDate: 'تم تحديث ملف الحفظ',
+              saveCleared: 'تم مسح ملف الحفظ',
+              saveReminder: 'إشعار للحفظ'
+            }
+          },
+          schedules: {
+            label: 'Events',
+            fields: {
+              upcomingSchedules: 'Upcoming Events'
+            }
+          }
+        }
+      },
+      cacheSettings: {
+        title: 'Cache Settings',
+        clear: 'Clear',
+        fields: {
+          locationCache: 'Location Cache',
+          mapCache: 'Map Cache',
+          locationColorCache: 'Location Color Cache'
+        }
+      },
+      accountSettings: {
+        title: 'إعدادت الحساب',
+        fields: {
+          badge: 'شارة',
+          changePassword: 'تغيير كلمة السر',
+          clearSaveSync: 'مسح بيانات مزامنة ملف الحفظ'
+        }
+      },
+      password: {
+        title: 'تغيير كلمة السر',
+        fields: {
+          oldPassword: 'كلمة السر القديمة',
+          newPassword: 'كلمة السر الجديدة',
+          newConfirmPassword: 'تأكيد كلمة السر الجديدة'
+        },
+        submit: 'إرسال'
+      },
+      badges: {
+        title: 'شارات',
+        manageBadgeGallery: 'إدارة معرض الشارات',
+        fields: {
+          unlockStatus: {
+            label: 'حالة الفتح:&nbsp;',
+            values: {
+              '0': 'مقفل',
+              '1': 'مفتوح',
+              all: 'جميع',
+              recentUnlock: 'Recently Unlocked'
+            }
+          },
+          sortOrder: {
+            label: 'ترتيب:&nbsp;',
+            values: {
+              default: 'افتراضي'
+            }
+          },
+          search: {
+            label: 'البحث:&nbsp;',
+            name: 'Name:',
+            location: 'Location:'
+          }
+        }
+      },
+      badgeGallery: {
+        title: 'إدارة معرض الشارات',
+        badgeGalleryRowProgress: 'ترقية الصف التالي (نقات الشارات)',
+        badgeGalleryColProgress: 'ترقية العمود التالي (شارات)',
+        removeMode: {
+          activate: 'Remove Badges',
+          deactivate: 'Done'
+        },
+        manageBadgePreset: 'Manage Presets'
+      },
+      badgePreset: {
+        title: 'Manage Badge Presets',
+        selectPreset: 'Select Preset',
+        presetName: 'Preset {{index}}'
+      },
+      save: {
+        title: 'إدارة حفظ البيانات',
+        reload: 'اعادة التحميل',
+        info: 'For importing saves, if the last time saved was while using a translation on RPG_RT, the game will display errors until you save once again on EasyRPG without any active translation.'
+      },
+      uiTheme: {
+        title: 'تصميم واجهة المستخدم',
+        auto: 'تلقائي'
+      },
+      createParty: {
+        title: {
+          create: 'إنشاء حفلة',
+          update: 'تعديل الحفلة'
+        },
+        fields: {
+          partyName: 'اسم الحفلة',
+          description: 'وصف',
+          public: 'عامة',
+          password: 'كلمة السر',
+          theme: 'التصميم'
+        },
+        showPassword: 'اظهار كلمة السر',
+        hidePassword: 'اخفاء كلمة السر',
+        submit: 'ارسل'
+      },
+      joinPrivateParty: {
+        title: 'الانضمام إلى الحفلة الخاصة',
+        fields: {
+          password: 'كلمة السر'
+        },
+        showPassword: 'كشف كلمة السر',
+        hidePassword: 'اخفاء كلمة السر',
+        incorrectPassword: 'كلمة السر غير صحيحة. من فضلك حاول مرة اخري.',
+        submit: 'إرسال'
+      },
+      events: {
+        title: 'الرحلات الاستكشافية',
+        rankExp: 'المرتبة التالية',
+        weekExp: 'نقاط الرحلات الاستكشافية هذا الأسبوع',
+        tabs: {
+          locations: 'المواقع',
+          vms: 'مكتشف آلة البيع'
+        }
+      },
+      rankings: {
+        title: 'المراتب',
+        player: 'Player'
+      },
+      screenshot: {
+        title: 'صور الشاشة',
+        download: 'تحميل',
+        save: 'حفظ الصورة',
+        share: 'Share in Chat'
+      },
+      myScreenshots: {
+        title: 'مجموعة الصور',
+        screenshotSlotProgress: 'تحديث المكان التالي (BP)',
+        empty: 'لم تقم بحفظ اي صور حتى الان.'
+      },
+      communityScreenshots: {
+        title: 'معرض الصور العام',
+        scrollToRefresh: 'انتقل إلى الأعلى للتحديث',
+        fields: {
+          game: {
+            label: 'Game:&nbsp;',
+            values: {
+              all: 'الكل'
+            }
+          },
+          sortOrder: {
+            values: {
+              recent: 'الجديد',
+              likes: 'الاكثر اعجابا'
+            }
+          },
+          interval: {
+            values: {
+              day: 'اليوم',
+              week: 'هذا الاسبوع',
+              month: 'هذا الشهر',
+              year: 'السنة الحالية',
+              all: 'الكل'
+            }
+          }
+        }
+      },
+      schedule: {
+        title: 'Events',
+        ongoing: 'Ongoing Events',
+        party: 'Party Events',
+        future: 'Future Events',
+        official: 'Official Events',
+        noResults: 'No events have been scheduled.',
+        doSchedule: 'Schedule an Event'
+      },
+      scheduleEdit: {
+        title: 'Edit Event',
+        save: 'Save',
+        cancel: 'Cancel Event',
+        fields: {
+          name: 'Event Name',
+          description: 'Description',
+          datetime: 'Event Date and Time',
+          recurring: 'Recurring Event',
+          theme: 'التصميم',
+          interval: {
+            title: 'Interval',
+            days: 'days',
+            months: 'months',
+            years: 'years'
+          },
+          restrictParty: 'Limit to Party',
+          official: 'Official Event',
+          resetOrganizer: 'Reset Organizer',
+          platforms: {
+            title: 'External Links',
+            discord: 'Discord',
+            youtube: 'YouTube',
+            twitch: 'Twitch',
+            niconico: 'Nicovideo',
+            openrec: 'Openrec',
+            bilibili: 'Bilibili'
+          }
+        }
+      },
+      report: {
+        title: 'Report',
+        submit: 'Submit',
+        fields: {
+          reason: {
+            '1': 'Slurs, harmful or inappropriate language',
+            '2': 'Harassment, bullying, stalking',
+            '3': 'Inappropriate names',
+            '4': 'Ban evasion',
+            '5': 'Cheating, abusing exploits',
+            '6': 'Underage player',
+            '7': 'Spam',
+            title: 'Reason',
+            placeholder: 'Custom reason (max 50 characters)',
+            other: 'Other (specify)'
+          }
+        }
+      },
+      rules: {
+        title: 'القواعد',
+        rule1: 'من فضلك كن محترما ومهذبا',
+        rule2: 'لا مناقشة +18 (NSFW ، دموية ، اباحية)',
+        rule3: 'لا مناقشات سياسية',
+        rule4: 'عدم استخدام التعليقات القابلة للاشتعال (بما في ذلك الإهانات)',
+        rule5: 'لا غش من أي نوع ولأي سبب',
+        rule6: 'في حالة وجود مشكلة يرجى إبلاغ المشرفين'
+      },
+      explorerUndiscoveredLocations: {
+        title: 'اماكن غير مكتشفة',
+        complete: 'لقد قمت باكتشاف جميع الاماكن المتاحة :)'
+      },
+      locations: {
+        title: 'المواقع',
+        fields: {
+          visited: {
+            values: {
+              all: 'All',
+              visited: 'Visited',
+              unvisited: 'Unvisited'
+            }
+          },
+          sortOrder: {
+            values: {
+              newest: 'Newest',
+              oldest: 'Oldest',
+              shallowest: 'Shallowest',
+              deepest: 'Deepest',
+              alpha: 'Alphabetical',
+              players: 'Player Count'
+            }
+          }
+        }
+      }
+    },
+    tooltips: {
+      togglePrivateMode: 'تبديل الوضع الخاص',
+      save: 'إدارة حفظ البيانات',
+      uiTheme: 'تصميم واجهة المستخدم',
+      toggleChat: 'وضع المحادثة',
+      toggleExplorer: 'ملاح Yume 2kki تفعيل',
+      screenshot: 'اخذ صورة للشاشة',
+      myScreenshots: 'لقطات الشاشة الخاصة بي',
+      settings: 'إعدادات',
+      toggleMute: 'تفعيل كتم الصوت',
+      toggleHideLocation: 'Toggle Location Sharing',
+      toggleGlobalMessage: 'وضع المحادثة العامة',
+      chat: {
+        toggleNextLocation: 'Show/Hide Next Expedition Location',
+        toggleGlobalMessageLocations: 'إظهار / إخفاء مواقع رسائل المحادثة',
+        toggleMessageTimestamps: 'إظهار / إخفاء الطوابع الزمنية لرسالة المحادثة',
+        filterMentions: 'Show Mentions Only',
+        clearChat: 'مسح تاريخ المحادثة'
+      },
+      parties: {
+        createParty: 'إنشاء حفلة',
+        disbandParty: 'تفكيك الحفلة'
+      },
+      events: 'الرحلات الاستكشافية',
+      locations: 'المواقع',
+      communityScreenshots: 'لقطات الشاشة للجميع',
+      rankings: 'المراتب',
+      schedules: 'Events',
+      nexus: 'الرجوع إلى النكسس',
+      explorerUndiscoveredLocations: 'اظهار الاماكن الغير مكتشفة',
+      timeTrial:
+        'لتفعيل وضع سباق الزمنو, اضغط مع الاستمرار على زر الشيفت و +  بعد بدء لعبة جديدة قبل ظهور أي شيء على الشاشة',
+      mobileControlsType:
+        'Alternatives to the default D-Pad control type.<br>Floating control types are only available in mobile fullscreen.'
+    },
+    placeholders: {
+      scheduleDescription:
+        'Markdown syntax is accepted, use {\\{l:World,optional link name}} to insert a link to yume.wiki'
+    },
+    reviewRules: 'مراجعة القواعد'
+  },
+  messages: {
+    games: {
+      ynoproject: 'YNOproject',
+      yume: 'Yume Nikki (يومي نيكي)',
+      '2kki': 'Yume 2kki (يومي تووكي)',
+      unconscious: 'Collective Unconscious (اللاوعي الجماعي)',
+      flow: '.flow (دوت فلو)',
+      prayers: 'Answered Prayers (دعوات مستجابة)',
+      deepdreams: 'Deep Dreams (احلام عميقة)',
+      someday: 'Someday (يوما ما)',
+      amillusion: 'Amillusion (الوهم)',
+      unevendream: 'Uneven Dream (حلم منقسم)',
+      braingirl: 'Braingirl (برين جيرل)',
+      muma: 'Muma|Rope (حبل|موما)',
+      genie: 'Dream Genie (حلم جني)',
+      mikan: 'Mikan Muzou (ميكان موزو)',
+      ultraviolet: 'Ultra Violet (الترا فايلوت)',
+      sheawaits: 'She Awaits (هي تنتظر)',
+      oneshot: 'OneShot',
+      oversomnia: 'Oversomnia (الأرق)',
+      tsushin: 'Yume Tsushin (يومي توشين)',
+      nostalgic: 'nostAlgic (حنين)',
+      if: 'If',
+      unaccomplished: 'Unaccomplished',
+      fog: 'FOG'
+    },
+    leavePage: 'هل أنت متأكد أنك تريد مغادرة الصفحة؟ سيتم فقد أي تقدم غير محفوظ في اللعبة',
+    logout: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+    loadingInstruct:
+      ". <br /> <br /> It looks like the site has been loading for a while; if this problem doesn't go away you may need to use CTRL+F5 or clear your browser's cache (but not cookies!). You can check the console using F12 for errors.",
+    requestNotifications: 'Receive notifications for followed events and expedition refreshes?',
+    connStatus: {
+      '0': 'غير متصل',
+      '1': 'متصل',
+      '2': 'محاولة الاتصال...',
+      '3': 'وضع الخاص',
+      '4': 'Singleplayer'
+    },
+    lastOnline: {
+      template: 'أخر ظهور\n منذ {INTERVAL}',
+      longTime: 'A long time ago',
+      interval: {
+        short: 'أقل من دقيقة',
+        minutes: {
+          singular: '{VALUE} دقيقة',
+          plural: '{VALUE} دقائق'
+        },
+        hours: {
+          singular: '{VALUE} ساعة',
+          plural: '{VALUE} ساعات'
+        },
+        days: {
+          singular: '{VALUE} يوم',
+          plural: '{VALUE} أيام'
+        }
+      }
+    },
+    location: {
+      template: '({LOCATION_EN}) {LOCATION}',
+      queryingLocation: 'جاري الاستعلام عن الموقع...',
+      unknownLocation: 'موقع غير معروف',
+      '2kki': {
+        template: '{LOCATION}'
+      },
+      connType: {
+        '1': 'One-Way',
+        '2': 'No Entry',
+        '4': 'Unlock',
+        '8': 'Locked',
+        '16': 'Dead End',
+        '32': 'Isolated',
+        '64': 'Requires Effect ({PARAMS})',
+        '128': '{PARAMS} Chance',
+        '256': '{PARAMS}',
+        '512': 'Shortcut',
+        '1024': 'Exit Point',
+        '2048': 'Seasonal ({PARAMS})'
+      },
+      depth: ' ({DEPTH})',
+      playing: 'Playing {GAME}'
+    },
+    locationDisplay: {
+      template: '{LOCATION}',
+      '2kki': {
+        template: '{LOCATION}'
+      }
+    },
+    playersOnline: {
+      singular: '{COUNT} لاعب متصل',
+      plural: '{COUNT} لاعبين متصلين'
+    },
+    playersInMap: {
+      singular: '{COUNT} لاعب في الخريطة',
+      plural: '{COUNT} لاعبون في الخريطة'
+    },
+    playerList: {
+      unnamed: 'لاعب غير مسمى',
+      muted: 'Muted',
+      actions: {
+        approveFriend: 'قبول طلب الصداقة',
+        rejectFriend: 'رفض طلب الصداقة',
+        cancelFriend: 'إلغاء طلب الصداقة',
+        partyKick: 'حذف اللاعب من الحفلة',
+        transferPartyOwner: 'ترقية اللاعب إلى قائد الحفلة'
+      }
+    },
+    roles: {
+      mod: 'مشرف',
+      dev: 'مطور'
+    },
+    timestamp: {
+      time: '{TIME}',
+      timeAndWeekday: '{TIME} ({WEEKDAY})'
+    },
+    context: {
+      ping: {
+        label: 'تنبيه {PLAYER}'
+      },
+      addFriend: {
+        label: 'مصاحبة {PLAYER}'
+      },
+      removeFriend: {
+        label: 'الغاء الصداقه {PLAYER}'
+      },
+      block: {
+        label: 'حظر {PLAYER}',
+        confirm: 'هل أنت متأكد أنك تريد حظر {PLAYER}؟'
+      },
+      unblock: {
+        label: 'إلغاء حظر {PLAYER}',
+        confirm: 'هل أنت متأكد أنك تريد إلغاء حظر {PLAYER}؟'
+      },
+      report: {
+        label: 'Report {PLAYER}'
+      },
+      admin: {
+        ban: {
+          label: '{PLAYER} منع',
+          confirm: 'هل أنت متأكد أنك تريد منع {PLAYER}؟',
+          success: 'تم منع {PLAYER}.'
+        },
+        unban: {
+          label: '{PLAYER} ازالة منع',
+          confirm: 'هل أنت متأكد أنك تريد ازالة منع {PLAYER}؟',
+          success: 'تم ازالة منع {PLAYER}.'
+        },
+        mute: {
+          label: '{PLAYER} كتم',
+          confirm: 'هل أنت متأكد أنك تريد كتم {PLAYER}؟',
+          success: 'تم كتم {PLAYER}.'
+        },
+        unmute: {
+          label: '{PLAYER} ازالة كتم',
+          confirm: 'هل أنت متأكد أنك تريد ازالة كتم {PLAYER}؟',
+          success: 'تم ازالة كتم {PLAYER}.'
+        },
+        grantBadge: {
+          label: 'منح شارة',
+          prompt: 'أدخل معرف الشارة لمنحها للاعب {PLAYER}',
+          success: 'تم منح شارة {BADGE} إلى الاعب {PLAYER}.',
+          fail: 'لم يوجد شارة للمعرف الذي ادخلته.'
+        },
+        revokeBadge: {
+          label: 'ازالة شارة',
+          prompt: 'أدخل معرف الشارة لإزالتها للاعب {PLAYER}',
+          success: 'تم ازالة شارة {BADGE} إلى الاعب {PLAYER}.',
+          fail: 'لم يوجد شارة للمعرف الذي ادخلته.'
+        },
+        tempban: {
+          label: 'Tempban {PLAYER}',
+          prompt: 'When to unban {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempbanned.'
+        },
+        tempmute: {
+          label: 'Tempmute {PLAYER}',
+          prompt: 'When to unmute {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempmuted.'
+        }
+      }
+    },
+    account: {
+      login: {
+        errors: {
+          invalidLogin: 'اسم المستخدم أو كلمة السر غير صحيحة.'
+        }
+      },
+      register: {
+        errors: {
+          confirmPasswordMismatch: 'كلمات السر المحددة لا تتطابق.',
+          invalidCredentials: 'اسم المستخدم أو كلمة المرور المحددة فارغة أو تحتوي على أحرف غير صالحة.',
+          emailTaken: 'عنوان البريد الإلكتروني المحدد قيد الاستخدام بالفعل.',
+          usernameTaken: 'اسم المستخدم المحدد قيد الاستخدام بالفعل.'
+        }
+      },
+      password: {
+        errors: {
+          confirmPasswordMismatch: 'كلمات السر الجديدة المحددة غير متطابقة',
+          badLogin: 'كلمة مرور تسجيل الدخول غير صحيحة',
+          internalServerError: 'لقد حدث خطأ، رجاء أعد المحاولة لاحقا'
+        }
+      }
+    },
+    chat: {
+      globalMessage: 'رسالة عامة'
+    },
+    friends: {
+      friend: 'Friend',
+      categories: {
+        incoming: '{COUNT} - قادم',
+        outgoing: '{COUNT} - خارج',
+        online: '{COUNT} - متصل',
+        offline: '{COUNT} - غير متصل'
+      }
+    },
+    parties: {
+      emptyMessage: 'لا يوجد حاليا أي حفلات نشطة.',
+      yourParty: 'حفلتك',
+      defaultPartyName: '{OWNER} حفلة',
+      partyOwner: 'قائد الحفلة',
+      confirmDisband: 'هل أنت متأكد أنك تريد حذف حفلاتتك؟ هذا لا يمكن التراجع عنه.',
+      confirmTransferPartyOwner: 'هل أنت متأكد أنك تريد نقل ملكية الحفلة إلى {PLAYER}؟',
+      offlineMemberSuffix: 'Member offline',
+      categories: {
+        online: 'متصل - {COUNT}',
+        offline: 'غير متصل - {COUNT}'
+      },
+      actions: {
+        viewPartyDetails: 'عرض تفاصيل الحفلة',
+        joinParty: 'الإنضمام إلى الحفلة',
+        joinPrivateParty: 'الانضمام إلى الحفلة الخاصة',
+        leaveParty: 'الخروج من الحفلة'
+      }
+    },
+    chatTips: {
+      template: 'نصيحة: {CONTENT}',
+      tips: {
+        backupReminder:
+          'يقترح بالاحتفاظ بنسخة احتياطية محلية من تقدمك عن طريق تنزيل ملف الحفظ بانتظام. بهذه الطريقة ، إذا تم مسح بيانات متصفحك ، فلن تفقد تقدمك',
+        menuTheme: 'يعتمد لون اسمك ونمط قائمة اللاعبين على نمط القائمة داخل اللعبة',
+        playersInMap: 'يمكنك التبديل بين عدد اللاعبين المتصلين وعدد اللاعبين في خريطتك بالنقر فوق المربع',
+        markdownSupport:
+          'يدعم الحديث تنسيق النص عن طريق التفاف النص في رموز معينة. المدعومة حاليًا هي: **bold** (\\*\\*text\\*\\*) و ، *italic* (\\*text\\*, \\_text\\_)، __underline__ (\\_\\_text\\_\\_)، ~~strikethrough~~ (\\~\\~text\\~\\~)، ||spoiler|| (\\|\\|text\\|\\|).',
+        tabToChat:
+          'إذا كنت تلعب على جهاز كمبيوتر ، فيمكنك الضغط على مفتاح Tab للتبديل بين اللعبة والمحادثة. يمكن تعطيل هذه الميزة في إعدادات الحديث ضمن (اضغط على Tab للتحدث).',
+        chatTabNotifications:
+          'عندما تكون في فئة نقاش غير (الكل) ، إذا تم إرسال رسالة جديدة في الفئة المصفاة الأخرى ، فسيتم إضافة خط غامق إلى تصنيف الفئة لإعلامك',
+        clearChat:
+          'عند النقر فوق زر مسح الحديث في الجزء العلوي الأيمن من مربع الحديث ، إذا لم تكن حاليًا في فئة (الكل) ، فسيؤدي ذلك فقط إلى إزالة الرسائل الخاصة بفئة الحديث الحالية التي أنت فيها',
+        chatHistoryLimit:
+          'إذا كان سجل حديثك طويلًا جدًا ، فقد تواجه مشكلات في الأداء على الموقع. في إعدادات الحديث ، يمكنك تحديد سجل المحادثات الخاص بك وفقًا لذلك لتجنب هذه المشكلات دون الحاجة إلى مسح حديثك يدويًا',
+        parties:
+          'تعتبر الحفلات طريقة رائعة للبقاء مع الأشخاص في أي مغامرة. يمكنك رؤية مواقع أعضاء مجموعتك والتحدث معهم في محادثة خاصة',
+        immersionMode:
+          'إذا كنت تفضل تجربة غامرة أكثر من تجربة اجتماعية ، فجرّب وضع الغمر. يقوم بإيقاف تشغيل الدردشة العامة وقائمة اللاعبين وعدد اللاعبين ، لذا يكون الأمر أكثر إثارة عندما تجد لاعبًا آخر أثناء الاستكشاف',
+        friendsMenu:
+          'من خلال النقر بزر الماوس الأيمن على جهاز الكمبيوتر، أو من خلال النقر باستمرار على الهاتف المحمول على أيقونة اللاعب خارج التصنيف، سيتم فتح مربع حوار يسمح بإرسال طلب صداقة إليه أو الإشارة إلى اللاعب المذكور أو حظره',
+        easySettingsMenu:
+          'إذا كنت تلعب على جهاز كمبيوتر، فيمكنك الضغط على المفتاح F1 أثناء اللعب لفتح قائمة الإعدادات، مما يسمح لك بإعادة تعيين مفاتيحك بالإضافة إلى ضبط بعض الإعدادات',
+        floatingControls:
+          "If you're playing on a touchscreen device and don't like the default controls, try the floating styles of controls available from the Mobile Controls Type in Settings.",
+        recentBadges:
+          'Accidentally dismissed a badge unlock notification? You can always review badges unlocked in the current session by selecting Recently Unlocked in the Badges listing.',
+        desktopHotkeys:
+          "If you're playing on a PC, Alt+Enter can also toggle fullscreen mode, F7 by default takes a screenshot of the game, and the T key opens the in-game chat input.",
+        badgeControls:
+          'In the Badge Gallery menu, you can drag and drop badges to rearrange them, or quickly remove many badges at once using the Remove Badges mode.',
+        cacheSettings:
+          'Having trouble with location completion or outdated maps? The Cache menu allows you to clear the relevant cache and retrieve the latest data.',
+        openSource: 'YNOproject مفتوح المصدر ومستودعات الكود متاحة على https://github.com/ynoproject/'
+      }
+    },
+    save: {
+      slot: {
+        title: 'ملف {SLOT_ID}',
+        readingLabel: 'قراءة بيانات الملف...',
+        emptyLabel: 'فارغ',
+        errorLabel: 'يوجد خلل'
+      },
+      upload: {
+        tooltip: 'وضع ملف الحفظ',
+        invalidSaveFile: 'الرجاء تحديد ملف حفظ صحيح (نمط .lsd)'
+      },
+      download: {
+        tooltip: 'تحميل ملف الحفظ',
+        emptySlot: 'يبدو أن ملف الحفظ الخاص بالمكان فارغ'
+      },
+      delete: {
+        tooltip: 'حذف الملف',
+        confirmDelete: 'هل أنت متأكد أنك تريد حذف البيانات المحفوظة للملف {SLOT_ID}؟'
+      }
+    },
+    saveSync: {
+      confirmClearSaveSync:
+        'هل أنت متأكد أنك تريد مسح بيانات المزامنة المحفوظة لهذه اللعبة؟ لا يمكن التراجع عن هذا إلا إذا كان لديك نسخة محلية من بياناتك المحفوظة.'
+    },
+    toast: {
+      system: {
+        siteUpdates: 'تم تحديث الموقع، أعد تحميل الصفحة للحصول على أحدث التغييرات.',
+        error:
+          'عفوًا! يبدو أنه حدث خطأ ما. راجع وحدة تحكم المتصفح للحصول على التفاصيل. لفتح وحدة التحكم ، اضغط على F12 اوانقر بزر الماوس الأيمن ثم اضغط على Inspect.'
+      },
+      account: {
+        loggedIn: 'لقد قمت بتسجيل الدخول باعتبارك {USER}.',
+        loggedOut: 'لقد قمت بتسجيل الخروج.',
+        passwordUpdated: 'تم تحديث كلمة السر الخاصة بك بنجاح'
+      },
+      players: {
+        playerBlocked: '{PLAYER} has been blocked.',
+        playerUnblocked: '{PLAYER} has been unblocked.'
+      },
+      friends: {
+        add: 'لقد أرسلت طلب صداقة إلى {PLAYER}',
+        remove: 'لقد قمت بإزالة {PLAYER} من أصدقائك',
+        accept: 'تم قبول طلب صداقة {PLAYER}',
+        reject: 'تم رفض طلب صداقة {PLAYER}',
+        cancel: 'تم إلغاء طلب الصداقة الذي قدمته إلى {PLAYER}',
+        incoming: 'لديك طلب صداقة جديد من {PLAYER}',
+        playerOnline: 'عضو الحفلة {PLAYER} متصل.',
+        playerOffline: 'عضو الحفلة {PLAYER} غير متصل.'
+      },
+      parties: {
+        create: 'تم إنشاء الحفلة {PARTY}.',
+        update: 'تم تحديث الحفلة {PARTY}.',
+        join: 'تم الانضمام إلى الحفلة {PARTY}.',
+        leave: 'تم الخروج من الحفلة {PARTY}.',
+        remove: 'تم حذفك من الحفلة {PARTY}.',
+        disband: 'تم تفكيك الحفلة {PARTY}.',
+        playerJoin: 'إنضم اللاعب {PLAYER} إلى الحفلة.',
+        playerLeave: 'خرج اللاعب {PLAYER} من الحفلة.',
+        playerOnline: 'عضو الحفلة {PLAYER} متصل.',
+        playerOffline: 'عضو الحفلة {PLAYER} غير متصل.',
+        kickPlayer: 'تم الحذف اللاعب {PLAYER} من الحفلة.',
+        transferPartyOwner: 'تم ترقية اللاعب {PLAYER} إلى قائد الحفلة.'
+      },
+      events: {
+        complete: 'اكتملت الرحلة الاستكشافية!\nلزيارة {LOCATION}, تم منحك {EXP}.',
+        freeComplete: 'اكتملت الرحلة الاستكشافية! لقد زرت {LOCATION}.',
+        vmComplete: 'تم العثور على آلة البيع!\nلقد حصلت على {EXP}.',
+        listUpdated: 'تم تحديث قائمة الرحلات الاستكشافية.'
+      },
+      badges: {
+        badgeUnlocked: 'لقد حصلت على شارة جديدة!'
+      },
+      screenshots: {
+        screenshotTaken: 'Your screenshot has been taken.'
+      },
+      saveSync: {
+        saveUploading: 'يتم تحميل ملف الحفظ من موضع {SLOT}...',
+        saveUploaded: 'تم تحميل ملف الحفظ من موضع {SLOT} بنجاح.',
+        saveDownloading: 'يتم تحديث ملف الحفظ من موضع {SLOT}...',
+        saveDownloaded: 'تم تحديث ملف الحفظ من موضع {SLOT} بنجاح.',
+        saveUpToDate: 'تم تحديث ملف الحفظ.',
+        saveCleared: 'تم مسح بيانات مزامنة ملف الحفظ، لن يؤثر هذا على عمليات الحفظ الحالية على أي من أجهزتك.',
+        saveReminder:
+          'تذكر أن تقوم بالحفظ بشكل متكرر وأن تقوم بعمل نسخة احتياطية من ملفات الحفظ الخاصة بك حتى لا تفقد تقدمك.'
+      },
+      timeTrials: {
+        timeTrialsComplete: 'Goal! {CATEGORY} completed in {TIME}.'
+      }
+    },
+    events: {
+      exp: 'نقاط الرحلات الاستكشافية: {POINTS}&nbsp;',
+      expRank: 'المرتبة: {RANK}&nbsp;',
+      period: 'موسم: {ORDINAL}',
+      periodEnds: 'ينتهي: {DATE}',
+      current: 'الحالي',
+      shortcut: 'يمكن الوصول إليها عبر طريق مختصر قابل للفتح',
+      toggleTracked: 'Toggle Location Tracking',
+      availableUntilDate: 'متاح حتى\n{DATE}',
+      types: {
+        '0': 'يومي',
+        '1': 'أسبوعي',
+        '2': 'نهاية الاسبوع',
+        '3': 'خاص',
+        '-1': 'رحلة استكشافية مجانية'
+      },
+      expRanks: {
+        '0': 'مبتدئ',
+        '1': 'متوسط',
+        '2': 'برونزي',
+        '3': 'فضي',
+        '4': 'ذهبي',
+        '5': 'بلاتيني',
+        '6': 'الماسي'
+      }
+    },
+    badges: {
+      null: 'لا شارة',
+      allCategory: 'جميع',
+      badgeTitle: '<bdi>{TITLE}</bdi> - {BP} نقات الشارات',
+      locked: '؟؟؟',
+      location: 'الموقع:&nbsp;',
+      goalProgress: '{CURRENT}/{TOTAL}',
+      percentUnlocked: '{PERCENT}% من اللاعبين لديهم هذه الشارة',
+      time: '{MINUTES}:{SECONDS}',
+      artCredit: '{ARTIST} رسم الفنان/ة',
+      search: {
+        modifier: {
+          template: '&nbsp;({MODIFIER})',
+          exactMatch: 'Exact Match'
+        }
+      },
+      sortOrder: {
+        template: '{TYPE} ({ORDER})',
+        types: {
+          bp: 'BP',
+          percent: 'نسبة الفتح'
+        },
+        asc: 'تصاعدي',
+        desc: 'تنازلي'
+      }
+    },
+    badgeGallery: {
+      label: '{PLAYER} معرض شارات',
+      loading: 'جاري التحميل...',
+      bp: '{BP} نقات الشارات',
+      count: '{COUNT} شارات',
+      empty: 'Badge gallery not set'
+    },
+    badgePreset: {
+      empty: 'This preset is empty.'
+    },
+    rankings: {
+      categories: {
+        badgeCount: {
+          label: 'شارات',
+          valueLabel: 'من الشارات #',
+          value: '{NUMBER}'
+        },
+        bp: {
+          label: '(نقات الشارات)',
+          valueLabel: 'نقات الشارات',
+          value: '{NUMBER} نقات الشارات'
+        },
+        exp: {
+          label: 'نقاط الرحلات الاستكشافية',
+          valueLabel: 'نقاط الرحلات الاستكشافية',
+          value: '{NUMBER} نقاط الرحلات الاستكشافية'
+        },
+        eventLocationCount: {
+          label: 'الرحلاات الاستكشافية',
+          valueLabel: 'من الرحلاات الاستكشافية #',
+          value: '{NUMBER}'
+        },
+        freeEventLocationCount: {
+          label: 'الرحلاات الاستكشافية المجانية',
+          valueLabel: 'من الرحلاات الاستكشافية #',
+          value: '{NUMBER}'
+        },
+        eventLocationCompletion: {
+          label: 'إكمال الرحلة الاستكشافية',
+          valueLabel: 'إكمال',
+          value: '{PERCENT}%'
+        },
+        eventVmCount: {
+          label: 'مكتشف آلة البيع',
+          valueLabel: 'من آلات البيع #',
+          value: '{NUMBER}'
+        },
+        timeTrial: {
+          label: 'تحديات الوقت',
+          valueLabel: 'وقت الانتهاء',
+          value: '{MINUTES}:{SECONDS}'
+        },
+        minigame: {
+          label: 'العاب صغيرة',
+          valueLabel: 'نقاط',
+          value: '{NUMBER}'
+        }
+      },
+      subCategories: {
+        '2': '(all effects) جميع التأثيرات',
+        all: 'الكل',
+        nasu: 'NASU',
+        rby: 'Red Blue Yellow (Mini Game B)',
+        rby_ex: 'Red Blue Yellow (Mini Game B) - EX نسخة',
+        fuji_ex: 'FUJI EX',
+        hozo: 'HOZO',
+        cartoonboy: 'فتى الكرتون',
+        ta_be: 'TA_BE_',
+        ta_be_hardcore: 'TA_BE_ - الوضع الصعب',
+        panerabbit: 'أرنب بان'
+      }
+    },
+    locations: {
+      author: 'By {AUTHOR}',
+      versionAdded: 'Added {VERSION}',
+      versionUpdated: 'Updated {VERSION}',
+      track: {
+        tooltip: {
+          on: 'Track Location',
+          off: 'Untrack Location'
+        }
+      }
+    },
+    screenshots: {
+      playerScreenshot: 'لقطات الشاشة الخاصة ب {USER}',
+      limit: 'الفتحات المستخدمة {COUNT}/{LIMIT}',
+      public: {
+        tooltip: {
+          on: 'عام',
+          off: 'خاص'
+        }
+      },
+      spoiler: {
+        label: 'سبويلر',
+        tooltip: {
+          on: 'وضع علامة سبويلر',
+          off: 'إزالة علامة سبويلر'
+        }
+      },
+      like: {
+        tooltip: {
+          on: 'حب',
+          off: 'كره'
+        }
+      },
+      delete: {
+        tooltip: 'حذف',
+        confirm: 'هل أنت متأكد أنك تريد حذف لقطة الشاشة هذه؟'
+      }
+    },
+    schedules: {
+      organizer: 'Organized by&nbsp;{NAME}',
+      invalidPlatformLink: 'Platform must have a valid URL',
+      confirmCancel: 'Are you sure you want to cancel this event?',
+      wrongEditGame: 'Cannot edit outside of {GAME}',
+      platforms: {
+        discord: 'Discord',
+        youtube: 'YouTube',
+        twitch: 'Twitch',
+        niconico: 'Nicovideo',
+        openrec: 'Openrec',
+        bilibili: 'Bilibili'
+      },
+      intervals: {
+        perDay: 'Every day',
+        days: 'Every {INTERVAL} days',
+        perWeek: 'Every {WEEKDAY}',
+        weeks: 'Every {INTERVAL} weeks',
+        perMonth: 'Every month',
+        months: 'Every {INTERVAL} months',
+        perYear: 'Every year',
+        years: 'Every {INTERVAL} years'
+      }
+    },
+    '2kki': {
+      explorerLink: {
+        generic: 'عرض في مستكشف Yume 2kki',
+        multi: 'عرض {LOCATION} في مستكشف Yume 2kki'
+      }
+    },
+    modSettings: {
+      title: 'إعدادات المشرفين',
+      actions: {
+        resetPassword: {
+          label: 'إعادة تعيين كلمة المرور',
+          playerPrompt: 'أدخل اسم الحساب لإعادة تعيين كلمة المرور الخاصة به',
+          success: 'كلمة المرور الجديدة لـ {PASSWORD} هي {PLAYER}'
+        },
+        changeUsername: {
+          label: 'قم بتغيير اسم المستخدم',
+          playerPrompt: 'أدخل اسم الحساب لتغيير اسم المستخدم الخاص به',
+          namePrompt: 'أدخل اسم المستخدم الجديد لـ {PLAYER}',
+          success: 'تم تغيير اسم المستخدم لـ {NAME} إلى {PLAYER}',
+          error: 'فشل تغيير اسم المستخدم لـ {PLAYER} ؛ قد يكون الاسم المحدد قيد الاستخدام بالفعل'
+        },
+        ban: {
+          label: 'حظر لاعب',
+          playerPrompt: 'أدخل اسم الحساب المراد حظره'
+        },
+        unban: {
+          label: 'إلغاء حظر لاعب',
+          playerPrompt: 'أدخل اسم الحساب المطلوب إلغاء حظره'
+        },
+        mute: {
+          label: 'كتم لاعب',
+          playerPrompt: 'أدخل اسم الحساب الذي تريد كتمه'
+        },
+        unmute: {
+          label: 'إلغاء كتم لاعب',
+          playerPrompt: 'أدخل اسم الحساب لإلغاء كتمه'
+        },
+        grantBadge: {
+          label: 'امنح شارة',
+          playerPrompt: 'أدخل اسم الحساب لمنح الشارة إليه'
+        },
+        revokeBadge: {
+          label: 'إبطال الشارة',
+          playerPrompt: 'أدخل اسم الحساب لإلغاء الشارة منه'
+        },
+        tempban: {
+          label: 'Tempban a Player',
+          playerPrompt: 'Enter the name of the account to tempban',
+          timePrompt: 'Enter the datetime when the ban expires (UTC time)'
+        },
+        tempmute: {
+          label: 'Tempmute a Player',
+          playerPrompt: 'Enter the name of the account to tempmute',
+          timePrompt: 'Enter the datetime when the mute expires (UTC time)'
+        }
+      }
+    }
+  }
+} satisfies Translation;
+
+export default ar;

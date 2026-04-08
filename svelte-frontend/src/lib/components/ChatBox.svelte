@@ -541,12 +541,15 @@
     <div id="chatbox" class="allChat">
       <div id="chatboxInfo">
         <div id="onlineInfo" class="info">
-          <span id="connStatus" class="infoContainer unselectable"
-            ><span id="connStatusIcon" class="punct">●</span><span id="connStatusText" class="infoText"
-              >{connStatus}{#if playerCount !== null}
-                ({playerCount}){/if}</span
-            ></span
-          >
+          <span id="connStatus" class="infoContainer unselectable">
+            <span id="connStatusIcon" class="punct">●</span>
+            <span id="connStatusText" class="infoText">
+              {connStatus}
+              {#if playerCount !== null}
+                ({playerCount})
+              {/if}
+            </span>
+          </span>
         </div>
         <div id="location" class="info hidden">
           <span id="locationLabel" class="infoLabel nowrap" data-i18n="[html]chatbox.location">Location:&nbsp;</span

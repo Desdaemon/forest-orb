@@ -1,5 +1,6 @@
 <script lang="ts">
   import { allGameFullBgUiThemes } from '$lib/allGameUiThemes';
+  import { getThemeDefinitionData } from '$lib/stores/uiTheme';
 
   const {
     uiTheme,
@@ -19,6 +20,9 @@
   // const styleId = $derived(`theme${themeSuffix}`);
   const isFullBg = $derived((allGameFullBgUiThemes[themeGameId] ?? []).includes(uiTheme));
   let css = $state('');
+  let baseStops = $state<GradientStop[]>([]);
+  let altStops = $state<GradientStop[]>([]);
+  let shadow = $state<Color | null>(null);
 
   // Mirrors themeStyleTemplate from system.js
   const themeStyleTemplate = `
@@ -185,15 +189,6 @@
     }
   `;
 
-  const DEBUG: boolean = false;
-
-  let alt,
-    systemGameId = gameId,
-    systemName = '';
-  const gradientId = $derived(
-    `${alt ? 'alt' : 'base'}Gradient_${systemGameId !== gameId ? `${systemGameId}_` : ''}${systemName.replace(/[ ()]/g, '_')}`
-  );
-
   $effect(() => {
     css = themeStyleTemplate
       .replaceAll('{THEME}', themeSuffix)
@@ -202,10 +197,51 @@
   });
 
   type Color = [number, number, number];
+  type GradientStop = { color: Color; offset: number };
+
+  function colorsEqual(a: Color, b: Color): boolean {
+    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+  }
+
+  function toGradientStops(colors: Color[]): GradientStop[] {
+    if (!colors.length) return [];
+
+    const stops: GradientStop[] = [{ color: colors[0], offset: 0 }];
+    let lastColor = colors[0];
+    colors.forEach((color, idx) => {
+      if (!colorsEqual(color, lastColor)) {
+        const offset = Math.floor(((idx + 1) / colors.length) * 10000) / 100;
+        stops.push({ color, offset });
+        lastColor = color;
+      }
+    });
+    return stops;
+  }
 
   function rgbString(color: Color) {
     return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
   }
+
+  $effect(() => {
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const definition = await getThemeDefinitionData(uiTheme, themeGameId, 0);
+        if (cancelled) return;
+        baseStops = toGradientStops(definition.baseColors);
+        altStops = toGradientStops(definition.altColors);
+        shadow = definition.shadow;
+      } catch (error) {
+        if (cancelled) return;
+        console.warn('ThemeDefinition: failed to load theme definition data', uiTheme, themeGameId, error);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  });
 </script>
 
 <svelte:head>
@@ -214,12 +250,11 @@
   </svelte:element>
 </svelte:head>
 
-{#snippet svgGradient(systemName: string, systemGameId: string, colors: Color[], alt: boolean)}
+{#snippet svgGradient(systemName: string, systemGameId: string, colors: GradientStop[], alt: boolean)}
   {@const id = `${alt ? 'alt' : 'base'}Gradient_${systemGameId !== gameId ? `${systemGameId}_` : ''}${systemName.replace(/[ ()]/g, '_')}`}
   <linearGradient xmlns="http://www.w3.org/2000/svg" {id} x1="0%" y1="0%" x2="0%" y2="100%">
-    {#each colors as color, idx}
-      {@const offset = idx === 0 ? 0 : Math.floor(((idx + 1) / colors.length) * 10000) / 100}
-      <stop stop-color={rgbString(color)} offset="{offset}%" />
+    {#each colors as stop}
+      <stop stop-color={rgbString(stop.color)} offset="{stop.offset}%" />
     {/each}
   </linearGradient>
 {/snippet}
@@ -227,6 +262,18 @@
 {#snippet svgDropShadow(systemName: string, systemGameId: string, color: Color)}
   {@const id = `dropShadow_${systemGameId !== gameId ? `${systemGameId}_` : ''}${systemName.replace(/[ ()]/g, '_')}`}
   <filter xmlns="http://www.w3.org/2000/svg" {id}>
-    <feDropShadow x="1" dy="1" stdDeviation="0.2" flood-color={rgbString(color)} />
+    <feDropShadow dx="1" dy="1" stdDeviation="0.2" flood-color={rgbString(color)} />
   </filter>
 {/snippet}
+
+{#if baseStops.length}
+  {@render svgGradient(uiTheme, themeGameId, baseStops, false)}
+{/if}
+
+{#if altStops.length}
+  {@render svgGradient(uiTheme, themeGameId, altStops, true)}
+{/if}
+
+{#if shadow}
+  {@render svgDropShadow(uiTheme, themeGameId, shadow)}
+{/if}

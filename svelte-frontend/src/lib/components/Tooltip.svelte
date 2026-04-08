@@ -272,7 +272,7 @@
 {#if content && isVisible}
   <div
     role="tooltip"
-    class={`tooltip${themeClass ? ` ${themeClass}` : ''}`}
+    class={['unselectable', `tooltip${themeClass ? ` ${themeClass}` : ''}`]}
     class:frozen={tooltipFrozen}
     style:left="{left}px"
     style:top="{top}px"
@@ -283,7 +283,7 @@
     bind:this={tooltipEl}
   >
     {#if typeof content === 'string'}
-      {content}
+      <span class="tooltipContent">{content}</span>
     {:else}
       {@render content()}
     {/if}
@@ -303,20 +303,18 @@
     font-size: 14px;
     font-weight: normal;
     line-height: 1.3;
-    color: #d4c8d8;
-    background: var(--container-bg-image-url, #3d3239) !important;
+    background-image: var(--container-bg-image-url) !important;
     border: 6px solid transparent;
-    border-image: var(
-        --border-image-url,
-        linear-gradient(45deg, #8b7a8f 25%, transparent 25%, transparent 75%, #8b7a8f 75%, #8b7a8f),
-        linear-gradient(45deg, #8b7a8f 25%, transparent 25%, transparent 75%, #8b7a8f 75%, #8b7a8f)
-      )
-      8 repeat !important;
+    border-image: var(--border-image-url) 8 repeat !important;
     border-image-width: 2 !important;
     box-shadow: none;
     text-shadow: none;
     image-rendering: pixelated;
     white-space: normal;
+  }
+
+  :global(.fullBg) .tooltip {
+    background-size: auto 100% !important;
   }
 
   .tooltip::after {

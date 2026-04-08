@@ -1,4 +1,5 @@
 :root {
+  --high-contrast-shadow-opacity: 1;
   --base-color: 216, 216, 216;
   --alt-color: 255, 255, 157;
   --base-bg-color: 45, 17, 23;
@@ -227,6 +228,67 @@ body, .container, div, input, .checkbox, button.checkboxButton, button[type="but
 
 body {
   margin: 0;
+}
+
+body.highContrast input,
+body.highContrast textarea,
+body.highContrast select,
+body.highContrast .checkbox,
+body.highContrast button {
+  filter: none !important;
+}
+
+body.highContrast .infoLabel,
+body.highContrast .messageContents,
+body.highContrast .chatboxTabLabel,
+body.highContrast .notice,
+body.highContrast .instruction,
+body.highContrast h1,
+body.highContrast h2,
+body.highContrast h3,
+body.highContrast h4,
+body.highContrast a:not(.listEntryAction),
+body.highContrast label,
+body.highContrast th,
+body.highContrast .spoiler.show {
+  filter: drop-shadow(1.5px 1.5px rgba(var(--shadow-color), var(--high-contrast-shadow-opacity))) !important;
+}
+
+body.highContrast input,
+body.highContrast textarea,
+body.highContrast select,
+body.highContrast .checkbox,
+body.highContrast button.checkboxButton,
+body.highContrast button[type="button"],
+body.highContrast button[type="submit"] {
+  text-shadow: 1.5px 1.5px rgba(var(--shadow-color), var(--high-contrast-shadow-opacity)) !important;
+}
+
+body.highContrast .altText,
+body.highContrast .nameMarker,
+body.highContrast a:not(.listEntryAction) {
+  color: rgb(var(--alt-color));
+}
+
+body.highContrast :focus-visible {
+  outline: 2px solid rgb(var(--alt-color));
+  outline-offset: 2px;
+}
+
+body.highContrast #layout:not(:fullscreen) #chatbox .chatboxTabSection,
+body.highContrast #layout:not(:fullscreen) #chatInputContainer form,
+body.highContrast #chatbox .chatboxTab.active,
+body.highContrast #chatbox .messageContainer.highlight {
+  background-color: rgba(var(--base-bg-color), 0.72) !important;
+}
+
+body.highContrast #chatbox.partyChat #messages .messageContainer.highlight {
+  background-color: rgba(var(--party-base-bg-color), 0.72) !important;
+}
+
+body.highContrast #layout:not(:fullscreen) #chatbox.partyChat #chatInputContainer form,
+body.highContrast #chatbox.partyChat .chatboxTabSection {
+  background-color: rgba(var(--party-base-bg-color), 0.72) !important;
 }
 
 .modal form {

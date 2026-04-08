@@ -1,10 +1,15 @@
 <script lang="ts">
-  let { bindCanvas = $bindable() }: { bindCanvas?: HTMLCanvasElement } = $props();
+  import { onMount } from "svelte";
+
+  let hasTouchscreen = $state(false);
+  onMount(() => {
+    hasTouchscreen = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+  });
 </script>
 
 <div id="canvasContainer">
   <div id="crashFix"></div>
-  <canvas id="canvas" tabindex="-1" bind:this={bindCanvas}></canvas>
+  <canvas id="canvas" tabindex="-1"></canvas>
 </div>
 
 <div id="gameChatContainer" class="hidden">
@@ -13,9 +18,9 @@
       <div class="messageContents">
         >&nbsp;<span id="gameChatModeIcon"></span>
         <div class="globalCooldownIcon icon hidden">
-          <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-            ><circle class="bgCircle" cx="9" cy="9" r="9" /><circle class="timerCircle" cx="9" cy="9" r="9" /></svg
-          >
+          <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+            <circle class="bgCircle" cx="9" cy="9" r="9" /><circle class="timerCircle" cx="9" cy="9" r="9" />
+          </svg>
         </div>
         <span id="gameChatInput" contenteditable="true"></span>
       </div>
@@ -29,7 +34,7 @@
   <span id="locationDisplayLabelOverlay"></span>
 </div>
 
-<div id="dpad" class="unselectable hidden">
+<div id="dpad" class="unselectable" class:hidden={!hasTouchscreen}>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" class="baseColorFill">
     <path
       id="dpad-up"
@@ -59,12 +64,12 @@
   </svg>
 </div>
 
-<div id="apad" class="unselectable hidden">
+<div id="apad" class="unselectable" class:hidden={!hasTouchscreen}>
   <div id="apad-escape" class="baseColorBg apadCircBtn apadBtn" data-key="Escape" data-key-code="27"></div>
   <div id="apad-enter" class="baseColorBg apadCircBtn apadBtn" data-key="Enter" data-key-code="13"></div>
 </div>
 
-<div id="joystick" class="unselectable hidden">
+<div id="joystick" class="unselectable" class:hidden={!hasTouchscreen}>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" class="baseColorFill hidden" data-style="joystick">
     <defs>
       <mask id="joystickInset">

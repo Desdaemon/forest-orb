@@ -1,0 +1,1254 @@
+import type { BaseTranslation, Translation } from '../i18n-types';
+
+const pl = {
+  translationComplete: '1',
+  version: {
+    '2kki': {
+      label: 'Yume 2kki wersja {VERSION}',
+      substitutes: {
+        ' Patch ': ' łatka ',
+        '?': '?'
+      }
+    }
+  },
+  ui: {
+    account: {
+      login: 'Zaloguj się',
+      logout: 'Wyloguj się'
+    },
+    fontStyle: {
+      label: 'Styl czcionki:',
+      values: {
+        style1: 'Styl 1',
+        style2: 'Styl 2',
+        style3: 'Styl 3',
+        style4: 'Styl 4',
+        style5: 'Styl 5',
+        style6: 'Styl 6',
+        style7: 'Styl 7'
+      }
+    },
+    chatbox: {
+      location: 'Lokalizacja:&nbsp;',
+      nextLocation: 'Next Loc:&nbsp;',
+      immersionMode: 'Tryb immersji',
+      reconnect: 'Połącz ponownie',
+      tab: {
+        chat: 'Czat',
+        players: 'Gracze',
+        parties: 'Grupy'
+      },
+      chat: {
+        tab: {
+          all: 'Razem',
+          map: 'Mapa',
+          global: 'Globalny',
+          party: 'Grupa'
+        },
+        nickname: {
+          header: 'Musisz ustawić ksywkę zanim zaczniesz czatować.',
+          rule: {
+            maxLength: '* Max. 10 znaków',
+            alphanumeric: '* Tylko znaki alfanumeryczne'
+          }
+        }
+      },
+      players: {
+        tab: {
+          map: 'Mapa',
+          friends: 'Znajomi',
+          party: 'Grupa'
+        }
+      }
+    },
+    instruction: {
+      translation: 'Potrzebne tłumaczenie',
+      noGameLoc: '* Tłumaczenie gry niedostępne'
+    },
+    '2kki': {
+      hostedWithPermission: 'Hostowane za pozwoleniem deweloperów Yume 2kki'
+    },
+    disclaimer: {
+      pendingApproval: 'Pending approval from developer/publisher',
+      hostedWithPermission: 'Hosted with permission from the developer(s)',
+      originalCreation: 'Original creation by the YNOproject community'
+    },
+    modal: {
+      common: {
+        save: 'Save',
+        apply: 'Apply'
+      },
+      confirm: {
+        ok: 'OK',
+        cancel: 'Anuluj'
+      },
+      login: {
+        title: 'Logowanie',
+        fields: {
+          username: 'Nazwa',
+          password: 'Hasło'
+        },
+        submit: 'Prześlij',
+        registerPrompt: 'Nie masz konta?&nbsp;',
+        register: 'Zarejestruj się'
+      },
+      register: {
+        title: 'Rejestracja',
+        fields: {
+          email: 'Email',
+          username: 'Nazwa',
+          password: 'Hasło',
+          confirmPassword: 'Potwierdź hasło'
+        },
+        submit: 'Prześlij',
+        loginPrompt: 'Masz już konto?&nbsp;',
+        login: 'Zaloguj się'
+      },
+      settings: {
+        title: 'Ustawienia',
+        fields: {
+          lang: 'Język',
+          locationVisibility: {
+            label: 'Widoczność lokalizacji',
+            values: {
+              private: 'Prywatna',
+              friends: 'Tylko dla znajomych',
+              public: 'Publiczna'
+            }
+          },
+          nametagMode: {
+            label: 'Podgląd nazw',
+            values: {
+              none: 'Brak',
+              classic: 'Klasyczne',
+              compact: 'Kompaktowe',
+              slim: 'Pomniejszone'
+            }
+          },
+          wikiLinkMode: {
+            label: 'Wiki Link Popup',
+            values: {
+              always: 'Always',
+              fullscreen: 'Fullscreen Only',
+              never: 'Never'
+            }
+          },
+          saveReminder: {
+            label: 'Częstotliwość powiadomień o zapisie',
+            interval: {
+              minutes: '{{interval}} minut',
+              never: 'Nigdy'
+            }
+          },
+          soundVolume: 'Głośność dźwięków',
+          musicVolume: 'Głośność muzyki',
+          togglePlayerSounds: 'Dźwięki innych graczy',
+          toggleEnableBadgeHints: {
+            label: 'Badge Hints',
+            helpText:
+              "Badge hints become available once you have unlocked the 'Badge Collector Amulet EX' badge. When enabled, an icon will appear in the top right when you enter a location with at least one badge you haven't unlocked."
+          },
+          togglePlayBadgeHintSound: 'Play Badge Hint Sound',
+          toggleEnableExplorer: {
+            label: 'Yume 2kki Navigator',
+            helpText:
+              'Yume 2kki Navigator to integracja usługi Yume 2kki Explorer, która pokazuje dostępne połączenia do mapy w której jesteś. Może to drastycznie zmienić twoje doświadczenia w grze, więc polecamy eksplorować większość gry przed jej włączeniem. Żeby używać tej funkcji, musisz się zalogować.'
+          },
+          toggleImmersionMode: {
+            label: 'Tryb immersji',
+            helpText: 'Wyłącza licznik ilości graczy, czat globalny i mapy dla immersyjnego doświadczenia'
+          },
+          timeTrialinfo: {
+            label: 'Time Triale'
+          },
+          toggleMobileControls: 'Pokaż sterowanie dotykowe',
+          mobileControlsType: {
+            label: 'Typ sterowania dotykowego',
+            default: 'D-Pad',
+            joystick: 'Gładki Joystick',
+            dpad: 'Gładki D-Pad'
+          },
+          toggleLocationDisplay: 'Wyświetlacz lokalizacji',
+          toggleRankings: 'Rankingi',
+          togglePreloads: {
+            label: 'Wczesne ładowanie',
+            helpText: 'Wcześnie załaduj pliki często używane w grze; wymaga ponownego załadowania strony'
+          },
+          toggleQuestionablePreloads: 'Wczesne ładowanie tapet',
+          toggleSchedules: 'Events',
+          unicodeFont: 'Alternate Font',
+          toggleSingleplayerMode: {
+            label: 'Singleplayer Mode',
+            helpText:
+              'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
+          }
+        },
+        blocklist: 'Zablokowani użytkownicy',
+        chatSettings: 'Czat',
+        screenshotSettings: 'Zrzuty ekranu',
+        notificationSettings: 'Powiadomienia',
+        cacheSettings: 'Cache',
+        accountSettings: 'Konto',
+        engineSettings: 'Engine (F1)'
+      },
+      blocklist: {
+        title: 'Zablokowani użytkownicy',
+        empty: 'Nie blokujesz żadnych użytkowników'
+      },
+      chatSettings: {
+        title: 'Ustawienia czatu',
+        fields: {
+          toggleGameChat: {
+            label: 'Nakładka z czatem',
+            global: 'Nakładka z czatem globalnym',
+            party: 'Nakładka z czatem grupy'
+          },
+          toggleTabToChat: 'Wciśnij Tab by czatować',
+          togglePlayMentionSound: 'Graj dźwięk powiadomienia',
+          chatHistoryLimit: {
+            values: {
+              '0': 'Nielimitowany',
+              '25': '25',
+              '50': '50',
+              '100': '100',
+              '250': '250',
+              '500': '500',
+              '1000': '1000',
+              '2500': '2500'
+            }
+          },
+          mapChatHistoryLimit: {
+            label: 'Limit historii czatu mapy'
+          },
+          globalChatHistoryLimit: {
+            label: 'Limit historii czatu globalnego'
+          },
+          partyChatHistoryLimit: {
+            label: 'Limit historii czasu grupy'
+          },
+          blurScreenshotEmbeds: 'Blur All Screenshots'
+        }
+      },
+      screenshotSettings: {
+        title: 'Ustawienia zrzutów ekranu',
+        fields: {
+          autoDownloadScreenshots: 'Automatycznie pobieraj zrzuty ekranu',
+          screenshotResolution: {
+            label: 'Rozdzielczość pobranych zrzutów ekranu',
+            values: {
+              '1': '1x - 320x240',
+              '2': '2x - 640x480',
+              '3': '3x - 960x720',
+              '4': '4x - 1280x960'
+            }
+          }
+        }
+      },
+      notificationSettings: {
+        title: 'Ustawienia powiadomień',
+        fields: {
+          toggleNotifications: 'Powiadomienia',
+          screenPosition: {
+            label: 'Położenie powiadomień',
+            values: {
+              bottomLeft: 'Lewy dolny róg',
+              bottomRight: 'Prawy dolny róg',
+              topLeft: 'Lewy górny róg',
+              topRight: 'Prawy górny róg'
+            }
+          },
+          system: {
+            label: 'System',
+            fields: {
+              siteUpdates: 'Strona została zaktualizowana',
+              error: 'Wystąpił błąd',
+              pushNotifications: 'Desktop Notifications'
+            }
+          },
+          account: {
+            label: 'Konto',
+            fields: {
+              loggedIn: 'Zalogowany',
+              loggedOut: 'Wyogowany',
+              passwordUpdate: 'Hasło zmienione'
+            }
+          },
+          players: {
+            label: 'Gracze',
+            fields: {
+              playerBlocked: 'Gracz zablokowany',
+              playerUnblocked: 'Gracz odblokowany'
+            }
+          },
+          friends: {
+            label: 'Znajomi',
+            fields: {
+              add: 'Wysłano zaproszenie do znajomych',
+              remove: 'Usunięto ze znajomych',
+              accept: 'Zaakceptowane zaproszenie do znajomych',
+              reject: 'Odrzucone zaproszenie do znajomych',
+              cancel: 'Anulowane zaproszenie do znajomych',
+              incoming: 'Przychodzące zaproszenie do znajomych',
+              playerOnline: 'Znajomy/a online',
+              playerOffline: 'Znajomy/a offline'
+            }
+          },
+          parties: {
+            label: 'Grupy',
+            fields: {
+              create: 'Stworzono grupę',
+              update: 'Aktualizowano grupę',
+              join: 'Dołączono do grupy',
+              leave: 'Opuszczono grupę',
+              remove: 'Usunięto z grupy',
+              disband: 'Usunięto grupę',
+              playerJoin: 'Gracz dołączył do grupy',
+              playerLeave: 'Gracz opuścił grupę',
+              playerOnline: 'Gracz jest online',
+              playerOffline: 'Gracz jest offline',
+              kickPlayer: 'Wyrzucono gracza z grupy',
+              transferPartyOwner: 'Promowano gracza do lidera grupy'
+            }
+          },
+          events: {
+            label: 'Ekspedycje',
+            fields: {
+              complete: 'Ekspedycja ukończona',
+              freeComplete: 'Darmowa ekspedycja ukończona',
+              vmComplete: 'Automat znaleziony',
+              listUpdated: 'Aktualizacja listy ekspedycji'
+            }
+          },
+          badges: {
+            label: 'Odznaki',
+            fields: {
+              badgeUnlocked: 'Odznaka odblokowana'
+            }
+          },
+          timeTrials: {
+            label: 'Time Trials',
+            fields: {
+              goalReached: 'Goal Reached'
+            }
+          },
+          screenshots: {
+            label: 'Zrzuty ekranu',
+            fields: {
+              screenshotTaken: 'Zrzut ekranu wykonany'
+            }
+          },
+          saveSync: {
+            label: 'Synchronizacja zapisów',
+            fields: {
+              saveUploading: 'Zapis przesyłany',
+              saveUploaded: 'Zapis przesłany',
+              saveDownloading: 'Zapis pobierany',
+              saveDownloaded: 'Zapis pobrany',
+              saveUpToDate: 'Zapis aktualny',
+              saveCleared: 'Zapis usunięty',
+              saveReminder: 'Powiadomienia o zapisie'
+            }
+          },
+          schedules: {
+            label: 'Events',
+            fields: {
+              upcomingSchedules: 'Upcoming Events'
+            }
+          }
+        }
+      },
+      cacheSettings: {
+        title: 'Cache Settings',
+        clear: 'Clear',
+        fields: {
+          locationCache: 'Location Cache',
+          mapCache: 'Map Cache',
+          locationColorCache: 'Location Color Cache'
+        }
+      },
+      accountSettings: {
+        title: 'Ustawienia konta',
+        fields: {
+          badge: 'Odznaka',
+          changePassword: 'Zmień hasło',
+          clearSaveSync: 'Usuń dane synchronizacji zapisów'
+        }
+      },
+      password: {
+        title: 'Zmień hasło',
+        fields: {
+          oldPassword: 'Stare hasło',
+          newPassword: 'Nowe hasło',
+          newConfirmPassword: 'Potwierdź nowe hasło'
+        },
+        submit: 'Wyślij'
+      },
+      badges: {
+        title: 'Odznaki',
+        manageBadgeGallery: 'Zarządzaj galerią odznak',
+        fields: {
+          unlockStatus: {
+            label: 'Status odblokowania:&nbsp;',
+            values: {
+              '0': 'Zablokowane',
+              '1': 'Odblokowane',
+              all: 'Wszystkie',
+              recentUnlock: 'Recently Unlocked'
+            }
+          },
+          sortOrder: {
+            label: 'Układ sortowania:&nbsp;',
+            values: {
+              default: 'Domyślny'
+            }
+          },
+          search: {
+            label: 'Szukaj:&nbsp;',
+            name: 'Nazwa:',
+            location: 'Lokalizacja:'
+          }
+        }
+      },
+      badgeGallery: {
+        title: 'Zarządzaj galerią odznak',
+        badgeGalleryRowProgress: 'Następne powiększenie poziomo (BP)',
+        badgeGalleryColProgress: 'Następne powiększenie pionowo (Odznaki)',
+        removeMode: {
+          activate: 'Remove Badges',
+          deactivate: 'Done'
+        },
+        manageBadgePreset: 'Manage Presets'
+      },
+      badgePreset: {
+        title: 'Manage Badge Presets',
+        selectPreset: 'Select Preset',
+        presetName: 'Preset {{index}}'
+      },
+      save: {
+        title: 'Zarządzaj zapisami',
+        reload: 'Zapisz zmiany i zrestartuj',
+        info: 'Dla importowania zapisów, jeśli ostatnio grało się używając tłumaczenia na RPG_RT, gra będzie pokazywać błędy dopóki nie zapiszę się na EasyRPG bez tłumaczeń.'
+      },
+      uiTheme: {
+        title: 'Motyw',
+        auto: 'Automatyczny'
+      },
+      createParty: {
+        title: {
+          create: 'Stwórz grupę',
+          update: 'Modyfikuj grupę'
+        },
+        fields: {
+          partyName: 'Nazwa grupy',
+          description: 'Opis',
+          public: 'Publiczna',
+          password: 'Hasło',
+          theme: 'Motyw'
+        },
+        showPassword: 'Pokaż hasło',
+        hidePassword: 'Ukryj hasło',
+        submit: 'Wyślij'
+      },
+      joinPrivateParty: {
+        title: 'Dołącz do prywatnej grupy',
+        fields: {
+          password: 'Hasło'
+        },
+        showPassword: 'Pokaż hasło',
+        hidePassword: 'Ukryj hasło',
+        incorrectPassword: 'Niepoprawne hasło. Spróbuj ponownie.',
+        submit: 'Wyślij'
+      },
+      events: {
+        title: 'Ekspedycje',
+        rankExp: 'Następna ranga',
+        weekExp: 'ExP w tym tygodniu',
+        tabs: {
+          locations: 'Miejsca',
+          vms: 'Automat'
+        }
+      },
+      rankings: {
+        title: 'Rankingi',
+        player: 'Player'
+      },
+      screenshot: {
+        title: 'Twój zrzut ekranu',
+        download: 'Pobierz',
+        save: 'Zapisz do moich zrzutów ekranu',
+        share: 'Share in Chat'
+      },
+      myScreenshots: {
+        title: 'Moje zrzuty ekranu',
+        screenshotSlotProgress: 'Następne zwiększenie limitu (BP)',
+        empty: 'Nie zapisano żadnych zrzutów ekranu.'
+      },
+      communityScreenshots: {
+        title: 'Zrzuty ekranu społeczności',
+        scrollToRefresh: 'Przewiń do góry by odświeżyć',
+        fields: {
+          game: {
+            label: 'Gra:&nbsp;',
+            values: {
+              all: 'Wszystkie'
+            }
+          },
+          sortOrder: {
+            values: {
+              recent: 'Najnowsze',
+              likes: 'Najbardziej polubiane'
+            }
+          },
+          interval: {
+            values: {
+              day: 'Dziś',
+              week: 'W tym tygodniu',
+              month: 'W tym miesiącu',
+              year: 'W tym roku',
+              all: 'Kiedykolwiek'
+            }
+          }
+        }
+      },
+      schedule: {
+        title: 'Events',
+        ongoing: 'Ongoing Events',
+        party: 'Party Events',
+        future: 'Future Events',
+        official: 'Official Events',
+        noResults: 'No events have been scheduled.',
+        doSchedule: 'Schedule an Event'
+      },
+      scheduleEdit: {
+        title: 'Edit Event',
+        save: 'Save',
+        cancel: 'Cancel Event',
+        fields: {
+          name: 'Event Name',
+          description: 'Description',
+          datetime: 'Event Date and Time',
+          recurring: 'Recurring Event',
+          theme: 'Motyw',
+          interval: {
+            title: 'Interval',
+            days: 'days',
+            months: 'months',
+            years: 'years'
+          },
+          restrictParty: 'Limit to Party',
+          official: 'Official Event',
+          resetOrganizer: 'Reset Organizer',
+          platforms: {
+            title: 'External Links',
+            discord: 'Discord',
+            youtube: 'YouTube',
+            twitch: 'Twitch',
+            niconico: 'Nicovideo',
+            openrec: 'Openrec',
+            bilibili: 'Bilibili'
+          }
+        }
+      },
+      report: {
+        title: 'Report',
+        submit: 'Submit',
+        fields: {
+          reason: {
+            '1': 'Slurs, harmful or inappropriate language',
+            '2': 'Harassment, bullying, stalking',
+            '3': 'Inappropriate names',
+            '4': 'Ban evasion',
+            '5': 'Cheating, abusing exploits',
+            '6': 'Underage player',
+            '7': 'Spam',
+            title: 'Reason',
+            placeholder: 'Custom reason (max 50 characters)',
+            other: 'Other (specify)'
+          }
+        }
+      },
+      rules: {
+        title: 'Zasady',
+        rule1: 'Bądź uprzejmy i miej szacunek dla innych.',
+        rule2: 'Zakaz dyskusji 18+ (NSFW, gore, itp.).',
+        rule3: 'Zakaz polityki.',
+        rule4: 'Zakaz używania obelg i zwracania niestosownych/wrogich uwag.',
+        rule5: 'Zakaz używania cheatów z jakiegokolwiek powodu.',
+        rule6: 'Jeżeli wystąpi zamieszanie w czacie, poinformuj moderatorów.'
+      },
+      explorerUndiscoveredLocations: {
+        title: 'Nieodkryte lokalizacje',
+        complete: 'Odkryto wszystkie lokalizacje! Gratulacje!'
+      },
+      locations: {
+        title: 'Miejsca',
+        fields: {
+          visited: {
+            values: {
+              all: 'All',
+              visited: 'Visited',
+              unvisited: 'Unvisited'
+            }
+          },
+          sortOrder: {
+            values: {
+              newest: 'Newest',
+              oldest: 'Oldest',
+              shallowest: 'Shallowest',
+              deepest: 'Deepest',
+              alpha: 'Alphabetical',
+              players: 'Player Count'
+            }
+          }
+        }
+      }
+    },
+    tooltips: {
+      togglePrivateMode: 'Włącz tryb prywatny',
+      save: 'Zarządzaj zapisami',
+      uiTheme: 'Ustaw motyw',
+      toggleChat: 'Pokaż/ukryj czat',
+      toggleExplorer: 'Pokaż/ukryj Yume 2kki Navigator',
+      screenshot: 'Wykonaj zrzut ekranu',
+      myScreenshots: 'Moje zrzuty ekranu',
+      settings: 'Ustawienia',
+      toggleMute: 'Wycisz',
+      toggleHideLocation: 'Toggle Location Sharing',
+      toggleGlobalMessage: 'Czatuj globalnie/lokalnie',
+      chat: {
+        toggleNextLocation: 'Show/Hide Next Expedition Location',
+        toggleGlobalMessageLocations: 'Pokaż/ukryj lokalizacje w czacie',
+        toggleMessageTimestamps: 'Pokaż/ukryj czas wysłania wiadomości',
+        filterMentions: 'Show Mentions Only',
+        clearChat: 'Wyczyść czat'
+      },
+      parties: {
+        createParty: 'Stwórz grupę',
+        disbandParty: 'Usuń grupę'
+      },
+      events: 'Ekspedycje',
+      locations: 'Miejsca',
+      communityScreenshots: 'Zrzuty ekranu społeczności',
+      rankings: 'Rankingi',
+      schedules: 'Events',
+      nexus: 'Powróć do Nexusu',
+      explorerUndiscoveredLocations: 'Pokaż nieodkryte lokalizacje',
+      timeTrial:
+        'Aby włączyć tryb Time Trial, przytrzymaj Shift i Strzałkę w Prawo po rozpoczęciu nowej gry zanim cokolwiek pojawi się na ekranie.',
+      mobileControlsType:
+        'Alternatives to the default D-Pad control type.<br>Floating control types are only available in mobile fullscreen.'
+    },
+    placeholders: {
+      scheduleDescription:
+        'Markdown syntax is accepted, use {\\{l:World,optional link name}} to insert a link to yume.wiki'
+    },
+    reviewRules: 'Sprawdź zasady'
+  },
+  messages: {
+    games: {
+      ynoproject: 'YNOproject',
+      yume: 'Yume Nikki',
+      '2kki': 'Yume 2kki',
+      unconscious: 'Collective Unconscious',
+      flow: '.flow',
+      fog: 'FOG',
+      prayers: 'Answered Prayers',
+      deepdreams: 'Deep Dreams',
+      someday: 'Someday',
+      amillusion: 'Amillusion',
+      unevendream: 'Uneven Dream',
+      braingirl: 'Braingirl',
+      muma: 'Muma|Rope',
+      genie: 'Dream Genie',
+      mikan: 'Mikan Muzou',
+      ultraviolet: 'Ultra Violet',
+      sheawaits: 'She Awaits',
+      oneshot: 'OneShot',
+      oversomnia: 'Oversomnia',
+      tsushin: 'Yume Tsushin',
+      nostalgic: 'nostAlgic',
+      if: 'If',
+      unaccomplished: 'Unaccomplished'
+    },
+    leavePage: 'Czy na pewno chcesz opuścić stronę? Niezapisane dane zostaną utracone.',
+    logout: 'Czy na pewno chcesz się wylogować?',
+    loadingInstruct:
+      '. <br /> <br /> Ta strona ładuje się dłużej niż normalne; Jeżeli problem nie minie można spróbować użyć CTRL+F5 lub wyczyścić cache przeglądarki (lecz nie ciasteczka!). Poprzez F12 można sprawdźić błędy w konsoli.',
+    requestNotifications: 'Receive notifications for followed events and expedition refreshes?',
+    connStatus: {
+      '0': 'Rozłączony',
+      '1': 'Połączony',
+      '2': 'Łączenie...',
+      '3': 'Tryb prywatny',
+      '4': 'Singleplayer'
+    },
+    lastOnline: {
+      template: 'Ostatnio online\n{INTERVAL} temu',
+      longTime: 'Dawno temu',
+      interval: {
+        short: 'mniej niż 1 minutę',
+        minutes: {
+          singular: '{VALUE} minutę',
+          plural: '{VALUE} minut/y'
+        },
+        hours: {
+          singular: '{VALUE} godzinę',
+          plural: '{VALUE} godzin/y'
+        },
+        days: {
+          singular: '{VALUE} dzień',
+          plural: '{VALUE} dni'
+        }
+      }
+    },
+    location: {
+      template: '{LOCATION} ({LOCATION_EN})',
+      queryingLocation: 'Sprawdzanie lokalizacji...',
+      unknownLocation: 'Nieznana lokalizacja',
+      '2kki': {
+        template: '{LOCATION}'
+      },
+      connType: {
+        '1': 'One-Way',
+        '2': 'No Entry',
+        '4': 'Unlock',
+        '8': 'Locked',
+        '16': 'Dead End',
+        '32': 'Isolated',
+        '64': 'Requires Effect ({PARAMS})',
+        '128': '{PARAMS} Chance',
+        '256': '{PARAMS}',
+        '512': 'Shortcut',
+        '1024': 'Exit Point',
+        '2048': 'Seasonal ({PARAMS})'
+      },
+      depth: ' ({DEPTH})',
+      playing: 'Gra w {GAME}'
+    },
+    locationDisplay: {
+      template: '{LOCATION}',
+      '2kki': {
+        template: '{LOCATION}'
+      }
+    },
+    playersOnline: {
+      singular: '{COUNT} gracz online',
+      plural: '{COUNT} graczy online'
+    },
+    playersInMap: {
+      singular: '{COUNT} gracz na mapie',
+      plural: '{COUNT} graczy na mapie'
+    },
+    playerList: {
+      unnamed: 'Gracz bez nazwy',
+      muted: 'Wyciszony',
+      actions: {
+        approveFriend: 'Akceptuj zaproszenie do znajomych',
+        rejectFriend: 'Odrzuć zaproszenie do znajomych',
+        cancelFriend: 'Anuluj zaproszenie do znajomych',
+        partyKick: 'Wyrzuć z grupy',
+        transferPartyOwner: 'Promuj na lidera grupy'
+      }
+    },
+    roles: {
+      mod: 'Moderator',
+      dev: 'Deweloper'
+    },
+    timestamp: {
+      time: '{TIME}',
+      timeAndWeekday: '{TIME} ({WEEKDAY})'
+    },
+    context: {
+      ping: {
+        label: 'Pinguj {PLAYER}'
+      },
+      addFriend: {
+        label: 'Dodaj {PLAYER} do znajomych'
+      },
+      removeFriend: {
+        label: 'Usuń {PLAYER} ze znajomych'
+      },
+      block: {
+        label: 'Zablokuj {PLAYER}',
+        confirm: 'Czy na pewno chcesz zablokować {PLAYER}?'
+      },
+      unblock: {
+        label: 'Odblokuj {PLAYER}',
+        confirm: 'Czy na pewno chcesz odblokować {PLAYER}?'
+      },
+      report: {
+        label: 'Report {PLAYER}'
+      },
+      admin: {
+        ban: {
+          label: 'Zbanuj {PLAYER}',
+          confirm: 'Czy na pewno chcesz zbanować {PLAYER}?',
+          success: '{PLAYER} został/a zbanowany/a.'
+        },
+        unban: {
+          label: 'Odbanuj {PLAYER}',
+          confirm: 'Czy na pewno chcesz odbanować {PLAYER}?',
+          success: '{PLAYER} został/a odbanowany/a.'
+        },
+        mute: {
+          label: 'Wycisz {PLAYER}',
+          confirm: 'Czy na pewno chcesz wyciszyć {PLAYER}?',
+          success: '{PLAYER} został/a wyciszony/a.'
+        },
+        unmute: {
+          label: 'Odcisz {PLAYER}',
+          confirm: 'Czy na pewno chcesz odciszyć {PLAYER}?',
+          success: '{PLAYER} został/a odciszony/a.'
+        },
+        grantBadge: {
+          label: 'Nadaj odznakę',
+          prompt: 'Podaj ID odznaki do nadania graczowi {PLAYER}.',
+          success: 'Odznaka {BADGE} została nadana graczowi {PLAYER}.',
+          fail: 'Nie znaleziono odznaki z tym ID.'
+        },
+        revokeBadge: {
+          label: 'Odebraj odznakę',
+          prompt: 'Podaj ID odznaki do odebrania graczowi {PLAYER}.',
+          success: 'Odznaka {BADGE} została odebrana graczowi {PLAYER}.',
+          fail: 'Nie znaleziono odznaki z tym ID.'
+        },
+        tempban: {
+          label: 'Tempban {PLAYER}',
+          prompt: 'When to unban {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempbanned.'
+        },
+        tempmute: {
+          label: 'Tempmute {PLAYER}',
+          prompt: 'When to unmute {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempmuted.'
+        }
+      }
+    },
+    account: {
+      login: {
+        errors: {
+          invalidLogin: 'Login lub hasło są nieprawidłowe.'
+        }
+      },
+      register: {
+        errors: {
+          confirmPasswordMismatch: 'Podane hasła nie zgadzają się.',
+          invalidCredentials: 'Login lub hasło są puste lub zawierają niedozwolone znaki.',
+          emailTaken: 'Ten email jest już w użyciu.',
+          usernameTaken: 'Ta nazwa jest już w użyciu.'
+        }
+      },
+      password: {
+        errors: {
+          confirmPasswordMismatch: 'Podane hasła nie zgadzają się.',
+          badLogin: 'Niepoprawne hasło.',
+          internalServerError: 'Wystąpił błąd: spróbuj ponownie później.'
+        }
+      }
+    },
+    chat: {
+      globalMessage: 'Globalna wiadomość'
+    },
+    friends: {
+      friend: 'Znajomy/a',
+      categories: {
+        incoming: 'Przychodzące - {COUNT}',
+        outgoing: 'Wysłane - {COUNT}',
+        online: 'Online - {COUNT}',
+        offline: 'Offline - {COUNT}'
+      }
+    },
+    parties: {
+      emptyMessage: 'Nie ma aktywnych grup.',
+      yourParty: 'Twoja grupa',
+      defaultPartyName: 'Grupa {OWNER}',
+      partyOwner: 'Lider grupy',
+      confirmDisband: 'Czy napewno chcerz rozłożyć swoją grupę? To nie może być cofnięte.',
+      confirmTransferPartyOwner: 'Czy napewno chcerz oddać rolę właściciela grupy graczowi {PLAYER}?',
+      offlineMemberSuffix: 'Członek offline',
+      categories: {
+        online: 'Online - {COUNT}',
+        offline: 'Offline - {COUNT}'
+      },
+      actions: {
+        viewPartyDetails: 'Sprawdź detale grupy',
+        joinParty: 'Dołącz do grupy',
+        joinPrivateParty: 'Dołącz do prywatnej grupy',
+        leaveParty: 'Opuść grupę'
+      }
+    },
+    chatTips: {
+      template: 'PORADA: {CONTENT}',
+      tips: {
+        backupReminder:
+          'Polecamy częste pobieranie swoich zapisów. W ten sposób, jeżeli wyczyścisz dane przegładarki, nie stracisz swoich danych.',
+        menuTheme: 'Kolor twojej nazwy i styl tła na liście graczy zależy od wybranego w grze motywu.',
+        playersInMap:
+          'Możesz zmienić to, czy widzisz ile osób jest online, czy ile osób jest w tej samej mapie co ty, klikając tekst obok liczby.',
+        markdownSupport:
+          'Czat wspiera formatowanie tekstu za pomocą różnych znaków. Aktualnie wspierane są: **pogrubienie** (\\*\\*tekst\\*\\*), *kursywa* (\\*tekst\\*, \\_tekst\\_), __podkreślenie__ (\\_\\_tekst\\_\\_), ~~przekreślenie~~ (\\~\\~tekst\\~\\~), i ||spoiler|| (\\|\\|tekst\\|\\|).',
+        tabToChat:
+          "Jeżeli grasz na komputerze, możesz użyć klawisza Tab by przełączyć się między czatem a grą. Ta funkcja może być wyłączona w ustawieniach czatu, zmieniając opcję 'Wciśnij Tab by czatować'.",
+        chatTabNotifications:
+          "Jeżeli jesteś w innej zakładce niż 'Razem', gdy pojawi się wiadomość w innej zakładce, nazwa tej zakładki zostanie pogrubiona.",
+        clearChat:
+          "Jeżeli wciśnisz przycisk wyczyszczenia czatu w innej zakładce niż 'Razem', usunięte zostaną tylko wiadomości w tej zakładce.",
+        chatHistoryLimit:
+          'Jeżeli historia czatu zrobi się zbyt długa, możesz doświadczyć spowolnień strony. W ustawieniach czatu możesz zmniejszyć limit historii czatu, by nie musieć ciągle własnoręcznie czyścić czatu.',
+        parties:
+          'Grupy są świetnym sposobem na trzymanie się razem z innymi na wycieczkach. Możesz zobaczyć lokalizację członków swojej grupy oraz rozmawiać z nimi w osobnym czacie.',
+        immersionMode:
+          'Jeżeli wolisz immersyjne doświadczenie od społecznego, możesz włączyć tryb immersji. Wyłącza on czat globalny, listę graczy i ilość graczy, przez co znajdywanie innych osób jest bardziej interesujące.',
+        friendsMenu:
+          'Klikając prawym przyciskiem myszy na komputerze, albo poprzez trzymanie na ikonie gracza poza rankingami na telefonie, otworzy się okno dialogowe, pozwalające ci wysłać zaproszenie do grona znajomych, wspomnieć ich lub zablokować ich.',
+        easySettingsMenu:
+          'Jeżeli grasz na komputerze, możesz nacisnąć F1 podczas gry aby zmienić sterowanie oraz kilka ustawień.',
+        floatingControls:
+          "If you're playing on a touchscreen device and don't like the default controls, try the floating styles of controls available from the Mobile Controls Type in Settings.",
+        recentBadges:
+          'Accidentally dismissed a badge unlock notification? You can always review badges unlocked in the current session by selecting Recently Unlocked in the Badges listing.',
+        desktopHotkeys:
+          "If you're playing on a PC, Alt+Enter can also toggle fullscreen mode, F7 by default takes a screenshot of the game, and the T key opens the in-game chat input.",
+        badgeControls:
+          'In the Badge Gallery menu, you can drag and drop badges to rearrange them, or quickly remove many badges at once using the Remove Badges mode.',
+        cacheSettings:
+          'Having trouble with location completion or outdated maps? The Cache menu allows you to clear the relevant cache and retrieve the latest data.',
+        openSource: 'Kod źródłowy YNOProject jest dostępny na stronie https://github.com/ynoproject/'
+      }
+    },
+    save: {
+      slot: {
+        title: 'Zapis {SLOT_ID}',
+        readingLabel: 'Odczytywanie zapisów...',
+        emptyLabel: 'Pusty',
+        errorLabel: 'Błąd'
+      },
+      upload: {
+        tooltip: 'Prześlij zapis',
+        invalidSaveFile: 'Wybierz poprawny plik zapisu (format .lsd).'
+      },
+      download: {
+        tooltip: 'Pobierz zapis',
+        emptySlot: 'W tym miejscu nie ma zapisu.'
+      },
+      delete: {
+        tooltip: 'Usuń zapis',
+        confirmDelete: 'Czy na pewno chcesz usunąć zapis {SLOT_ID}?'
+      }
+    },
+    saveSync: {
+      confirmClearSaveSync:
+        'Czy napewno chcerz wyczyścić dane synchronizacji zapisu dla tej gry? To nie może być cofnięte jeżeli nie posiada się lokalnej kopii zapisu gry.'
+    },
+    toast: {
+      system: {
+        siteUpdates: 'Strona została zaktualizowana. Odśwież stronę by otrzymać najnowsze zmiany.',
+        error:
+          "Coś poszło nie tak! Sprawdź konsolę przeglądarki dla detali. By otworzyć konsolę, wciśnij F12 lub wciśnij prawy przycisk myszki a potem 'Inspektuj'."
+      },
+      account: {
+        loggedIn: 'Zalogowano się jako {USER}.',
+        loggedOut: 'Zostałeś/aś wylogowany/a.',
+        passwordUpdated: 'Twoje hasło zostało zaktualizowane pomyślnie.'
+      },
+      players: {
+        playerBlocked: 'Gracz {PLAYER} został zablokowany.',
+        playerUnblocked: 'Gracz {PLAYER} został odblokowany.'
+      },
+      friends: {
+        add: 'Wysłano zaproszenie do znajomych do {PLAYER}.',
+        remove: 'Usunięto {PLAYER} ze znajomych.',
+        accept: 'Zaproszenie do znajomych od {PLAYER} zostało zaakceptowane.',
+        reject: 'Zaproszenie do znajomych od {PLAYER} zostało odrzucone.',
+        cancel: 'Twoje zaproszenie do znajomych dla {PLAYER} zostało anulowane.',
+        incoming: 'Masz nowe zaproszenie do znajomych od {PLAYER}.',
+        playerOnline: '{PLAYER} jest teraz online.',
+        playerOffline: '{PLAYER} jest teraz offline.'
+      },
+      parties: {
+        create: 'Grupa {PARTY} została stworzona.',
+        update: 'Grupa {PARTY} została zaktualizowana.',
+        join: 'Dołączono do grupy {PARTY}.',
+        leave: 'Opuszczono grupę {PARTY}.',
+        remove: 'Zostałeś/aś wyrzucony/a z grupy {PARTY}.',
+        disband: 'Grupa {PARTY} została usunięta.',
+        playerJoin: 'Gracz {PLAYER} dołączył do grupy.',
+        playerLeave: 'Gracz {PLAYER} opuścił grupę.',
+        playerOnline: '{PLAYER} jest teraz online.',
+        playerOffline: '{PLAYER} jest teraz offline.',
+        kickPlayer: 'Gracz {PLAYER} został wyrzucony z grupy.',
+        transferPartyOwner: 'Gracz {PLAYER} został promowany na lidera grupy.'
+      },
+      events: {
+        complete: 'Ekspedycja ukończona!\nZa zwiedzenie {LOCATION} otrzymujesz {EXP}.',
+        freeComplete: 'Ekspedycja ukończona! Zwiedzono {LOCATION}.',
+        vmComplete: 'Automat znaleziony!\nOtrzymujesz {EXP}.',
+        listUpdated: 'Lista ekspedycji została zaktualizowana.'
+      },
+      badges: {
+        badgeUnlocked: 'Odblokowano nową odznakę!'
+      },
+      screenshots: {
+        screenshotTaken: 'Zrzut ekranu został wykonany.'
+      },
+      saveSync: {
+        saveUploading: 'Przesyłanie zapisu {SLOT}...',
+        saveUploaded: 'Zapis {SLOT} został przesłany.',
+        saveDownloading: 'Aktualizowanie zapisu {SLOT}...',
+        saveDownloaded: 'Zapis {SLOT} został zakualizowany.',
+        saveUpToDate: 'Masz już aktualny zapis.',
+        saveCleared:
+          'Dane synchronizacji zapisów zostały oczyszczone. Nie usuwa to plików pobranych na twoich urządzeniach.',
+        saveReminder: 'Pamiętaj, aby często zapisywwać grę i tworzyć kopie zapasowe zapisów aby nie utracić postępów.'
+      },
+      timeTrials: {
+        timeTrialsComplete: 'Goal! {CATEGORY} completed in {TIME}.'
+      }
+    },
+    events: {
+      exp: '{POINTS} ExP',
+      expRank: 'Ranga: {RANK}',
+      period: 'Sezon {ORDINAL}',
+      periodEnds: 'Kończy się dnia {DATE}',
+      current: 'Aktualne',
+      shortcut: 'Dostępne przez odblokowywalny skrót',
+      toggleTracked: 'Toggle Location Tracking',
+      availableUntilDate: 'Dostępne do\n{DATE}',
+      types: {
+        '0': 'Dzienna',
+        '1': 'Tygodniowa',
+        '2': 'Weekendowa',
+        '3': 'Specjalna',
+        '-1': 'Darmowa ekspedycja'
+      },
+      expRanks: {
+        '0': 'Początkujący',
+        '1': 'Pośredni',
+        '2': 'Brąz',
+        '3': 'Srebro',
+        '4': 'Złoto',
+        '5': 'Platyna',
+        '6': 'Diament'
+      }
+    },
+    badges: {
+      null: 'Brak odznaki',
+      allCategory: 'Wszystkie',
+      badgeTitle: '{TITLE} - {BP} BP',
+      locked: '???',
+      location: 'Lokalizacja:&nbsp;',
+      goalProgress: '{CURRENT}/{TOTAL}',
+      percentUnlocked: '{PERCENT}% graczy ma tą odznakę',
+      time: '{MINUTES}:{SECONDS}',
+      artCredit: 'Narysowane przez {ARTIST}',
+      search: {
+        modifier: {
+          template: '&nbsp;({MODIFIER})',
+          exactMatch: 'Exact Match'
+        }
+      },
+      sortOrder: {
+        template: '{TYPE} ({ORDER})',
+        types: {
+          bp: 'BP',
+          percent: 'Procent odblokowany'
+        },
+        asc: 'Rosnąco',
+        desc: 'Malejąco'
+      }
+    },
+    badgeGallery: {
+      label: 'Galeria odznak {PLAYER}',
+      loading: 'Ładowanie...',
+      bp: '{BP} BP',
+      count: '{COUNT} odznak',
+      empty: 'Badge gallery not set'
+    },
+    badgePreset: {
+      empty: 'This preset is empty.'
+    },
+    rankings: {
+      categories: {
+        badgeCount: {
+          label: 'Odznaki',
+          valueLabel: 'Ilość odznak',
+          value: '{NUMBER}'
+        },
+        bp: {
+          label: 'BP (Punkty odznak)',
+          valueLabel: 'BP',
+          value: '{NUMBER} BP'
+        },
+        exp: {
+          label: 'ExP',
+          valueLabel: 'ExP',
+          value: '{NUMBER} ExP'
+        },
+        eventLocationCount: {
+          label: 'Ekspedycje',
+          valueLabel: 'Ilość ekspedycji',
+          value: '{NUMBER}'
+        },
+        freeEventLocationCount: {
+          label: 'Darmowe ekspedycje',
+          valueLabel: 'Ilość ekspedycji',
+          value: '{NUMBER}'
+        },
+        eventLocationCompletion: {
+          label: 'Kompletność ekspedycji',
+          valueLabel: 'Kompletność',
+          value: '{PERCENT}%'
+        },
+        eventVmCount: {
+          label: 'Automaty',
+          valueLabel: 'Ilość znalezionych automatów',
+          value: '{NUMBER}'
+        },
+        timeTrial: {
+          label: 'Time Triale',
+          valueLabel: 'Czas',
+          value: '{MINUTES}:{SECONDS}'
+        },
+        minigame: {
+          label: 'Minigry',
+          valueLabel: 'Wynik',
+          value: '{NUMBER}'
+        }
+      },
+      subCategories: {
+        '2': 'Wszystkie efekty',
+        all: 'Wszystkie',
+        nasu: 'NASU',
+        rby: 'Red Blue Yellow (Mini Game B)',
+        rby_ex: 'Red Blue Yellow (Mini Game B) - wersja EX',
+        fuji_ex: 'FUJI EX',
+        hozo: 'HOZO',
+        cartoonboy: 'Cartoon Boy',
+        ta_be: 'TA_BE_',
+        ta_be_hardcore: 'TA_BE_ - Hardcore Mode',
+        panerabbit: 'PANErabbit'
+      }
+    },
+    locations: {
+      author: 'By {AUTHOR}',
+      versionAdded: 'Added {VERSION}',
+      versionUpdated: 'Updated {VERSION}',
+      track: {
+        tooltip: {
+          on: 'Track Location',
+          off: 'Untrack Location'
+        }
+      }
+    },
+    screenshots: {
+      playerScreenshot: 'Zrzut ekranu {USER}',
+      limit: '{COUNT}/{LIMIT} miejsc zużytych',
+      public: {
+        tooltip: {
+          on: 'Ustaw jako publiczny',
+          off: 'Ustaw jako prywatny'
+        }
+      },
+      spoiler: {
+        label: 'Spoiler',
+        tooltip: {
+          on: 'Ustaw jako spoiler',
+          off: 'Usuń spoiler'
+        }
+      },
+      like: {
+        tooltip: {
+          on: 'Polub',
+          off: 'Usuń polubienie'
+        }
+      },
+      delete: {
+        tooltip: 'Usuń',
+        confirm: 'Czy na pewno chcesz usunąć ten zrzut ekranu?'
+      }
+    },
+    schedules: {
+      organizer: 'Organized by&nbsp;{NAME}',
+      invalidPlatformLink: 'Platform must have a valid URL',
+      confirmCancel: 'Are you sure you want to cancel this event?',
+      wrongEditGame: 'Cannot edit outside of {GAME}',
+      platforms: {
+        discord: 'Discord',
+        youtube: 'YouTube',
+        twitch: 'Twitch',
+        niconico: 'Nicovideo',
+        openrec: 'Openrec',
+        bilibili: 'Bilibili'
+      },
+      intervals: {
+        perDay: 'Every day',
+        days: 'Every {INTERVAL} days',
+        perWeek: 'Every {WEEKDAY}',
+        weeks: 'Every {INTERVAL} weeks',
+        perMonth: 'Every month',
+        months: 'Every {INTERVAL} months',
+        perYear: 'Every year',
+        years: 'Every {INTERVAL} years'
+      }
+    },
+    '2kki': {
+      explorerLink: {
+        generic: 'Otwórz w Yume 2kki Explorer',
+        multi: 'Otwórz {LOCATION} w Yume 2kki Explorer'
+      }
+    },
+    modSettings: {
+      title: 'Ustawienia dla moderatorów',
+      actions: {
+        resetPassword: {
+          label: 'Resetuj czyjeś hasło',
+          playerPrompt: 'Podaj nazwę gracza dla którego chcesz zresetować hasło',
+          success: 'Nowym hasłem dla {PLAYER} jest {PASSWORD}'
+        },
+        changeUsername: {
+          label: 'Zmień czyjąś nazwę',
+          playerPrompt: 'Podaj nazwę gracza którego nazwę chcesz zmienić',
+          namePrompt: 'Podaj nową nazwę dla {PLAYER}',
+          success: 'Nazwa gracza {PLAYER} została zmieniona na {NAME}',
+          error: 'Nie udało się zmienić nazwy gracza {PLAYER}; ta nazwa może już być w użyciu'
+        },
+        ban: {
+          label: 'Zbanuj gracza',
+          playerPrompt: 'Podaj nazwę gracza do zbanowania'
+        },
+        unban: {
+          label: 'Odbanuj gracza',
+          playerPrompt: 'Podaj nazwę gracza do odbanowania'
+        },
+        mute: {
+          label: 'Wycisz gracza',
+          playerPrompt: 'Podaj nazwę gracza do wyciszenia'
+        },
+        unmute: {
+          label: 'Odcisz gracza',
+          playerPrompt: 'Podaj nazwę gracza do odciszenia'
+        },
+        grantBadge: {
+          label: 'Nadaj odznakę',
+          playerPrompt: 'Podaj nazwę gracza dla którego chcesz nadać odznakę'
+        },
+        revokeBadge: {
+          label: 'Odebraj odznakę',
+          playerPrompt: 'Podaj nazwę gracza którego odznakę czesz odebrać'
+        },
+        tempban: {
+          label: 'Tempban a Player',
+          playerPrompt: 'Enter the name of the account to tempban',
+          timePrompt: 'Enter the datetime when the ban expires (UTC time)'
+        },
+        tempmute: {
+          label: 'Tempmute a Player',
+          playerPrompt: 'Enter the name of the account to tempmute',
+          timePrompt: 'Enter the datetime when the mute expires (UTC time)'
+        }
+      }
+    }
+  }
+} satisfies Translation;
+
+export default pl;

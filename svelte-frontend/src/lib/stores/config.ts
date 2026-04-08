@@ -1,16 +1,18 @@
 import { writable } from 'svelte/store';
 import { defaultGlobalConfig, defaultUserConfig, loadConfigFromStorage, saveConfigToStorage } from '../play';
-import type { GlobalConfig, GlobalToggles, UserConfig, UserToggles } from '../settingsSchema';
+import type { GlobalConfig, GlobalToggles, UserConfig, UserToggles } from '../config';
 
 // A hook receives the raw stored value (or `undefined` if the key was absent) and the game id.
 export type ConfigHook = (value: unknown, gameId: string) => void | Promise<void>;
 
-const _hooks = new Map<string, ConfigHook>();
+const _hooks = new Map<string, Set<ConfigHook>>();
 let _gameId = '';
 
 /** Register a side-effect hook that fires for a config key on init and on every update. */
 export function registerConfigHook(key: string, hook: ConfigHook): void {
-  _hooks.set(key, hook);
+  const hooks = _hooks.get(key) ?? new Set<ConfigHook>();
+  hooks.add(hook);
+  _hooks.set(key, hooks);
 }
 
 export const globalConfig = writable<GlobalConfig>({ ...defaultGlobalConfig });
@@ -25,14 +27,16 @@ export async function initConfig(gameId: string): Promise<void> {
   userConfig.set({ ...defaultUserConfig, ...stored });
 
   const pending: Promise<void>[] = [];
-  for (const [key, hook] of _hooks) {
-    try {
-      const result = hook(stored[key], gameId);
-      if (result instanceof Promise) {
-        pending.push(result.catch((err) => console.error(`configStore: hook error for "${key}"`, err)));
+  for (const [key, hooks] of _hooks) {
+    for (const hook of hooks) {
+      try {
+        const result = hook(stored[key], gameId);
+        if (result instanceof Promise) {
+          pending.push(result.catch((err) => console.error(`configStore: hook error for "${key}"`, err)));
+        }
+      } catch (err) {
+        console.error(`configStore: hook error for "${key}"`, err);
       }
-    } catch (err) {
-      console.error(`configStore: hook error for "${key}"`, err);
     }
   }
   await Promise.all(pending);
@@ -46,7 +50,7 @@ export function setGlobalSetting<K extends keyof GlobalConfig>(key: K, value: Gl
 }
 
 export function toggleGlobal<K extends GlobalToggles>(key: K) {
-  globalConfig.update(c => {
+  globalConfig.update((c) => {
     const val = !c[key];
     saveConfigToStorage(_gameId, { [key]: val });
     _runHook(key, val);
@@ -62,7 +66,7 @@ export function setUserSetting<K extends keyof UserConfig>(key: K, value: UserCo
 }
 
 export function toggleUser<K extends UserToggles>(key: K) {
-  userConfig.update(c => {
+  userConfig.update((c) => {
     const val = !c[key];
     saveConfigToStorage(_gameId, { [key]: val });
     _runHook(key, val);
@@ -80,14 +84,16 @@ export function setConfigValue(key: string, value: unknown): void {
 }
 
 function _runHook(key: string, value: unknown): void {
-  const hook = _hooks.get(key);
-  if (!hook) return;
-  try {
-    const result = hook(value, _gameId);
-    if (result instanceof Promise) {
-      result.catch((err) => console.error(`configStore: hook error for "${key}"`, err));
+  const hooks = _hooks.get(key);
+  if (!hooks?.size) return;
+  for (const hook of hooks) {
+    try {
+      const result = hook(value, _gameId);
+      if (result instanceof Promise) {
+        result.catch((err) => console.error(`configStore: hook error for "${key}"`, err));
+      }
+    } catch (err) {
+      console.error(`configStore: hook error for "${key}"`, err);
     }
-  } catch (err) {
-    console.error(`configStore: hook error for "${key}"`, err);
   }
 }

@@ -1,0 +1,1257 @@
+import type { BaseTranslation, Translation } from '../i18n-types';
+
+const eo = {
+  translationComplete: '1',
+  version: {
+    '2kki': {
+      label: 'Yume 2kki Versio {VERSION}',
+      substitutes: {
+        ' Patch ': ' Fliko ',
+        '?': '?'
+      }
+    }
+  },
+  ui: {
+    account: {
+      login: 'Ensaluti',
+      logout: 'Malkonektiĝi'
+    },
+    fontStyle: {
+      label: 'Tipara Fasono:',
+      values: {
+        style1: 'Fasono 1',
+        style2: 'Fasono 2',
+        style3: 'Fasono 3',
+        style4: 'Fasono 4',
+        style5: 'Fasono 5',
+        style6: 'Fasono 6',
+        style7: 'Fasono 7'
+      }
+    },
+    chatbox: {
+      location: 'Loko:&nbsp;',
+      nextLocation: 'Next Loc:&nbsp;',
+      immersionMode: 'Absorbiĝa Reĝimo',
+      reconnect: 'Rekonektiĝi',
+      tab: {
+        chat: 'Babilejo',
+        players: 'Ludantoj',
+        parties: 'Grupoj'
+      },
+      chat: {
+        tab: {
+          all: 'Ĉiuj',
+          map: 'Mapo',
+          global: 'Tutmondo',
+          party: 'Grupo'
+        },
+        nickname: {
+          header: 'Vi devas krei kromnomon, antaŭ ol vi povas babili.',
+          rule: {
+            maxLength: '* Maksimume 10 signoj',
+            alphanumeric: '* Nur literaj aŭ ciferaj signoj'
+          }
+        }
+      },
+      players: {
+        tab: {
+          map: 'Mapo',
+          friends: 'Amikoj',
+          party: 'Grupo'
+        }
+      }
+    },
+    instruction: {
+      translation: 'Tradukado Estas Necesa',
+      noGameLoc: '* Luda Traduko Estas Nedisponebla'
+    },
+    '2kki': {
+      hostedWithPermission: 'Gastigante kun permeso de la programistoj de Yume 2kki'
+    },
+    disclaimer: {
+      pendingApproval: 'Pending approval from developer/publisher',
+      hostedWithPermission: 'Hosted with permission from the developer(s)',
+      originalCreation: 'Original creation by the YNOproject community'
+    },
+    modal: {
+      common: {
+        save: 'Save',
+        apply: 'Apply'
+      },
+      confirm: {
+        ok: 'Konfirmi',
+        cancel: 'Nuligi'
+      },
+      login: {
+        title: 'Ensaluti',
+        fields: {
+          username: 'Uzantnomo',
+          password: 'Pasvorto'
+        },
+        submit: 'Sendi',
+        registerPrompt: 'Ĉu vi ne havas konton?&nbsp;',
+        register: 'Registriĝi'
+      },
+      register: {
+        title: 'Registriĝi',
+        fields: {
+          email: 'Retadreso',
+          username: 'Uzantnomo',
+          password: 'Pasvorto',
+          confirmPassword: 'Konfirmi Pasvorton'
+        },
+        submit: 'Sendi',
+        loginPrompt: 'Ĉu vi jam havas konton?&nbsp;',
+        login: 'Ensaluti'
+      },
+      settings: {
+        title: 'Agordoj',
+        fields: {
+          lang: 'Lingvo',
+          locationVisibility: {
+            label: 'Enluda Videbleco de Loko',
+            values: {
+              private: 'Privata',
+              friends: 'Amikoj',
+              public: 'Publika'
+            }
+          },
+          nametagMode: {
+            label: 'Nometikedoj',
+            values: {
+              none: 'Nenia',
+              classic: 'Klasika',
+              compact: 'Densa',
+              slim: 'Streta'
+            }
+          },
+          wikiLinkMode: {
+            label: 'Wiki Link Popup',
+            values: {
+              always: 'Always',
+              fullscreen: 'Fullscreen Only',
+              never: 'Never'
+            }
+          },
+          saveReminder: {
+            label: 'Ofto de Atentiligo por Konservi',
+            interval: {
+              minutes: '{{interval}} minutoj',
+              never: 'Neniam'
+            }
+          },
+          soundVolume: 'Sona Laŭteco',
+          musicVolume: 'Muzika Laŭteco',
+          togglePlayerSounds: 'Sonoj de Ludantoj',
+          toggleEnableBadgeHints: {
+            label: 'Badge Hints',
+            helpText:
+              "Badge hints become available once you have unlocked the 'Badge Collector Amulet EX' badge. When enabled, an icon will appear in the top right when you enter a location with at least one badge you haven't unlocked."
+          },
+          togglePlayBadgeHintSound: 'Play Badge Hint Sound',
+          toggleEnableExplorer: {
+            label: 'Yume 2kki Navigilo',
+            helpText:
+              'La Yume 2kki Navigilo integras la Yume 2kki Esplorilon kaj ebligas al vi vidi, kiujn lokojn konektas al via loko unuvide. Ĉi tiu funkcio treege influos vian sperton kun la ludo, kaj ni rekomendegas, ke vi esploru la plimulton de la ludo blinde antaŭ ol vi ŝaltos ĉi tiun funkcion. Vi devas esti ensalutinta por uzi la Yume 2kki Navigilon.'
+          },
+          toggleImmersionMode: {
+            label: 'Absorbiĝa Reĝimo',
+            helpText:
+              'Forigas ludantajn nombrilojn, tutmondan babilejon, kaj mapojn por doni al vi pli absorban ludadon'
+          },
+          timeTrialinfo: {
+            label: 'Tempoprovo'
+          },
+          toggleMobileControls: 'Montri Regilon de Poŝtelefono',
+          mobileControlsType: {
+            label: 'Speco de Regilo de Poŝtelefono',
+            default: 'D-Pad',
+            joystick: 'Glita Stirstango',
+            dpad: 'Glita D-Pad'
+          },
+          toggleLocationDisplay: 'Montri Lokon',
+          toggleRankings: 'Rangolisto',
+          togglePreloads: {
+            label: 'Antaŭŝargoj',
+            helpText:
+              'Antaŭŝargi ofte uzitajn ludhavaĵojn por certigi, ke ili estos disponeblaj kiam necese; bezonas reŝargi retejon'
+          },
+          toggleQuestionablePreloads: 'Antaŭŝargi Ekranfonojn de Komputilo',
+          toggleSchedules: 'Events',
+          unicodeFont: 'Alternate Font',
+          toggleSingleplayerMode: {
+            label: 'Singleplayer Mode',
+            helpText:
+              'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
+          }
+        },
+        blocklist: 'Listo de Blokitoj',
+        chatSettings: 'Babilejo',
+        screenshotSettings: 'Ekrankopioj',
+        notificationSettings: 'Sciigoj',
+        accountSettings: 'Konto',
+        engineSettings: 'Engine (F1)',
+        cacheSettings: 'Cache'
+      },
+      blocklist: {
+        title: 'Listo de Blokitoj',
+        empty: 'Via listo de blokitoj estas malplena'
+      },
+      chatSettings: {
+        title: 'Agordoj de Babilejo',
+        fields: {
+          toggleGameChat: {
+            label: 'Plustavolo de Enluda Babilejo',
+            global: 'Plustavolo de Tutmonda Babilejo',
+            party: 'Plustavolo de Grupa Babilejo'
+          },
+          toggleTabToChat: 'Premi Tab-Klavon por Babili',
+          togglePlayMentionSound: 'Ludi Sonon de Mencio',
+          chatHistoryLimit: {
+            values: {
+              '0': 'Senlima',
+              '25': '25',
+              '50': '50',
+              '100': '100',
+              '250': '250',
+              '500': '500',
+              '1000': '1000',
+              '2500': '2500'
+            }
+          },
+          mapChatHistoryLimit: {
+            label: 'Limo de Mapa Babileja Historio'
+          },
+          globalChatHistoryLimit: {
+            label: 'Limo de Tutmonda Babileja Historio'
+          },
+          partyChatHistoryLimit: {
+            label: 'Limo de Grupa Babileja Historio'
+          },
+          blurScreenshotEmbeds: 'Blur All Screenshots'
+        }
+      },
+      screenshotSettings: {
+        title: 'Agordoj de Ekrankopioj',
+        fields: {
+          autoDownloadScreenshots: 'Aŭtomate Elŝuti Ekrankopiojn',
+          screenshotResolution: {
+            label: 'Distingivo de Ekrapkopia Elŝutaĵo',
+            values: {
+              '1': '1x - 320x240',
+              '2': '2x - 640x480',
+              '3': '3x - 960x720',
+              '4': '4x - 1280x960'
+            }
+          }
+        }
+      },
+      notificationSettings: {
+        title: 'Agordoj de Sciigoj',
+        fields: {
+          toggleNotifications: 'Sciigoj',
+          screenPosition: {
+            label: 'Ekrana Loko',
+            values: {
+              bottomLeft: 'Malsupre Maldekstre',
+              bottomRight: 'Malsupre Dekstre',
+              topLeft: 'Supre Maldekstre',
+              topRight: 'Supre Dekstre'
+            }
+          },
+          system: {
+            label: 'Sistemo',
+            fields: {
+              siteUpdates: 'Retejon Ĝisdatigis',
+              error: 'Eraro Okazis',
+              pushNotifications: 'Desktop Notifications'
+            }
+          },
+          account: {
+            label: 'Konto',
+            fields: {
+              loggedIn: 'Ensalutis',
+              loggedOut: 'Malkonektiĝis',
+              passwordUpdate: 'Pasvorto Ŝanĝis'
+            }
+          },
+          players: {
+            label: 'Ludantoj',
+            fields: {
+              playerBlocked: 'Lundanton Blokis',
+              playerUnblocked: 'Lundanton Malblokis'
+            }
+          },
+          friends: {
+            label: 'Amikoj',
+            fields: {
+              add: 'Amikon Aldonis',
+              remove: 'Amikon Forigis',
+              accept: 'Amikiĝpeton Akceptis',
+              reject: 'Amikiĝpeton Malakceptis',
+              cancel: 'Amikiĝpeton Nuligis',
+              incoming: 'Envena Amikiĝpeto',
+              playerOnline: 'Amiko Enrete',
+              playerOffline: 'Amiko ne Enrete'
+            }
+          },
+          parties: {
+            label: 'Grupoj',
+            fields: {
+              create: 'Grupon Kreis',
+              update: 'Grupon Ŝanĝis',
+              join: 'Aliĝis al Grupo',
+              leave: 'Foriris el Grupo',
+              remove: 'Forigis el Grupo',
+              disband: 'Grupon Disigis',
+              playerJoin: 'Ludanto Aliĝis al Grupo',
+              playerLeave: 'Ludanto Foriris el Grupo',
+              playerOnline: 'Grupano Enrete',
+              playerOffline: 'Grupano ne Enrete',
+              kickPlayer: 'Forpelis Ludanton el Grupo',
+              transferPartyOwner: 'Promociis Ludanton al Grupestro'
+            }
+          },
+          events: {
+            label: 'Ekspedicioj',
+            fields: {
+              complete: 'Ekspedicion Finis',
+              freeComplete: 'Liberan Ekspedicion Finis',
+              vmComplete: 'Vendaŭtomaton Trovis',
+              listUpdated: 'Liston de Ekspedicioj Ĝisdatigis'
+            }
+          },
+          badges: {
+            label: 'Insignoj',
+            fields: {
+              badgeUnlocked: 'Insigno Malŝlosis'
+            }
+          },
+          timeTrials: {
+            label: 'Time Trials',
+            fields: {
+              goalReached: 'Goal Reached'
+            }
+          },
+          screenshots: {
+            label: 'Ekrankopioj',
+            fields: {
+              screenshotTaken: 'Faris Ekrankopion'
+            }
+          },
+          saveSync: {
+            label: 'Sinkronigo de Konservdatumoj',
+            fields: {
+              saveUploading: 'Alŝutas Konservdatumon',
+              saveUploaded: 'Konservdatumon Finis Alŝuti',
+              saveDownloading: 'Elŝutas Konservdatumon',
+              saveDownloaded: 'Konservdatumon Finis Elŝuti',
+              saveUpToDate: 'Konservdatumoj Estas Ĝisdataj',
+              saveCleared: 'Konservdatumon Forigis',
+              saveReminder: 'Atentiligo por Konservi'
+            }
+          },
+          schedules: {
+            label: 'Events',
+            fields: {
+              upcomingSchedules: 'Upcoming Events'
+            }
+          }
+        }
+      },
+      cacheSettings: {
+        title: 'Cache Settings',
+        clear: 'Clear',
+        fields: {
+          locationCache: 'Location Cache',
+          mapCache: 'Map Cache',
+          locationColorCache: 'Location Color Cache'
+        }
+      },
+      accountSettings: {
+        title: 'Agordoj de Konto',
+        fields: {
+          badge: 'Insigno',
+          changePassword: 'Ŝanĝi Pasvorton',
+          clearSaveSync: 'Forigi Sinkronigitajn Konservdatumojn'
+        }
+      },
+      password: {
+        title: 'Ŝanĝi Pasvorton',
+        fields: {
+          oldPassword: 'Malnova Pasvorto',
+          newPassword: 'Nova Pasvorto',
+          newConfirmPassword: 'Konfirmi Novan Pasvorton'
+        },
+        submit: 'Sendi'
+      },
+      badges: {
+        title: 'Insignoj',
+        manageBadgeGallery: 'Administri Insignan Galerion',
+        fields: {
+          unlockStatus: {
+            label: 'Malŝlosa Stato:&nbsp;',
+            values: {
+              '0': 'Ŝlosita(j)',
+              '1': 'Malŝlosita(j)',
+              all: 'Ĉiuj',
+              recentUnlock: 'Lastatempe Malŝlosita(j)'
+            }
+          },
+          sortOrder: {
+            label: 'Ordiga Ordo:&nbsp;',
+            values: {
+              default: 'Norma'
+            }
+          },
+          search: {
+            label: 'Serĉi:&nbsp;',
+            name: 'Nomo:',
+            location: 'Loko:'
+          }
+        }
+      },
+      badgeGallery: {
+        title: 'Administri Insignan Galerion',
+        badgeGalleryRowProgress: 'Sekva Vico-Pliboniĝo (IP)',
+        badgeGalleryColProgress: 'Sekva Kolumno-Pliboniĝo (Insignoj)',
+        removeMode: {
+          activate: 'Forigi Insignojn',
+          deactivate: 'Fini'
+        },
+        manageBadgePreset: 'Manage Presets'
+      },
+      badgePreset: {
+        title: 'Manage Badge Presets',
+        selectPreset: 'Select Preset',
+        presetName: 'Preset {{index}}'
+      },
+      save: {
+        title: 'Administri Konservdatumojn',
+        reload: 'Konservi Ŝanĝojn kaj Reŝargi',
+        info: 'Por importado de konservoj, se vi lastafoje konservis dum uzante tradukon per RPG_RT, la ludo montros erarojn ĝis vi konservos denove per EasyRPG sen aktiva traduko.'
+      },
+      uiTheme: {
+        title: 'Fasada Etoso',
+        auto: 'AŬTOMATA'
+      },
+      createParty: {
+        title: {
+          create: 'Krei Grupon',
+          update: 'Ŝanĝi Grupon'
+        },
+        fields: {
+          partyName: 'Nomo de Grupo',
+          description: 'Priskribo',
+          public: 'Publika',
+          password: 'Pasvorto',
+          theme: 'Etoso'
+        },
+        showPassword: 'Montri Pasvorton',
+        hidePassword: 'Kaŝi Pasvorton',
+        submit: 'Sendi'
+      },
+      joinPrivateParty: {
+        title: 'Aliĝi al Privata Grupo',
+        fields: {
+          password: 'Pasvorto'
+        },
+        showPassword: 'Montri Pasvorton',
+        hidePassword: 'Kaŝi Pasvorton',
+        incorrectPassword: 'Malĝusta Pasvorto: Bonvolu provi denove.',
+        submit: 'Sendi'
+      },
+      events: {
+        title: 'Ekspedicioj',
+        rankExp: 'Sekva Rango',
+        weekExp: 'ExP Ĉi-semajne',
+        tabs: {
+          locations: 'Lokoj',
+          vms: 'Vendaŭtomato por Trovi'
+        }
+      },
+      rankings: {
+        title: 'Rangolisto',
+        player: 'Player'
+      },
+      screenshot: {
+        title: 'Via Ekrankopio',
+        download: 'Elŝuti',
+        save: 'Konservi al Miaj Ekrankopioj',
+        share: 'Share in Chat'
+      },
+      myScreenshots: {
+        title: 'Miaj Ekrankopioj',
+        screenshotSlotProgress: 'Next Slot Upgrade (IP)',
+        empty: 'Vi ne havas konservitajn ekrankopiojn.'
+      },
+      communityScreenshots: {
+        title: 'Komunumaj Ekrankopioj',
+        scrollToRefresh: 'Rulumi Supren por Reŝargi',
+        fields: {
+          game: {
+            label: 'Ludo:&nbsp;',
+            values: {
+              all: 'Ĉiuj'
+            }
+          },
+          sortOrder: {
+            values: {
+              recent: 'Plej Novaj',
+              likes: 'Plej Ŝatataj'
+            }
+          },
+          interval: {
+            values: {
+              day: 'Hodiaŭ',
+              week: 'Ĉi-semajne',
+              month: 'Ĉi-monate',
+              year: 'Ĉi-jare',
+              all: 'Ĉiame'
+            }
+          }
+        }
+      },
+      schedule: {
+        title: 'Events',
+        ongoing: 'Ongoing Events',
+        party: 'Party Events',
+        future: 'Future Events',
+        official: 'Official Events',
+        noResults: 'No events have been scheduled.',
+        doSchedule: 'Schedule an Event'
+      },
+      scheduleEdit: {
+        title: 'Edit Event',
+        save: 'Save',
+        cancel: 'Cancel Event',
+        fields: {
+          name: 'Event Name',
+          description: 'Description',
+          datetime: 'Event Date and Time',
+          recurring: 'Recurring Event',
+          theme: 'Etoso',
+          interval: {
+            title: 'Interval',
+            days: 'days',
+            months: 'months',
+            years: 'years'
+          },
+          restrictParty: 'Limit to Party',
+          official: 'Official Event',
+          resetOrganizer: 'Reset Organizer',
+          platforms: {
+            title: 'External Links',
+            discord: 'Discord',
+            youtube: 'YouTube',
+            twitch: 'Twitch',
+            niconico: 'Nicovideo',
+            openrec: 'Openrec',
+            bilibili: 'Bilibili'
+          }
+        }
+      },
+      report: {
+        title: 'Report',
+        submit: 'Submit',
+        fields: {
+          reason: {
+            '1': 'Slurs, harmful or inappropriate language',
+            '2': 'Harassment, bullying, stalking',
+            '3': 'Inappropriate names',
+            '4': 'Ban evasion',
+            '5': 'Cheating, abusing exploits',
+            '6': 'Underage player',
+            '7': 'Spam',
+            title: 'Reason',
+            placeholder: 'Custom reason (max 50 characters)',
+            other: 'Other (specify)'
+          }
+        }
+      },
+      rules: {
+        title: 'Reguloj',
+        rule1: 'Bonvolu esti respektema kaj ĝentila.',
+        rule2: 'Ne diskutu 18+ temojn (NSFW, gore, ktp.).',
+        rule3: 'Ne diskutu politikon.',
+        rule4: 'Ne diru flamigajn komentojn (inkluzive de insultoj).',
+        rule5: 'Ne trompu ial ajn.',
+        rule6: 'Se estas problemoj, bonvolu sciigi la kontrolantojn.'
+      },
+      explorerUndiscoveredLocations: {
+        title: 'Nemalkovritaj Lokoj',
+        complete: 'Vi malkovris ĉiujn disponeblajn lokojn! Gratulon!!'
+      },
+      locations: {
+        title: 'Lokoj',
+        fields: {
+          visited: {
+            values: {
+              all: 'All',
+              visited: 'Visited',
+              unvisited: 'Unvisited'
+            }
+          },
+          sortOrder: {
+            values: {
+              newest: 'Newest',
+              oldest: 'Oldest',
+              shallowest: 'Shallowest',
+              deepest: 'Deepest',
+              alpha: 'Alphabetical',
+              players: 'Player Count'
+            }
+          }
+        }
+      }
+    },
+    tooltips: {
+      togglePrivateMode: 'Baskuligi Privatan Reĝimon',
+      save: 'Administri Konservdatumojn',
+      uiTheme: 'Fasada Etoso',
+      toggleChat: 'Baskuligi Babilejon',
+      toggleExplorer: 'Baskuligi Yume 2kki Navigilon',
+      screenshot: 'Fari Ekrankopion',
+      myScreenshots: 'Miaj Ekrankopioj',
+      settings: 'Agordoj',
+      toggleMute: 'Baskuligi Silenton',
+      toggleHideLocation: 'Toggle Location Sharing',
+      toggleGlobalMessage: 'Baskuligi Tutmondan Babiladon',
+      chat: {
+        toggleNextLocation: 'Show/Hide Next Expedition Location',
+        toggleGlobalMessageLocations: 'Montri/Kaŝi Lokojn de Babilmesaĝoj',
+        toggleMessageTimestamps: 'Montri/Kaŝi Tempindikojn de Babilmesaĝoj',
+        filterMentions: 'Show Mentions Only',
+        clearChat: 'Forigi Babilejon'
+      },
+      parties: {
+        createParty: 'Krei Grupon',
+        disbandParty: 'Disigi Grupon'
+      },
+      events: 'Ekspedicioj',
+      locations: 'Lokoj',
+      communityScreenshots: 'Komunumaj Ekrankopioj',
+      rankings: 'Rangolisto',
+      schedules: 'Events',
+      nexus: 'Reen al la Pordejo',
+      explorerUndiscoveredLocations: 'Vidigi Nemalkovritajn Lokojn',
+      timeTrial:
+        'Por ŝalti Tempoprovo-reĝimon, premtenu la majuskligan klavon kaj la dekstran klavon post komenci novan ludon kaj antaŭ ol io aperos ekrane.',
+      mobileControlsType:
+        'Alternativoj al la norma D-Pad speco de regilo.<br>Glitaj specoj de regilo nur estas disponebla per poŝtelefono en plenekrana reĝimo.'
+    },
+    placeholders: {
+      scheduleDescription:
+        'Markdown syntax is accepted, use {\\{l:World,optional link name}} to insert a link to yume.wiki'
+    },
+    reviewRules: 'Montri Regulojn'
+  },
+  messages: {
+    games: {
+      ynoproject: 'YNOproject',
+      yume: 'Yume Nikki',
+      '2kki': 'Yume 2kki',
+      unconscious: 'Collective Unconscious',
+      flow: '.flow',
+      fog: 'FOG',
+      prayers: 'Answered Prayers',
+      deepdreams: 'Deep Dreams',
+      someday: 'Someday',
+      amillusion: 'Amillusion',
+      unevendream: 'Uneven Dream',
+      braingirl: 'Braingirl',
+      muma: 'Muma|Rope',
+      genie: 'Dream Genie',
+      mikan: 'Mikan Muzou',
+      ultraviolet: 'Ultra Violet',
+      sheawaits: 'She Awaits',
+      oneshot: 'OneShot',
+      oversomnia: 'Oversomnia',
+      tsushin: 'Yume Tsushin',
+      nostalgic: 'nostAlgic',
+      if: 'If',
+      unaccomplished: 'Unaccomplished'
+    },
+    leavePage: 'Ĉu vi certas, ke vi volas foriri ĉi-retejon? Vi perdos ĉiun nekonservitan progresadon.',
+    logout: 'Ĉu vi certas, ke vi volas malkonektiĝi?',
+    loadingInstruct:
+      'Ŝajnas, ke la retejon ŝargas delonge; se ĉi-problemo ne solviĝos, tiam vi premu CTRL+F5 aŭ forigu la kaŝmemoron de via retumilo (sed ne kuketojn!). Vi povas kontroli la konzolon per la F12 klavo por vidi erarojn.',
+    requestNotifications: 'Receive notifications for followed events and expedition refreshes?',
+    connStatus: {
+      '0': 'Nekonektita',
+      '1': 'Konektita',
+      '2': 'Konektas...',
+      '3': 'Privata Reĝimo',
+      '4': 'Singleplayer'
+    },
+    lastOnline: {
+      template: 'Laste enrete\nantaŭ {INTERVAL}',
+      longTime: 'Antaŭ longe',
+      interval: {
+        short: 'malpli ol 1 minuto',
+        minutes: {
+          singular: '{VALUE} minuto',
+          plural: '{VALUE} minutoj'
+        },
+        hours: {
+          singular: '{VALUE} horo',
+          plural: '{VALUE} horoj'
+        },
+        days: {
+          singular: '{VALUE} tago',
+          plural: '{VALUE} tagoj'
+        }
+      }
+    },
+    location: {
+      template: '{LOCATION}',
+      queryingLocation: 'Informpetas Lokon...',
+      unknownLocation: 'Nekonata Loko',
+      '2kki': {
+        template: '{LOCATION}'
+      },
+      connType: {
+        '1': 'One-Way',
+        '2': 'No Entry',
+        '4': 'Unlock',
+        '8': 'Locked',
+        '16': 'Dead End',
+        '32': 'Isolated',
+        '64': 'Requires Effect ({PARAMS})',
+        '128': '{PARAMS} Chance',
+        '256': '{PARAMS}',
+        '512': 'Shortcut',
+        '1024': 'Exit Point',
+        '2048': 'Seasonal ({PARAMS})'
+      },
+      depth: ' ({DEPTH})',
+      playing: 'Ludas {GAME}'
+    },
+    locationDisplay: {
+      template: '{LOCATION}',
+      '2kki': {
+        template: '{LOCATION}'
+      }
+    },
+    playersOnline: {
+      singular: '{COUNT} Enreta Ludanto',
+      plural: '{COUNT} Enretaj Ludantoj'
+    },
+    playersInMap: {
+      singular: '{COUNT} Ludanto en Mapo',
+      plural: '{COUNT} Ludantoj en Mapo'
+    },
+    playerList: {
+      unnamed: 'Sennoma Ludanto',
+      muted: 'Silentigita',
+      actions: {
+        approveFriend: 'Akcepti Amikiĝpeton',
+        rejectFriend: 'Malakcepti Amikiĝpeton',
+        cancelFriend: 'Nuligi Amikiĝpeton',
+        partyKick: 'Forpeli el Grupo',
+        transferPartyOwner: 'Promocii al Grupestro'
+      }
+    },
+    roles: {
+      mod: 'Kontrolanto',
+      dev: 'Programisto'
+    },
+    timestamp: {
+      time: '{TIME}',
+      timeAndWeekday: '{TIME} ({WEEKDAY})'
+    },
+    context: {
+      ping: {
+        label: 'Mencii je {PLAYER}'
+      },
+      addFriend: {
+        label: 'Amikiĝi {PLAYER}'
+      },
+      removeFriend: {
+        label: 'Eksamikiĝi {PLAYER}'
+      },
+      block: {
+        label: 'Bloki je {PLAYER}',
+        confirm: 'Ĉu vi certas, ke vi volas bloki je {PLAYER}?'
+      },
+      unblock: {
+        label: 'Malbloki je {PLAYER}',
+        confirm: 'Ĉu vi certas, ke vi volas malbloki je {PLAYER}?'
+      },
+      report: {
+        label: 'Report {PLAYER}'
+      },
+      admin: {
+        ban: {
+          label: 'Forbari je {PLAYER}',
+          confirm: 'Ĉu vi certas, ke vi volas forbari je {PLAYER}?',
+          success: '{PLAYER} estis forbarita.'
+        },
+        unban: {
+          label: 'Malforbari je {PLAYER}',
+          confirm: 'Ĉu vi certas, ke vi volas malforbari je {PLAYER}?',
+          success: '{PLAYER} estis malforbarita.'
+        },
+        mute: {
+          label: 'Silentigi je {PLAYER}',
+          confirm: 'Ĉu vi certas, ke vi volas silentigi je {PLAYER}?',
+          success: '{PLAYER} estis silentigita.'
+        },
+        unmute: {
+          label: 'Malsilentigi je {PLAYER}',
+          confirm: 'Ĉu vi certas, ke vi volas malsilentigi je {PLAYER}?',
+          success: '{PLAYER} estis malsilentigita.'
+        },
+        grantBadge: {
+          label: 'Doni Insignon',
+          prompt: 'Entajpi la insignan identigilon por doni al {PLAYER}.',
+          success: '{BADGE} sukcese donis al {PLAYER}.',
+          fail: 'Neniu insigno troviĝis kun la entajpita insigna identigilo.'
+        },
+        revokeBadge: {
+          label: 'Revoki Insignon',
+          prompt: 'Entajpi la insignan identigilon por revoki el {PLAYER}.',
+          success: '{BADGE} sukcese revokis el {PLAYER}.',
+          fail: 'Neniu insigno troviĝis kun la entajpita insigna identigilo.'
+        },
+        tempban: {
+          label: 'Tempban {PLAYER}',
+          prompt: 'When to unban {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempbanned.'
+        },
+        tempmute: {
+          label: 'Tempmute {PLAYER}',
+          prompt: 'When to unmute {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempmuted.'
+        }
+      }
+    },
+    account: {
+      login: {
+        errors: {
+          invalidLogin: 'Uzantnomo aŭ pasvorto estas malĝusta.'
+        }
+      },
+      register: {
+        errors: {
+          confirmPasswordMismatch: 'La entajpitaj pasvortoj ne estas la samaj.',
+          invalidCredentials: 'Uzantnomo aŭ pasvorto entajpitaj estas malplenaj aŭ havas nevalidajn signojn.',
+          emailTaken: 'La entajpita retadreso jam estas uzata.',
+          usernameTaken: 'La entajpita uzantnomo jam estas uzata.'
+        }
+      },
+      password: {
+        errors: {
+          confirmPasswordMismatch: 'La entajpitaj novaj pasvortoj ne estas la samaj.',
+          badLogin: 'Ensaluta pasvorto estas malĝusta.',
+          internalServerError: 'Eraro okazis: bonvolu reprovi poste.'
+        }
+      }
+    },
+    chat: {
+      globalMessage: 'Tutmonda Mesaĝo'
+    },
+    friends: {
+      friend: 'Amiko',
+      categories: {
+        incoming: 'Envena - {COUNT}',
+        outgoing: 'Elira - {COUNT}',
+        online: 'Enreta - {COUNT}',
+        offline: 'Ne Enreta - {COUNT}'
+      }
+    },
+    parties: {
+      emptyMessage: 'Ne estas aktivaj grupoj nuntempe.',
+      yourParty: 'Via Grupo',
+      defaultPartyName: 'La Grupo de {OWNER}',
+      partyOwner: 'Grupestro',
+      confirmDisband: 'Ĉu vi certas, ke vi volas disigi vian grupon? Ĉi tiu ago ne povas esti malfarita.',
+      confirmTransferPartyOwner: 'Ĉu vi certas, ke vi volas transdoni la proprieton de la grupo al {PLAYER}?',
+      offlineMemberSuffix: 'Grupano ne enreta',
+      categories: {
+        online: 'Enrete - {COUNT}',
+        offline: 'Ne Enrete - {COUNT}'
+      },
+      actions: {
+        viewPartyDetails: 'Vidigi Detalojn de Grupo',
+        joinParty: 'Aliĝi al Grupo',
+        joinPrivateParty: 'Aliĝi al Privata Grupo',
+        leaveParty: 'Foriri el Grupo'
+      }
+    },
+    chatTips: {
+      template: 'KONSILETO: {CONTENT}',
+      tips: {
+        backupReminder:
+          'Ni rekomendas, ke vi faru lokan sekurkopion de via progreso, ofte elŝutante vian konservdatumojn. Tiel, se la datumojn de via retumilo forigas, vi ne perdos vian progreson.',
+        menuTheme: 'Via noma koloro kaj fasono en ludantolistoj estas bazita sur via enluda menua etoso.',
+        playersInMap:
+          'Vi povas ŝanĝi inter kiom da ludantoj estas enretaj kaj kiom da ludantoj estas en via mapo, alklakante la etikedon.',
+        markdownSupport:
+          'La babilejo subtenas tekstaranĝon, envolvante tekston per specifaj signoj. Nuntempe subtenataj aranĝoj estas: **grasa** (\\*\\*teksto\\*\\*), *kursiva* (\\*teksto\\*, \\_teksto\\_), __substrekita__ (\\_\\_teksto\\_\\_), ~~trastreka~~ (\\~\\~teksto\\~\\~), kaj ||intrigmalkoŝa|| (\\|\\|teksto\\|\\|).',
+        tabToChat:
+          "Se vi ludas per komputilo, vi povas premi la tab-klavon por ŝanĝi inter la ludo kaj la babilejo. Vi povas malŝalti ĉi tiun funkcion en la Agordoj de Babilejo laŭ 'Premi Tab-Klavon por Babili'.",
+        chatTabNotifications:
+          "Kiam vi estas en babileja langeto krom 'Ĉiuj', se novajn mesaĝojn sendis en alia filtrata langeto, la etikedo de tiu langeto iĝos grasa, por sciigi vin.",
+        clearChat:
+          "Se vi alklakas la butonon 'Forigi Babilejon' supre dekstre de la babilejo, kaj vi ne estas en la langeto 'Ĉiuj', nur la mesaĝojn de via nuna langeto forigos.",
+        chatHistoryLimit:
+          'Se via babileja historio fariĝas tro longa, vi eble alfrontos rendimentajn problemojn. En la Agordoj de Babilejo, vi povas limigi vian babilejan historion, por eviti ĉi tiujn problemojn, sen devi permane forigi la babilejon.',
+        parties:
+          'Grupoj estas brila maniero kuniĝi kun homoj dum aventuro. Vi povas vidi la lokojn de viaj grupanoj kaj paroli kun ili per privata babilejo.',
+        immersionMode:
+          'Se vi preferas pli absorbiĝan ludadon anstataŭ socian, provu Absorbiĝan Reĝimon. Ĝi forigos tutmondan babilejon, la ludantoliston kaj ludantajn nombrilojn por pliinteresigi la ludon, kiam vi trovos alian ludanton dum esplorado.',
+        friendsMenu:
+          'Dekstre alklakante per komputilo, aŭ tuŝadante per poŝtelefono la nomon de ludanto ekster la rangolisto, aperos dialogujo, ebligante vin sendi amikiĝpeton, mencii aŭ bloki la ludanton.',
+        easySettingsMenu:
+          'Se vi ludas per komputilo, vi povas premi la F1 klavon dum ludado por malfermi la menuon de agordoj, ebligante vin ŝanĝi klavkomandojn kaj aliajn agordojn.',
+        floatingControls:
+          "If you're playing on a touchscreen device and don't like the default controls, try the floating styles of controls available from the Mobile Controls Type in Settings.",
+        recentBadges:
+          'Accidentally dismissed a badge unlock notification? You can always review badges unlocked in the current session by selecting Recently Unlocked in the Badges listing.',
+        desktopHotkeys:
+          "If you're playing on a PC, Alt+Enter can also toggle fullscreen mode, F7 by default takes a screenshot of the game, and the T key opens the in-game chat input.",
+        badgeControls:
+          'In the Badge Gallery menu, you can drag and drop badges to rearrange them, or quickly remove many badges at once using the Remove Badges mode.',
+        cacheSettings:
+          'Having trouble with location completion or outdated maps? The Cache menu allows you to clear the relevant cache and retrieve the latest data.',
+        openSource:
+          'YNOproject estas malfermitkoda kaj la kodaj deponejoj estas haveblaj en https://github.com/ynoproject/'
+      }
+    },
+    save: {
+      slot: {
+        title: 'Dosiero {SLOT_ID}',
+        readingLabel: 'Legas Dosieron...',
+        emptyLabel: 'Malplena',
+        errorLabel: 'Erara'
+      },
+      upload: {
+        tooltip: 'Alŝuti Konservdosieron',
+        invalidSaveFile: 'Bonvolu elekti validan konservdosieron (.lsd dosierformo).'
+      },
+      download: {
+        tooltip: 'Elŝuti Konservdosieron',
+        emptySlot: 'Aĥ! Ŝajnas, ke la konservdosiero de ĉi tiu loko estas malplena.'
+      },
+      delete: {
+        tooltip: 'Forigi Konservdosieron',
+        confirmDelete: 'Ĉu vi certas, ke vi volas forigi la konservdatumojn de dosiero {SLOT_ID}?'
+      }
+    },
+    saveSync: {
+      confirmClearSaveSync:
+        'Ĉu vi certas, ke vi volas forigi viajn Sinkronigitajn Konservdatumojn por ĉi tiu ludo? Ĉi tiu ago ne povas esti malfarita krom se vi havas lokan kopion de viaj konservdatumoj.'
+    },
+    toast: {
+      system: {
+        siteUpdates: 'La retejon ĝisdatigis. Reŝargi la retejon por ricevi la plej novajn ŝanĝojn.',
+        error:
+          "Aĥ! Ŝajnas, ke estis problemo. Vidu la retumilan konzolon por detaloj. Por malfermi la konzolon, premu la F12 klavon aŭ dekstre alklaku kaj alklaku 'Inspekti'."
+      },
+      account: {
+        loggedIn: 'Vi ensalutis kiel {USER}.',
+        loggedOut: 'Vi malkonektiĝis.',
+        passwordUpdated: 'Vian pasvorton ŝanĝis sukcese.'
+      },
+      players: {
+        playerBlocked: '{PLAYER} estis blokita.',
+        playerUnblocked: '{PLAYER} estis malblokita.'
+      },
+      friends: {
+        add: 'Vi sendis amikiĝpeton al {PLAYER}.',
+        remove: 'Vi forigis je {PLAYER} el viaj amikoj.',
+        accept: 'La amikiĝpeton de {PLAYER} akceptis.',
+        reject: 'La amikiĝpeton de {PLAYER} malakceptis.',
+        cancel: 'Via amikiĝpeton al {PLAYER} nuligis.',
+        incoming: 'Vi havas novan amikiĝpeton el {PLAYER}.',
+        playerOnline: '{PLAYER} nune estas enreta.',
+        playerOffline: '{PLAYER} nune ne estas enreta.'
+      },
+      parties: {
+        create: '{PARTY} estis kreita.',
+        update: '{PARTY} estis ŝanĝita.',
+        join: 'Vi aliĝis al {PARTY}.',
+        leave: 'Vi foriris el {PARTY}.',
+        remove: 'Vin forigis el {PARTY}.',
+        disband: '{PARTY} estis disigita.',
+        playerJoin: '{PLAYER} aliĝis al la grupo.',
+        playerLeave: '{PLAYER} foriris el la grupo.',
+        playerOnline: '{PLAYER} nune estas enreta.',
+        playerOffline: '{PLAYER} nune ne estas enreta.',
+        kickPlayer: '{PLAYER} estis forpelita el la grupo.',
+        transferPartyOwner: '{PLAYER} estis promociita al grupestro.'
+      },
+      events: {
+        complete: 'Ekspedicio Finiĝis!\nPor vizitado de {LOCATION}, vi estas premiita {EXP}.',
+        freeComplete: 'Ekspedicio Finiĝis! Vi vizitis je {LOCATION}.',
+        vmComplete: 'Vendaŭtomaton Trovis!\n Vi estas premiita {EXP}.',
+        listUpdated: 'La liston de ekspedicioj ĝisdatigis.'
+      },
+      badges: {
+        badgeUnlocked: 'Vi malŝlosis novan insignon!'
+      },
+      screenshots: {
+        screenshotTaken: 'Ekrankopion faris, alklaku por konservi.'
+      },
+      saveSync: {
+        saveUploading: 'Alŝutas konservdatumojn el loko {SLOT}...',
+        saveUploaded: 'Viajn konservdatumojn el loko {SLOT} alŝutis.',
+        saveDownloading: 'Ĝisdatigas konservdatumojn en loko {SLOT}...',
+        saveDownloaded: 'Konservan lokon {SLOT} ĝisdatigis sukcese.',
+        saveUpToDate: 'Konservdatumoj estas ĝisdataj.',
+        saveCleared: 'Sinkronigitajn Konservdatumojn forigis. Ĉi tiu ago ne influos konservojn en iuj aliaj aparatoj.',
+        saveReminder:
+          'Memoru konservi ofte kaj faru lokan sekurkopion de viaj konservdosieroj por ne perdi vian progreson.'
+      },
+      timeTrials: {
+        timeTrialsComplete: 'Goal! {CATEGORY} completed in {TIME}.'
+      }
+    },
+    events: {
+      exp: '{POINTS} ExP',
+      expRank: 'Rango: {RANK}',
+      period: 'Sezono {ORDINAL}',
+      periodEnds: 'Finiĝos je {DATE}',
+      current: 'Nuna',
+      shortcut: 'Atingeblas tra malŝlosebla ŝparvojo',
+      toggleTracked: 'Toggle Location Tracking',
+      availableUntilDate: 'Disponebla Ĝis\n{DATE}',
+      types: {
+        '0': 'Tage',
+        '1': 'Semajne',
+        '2': 'Semajnfine',
+        '3': 'Speciala',
+        '-1': 'Libera Ekspedicio'
+      },
+      expRanks: {
+        '0': 'Novulo',
+        '1': 'Intermeza',
+        '2': 'Bronza',
+        '3': 'Arĝenta',
+        '4': 'Ora',
+        '5': 'Platena',
+        '6': 'Diamanta'
+      }
+    },
+    badges: {
+      null: 'Neniu Insigno',
+      allCategory: 'Ĉiuj',
+      badgeTitle: '{TITLE} - {BP} IP',
+      locked: '???',
+      location: 'Loko:&nbsp;',
+      goalProgress: '{CURRENT}/{TOTAL}',
+      percentUnlocked: '{PERCENT}% el ludantoj havas ĉi tiun insignon',
+      time: '{MINUTES}:{SECONDS}',
+      artCredit: 'Arto de {ARTIST}',
+      search: {
+        modifier: {
+          template: '&nbsp;({MODIFIER})',
+          exactMatch: 'Exact Match'
+        }
+      },
+      sortOrder: {
+        template: '{TYPE} ({ORDER})',
+        types: {
+          bp: 'IP',
+          percent: 'Procento Malŝlosita'
+        },
+        asc: 'Kreskanta',
+        desc: 'Malkreskanta'
+      }
+    },
+    badgeGallery: {
+      label: 'Insigna Galerio de {PLAYER}',
+      loading: 'Ŝargas...',
+      bp: '{BP} IP',
+      count: '{COUNT} Insignoj',
+      empty: 'Badge gallery not set'
+    },
+    badgePreset: {
+      empty: 'This preset is empty.'
+    },
+    rankings: {
+      categories: {
+        badgeCount: {
+          label: 'Insignoj',
+          valueLabel: '# da Insignoj',
+          value: '{NUMBER}'
+        },
+        bp: {
+          label: 'IP (Insignaj Poentoj)',
+          valueLabel: 'IP',
+          value: '{NUMBER} IP'
+        },
+        exp: {
+          label: 'ExP',
+          valueLabel: 'ExP',
+          value: '{NUMBER} ExP'
+        },
+        eventLocationCount: {
+          label: 'Ekspedicioj',
+          valueLabel: '# da Ekspedicioj',
+          value: '{NUMBER}'
+        },
+        freeEventLocationCount: {
+          label: 'Liberaj Ekspedicioj',
+          valueLabel: '# da Ekspedicioj',
+          value: '{NUMBER}'
+        },
+        eventLocationCompletion: {
+          label: 'Ekspedicioj Finitaj',
+          valueLabel: 'Finita',
+          value: '{PERCENT}%'
+        },
+        eventVmCount: {
+          label: 'Vendaŭtomato por Trovi',
+          valueLabel: '# da Vendaŭtomatoj',
+          value: '{NUMBER}'
+        },
+        timeTrial: {
+          label: 'Tempoprovoj',
+          valueLabel: 'Finita Tempo',
+          value: '{MINUTES}:{SECONDS}'
+        },
+        minigame: {
+          label: 'Ludetoj',
+          valueLabel: 'Poentaro',
+          value: '{NUMBER}'
+        }
+      },
+      subCategories: {
+        '2': 'Ĉiuj Efikoj',
+        all: 'Ĉiuj',
+        nasu: 'NASU',
+        rby: 'Ruĝa Blua Flava (Ludeto B)',
+        rby_ex: 'Ruĝa Blua Flava (Ludeto B) - Versio EX',
+        fuji_ex: 'FUJI EX',
+        hozo: 'HOZO',
+        cartoonboy: 'Karikatura Knabo',
+        ta_be: 'TA_BE_',
+        ta_be_hardcore: 'TA_BE_ - Malfacila Reĝimo',
+        panerabbit: 'PANErabbit'
+      }
+    },
+    locations: {
+      author: 'By {AUTHOR}',
+      versionAdded: 'Added {VERSION}',
+      versionUpdated: 'Updated {VERSION}',
+      track: {
+        tooltip: {
+          on: 'Track Location',
+          off: 'Untrack Location'
+        }
+      }
+    },
+    screenshots: {
+      playerScreenshot: 'Ekrankopio de {USER}',
+      limit: '{COUNT}/{LIMIT} Lokoj Uzitaj',
+      public: {
+        tooltip: {
+          on: 'Publikigi',
+          off: 'Privatigi'
+        }
+      },
+      spoiler: {
+        label: 'Intrigmalkoŝo',
+        tooltip: {
+          on: 'Aldoni Intrigmalkoŝan Etikedon',
+          off: 'Forigi Intrigmalkoŝan Etikedon'
+        }
+      },
+      like: {
+        tooltip: {
+          on: 'Ŝati',
+          off: 'Ne plu Ŝati'
+        }
+      },
+      delete: {
+        tooltip: 'Forigi',
+        confirm: 'Ĉu vi certas, ke vi volas forigi ĉi tiun ekrankopion?'
+      }
+    },
+    schedules: {
+      organizer: 'Organized by&nbsp;{NAME}',
+      invalidPlatformLink: 'Platform must have a valid URL',
+      confirmCancel: 'Are you sure you want to cancel this event?',
+      wrongEditGame: 'Cannot edit outside of {GAME}',
+      platforms: {
+        discord: 'Discord',
+        youtube: 'YouTube',
+        twitch: 'Twitch',
+        niconico: 'Nicovideo',
+        openrec: 'Openrec',
+        bilibili: 'Bilibili'
+      },
+      intervals: {
+        perDay: 'Every day',
+        days: 'Every {INTERVAL} days',
+        perWeek: 'Every {WEEKDAY}',
+        weeks: 'Every {INTERVAL} weeks',
+        perMonth: 'Every month',
+        months: 'Every {INTERVAL} months',
+        perYear: 'Every year',
+        years: 'Every {INTERVAL} years'
+      }
+    },
+    '2kki': {
+      explorerLink: {
+        generic: 'Vidi en Yume 2kki Esplorilo',
+        multi: 'Vidi je {LOCATION} en Yume 2kki Esplorilo'
+      }
+    },
+    modSettings: {
+      title: 'Agordoj de Kontrolanto',
+      actions: {
+        resetPassword: {
+          label: 'Restarigi Pasvorton',
+          playerPrompt: 'Entajpi la nomon de la konto por restarigi la pasvorton de tiu konto',
+          success: 'La nova pasvorto de {PLAYER} estas {PASSWORD}'
+        },
+        changeUsername: {
+          label: 'Ŝanĝi Uzantnomon',
+          playerPrompt: 'Entajpi la nomon de la konto por ŝanĝi la uzantnomon de tiu konto',
+          namePrompt: 'Entajpi la novan uzantnomon de {PLAYER}',
+          success: 'Uzantnomo de {PLAYER} estis ŝanĝita al {NAME}',
+          error: 'Malsukcesis ŝanĝi uzantnomon de {PLAYER}; la entajpita nomo eble jam estas uzata'
+        },
+        ban: {
+          label: 'Forbari Ludanton',
+          playerPrompt: 'Entajpi la nomon de la konto por forbari'
+        },
+        unban: {
+          label: 'Malforbari Ludanton',
+          playerPrompt: 'Entajpi la nomon de la konto por malforbari'
+        },
+        mute: {
+          label: 'Silentigi Ludanton',
+          playerPrompt: 'Entajpi la nomon de la konto por silentigi'
+        },
+        unmute: {
+          label: 'Malsilentigi Ludanton',
+          playerPrompt: 'Entajpi la nomon de la konto por malsilentigi'
+        },
+        grantBadge: {
+          label: 'Doni Insignon',
+          playerPrompt: 'Entajpi la nomon de la konto por doni la insignon al tiu konto'
+        },
+        revokeBadge: {
+          label: 'Revoki Insignon',
+          playerPrompt: 'Entajpi la nomon de la konto por revoki la insignon el tiu konto'
+        },
+        tempban: {
+          label: 'Tempban a Player',
+          playerPrompt: 'Enter the name of the account to tempban',
+          timePrompt: 'Enter the datetime when the ban expires (UTC time)'
+        },
+        tempmute: {
+          label: 'Tempmute a Player',
+          playerPrompt: 'Enter the name of the account to tempmute',
+          timePrompt: 'Enter the datetime when the mute expires (UTC time)'
+        }
+      }
+    }
+  }
+} satisfies Translation;
+
+export default eo;

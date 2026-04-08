@@ -1,0 +1,1260 @@
+import type { BaseTranslation, Translation } from '../i18n-types';
+
+const ru = {
+  translationComplete: '0',
+  version: {
+    '2kki': {
+      label: 'Yume 2kki Версия {VERSION}',
+      substitutes: {
+        ' Patch ': ' Патч № ',
+        '?': '?'
+      }
+    }
+  },
+  ui: {
+    account: {
+      login: 'Войти',
+      logout: 'Выйти'
+    },
+    fontStyle: {
+      label: 'Стиль шрифта:',
+      values: {
+        style1: 'Стиль 1',
+        style2: 'Стиль 2',
+        style3: 'Стиль 3',
+        style4: 'Стиль 4',
+        style5: 'Стиль 5',
+        style6: 'Стиль 6',
+        style7: 'Стиль 7'
+      }
+    },
+    chatbox: {
+      location: 'Локация:&nbsp;',
+      nextLocation: 'Далее:&nbsp;',
+      immersionMode: 'Режим погружения',
+      reconnect: 'Переподключиться',
+      tab: {
+        chat: 'Чат',
+        players: 'Игроки',
+        parties: 'Группы'
+      },
+      chat: {
+        tab: {
+          all: 'Все',
+          map: 'Карта',
+          global: 'Общий',
+          party: 'Группа'
+        },
+        nickname: {
+          header: 'Пожалуйста, задайте никнейм, чтобы получить доступ к чату.',
+          rule: {
+            maxLength: '* Не более 10 символов.',
+            alphanumeric: '* Только латиница и цифры.'
+          }
+        }
+      },
+      players: {
+        tab: {
+          map: 'Карта',
+          friends: 'Друзья',
+          party: 'Группа'
+        }
+      }
+    },
+    instruction: {
+      translation: 'Помочь с переводом',
+      noGameLoc: '* Перевод игры отсутствует.'
+    },
+    '2kki': {
+      hostedWithPermission: 'Размещено с разрешения разработчиков Yume 2kki.'
+    },
+    disclaimer: {
+      pendingApproval: 'Pending approval from developer/publisher',
+      hostedWithPermission: 'Hosted with permission from the developer(s)',
+      originalCreation: 'Original creation by the YNOproject community'
+    },
+    modal: {
+      common: {
+        save: 'Save',
+        apply: 'Apply'
+      },
+      confirm: {
+        ok: 'ОК',
+        cancel: 'Отмена'
+      },
+      login: {
+        title: 'Войти',
+        fields: {
+          username: 'Логин',
+          password: 'Пароль'
+        },
+        submit: 'Войти',
+        registerPrompt: 'Ещё нет аккаунта?&nbsp;',
+        register: 'Зарегистрироваться'
+      },
+      register: {
+        title: 'Регистрация',
+        fields: {
+          email: 'E-mail',
+          username: 'Логин',
+          password: 'Пароль',
+          confirmPassword: 'Подтвердите пароль'
+        },
+        submit: 'Зарегистрироваться',
+        loginPrompt: 'Уже есть аккаунт?&nbsp;',
+        login: 'Войти'
+      },
+      settings: {
+        title: 'Настройки',
+        fields: {
+          lang: 'Язык',
+          locationVisibility: {
+            label: 'Местоположение в игре',
+            values: {
+              private: 'Приватное',
+              friends: 'Для друзей',
+              public: 'Для всех'
+            }
+          },
+          nametagMode: {
+            label: 'Ники',
+            values: {
+              none: 'Скрыть',
+              classic: 'Классические',
+              compact: 'Компактные',
+              slim: 'Тонкие'
+            }
+          },
+          wikiLinkMode: {
+            label: 'Всплывающая ссылка на Вики',
+            values: {
+              always: 'Всегда',
+              fullscreen: 'Только в полноэкранном',
+              never: 'Никогда'
+            }
+          },
+          saveReminder: {
+            label: 'Частота напоминания о сохранениях',
+            interval: {
+              minutes: '{{interval}} мин.',
+              never: 'Никогда'
+            }
+          },
+          soundVolume: 'Громкость звуков',
+          musicVolume: 'Громкость музыки',
+          togglePlayerSounds: 'Звуки игроков',
+          toggleEnableBadgeHints: {
+            label: 'Badge Hints',
+            helpText:
+              "Badge hints become available once you have unlocked the 'Badge Collector Amulet EX' badge. When enabled, an icon will appear in the top right when you enter a location with at least one badge you haven't unlocked."
+          },
+          togglePlayBadgeHintSound: 'Play Badge Hint Sound',
+          toggleEnableExplorer: {
+            label: 'Навигатор Yume 2kki',
+            helpText:
+              'Навигатор Yume 2kki - Интеграция Yume 2kki Explorer, позволяющая вам просматривать соединения с вашей локацией. Эта функция может значительно повлиять на ваш исследовательский опыт игры, потому, советуем исследовать игру настолько, насколько возможно, не прибегая к ней. Вы должны войти в аккаунт на сайте, чтобы пользоваться Навигатором Yume 2kki.'
+          },
+          toggleImmersionMode: {
+            label: 'Режим Погружения',
+            helpText:
+              'Отключает счётчик игроков, глобальный чат и подписи карт, дабы вы могли испытать большее погружение в игру.'
+          },
+          timeTrialinfo: {
+            label: 'Испытание на время'
+          },
+          toggleMobileControls: 'Управление с экрана',
+          mobileControlsType: {
+            label: 'Управление на мобильном',
+            default: 'Крестовина',
+            joystick: 'Плавающий стик',
+            dpad: 'Плавающая крестовина'
+          },
+          toggleLocationDisplay: 'Отображение локации',
+          toggleRankings: 'Рейтинги',
+          togglePreloads: {
+            label: 'Предзагрузки',
+            helpText:
+              'Предзагрузить часто используемые ресурсы, чтобы они всегда были доступны при необходимости; Требует перезагрузки страницы.'
+          },
+          toggleQuestionablePreloads: 'Предзагрузить обои ПК',
+          toggleSchedules: 'События',
+          unicodeFont: 'Alternate Font',
+          toggleSingleplayerMode: {
+            label: 'Singleplayer Mode',
+            helpText:
+              'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
+          }
+        },
+        blocklist: 'Заблокированные',
+        chatSettings: 'Чат',
+        screenshotSettings: 'Снимки',
+        notificationSettings: 'Уведомления',
+        cacheSettings: 'Кэш',
+        accountSettings: 'Аккаунт',
+        engineSettings: 'Движок (F1)'
+      },
+      blocklist: {
+        title: 'Заблокированные',
+        empty: 'Вы ещё никого не заблокировали'
+      },
+      chatSettings: {
+        title: 'Настройки чата',
+        fields: {
+          toggleGameChat: {
+            label: 'Внутри-игровой оверлей чата',
+            global: 'Оверлей глобального чата',
+            party: 'Оверлей группового чата'
+          },
+          toggleTabToChat: 'Переключение в чат по Tab',
+          togglePlayMentionSound: 'Звук упоминания',
+          chatHistoryLimit: {
+            values: {
+              '0': 'Неограниченно',
+              '25': '25',
+              '50': '50',
+              '100': '100',
+              '250': '250',
+              '500': '500',
+              '1000': '1000',
+              '2500': '2500'
+            }
+          },
+          mapChatHistoryLimit: {
+            label: 'Лимит истории чата карты'
+          },
+          globalChatHistoryLimit: {
+            label: 'Лимит истории общего чата'
+          },
+          partyChatHistoryLimit: {
+            label: 'Лимит истории чата группы'
+          },
+          blurScreenshotEmbeds: 'Размыть все снимки'
+        }
+      },
+      screenshotSettings: {
+        title: 'Настройки снимков',
+        fields: {
+          autoDownloadScreenshots: 'Скачивать снимки экрана игры',
+          screenshotResolution: {
+            label: 'Разрешение загружаемых снимков',
+            values: {
+              '1': '1x - 320x240',
+              '2': '2x - 640x480',
+              '3': '3x - 960x720',
+              '4': '4x - 1280x960'
+            }
+          }
+        }
+      },
+      notificationSettings: {
+        title: 'Настройка уведомлений',
+        fields: {
+          toggleNotifications: 'Уведомления',
+          screenPosition: {
+            label: 'Положение на экране',
+            values: {
+              bottomLeft: 'Внизу слева',
+              bottomRight: 'Внизу справа',
+              topLeft: 'Наверху слева',
+              topRight: 'Наверху справа'
+            }
+          },
+          system: {
+            label: 'Система',
+            fields: {
+              siteUpdates: 'Обновление сайта',
+              error: 'Произошла ошибка',
+              pushNotifications: 'Для рабочего стола'
+            }
+          },
+          account: {
+            label: 'Аккаунт',
+            fields: {
+              loggedIn: 'Вход',
+              loggedOut: 'Выход',
+              passwordUpdate: 'Пароль обновлён'
+            }
+          },
+          players: {
+            label: 'Игроки',
+            fields: {
+              playerBlocked: 'Блокировка игрока',
+              playerUnblocked: 'Разблокировка игрока'
+            }
+          },
+          friends: {
+            label: 'Друзья',
+            fields: {
+              add: 'Друг добавлен',
+              remove: 'Друг удалён',
+              accept: 'Запрос в Друзья Принят',
+              reject: 'Запрос в Друзья Отклонён',
+              cancel: 'Запрос в Друзья Отменён',
+              incoming: 'Входящий Запрос в Друзья',
+              playerOnline: 'Друг в сети',
+              playerOffline: 'Друг вне сети'
+            }
+          },
+          parties: {
+            label: 'Группы',
+            fields: {
+              create: 'Группа создана',
+              update: 'Группа изменена',
+              join: 'Присоединение к группе',
+              leave: 'Уход из группы',
+              remove: 'Удаление из группы',
+              disband: 'Роспуск группы',
+              playerJoin: 'Присоединение участника к группе',
+              playerLeave: 'Уход участника из группы',
+              playerOnline: 'Участник группы в сети',
+              playerOffline: 'Участник группы вне сети',
+              kickPlayer: 'Участник исключён из группы',
+              transferPartyOwner: 'Повышение до лидера группы'
+            }
+          },
+          events: {
+            label: 'Походы',
+            fields: {
+              complete: 'Поход выполнен',
+              freeComplete: 'Свободный поход выполнен',
+              vmComplete: 'Торговый автомат найден',
+              listUpdated: 'Список походов обновлён'
+            }
+          },
+          badges: {
+            label: 'Значки',
+            fields: {
+              badgeUnlocked: 'Значок открыт'
+            }
+          },
+          timeTrials: {
+            label: 'Time Trials',
+            fields: {
+              goalReached: 'Goal Reached'
+            }
+          },
+          screenshots: {
+            label: 'Снимки',
+            fields: {
+              screenshotTaken: 'Снимок игры сделан'
+            }
+          },
+          saveSync: {
+            label: 'Облачное сохранение',
+            fields: {
+              saveUploading: 'Выгрузка сохранения',
+              saveUploaded: 'Выгрузка завершена',
+              saveDownloading: 'Загрузка сохранения',
+              saveDownloaded: 'Загрузка завершена',
+              saveUpToDate: 'Сохранение актуально',
+              saveCleared: 'Сохранение очищено',
+              saveReminder: 'Напоминания о сохранении'
+            }
+          },
+          schedules: {
+            label: 'События',
+            fields: {
+              upcomingSchedules: 'Грядущие события'
+            }
+          }
+        }
+      },
+      cacheSettings: {
+        title: 'Настройки кэша',
+        clear: 'Очистить',
+        fields: {
+          locationCache: 'Локации',
+          mapCache: 'Карты',
+          locationColorCache: 'Цвета локаций'
+        }
+      },
+      accountSettings: {
+        title: 'Настройки аккаунта',
+        fields: {
+          badge: 'Значок',
+          changePassword: 'Изменить пароль',
+          clearSaveSync: 'Очистить данные облачного сохранения'
+        }
+      },
+      password: {
+        title: 'Изменить пароль',
+        fields: {
+          oldPassword: 'Старый пароль',
+          newPassword: 'Новый пароль',
+          newConfirmPassword: 'Подтвердите новый пароль'
+        },
+        submit: 'Изменить'
+      },
+      badges: {
+        title: 'Значки',
+        manageBadgeGallery: 'Изменить галерею значков',
+        fields: {
+          unlockStatus: {
+            label: 'Статус разблокировки:&nbsp;',
+            values: {
+              '0': 'Закрытые',
+              '1': 'Доступные',
+              all: 'Все',
+              recentUnlock: 'Недавно разблокированные'
+            }
+          },
+          sortOrder: {
+            label: 'Порядок:&nbsp;',
+            values: {
+              default: 'По-умолчанию'
+            }
+          },
+          search: {
+            label: 'Поиск:&nbsp;',
+            name: 'Название:',
+            location: 'Локация:'
+          }
+        }
+      },
+      badgeGallery: {
+        title: 'Галерея значков',
+        badgeGalleryRowProgress: 'До следующей строки (ОЗ)',
+        badgeGalleryColProgress: 'До следующей колонки (значков)',
+        removeMode: {
+          activate: 'Убрать значки',
+          deactivate: 'Готово'
+        },
+        manageBadgePreset: 'Manage Presets'
+      },
+      badgePreset: {
+        title: 'Manage Badge Presets',
+        selectPreset: 'Select Preset',
+        presetName: 'Preset {{index}}'
+      },
+      save: {
+        title: 'Управление данными сохранений',
+        reload: 'Сохранить изменения и перезагрузить',
+        info: 'Если при сохранении вы играли на переведённой версии RPG_RT, в игре могут возникать ошибки до тех пор, пока вы снова не сохранитесь в EasyRPG без включённых переводов.'
+      },
+      uiTheme: {
+        title: 'Стиль интерфейса',
+        auto: 'Как в игре'
+      },
+      createParty: {
+        title: {
+          create: 'Создать группу',
+          update: 'Изменить группу'
+        },
+        fields: {
+          partyName: 'Имя группы',
+          description: 'Описание',
+          public: 'Открытая',
+          password: 'Пароль',
+          theme: 'Стиль оформления'
+        },
+        showPassword: 'Показать пароль',
+        hidePassword: 'Скрыть пароль',
+        submit: 'Отправить'
+      },
+      joinPrivateParty: {
+        title: 'Войти в закрытую группу',
+        fields: {
+          password: 'Пароль'
+        },
+        showPassword: 'Показать пароль',
+        hidePassword: 'Скрыть пароль',
+        incorrectPassword: 'Неверный пароль. Пожалуйста, попробуйте снова.',
+        submit: 'Войти'
+      },
+      events: {
+        title: 'Походы',
+        rankExp: 'До след. ранга',
+        weekExp: 'Опыта за неделю',
+        tabs: {
+          locations: 'Локации',
+          vms: 'Поиск торговых автоматов'
+        }
+      },
+      rankings: {
+        title: 'Рейтинги',
+        player: 'Игрок'
+      },
+      screenshot: {
+        title: 'Ваш снимок',
+        download: 'Скачать',
+        save: 'Сохранить в Ваши снимки',
+        share: 'Отправить в чат'
+      },
+      myScreenshots: {
+        title: 'Ваши снимки',
+        screenshotSlotProgress: 'До следующего слота (ОЗ)',
+        empty: 'Вы ещё не сохранили ни одного снимка.'
+      },
+      communityScreenshots: {
+        title: 'Снимки сообщества',
+        scrollToRefresh: 'Прокрутите вверх чтобы Обновить',
+        fields: {
+          game: {
+            label: 'Игра:&nbsp;',
+            values: {
+              all: 'Все'
+            }
+          },
+          sortOrder: {
+            values: {
+              recent: 'Новейшие',
+              likes: 'Лучшие'
+            }
+          },
+          interval: {
+            values: {
+              day: 'Сегодня',
+              week: 'Эта неделя',
+              month: 'Этот месяц',
+              year: 'Этот год',
+              all: 'Всё время'
+            }
+          }
+        }
+      },
+      schedule: {
+        title: 'События',
+        ongoing: 'События в процессе',
+        party: 'События группы',
+        future: 'Грядущие события',
+        official: 'Официальные события',
+        noResults: 'Нет запланированных событий.',
+        doSchedule: 'Запланировать событие'
+      },
+      scheduleEdit: {
+        title: 'Редактировать событие',
+        save: 'Сохранить',
+        cancel: 'Отменить событие',
+        fields: {
+          name: 'Название',
+          description: 'Описание',
+          datetime: 'Дата и время',
+          recurring: 'Повторяющееся?',
+          theme: 'Стиль оформления',
+          interval: {
+            title: 'Интервал',
+            days: 'дней',
+            months: 'месяцев',
+            years: 'лет'
+          },
+          restrictParty: 'Только для группы',
+          official: 'Официальное событие',
+          resetOrganizer: 'Сбросить организатора',
+          platforms: {
+            title: 'Внешние ссылки',
+            discord: 'Discord',
+            youtube: 'YouTube',
+            twitch: 'Twitch',
+            niconico: 'Nicovideo',
+            openrec: 'Openrec',
+            bilibili: 'Bilibili'
+          }
+        }
+      },
+      report: {
+        title: 'Жалоба',
+        submit: 'Подать',
+        fields: {
+          reason: {
+            '1': 'Оскорбления, агрессивная или неприемлемая лексика',
+            '2': 'Издевательство, травля, преследование',
+            '3': 'Неприемлемое имя',
+            '4': 'Обход бана',
+            '5': 'Читерство, абьюз эксплойтов',
+            '6': 'Игрок младше 13 лет',
+            '7': 'Спам',
+            title: 'Причина',
+            placeholder: 'Своя причина (до 50 символов)',
+            other: 'Другое (укажите)'
+          }
+        }
+      },
+      rules: {
+        title: 'Правила',
+        rule1: 'Пожалуйста, будьте вежливы и учтивы.',
+        rule2: 'Запрещены дискуссии на 18+ темы (Расчленёнка, NSFW И т. д.).',
+        rule3: 'Никакой политики.',
+        rule4: 'Никаких провокаций, оскорблений и унижений.',
+        rule5: 'Запрещено читерство в любом виде под каким-бы то ни было предлогом.',
+        rule6: 'При возникновении проблем, пожалуйста, свяжитесь с модераторами.'
+      },
+      explorerUndiscoveredLocations: {
+        title: 'Неисследованная локация',
+        complete: 'Вы исследовали все доступные локации! Поздравляем!!!'
+      },
+      locations: {
+        title: 'Локации',
+        fields: {
+          visited: {
+            values: {
+              all: 'Все',
+              visited: 'Посещённые',
+              unvisited: 'Не посещённые'
+            }
+          },
+          sortOrder: {
+            values: {
+              newest: 'Новейшие',
+              oldest: 'Старейшие',
+              shallowest: 'Поверхностные',
+              deepest: 'Глубочайшие',
+              alpha: 'По алфавиту',
+              players: 'Кол-во игроков'
+            }
+          }
+        }
+      }
+    },
+    tooltips: {
+      togglePrivateMode: 'Переключить Приватный режим',
+      save: 'Управление данными сохранений',
+      uiTheme: 'Стиль интерфейса',
+      toggleChat: 'Переключить чат',
+      toggleExplorer: 'Переключить Навигатор Yume 2kki',
+      screenshot: 'Сделать снимок',
+      myScreenshots: 'Мои снимки',
+      settings: 'Настройки',
+      toggleMute: 'Переключить звук',
+      toggleHideLocation: 'Переключить сокрытие локации',
+      toggleGlobalMessage: 'Переключить отправку в общий чат',
+      chat: {
+        toggleNextLocation: 'Показать/Скрыть локацию следующей экспедиции',
+        toggleGlobalMessageLocations: 'Переключить отображение Локаций в чате',
+        toggleMessageTimestamps: 'Переключить отображение Меток времени у сообщений',
+        filterMentions: 'Show Mentions Only',
+        clearChat: 'Очистить чат'
+      },
+      parties: {
+        createParty: 'Создать группу',
+        disbandParty: 'Распустить группу'
+      },
+      events: 'Походы',
+      locations: 'Локации',
+      communityScreenshots: 'Снимки сообщества',
+      rankings: 'Рейтинги',
+      schedules: 'События',
+      nexus: 'Вернуться на главную страницу',
+      explorerUndiscoveredLocations: 'Просмотреть Неисследованные локации',
+      timeTrial:
+        'Чтобы включить режим Испытания на время, удерживайте Shift и Вправо после начала новой игры до того, как на экране что-либо появится.',
+      mobileControlsType:
+        'Альтернативы обычной крестовине для мобильного.<br>Плавающие варианты работают только в полноэкранном режиме.'
+    },
+    placeholders: {
+      scheduleDescription:
+        'Доступен Markdown, используйте {\\{l:World,имя ссылки (опционально)}} чтобы вставить ссылку на yume.wiki'
+    },
+    reviewRules: 'Просмотреть правила'
+  },
+  messages: {
+    games: {
+      ynoproject: 'YNOproject',
+      yume: 'Yume Nikki',
+      '2kki': 'Yume 2kki',
+      unconscious: 'Collective Unconscious',
+      flow: '.flow',
+      fog: 'FOG',
+      prayers: 'Answered Prayers',
+      deepdreams: 'Deep Dreams',
+      someday: 'Someday',
+      amillusion: 'Amillusion',
+      unevendream: 'Uneven Dream',
+      braingirl: 'Braingirl',
+      muma: 'Muma|Rope',
+      genie: 'Dream Genie',
+      mikan: 'Mikan Muzou',
+      ultraviolet: 'Ultra Violet',
+      sheawaits: 'She Awaits',
+      oneshot: 'OneShot',
+      oversomnia: 'Oversomnia',
+      tsushin: 'Yume Tsushin',
+      nostalgic: 'nostAlgic',
+      if: 'If',
+      unaccomplished: 'Unaccomplished'
+    },
+    leavePage: 'Вы уверены, что хотите покинуть страницу? Весь несохранённый прогресс будет утерян.',
+    logout: 'Вы уверены, что хотите выйти из аккаунта?',
+    loadingInstruct:
+      '. <br /> <br /> Похоже, сайт грузится слишком долго; если проблема не исчезает, попробуйте CTRL+F5 или очистить кэш браузера (не куки!). Так-же вы можете проверить консоль (F12) на ошибки.',
+    requestNotifications: 'Получать уведомления о событиях и обновлениях экспедиций?',
+    connStatus: {
+      '0': 'Вне сети',
+      '1': 'В сети',
+      '2': 'Соединение...',
+      '3': 'Приватный режим',
+      '4': 'Singleplayer'
+    },
+    lastOnline: {
+      template: 'Был(а) в сети:\n{INTERVAL} назад',
+      longTime: 'Давно',
+      interval: {
+        short: 'Менее минуты',
+        minutes: {
+          singular: '{VALUE} Минуту',
+          plural: '{VALUE} Минут'
+        },
+        hours: {
+          singular: '{VALUE} Час',
+          plural: '{VALUE} Часов'
+        },
+        days: {
+          singular: '{VALUE} День',
+          plural: '{VALUE} Дней'
+        }
+      }
+    },
+    location: {
+      template: '{LOCATION} ({LOCATION_EN})',
+      queryingLocation: 'Вычисляем место...',
+      unknownLocation: 'Неизвестно',
+      '2kki': {
+        template: '{LOCATION}'
+      },
+      connType: {
+        '1': 'Одностороннее',
+        '2': 'Без входа',
+        '4': 'Разблокирует',
+        '8': 'Заблокированно',
+        '16': 'Тупиковое',
+        '32': 'Изолированное',
+        '64': 'Нужен эффект: ({PARAMS})',
+        '128': 'Шанс {PARAMS}',
+        '256': '{PARAMS}',
+        '512': 'Обходное',
+        '1024': 'Конец обхода',
+        '2048': 'Время года ({PARAMS})'
+      },
+      depth: ' ({DEPTH})',
+      playing: 'Играет в {GAME}'
+    },
+    locationDisplay: {
+      template: '{LOCATION}',
+      '2kki': {
+        template: '{LOCATION}'
+      }
+    },
+    playersOnline: {
+      singular: '{COUNT} Игрок онлайн',
+      plural: '{COUNT} Игроков онлайн'
+    },
+    playersInMap: {
+      singular: '{COUNT} Игрок на карте',
+      plural: '{COUNT} Игроков на карте'
+    },
+    playerList: {
+      unnamed: 'Безымянный игрок',
+      muted: 'Без голоса',
+      actions: {
+        approveFriend: 'Принять Запрос в Друзья',
+        rejectFriend: 'Отклонить Запрос в Друзья',
+        cancelFriend: 'Отменить Запрос в Друзья',
+        partyKick: 'Выгнать из группы,',
+        transferPartyOwner: 'Передать лидерство в группе'
+      }
+    },
+    roles: {
+      mod: 'Модератор',
+      dev: 'Разработчик'
+    },
+    timestamp: {
+      time: '{TIME}',
+      timeAndWeekday: '{TIME} ({WEEKDAY})'
+    },
+    context: {
+      ping: {
+        label: 'Упомянуть {PLAYER}'
+      },
+      addFriend: {
+        label: 'Добавить {PLAYER} в Друзья'
+      },
+      removeFriend: {
+        label: 'Удалить {PLAYER} из Друзей'
+      },
+      block: {
+        label: 'Заблокировать {PLAYER}',
+        confirm: 'Вы уверены, что хотите заблокировать {PLAYER}?'
+      },
+      unblock: {
+        label: 'Разблокировать {PLAYER}',
+        confirm: 'Вы уверены, что хотите разблокировать {PLAYER}?'
+      },
+      report: {
+        label: 'Пожаловаться на {PLAYER}'
+      },
+      admin: {
+        ban: {
+          label: 'Забанить {PLAYER}',
+          confirm: 'Вы уверены, что хотите забанить {PLAYER}?',
+          success: 'Вы забанили {PLAYER}.'
+        },
+        unban: {
+          label: 'Разбанить {PLAYER}',
+          confirm: 'Вы уверены, что хотите разбанить {PLAYER}?',
+          success: 'Вы разбанили {PLAYER}.'
+        },
+        mute: {
+          label: 'Заглушить {PLAYER}',
+          confirm: 'Вы уверены, что хотите заглушить {PLAYER}?',
+          success: 'Вы заглушили {PLAYER}.'
+        },
+        unmute: {
+          label: 'Вернуть голос {PLAYER}',
+          confirm: 'Вы уверены, что хотите вернуть голос {PLAYER}?',
+          success: 'Голос {PLAYER} возвращён.'
+        },
+        grantBadge: {
+          label: 'Выдать Значок',
+          prompt: 'Введите ID Значка, который надо выдать {PLAYER}.',
+          success: '{BADGE} Успешно выдано {PLAYER}.',
+          fail: 'Значка с таким ID Не найдено.'
+        },
+        revokeBadge: {
+          label: 'Забрать значок',
+          prompt: 'Введите ID значка, который надо забрать у {PLAYER}.',
+          success: '{BADGE} успешно забран у {PLAYER}.',
+          fail: 'Значка с таким ID не найдено.'
+        },
+        tempban: {
+          label: 'Tempban {PLAYER}',
+          prompt: 'When to unban {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempbanned.'
+        },
+        tempmute: {
+          label: 'Tempmute {PLAYER}',
+          prompt: 'When to unmute {PLAYER}? (UTC time)',
+          success: '{PLAYER} has been tempmuted.'
+        }
+      }
+    },
+    account: {
+      login: {
+        errors: {
+          invalidLogin: 'Логин или пароль не верны.'
+        }
+      },
+      register: {
+        errors: {
+          confirmPasswordMismatch: 'Пароли не совпадают.',
+          invalidCredentials: 'Указанные логин и пароль пустые или содержат недопустимые символы.',
+          emailTaken: 'Данный e-mail уже используется.',
+          usernameTaken: 'Данный логин уже используется.'
+        }
+      },
+      password: {
+        errors: {
+          confirmPasswordMismatch: 'Пароли не совпадают.',
+          badLogin: 'Пароль для входа не подходит.',
+          internalServerError: 'Произошла ошибка: пожалуйста, повторите попытку позже.'
+        }
+      }
+    },
+    chat: {
+      globalMessage: 'Общий чат'
+    },
+    friends: {
+      friend: 'Друзья',
+      categories: {
+        incoming: 'Входящие - {COUNT}',
+        outgoing: 'Исходящие - {COUNT}',
+        online: 'В сети - {COUNT}',
+        offline: 'Вне сети - {COUNT}'
+      }
+    },
+    parties: {
+      emptyMessage: 'Пока ещё никто не создал ни одной группы.',
+      yourParty: 'Ваша группа',
+      defaultPartyName: 'Группа {OWNER}',
+      partyOwner: 'Глава группы',
+      confirmDisband: 'Вы уверенны, что хотите распустить группу? Роспуск нельзя отменить.',
+      confirmTransferPartyOwner: 'Вы уверенны, что хотите передать лидерство в группе игроку {PLAYER}?',
+      offlineMemberSuffix: 'Не в сети',
+      categories: {
+        online: 'В сети - {COUNT}',
+        offline: 'Вне сети - {COUNT}'
+      },
+      actions: {
+        viewPartyDetails: 'Просмотреть данные о группе',
+        joinParty: 'Присоединиться к группе',
+        joinPrivateParty: 'Присоединиться к закрытой группе',
+        leaveParty: 'Выйти из группы'
+      }
+    },
+    chatTips: {
+      template: 'СОВЕТ: {CONTENT}',
+      tips: {
+        backupReminder:
+          'Советуем время от времени загружать к себе свои сохранения. Таким образом, вы не потеряете свой прогресс, если вдруг решите очистить данные браузера.',
+        menuTheme:
+          'Цвет вашего ника и оформление вашего ярлыка в списке игроков зависит от выбранной вами в игре темы меню.',
+        playersInMap:
+          'Вы можете переключиться между режимами отображения количества игроков в игре и на карте, нажав на счётчик.',
+        markdownSupport:
+          'В чате поддерживается форматирование, нужно лишь окружить форматируемый текст специальными символами. На настоящий момент поддерживаются: **Жирный** (\\*\\*текст\\*\\*), *Курсив* (\\*текст\\*, \\_текст\\_), __Подчёркнутый__ (\\_\\_текст\\_\\_), ~~Зачёркнутый~~ (\\~\\~текст\\~\\~) и ||Спойлер|| (\\|\\|текст\\|\\|).',
+        tabToChat:
+          'Если вы играете с ПК, вы можете нажать Tab чтобы переключить фокус между игрой и чатом. Эта функция может быть отключена в Настройках Чата пунктом «Переключение в Чат по Tab».',
+        chatTabNotifications:
+          'Если вы во вкладке чата, отличной от «Все», и в другой вкладке появилось новое сообщение, её ярлык станет чуть жирнее.',
+        clearChat:
+          'Если вы нажмёте на кнопку «Очистить чат» (сверху справа в окне чата), не будучи во вкладке «Все», то удалятся только сообщения из ныне открытой вкладки.',
+        chatHistoryLimit:
+          'Если история чата становится слишком длинной, это может привести к проблемам с производительностью. В Настройках чата вы можете изменить лимит истории чата.',
+        parties:
+          'Группы - хороший способ путешествовать вместе с другими людьми. Вы можете видеть местонахождение других участников группы и общаться с ними в отдельном канале чата.',
+        immersionMode:
+          'Если вам больше по душе опыт исследовательский, нежели социальный, попробуйте Режим Погружения. В нём скрывается общий чат, список и количество игроков, таким образом делая столкновения с другими игроками во время исследования более неожиданными.',
+        friendsMenu:
+          'Если вы нажмёте правой клавишей мыши на ПК или будете удерживать нажатой пальцем иконку игрока вне Таблицы рекордов, то появится окошко, где вы сможете отправить игроку запрос в друзья, упомянуть в чате или заблокировать.',
+        easySettingsMenu:
+          'Если вы играете с ПК, то при нажатии клавиши F1 во время игры вы можете получить доступ к меню настроек, где вы можете переназначить управление, а так-же изменить некоторые другие настройки.',
+        floatingControls:
+          'Если вы играете на сенсорном устройстве и вас не устраивает управление по-умолчанию, попробуйте плавающие стили управления, доступные в Настройках под пунктом .',
+        recentBadges:
+          'Случайно убрали уведомление о получении значка? Вы всегда можете проверить полученные в нынешней сессии значки, выбрав категорию Недавно разблокированных в Списке значков.',
+        desktopHotkeys:
+          'Если вы играете на ПК, то можете переключить полноэкранный режим на Alt+Enter, F7 будет стандартной клавишей для снимка игры, а клавиша Е (Английская T) будет открывать окно ввода чата.',
+        badgeControls:
+          'В меню Галлереи значков, вы можете перетаскивать значки, чтобы поменять их местами, либо удалить много значков разом в режиме Уборки значков.',
+        cacheSettings:
+          'Проблемы со старыми локациями или устаревшими картами? Настройки позволяют очистить кэш карт и локаций, чтобы вы могли получить последние данные.',
+        openSource:
+          'YNOproject - проект с открытым исходным кодом. С его репозиториями можно ознакомиться по ссылке: https://github.com/ynoproject/'
+      }
+    },
+    save: {
+      slot: {
+        title: 'Файл {SLOT_ID}',
+        readingLabel: 'Чтение данных файла...',
+        emptyLabel: 'Пусто',
+        errorLabel: 'Ошибка'
+      },
+      upload: {
+        tooltip: 'Загрузить сохранение',
+        invalidSaveFile: 'Пожалуйста, выберите корректный файл сохранения (В формате .lsd).'
+      },
+      download: {
+        tooltip: 'Скачать сохранение',
+        emptySlot: 'Упс! Похоже, в указанном слоту нет данных.'
+      },
+      delete: {
+        tooltip: 'Удалить сохранение',
+        confirmDelete: 'Вы уверенны, что хотите очистить слот {SLOT_ID}?'
+      }
+    },
+    saveSync: {
+      confirmClearSaveSync:
+        'Вы уверенны, что хотите удалить данные облачного сохранения для данной игры? Если у вас нет локальной копии сохранения, эти данные будут утеряны безвозвратно.'
+    },
+    toast: {
+      system: {
+        siteUpdates:
+          'Сайт был обновлён. Пожалуйста, перезагрузите страницу, чтобы получить доступ к наиболее актуальной версии.',
+        error:
+          "Упс! Похоже, что-то пошло не так. Проверьте консоль браузера, чтобы узнать детали. Чтобы её открыть, нажмите F12 или правую клавишу мыши и 'Исследовать'."
+      },
+      account: {
+        loggedIn: 'Вы вошли как {USER}.',
+        loggedOut: 'Вы вышли из аккаунта.',
+        passwordUpdated: 'Ваш пароль был изменён успешно.'
+      },
+      players: {
+        playerBlocked: 'Игрок {PLAYER} теперь блокируется.',
+        playerUnblocked: 'Игрок {PLAYER} больше не блокируется.'
+      },
+      friends: {
+        add: 'Отправлен запрос дружбы к {PLAYER}.',
+        remove: 'Вы удалили {PLAYER} из списка друзей.',
+        accept: 'Вы приняли запрос в друзья от {PLAYER}.',
+        reject: 'Вы отклонили запрос в друзья от {PLAYER}.',
+        cancel: 'Запрос дружбы к {PLAYER} отменён.',
+        incoming: 'Игрок {PLAYER} хочет добавить вас в Друзья.',
+        playerOnline: '{PLAYER} в сети.',
+        playerOffline: '{PLAYER} вне сети.'
+      },
+      parties: {
+        create: 'Была создана {PARTY}.',
+        update: 'Изменена {PARTY}.',
+        join: 'Вы присоединились к {PARTY}.',
+        leave: 'Вы вышли из {PARTY}.',
+        remove: 'Вас выгнали из {PARTY}.',
+        disband: 'Была распущена {PARTY}.',
+        playerJoin: '{PLAYER} присоединяется к группе.',
+        playerLeave: '{PLAYER} покидает группу.',
+        playerOnline: '{PLAYER} в сети.',
+        playerOffline: '{PLAYER} вне сети.',
+        kickPlayer: '{PLAYER} исключается из группы.',
+        transferPartyOwner: '{PLAYER} теперь лидер группы.'
+      },
+      events: {
+        complete: 'Поход завершён!\nВы получаете {EXP} за посещение {LOCATION}.',
+        freeComplete: 'Поход завершён!\nВы посетили {LOCATION}.',
+        vmComplete: 'Торговый автомат найден!\nВы получаете {EXP}.',
+        listUpdated: 'Список походов обновлён.'
+      },
+      badges: {
+        badgeUnlocked: 'Значок разблокирован!'
+      },
+      screenshots: {
+        screenshotTaken: 'Снимок игрового экрана успешно сделан.'
+      },
+      saveSync: {
+        saveUploading: 'Выгружаем в облако данные слота {SLOT}...',
+        saveUploaded: 'Данные слота {SLOT} успешно выгружены в облако.',
+        saveDownloading: 'Обновляем данные из слота {SLOT}...',
+        saveDownloaded: 'Слот {SLOT} успешно обновлён.',
+        saveUpToDate: 'Данные слота актуальны.',
+        saveCleared:
+          'Данные облачного сохранения удалены. Это действие не затронет уже выгруженные сохранения на других устройствах.',
+        saveReminder:
+          'Не забывайте почаще сохраняться и выгружать ваши сохранения, чтобы не потерять свой прогресс в игре.'
+      },
+      timeTrials: {
+        timeTrialsComplete: 'Goal! {CATEGORY} completed in {TIME}.'
+      }
+    },
+    events: {
+      exp: '{POINTS} Опыта',
+      expRank: 'Ранг: {RANK}',
+      period: 'Сезон: {ORDINAL}',
+      periodEnds: 'Заканчивается: {DATE}',
+      current: 'Доступно',
+      shortcut: 'Можно добраться разблокируемым коротким путём.',
+      toggleTracked: 'Переключить отслеживание локации',
+      availableUntilDate: 'Доступен до:\n{DATE}',
+      types: {
+        '0': 'Ежедневные',
+        '1': 'Еженедельные',
+        '2': 'Выходные',
+        '3': 'Особые',
+        '-1': 'Свободные'
+      },
+      expRanks: {
+        '0': 'Новичок',
+        '1': 'Продвинутый',
+        '2': 'Бронзовый',
+        '3': 'Серебрянный',
+        '4': 'Золотой',
+        '5': 'Платиновый',
+        '6': 'Алмазный'
+      }
+    },
+    badges: {
+      null: 'Нет значка',
+      allCategory: 'Все',
+      badgeTitle: '{TITLE} - {BP} ОЗ',
+      locked: '???',
+      location: 'Локация:&nbsp;',
+      goalProgress: '{CURRENT}/{TOTAL}',
+      percentUnlocked: '{PERCENT}% Игроков имеют этот значок',
+      time: '{MINUTES}:{SECONDS}',
+      artCredit: 'Картинка от {ARTIST}',
+      search: {
+        modifier: {
+          template: '&nbsp;({MODIFIER})',
+          exactMatch: 'Точное совпадение'
+        }
+      },
+      sortOrder: {
+        template: '{TYPE} ({ORDER})',
+        types: {
+          bp: 'ОЗ',
+          percent: 'Наличие у игроков'
+        },
+        asc: 'По возрастанию',
+        desc: 'По убыванию'
+      }
+    },
+    badgeGallery: {
+      label: 'Галерея значков {PLAYER}',
+      loading: 'Загрузка...',
+      bp: '{BP} ОЗ',
+      count: '{COUNT} значков',
+      empty: 'Badge gallery not set'
+    },
+    badgePreset: {
+      empty: 'This preset is empty.'
+    },
+    rankings: {
+      categories: {
+        badgeCount: {
+          label: 'Значки',
+          valueLabel: 'Кол-во значков',
+          value: '{NUMBER}'
+        },
+        bp: {
+          label: 'ОЗ (Очки Значков)',
+          valueLabel: 'ОЗ',
+          value: '{NUMBER} ОЗ'
+        },
+        exp: {
+          label: 'Опыт',
+          valueLabel: 'Опыт',
+          value: '{NUMBER} опыта'
+        },
+        eventLocationCount: {
+          label: 'Походы',
+          valueLabel: 'Кол-во походов',
+          value: '{NUMBER}'
+        },
+        freeEventLocationCount: {
+          label: 'Свободных походов',
+          valueLabel: 'Кол-во походов',
+          value: '{NUMBER}'
+        },
+        eventLocationCompletion: {
+          label: 'Выполнение походов',
+          valueLabel: 'Выполнение',
+          value: '{PERCENT}%'
+        },
+        eventVmCount: {
+          label: 'Поиск торговых автоматов',
+          valueLabel: 'Кол-во торговых автоматов',
+          value: '{NUMBER}'
+        },
+        timeTrial: {
+          label: 'Испытания на время',
+          valueLabel: 'Время прохождения',
+          value: '{MINUTES}:{SECONDS}'
+        },
+        minigame: {
+          label: 'Мини-игры',
+          valueLabel: 'Счёт',
+          value: '{NUMBER}'
+        }
+      },
+      subCategories: {
+        '2': 'Все эффекты',
+        all: 'Всё',
+        nasu: 'NASU',
+        rby: 'Red Blue Yellow (Мини-Игра Б)',
+        rby_ex: 'Red Blue Yellow (Мини-Игра Б) - Версия EX',
+        fuji_ex: 'FUJI EX',
+        hozo: 'HOZO',
+        cartoonboy: 'Cartoon Boy',
+        ta_be: 'TA_BE_',
+        ta_be_hardcore: 'TA_BE_ - Хардкорный режим',
+        panerabbit: 'ПЛИТО-Кролик'
+      }
+    },
+    locations: {
+      author: 'От {AUTHOR}',
+      versionAdded: 'Добавлено в {VERSION}',
+      versionUpdated: 'Обновлено в {VERSION}',
+      track: {
+        tooltip: {
+          on: 'Отслеживать',
+          off: 'Не отслеживать'
+        }
+      }
+    },
+    screenshots: {
+      playerScreenshot: 'Снимок от {USER}',
+      limit: 'Использованно слотов: {COUNT}/{LIMIT}',
+      public: {
+        tooltip: {
+          on: 'Сделать публичным',
+          off: 'Сделать приватным'
+        }
+      },
+      spoiler: {
+        label: 'Спойлер',
+        tooltip: {
+          on: 'Пометить как спойлер',
+          off: 'Убрать отметку спойлера'
+        }
+      },
+      like: {
+        tooltip: {
+          on: 'Понравилось',
+          off: 'Не нравится'
+        }
+      },
+      delete: {
+        tooltip: 'Удалить',
+        confirm: 'Вы уверенны, что хотите удалить этот снимок?'
+      }
+    },
+    schedules: {
+      organizer: 'Устроено&nbsp;{NAME}',
+      invalidPlatformLink: 'Недействительный URL платформы',
+      confirmCancel: 'Вы уверены что хотите отменить событие?',
+      wrongEditGame: 'Нельзя редактировать вне {GAME}',
+      platforms: {
+        discord: 'Discord',
+        youtube: 'YouTube',
+        twitch: 'Twitch',
+        niconico: 'Nicovideo',
+        openrec: 'Openrec',
+        bilibili: 'Bilibili'
+      },
+      intervals: {
+        perDay: 'Every day',
+        days: 'Every {INTERVAL} days',
+        perWeek: 'Every {WEEKDAY}',
+        weeks: 'Every {INTERVAL} weeks',
+        perMonth: 'Every month',
+        months: 'Every {INTERVAL} months',
+        perYear: 'Every year',
+        years: 'Every {INTERVAL} years'
+      }
+    },
+    '2kki': {
+      explorerLink: {
+        generic: 'Просмотреть в Yume 2kki Explorer',
+        multi: 'Просмотреть {LOCATION} в Yume 2kki Explorer'
+      }
+    },
+    modSettings: {
+      title: 'Функционал Модератора',
+      actions: {
+        resetPassword: {
+          label: 'Сброс пароля',
+          playerPrompt: 'Введите имя аккаунта, которому необходимо сбросить пароль',
+          success: 'Новый пароль игрока {PLAYER} теперь {PASSWORD}'
+        },
+        changeUsername: {
+          label: 'Сменить Имя пользователя',
+          playerPrompt: 'Введите имя аккаунта, чьё Имя пользователя необходимо сменить',
+          namePrompt: 'Введите новое имя пользователя для {PLAYER}',
+          success: 'Имя пользователя {PLAYER} было изменено на {NAME}',
+          error: 'Не удалось сменить имя пользователя {PLAYER}; Вероятно, указанное имя уже используется'
+        },
+        ban: {
+          label: 'Забанить игрока',
+          playerPrompt: 'Введите имя аккаунта, что необходимо забанить'
+        },
+        unban: {
+          label: 'Разбанить игрока',
+          playerPrompt: 'Введите имя аккаунта, что необходимо разбанить'
+        },
+        mute: {
+          label: 'Заглушить игрока',
+          playerPrompt: 'Введите имя аккаунта, что необходимо заглушить'
+        },
+        unmute: {
+          label: 'Вернуть голос игроку',
+          playerPrompt: 'Введите имя аккаунта, которому необходимо вернуть голос'
+        },
+        grantBadge: {
+          label: 'Выдать значок',
+          playerPrompt: 'Введите имя аккаунта, которому необходимо выдать значок'
+        },
+        revokeBadge: {
+          label: 'Забрать значок',
+          playerPrompt: 'Введите имя аккаунта, у которого необходимо забрать значок'
+        },
+        tempban: {
+          label: 'Tempban a Player',
+          playerPrompt: 'Enter the name of the account to tempban',
+          timePrompt: 'Enter the datetime when the ban expires (UTC time)'
+        },
+        tempmute: {
+          label: 'Tempmute a Player',
+          playerPrompt: 'Enter the name of the account to tempmute',
+          timePrompt: 'Enter the datetime when the mute expires (UTC time)'
+        }
+      }
+    }
+  }
+} satisfies Translation;
+
+export default ru;

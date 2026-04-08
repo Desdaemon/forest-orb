@@ -1,0 +1,1255 @@
+import type { BaseTranslation, Translation } from '../i18n-types';
+
+const ja = {
+  translationComplete: '1',
+  name: '日本語',
+  version: {
+    '2kki': {
+      label: 'ゆめ２っきver{VERSION}',
+      substitutes: {
+        ' Patch ': 'パッチ',
+        '?': '？'
+      }
+    }
+  },
+  ui: {
+    account: {
+      login: 'ログインする',
+      logout: 'ログアウトする'
+    },
+    fontStyle: {
+      label: 'フォント スタイル',
+      values: {
+        style1: 'スタイル１',
+        style2: 'スタイル２',
+        style3: 'スタイル３',
+        style4: 'スタイル４',
+        style5: 'スタイル５',
+        style6: 'スタイル６',
+        style7: 'スタイル７'
+      }
+    },
+    chatbox: {
+      location: '場所：',
+      nextLocation: '次の場所：',
+      immersionMode: '没入モード',
+      reconnect: '再接続',
+      tab: {
+        chat: 'チャット',
+        players: 'プレイヤー',
+        parties: 'パーティー'
+      },
+      chat: {
+        tab: {
+          all: '全',
+          map: 'ﾏｯﾌﾟ',
+          global: 'ｸﾞﾛｰﾊﾞﾙ',
+          party: 'ﾊﾟｰﾃｨｰ'
+        },
+        nickname: {
+          header: 'チャットを する前に、 ニックネームを 設定する 必要が あります。',
+          rule: {
+            maxLength: '※最大 10 文字 まで',
+            alphanumeric: '※半角 英数字 のみ'
+          }
+        }
+      },
+      players: {
+        tab: {
+          map: 'ﾏｯﾌﾟ',
+          friends: 'ﾌﾚﾝﾄﾞ',
+          party: 'ﾊﾟｰﾃｨｰ'
+        }
+      }
+    },
+    instruction: {
+      translation: '翻訳の仕事募集',
+      noGameLoc: '* ゲーム 翻訳 未対応'
+    },
+    '2kki': {
+      hostedWithPermission: 'ゆめ２っきの 開発者の 許可を 得て 掲載しています'
+    },
+    disclaimer: {
+      pendingApproval: '開発者/配信元の承認待ち',
+      hostedWithPermission: '開発者の許可を得て掲載しています',
+      originalCreation: 'YNOprojectのコミュニティによるオリジナルの作品'
+    },
+    modal: {
+      common: {
+        save: 'セーブ',
+        apply: '適用'
+      },
+      confirm: {
+        ok: 'はい',
+        cancel: 'キャンセル'
+      },
+      login: {
+        title: 'ログイン',
+        fields: {
+          username: 'ユーザー名',
+          password: 'パスワード'
+        },
+        submit: '送信',
+        registerPrompt: 'アカウントを お持ちでない方は',
+        register: '登録する'
+      },
+      register: {
+        title: '登録',
+        fields: {
+          email: 'メールアドレス',
+          username: 'ユーザー名',
+          password: 'パスワード',
+          confirmPassword: 'パスワード（確認）'
+        },
+        submit: '送信',
+        loginPrompt: 'すでに アカウントを お持ちの方は',
+        login: 'ログインする'
+      },
+      settings: {
+        title: '設定',
+        fields: {
+          lang: '言語',
+          locationVisibility: {
+            label: 'ゲーム内の位置情報表示範囲',
+            values: {
+              private: '公開しない',
+              friends: 'フレンドのみ',
+              public: '全体'
+            }
+          },
+          nametagMode: {
+            label: 'プレイヤー 名表示',
+            values: {
+              none: 'なし',
+              classic: 'クラシック',
+              compact: 'コンパクト',
+              slim: 'スリム'
+            }
+          },
+          wikiLinkMode: {
+            label: 'Wikiページのポップアップ表示',
+            values: {
+              always: '常に',
+              fullscreen: '全画面の時のみ',
+              never: '設定しない'
+            }
+          },
+          saveReminder: {
+            label: 'セーブリマインダーの頻度',
+            interval: {
+              minutes: '{interval}分ごとに',
+              never: 'しない'
+            }
+          },
+          soundVolume: 'SEの音量',
+          musicVolume: 'BGMの音量',
+          togglePlayerSounds: 'プレイヤー 効果音',
+          toggleEnableBadgeHints: {
+            label: 'バッジヒント',
+            helpText:
+              'バッジヒントは「バッジコレクターアミュレットEX」のバッジを入手すると使用できるようになります。有効にすると、入手していないバッジが１つ以上ある場所に入った時に、右上にアイコンが表示されます。'
+          },
+          togglePlayBadgeHintSound: 'バッジヒント通知音を再生する',
+          toggleEnableExplorer: {
+            label: 'ゆめ２っきナビゲーター',
+            helpText:
+              'ゆめ２っきナビゲーターはゆめ２っきエクスプローラーを一体化したもので、現在地の接続を一目で見ることができます。この機能はあなたの体験に大きな影響を与える可能性があります。ですから、この機能を有効にする前に、ゲームの大部分を探索しておくことを強くお勧めします。ゆめ２っきナビゲーターを使用するにはログインする必要があります。'
+          },
+          toggleImmersionMode: {
+            label: '没入モード',
+            helpText:
+              'より 没入感のある 体験を 提供するために、 プレイヤー数、 グローバル チャット、マップを オフにします'
+          },
+          timeTrialinfo: {
+            label: 'Time Trial'
+          },
+          toggleMobileControls: 'モバイルコントローラーを表示',
+          mobileControlsType: {
+            label: 'モバイルコントローラー型',
+            default: '方向キー',
+            joystick: '浮動ジョイスティック',
+            dpad: '浮動方向キー'
+          },
+          toggleLocationDisplay: '場所 表示',
+          toggleRankings: 'ランキング',
+          togglePreloads: {
+            label: 'プリロード',
+            helpText:
+              '頻繁に使用されるゲームアセットをプリロードし、必要なときに利用できるようにします（ページの再読み込みが必要です）'
+          },
+          toggleQuestionablePreloads: 'PCの壁紙をプリロードする',
+          toggleSchedules: 'イベント',
+          unicodeFont: '代替フォント',
+          toggleSingleplayerMode: {
+            label: 'シングルプレイヤーモード',
+            helpText:
+              'プライベートモードをシングルプレイヤーモードに切り替え、フレンドやパーティメンバーを含めた全員を非表示にします。一人で探索したい場合に最適です。'
+          }
+        },
+        blocklist: 'ブロックリスト',
+        chatSettings: 'チャット',
+        screenshotSettings: 'スクリーンショット',
+        notificationSettings: '通知',
+        cacheSettings: 'キャッシュ',
+        accountSettings: 'アカウント',
+        engineSettings: 'Engine (F1)'
+      },
+      blocklist: {
+        title: 'ブロックリスト',
+        empty: 'あなたのブロックリストは現在空です'
+      },
+      chatSettings: {
+        title: 'チャット 設定',
+        fields: {
+          toggleGameChat: {
+            label: 'ゲーム内にチャットをオーバーレイ表示する',
+            global: 'グローバルチャットのオーバーレイ表示',
+            party: 'パーティチャットのオーバーレイ表示'
+          },
+          toggleTabToChat: 'タブキーを 押して チャット',
+          togglePlayMentionSound: 'メンション通知音を再生する',
+          chatHistoryLimit: {
+            values: {
+              '0': '無限',
+              '25': '25',
+              '50': '50',
+              '100': '100',
+              '250': '250',
+              '500': '500',
+              '1000': '1000',
+              '2500': '2500'
+            }
+          },
+          mapChatHistoryLimit: {
+            label: 'マップ チャット 履歴の 上限'
+          },
+          globalChatHistoryLimit: {
+            label: 'グローバル チャット 履歴の 上限'
+          },
+          partyChatHistoryLimit: {
+            label: 'パーティー チャット 履歴の 上限'
+          },
+          blurScreenshotEmbeds: 'チャットスクショを全部ネタバレにする'
+        }
+      },
+      screenshotSettings: {
+        title: 'スクリーンショット設定',
+        fields: {
+          autoDownloadScreenshots: 'スクリーンショットを自動でダウンロードする',
+          screenshotResolution: {
+            label: 'ダウンロードするスクリーンショットの解像度',
+            values: {
+              '1': '1x - 320x240',
+              '2': '2x - 640x480',
+              '3': '3x - 960x720',
+              '4': '4x - 1280x960'
+            }
+          }
+        }
+      },
+      notificationSettings: {
+        title: '通知 設定',
+        fields: {
+          toggleNotifications: '通知 表示',
+          screenPosition: {
+            label: '表示 場所',
+            values: {
+              bottomLeft: '左下',
+              bottomRight: '右下',
+              topLeft: '左上',
+              topRight: '右上'
+            }
+          },
+          system: {
+            label: 'システム',
+            fields: {
+              siteUpdates: 'サイト更新通知',
+              error: 'エラー発生通知',
+              pushNotifications: 'デスクトップ通知'
+            }
+          },
+          account: {
+            label: 'アカウント',
+            fields: {
+              loggedIn: 'ログイン通知',
+              loggedOut: 'ログアウト通知',
+              passwordUpdate: 'パスワード変更通知'
+            }
+          },
+          players: {
+            label: 'プレイヤー',
+            fields: {
+              playerBlocked: 'プレイヤーのブロック通知',
+              playerUnblocked: 'プレイヤーのブロック解除通知'
+            }
+          },
+          friends: {
+            label: 'フレンド',
+            fields: {
+              add: 'フレンド登録通知',
+              remove: 'フレンド解除通知',
+              accept: 'フレンド申請承認通知',
+              reject: 'フレンド申請却下通知',
+              cancel: 'フレンド申請取り消し通知',
+              incoming: 'フレンド申請受信通知',
+              playerOnline: 'フレンドオンライン通知',
+              playerOffline: 'フレンドオフライン通知'
+            }
+          },
+          parties: {
+            label: 'パーティー',
+            fields: {
+              create: 'パーティー 作成 通知',
+              update: 'パーティー 更新 通知',
+              join: 'パーティー 参加 通知',
+              leave: 'パーティー 離脱 通知',
+              remove: 'パーティー 追放 通知',
+              disband: 'パーティー 解散 通知',
+              playerJoin: 'パーティー メンバー 参加 通知',
+              playerLeave: 'パーティー メンバー 離脱 通知',
+              playerOnline: 'パーティー メンバー オンライン 通知',
+              playerOffline: 'パーティー メンバー オフライン 通知',
+              kickPlayer: 'パーティー メンバー 追放 通知',
+              transferPartyOwner: 'パーティー リーダー 昇格 通知'
+            }
+          },
+          events: {
+            label: 'ドリームラリー',
+            fields: {
+              complete: 'ドリームラリー到達通知',
+              freeComplete: 'エンドレスラリー到達通知',
+              vmComplete: '自販機発見通知',
+              listUpdated: 'ドリームラリー更新通知'
+            }
+          },
+          badges: {
+            label: 'バッジ',
+            fields: {
+              badgeUnlocked: 'バッジ獲得通知'
+            }
+          },
+          timeTrials: {
+            label: 'スピードラン',
+            fields: {
+              goalReached: 'ゴール記録通知'
+            }
+          },
+          screenshots: {
+            label: 'スクリーンショット',
+            fields: {
+              screenshotTaken: 'スクリーンショット撮影通知'
+            }
+          },
+          saveSync: {
+            label: 'セーブデータ同期',
+            fields: {
+              saveUploading: 'セーブデータアップロード通知',
+              saveUploaded: 'セーブデータアップロード終了通知',
+              saveDownloading: 'セーブデータダウンロード開始通知',
+              saveDownloaded: 'セーブデータダウンロード通知',
+              saveUpToDate: 'セーブデータ更新通知',
+              saveCleared: 'セーブデータ消去通知',
+              saveReminder: 'セーブリマインダー'
+            }
+          },
+          schedules: {
+            label: 'イベント',
+            fields: {
+              upcomingSchedules: '今後のイベント'
+            }
+          }
+        }
+      },
+      cacheSettings: {
+        title: 'キャッシュ設定',
+        clear: '初期化する',
+        fields: {
+          locationCache: '場所キャッシュ',
+          mapCache: '地図キャッシュ',
+          locationColorCache: '場所の色キャッシュ'
+        }
+      },
+      accountSettings: {
+        title: 'アカウント設定',
+        fields: {
+          badge: 'バッジ',
+          changePassword: 'パスワード変更',
+          clearSaveSync: 'セーブデータ同期を削除'
+        }
+      },
+      password: {
+        title: 'パスワード変更',
+        fields: {
+          oldPassword: '現在のパスワード',
+          newPassword: '変更後のパスワード',
+          newConfirmPassword: '変更後のパスワード（確認）'
+        },
+        submit: '決定'
+      },
+      badges: {
+        title: 'バッジ',
+        manageBadgeGallery: 'バッジギャラリー管理',
+        fields: {
+          unlockStatus: {
+            label: '獲得状態：',
+            values: {
+              '0': '未獲得',
+              '1': '獲得',
+              all: '全',
+              recentUnlock: '最新獲得'
+            }
+          },
+          sortOrder: {
+            label: 'ソート：',
+            values: {
+              default: 'デフォルト'
+            }
+          },
+          search: {
+            label: '検索：',
+            name: '名：',
+            location: '場所：'
+          }
+        }
+      },
+      badgeGallery: {
+        title: 'バッジギャラリー設定',
+        badgeGalleryRowProgress: '次の行追加まで（BP）',
+        badgeGalleryColProgress: '次の列追加まで（バッジ）',
+        removeMode: {
+          activate: 'バッジを削除する',
+          deactivate: '戻る'
+        },
+        manageBadgePreset: 'プリセット'
+      },
+      badgePreset: {
+        title: 'バッジプリセット',
+        selectPreset: 'プリセット選択',
+        presetName: 'プリセット{{index}}'
+      },
+      save: {
+        title: 'セーブデータ管理',
+        reload: '変更を保存してリロード',
+        info: 'セーブをアップロードする際、RPG_RT.exeから起動した翻訳版のゲームからセーブした場合、EasyRPGを使用して翻訳未使用のゲームでセーブし直さないと、エラーが表示されます'
+      },
+      uiTheme: {
+        title: 'メニュー タイプ',
+        auto: '自動'
+      },
+      createParty: {
+        title: {
+          create: 'パーティーの作成',
+          update: 'パーティーの編集'
+        },
+        fields: {
+          partyName: 'パーティー名',
+          description: '説明',
+          public: '公開',
+          password: 'パスワード',
+          theme: 'メニュー タイプ'
+        },
+        showPassword: 'パスワードを 表示',
+        hidePassword: 'パスワードを 隠す',
+        submit: '送信'
+      },
+      joinPrivateParty: {
+        title: '非公開の パーティーに 参加',
+        fields: {
+          password: 'パスワード'
+        },
+        showPassword: 'パスワードを 表示',
+        hidePassword: 'パスワードを 隠す',
+        incorrectPassword: 'パスワードが正しくありません：もう一度やり直してください。',
+        submit: '送信'
+      },
+      events: {
+        title: 'ドリームラリー',
+        rankExp: '次のランクまで',
+        weekExp: '今週のExP',
+        tabs: {
+          locations: '世界',
+          vms: '自販機'
+        }
+      },
+      rankings: {
+        title: 'ランキング',
+        player: 'Player'
+      },
+      screenshot: {
+        title: 'スクリーンショット',
+        download: 'ダウンロード',
+        save: 'マイスクリーンショットに保存する',
+        share: 'チャットで共有'
+      },
+      myScreenshots: {
+        title: 'マイスクリーンショット',
+        screenshotSlotProgress: '次のスロット追加まで(BP)',
+        empty: 'まだスクリーンショットを保存していません。'
+      },
+      communityScreenshots: {
+        title: 'コミュニティのスクリーンショット',
+        scrollToRefresh: '一番上にスクロールして更新',
+        fields: {
+          game: {
+            label: 'ゲーム:&nbsp;',
+            values: {
+              all: '全て'
+            }
+          },
+          sortOrder: {
+            values: {
+              recent: '新着順',
+              likes: 'いいねが多い順'
+            }
+          },
+          interval: {
+            values: {
+              day: '今日',
+              week: '今週',
+              month: '今月',
+              year: '今年',
+              all: '全て'
+            }
+          }
+        }
+      },
+      schedule: {
+        title: 'イベント',
+        ongoing: '進行中',
+        party: 'パーティー限定',
+        future: '今後のイベント',
+        official: '公式イベント',
+        noResults: '登録したイベントがありません。',
+        doSchedule: 'イベントを登録する'
+      },
+      scheduleEdit: {
+        title: 'イベントの詳細',
+        save: 'セーブ',
+        cancel: 'キャンセル',
+        fields: {
+          name: '名前',
+          description: '概要',
+          datetime: '日付',
+          recurring: '定期的なイベント',
+          theme: 'メニュー タイプ',
+          interval: {
+            title: '繰り返す期間',
+            days: '日間',
+            months: 'ヶ月間',
+            years: '年間'
+          },
+          restrictParty: 'パーティー限定',
+          official: '公式イベント',
+          resetOrganizer: '主催者をリセットする',
+          platforms: {
+            title: '配信URL',
+            discord: 'Discord',
+            youtube: 'YouTube',
+            twitch: 'Twitch',
+            niconico: 'ニコニコ動画',
+            openrec: 'OPENREC',
+            bilibili: 'Bilibili'
+          }
+        }
+      },
+      report: {
+        title: '通報',
+        submit: '送信',
+        fields: {
+          reason: {
+            '1': '差別用語、有害または不適切な言葉',
+            '2': '嫌がらせ、いじめ、ストーカー行為',
+            '3': '不適切なプレイヤー名',
+            '4': 'BAN回避',
+            '5': '不正行為、不具合の悪用',
+            '6': '未成年プレイヤー',
+            '7': 'スパム',
+            title: '理由',
+            placeholder: '任意の理由を記入してください',
+            other: 'その他 (任意記入)'
+          }
+        }
+      },
+      rules: {
+        title: 'ルール',
+        rule1: '礼儀正しく、丁寧な対応を心がけてください。',
+        rule2: '18禁の会話は禁止です(NSFW、ゴアなど)。',
+        rule3: '政治的な会話は禁止です。',
+        rule4: '扇動的な発言(中傷を含む)は禁止です。',
+        rule5: 'いかなる理由であれ、不正行為は禁止です。',
+        rule6: 'トラブルが発生した場合は、モデレーターにお知らせください。'
+      },
+      explorerUndiscoveredLocations: {
+        title: '未発見の場所',
+        complete: 'あなたは到達可能なすべての場所を発見しました！おめでとう！！'
+      },
+      locations: {
+        title: '場所一覧',
+        fields: {
+          visited: {
+            values: {
+              all: '全て',
+              visited: '到達済み',
+              unvisited: '未到達'
+            }
+          },
+          sortOrder: {
+            values: {
+              newest: '新しい順',
+              oldest: '古い順',
+              shallowest: '浅い順',
+              deepest: '深い順',
+              alpha: 'アルファベット順',
+              players: 'プレイヤー数順'
+            }
+          }
+        }
+      }
+    },
+    tooltips: {
+      togglePrivateMode: 'プライベートモードのオン／オフ',
+      save: 'セーブデータ管理',
+      uiTheme: 'メニュータイプ',
+      toggleChat: 'チャットのオン／オフ',
+      toggleExplorer: 'ゆめ２っきナビゲーターのオン／オフ',
+      screenshot: 'スクリーンショットを撮る',
+      myScreenshots: 'マイスクリーンショット',
+      settings: '設定',
+      toggleMute: '消音のオン／オフ',
+      toggleHideLocation: '場所の共有のオン／オフ',
+      toggleGlobalMessage: 'グローバルメッセージのオン／オフ',
+      chat: {
+        toggleNextLocation: '次のラリーの場所表示のオン／オフ',
+        toggleGlobalMessageLocations: 'チャットの場所表示のオン／オフ',
+        toggleMessageTimestamps: 'チャットのタイムスタンプ表示のオン／オフ',
+        filterMentions: 'メンションのみ表示',
+        clearChat: 'チャットを消去'
+      },
+      parties: {
+        createParty: 'パーティーを組む',
+        disbandParty: 'パーティーを解散する'
+      },
+      events: 'ドリームラリー',
+      locations: '場所一覧',
+      communityScreenshots: 'コミュニティのスクリーンショット',
+      rankings: 'ランキング',
+      schedules: 'イベント',
+      nexus: '扉部屋へ戻る',
+      explorerUndiscoveredLocations: '未発見の場所を見る',
+      timeTrial: 'Time Trial Modeを有効にするには、はじめからを押す時にShiftキーと右キーを押し続けます',
+      mobileControlsType:
+        'モバイルコントローラーをデフォルトの方向キーから切り替えられます。<br>浮動コントローラーはモバイルのフルスクリーンの時のみ有効です。'
+    },
+    placeholders: {
+      scheduleDescription: 'Markdown記法が使用可能で、{\\{l:英名,和名}}を使ってyume.wikiへのマップURLを記入する'
+    },
+    reviewRules: 'ルールを見る'
+  },
+  messages: {
+    games: {
+      ynoproject: 'YNOproject',
+      yume: 'ゆめにっき',
+      '2kki': 'ゆめ２っき',
+      unconscious: 'Collective Unconscious',
+      flow: '.flow',
+      fog: 'FOG',
+      prayers: 'Answered Prayers',
+      deepdreams: 'Deep Dreams',
+      someday: 'Someday',
+      amillusion: 'Amillusion',
+      unevendream: 'おうとつゆめ',
+      braingirl: 'ブレインガール',
+      muma: 'Muma|Rope',
+      genie: 'Dream Genie',
+      mikan: '未完夢像',
+      ultraviolet: 'Ultra Violet',
+      sheawaits: 'She Awaits',
+      oneshot: 'OneShot',
+      oversomnia: 'Oversomnia',
+      tsushin: '梦通信',
+      nostalgic: 'nostAlgic',
+      if: 'If',
+      unaccomplished: 'Unaccomplished'
+    },
+    leavePage: '本当にこのページから離脱するのですか？保存されていないゲーム内の進行状況はすべて失われます。',
+    logout: 'ログアウトしてもよろしいですか？',
+    loadingInstruct:
+      '. <br /> <br /> サイトの読み込みに時間がかかっているようです。この問題が解決しない場合、CTRL+F5を使用するか、ブラウザのキャッシュをクリアする必要があるかもしれません。(Cookieは削除しないでください！)F12でエラーを確認することができます。',
+    requestNotifications: 'フォローしたイベントやラリーの更新の通知を受け取りますか？',
+    connStatus: {
+      '0': '接続なし',
+      '1': '接続済み',
+      '2': '接続中…',
+      '3': 'プライベートモード',
+      '4': 'シングルプレイ中'
+    },
+    lastOnline: {
+      template: '最後のプレイ\n{INTERVAL}',
+      longTime: 'かなり前',
+      interval: {
+        short: '1分以内',
+        minutes: {
+          singular: '{VALUE}分前',
+          plural: '{VALUE}分前'
+        },
+        hours: {
+          singular: '{VALUE}時間前',
+          plural: '{VALUE}時間前'
+        },
+        days: {
+          singular: '{VALUE}日前',
+          plural: '{VALUE}日前'
+        }
+      }
+    },
+    location: {
+      template: '{LOCATION} 「{LOCATION_EN}」',
+      queryingLocation: '場所を取得中…',
+      unknownLocation: '場所不明',
+      '2kki': {
+        template: '{LOCATION_JP} 「{LOCATION}」'
+      },
+      connType: {
+        '1': '一方通行',
+        '2': '一方通行の先',
+        '4': 'ロック解除',
+        '8': 'ロック',
+        '16': '見えるだけ、見せるだけ',
+        '32': '孤立したエリア',
+        '64': '要エフェクト「{PARAMS_JP}」',
+        '128': '{PARAMS_JP}パーセントの確率で到達',
+        '256': '{PARAMS_JP}',
+        '512': '公衆電話',
+        '1024': '公衆電話先',
+        '2048': '季節限定「{PARAMS_JP}」'
+      },
+      depth: '「{DEPTH}」',
+      playing: '{GAME}をプレイ中'
+    },
+    locationDisplay: {
+      template: '{LOCATION}',
+      '2kki': {
+        template: '{LOCATION_JP}'
+      }
+    },
+    playersOnline: {
+      singular: '{COUNT}人が 接続中',
+      plural: '{COUNT}人が 接続中'
+    },
+    playersInMap: {
+      singular: '{COUNT}人が 接続中（同マップ）',
+      plural: '{COUNT}人が 接続中（同マップ）'
+    },
+    playerList: {
+      unnamed: '無名プレイヤー',
+      muted: 'ミュート済',
+      actions: {
+        approveFriend: 'フレンド申請を承認',
+        rejectFriend: 'フレンド申請を却下',
+        cancelFriend: 'フレンド申請を取り消す',
+        partyKick: 'パーティーから追い出す',
+        transferPartyOwner: 'パーティーリーダーに昇格する'
+      }
+    },
+    roles: {
+      mod: 'モデレーター',
+      dev: '開発者'
+    },
+    timestamp: {
+      time: '{TIME}',
+      timeAndWeekday: '{TIME}（{WEEKDAY}）'
+    },
+    context: {
+      ping: {
+        label: '{PLAYER}にメンション'
+      },
+      addFriend: {
+        label: '{PLAYER}のフレンドになる'
+      },
+      removeFriend: {
+        label: '{PLAYER}のフレンドを解除'
+      },
+      block: {
+        label: '{PLAYER}をブロック',
+        confirm: '{PLAYER}をブロックしてもよろしいですか？'
+      },
+      unblock: {
+        label: '{PLAYER}をブロック解除',
+        confirm: '{PLAYER}をブロック解除してもよろしいですか？?'
+      },
+      report: {
+        label: '{PLAYER}を通報'
+      },
+      admin: {
+        ban: {
+          label: '{PLAYER}をBAN',
+          confirm: '本当に{PLAYER}をBANしますか？',
+          success: '{PLAYER}はBANされました。'
+        },
+        unban: {
+          label: '{PLAYER}をBAN解除',
+          confirm: '本当に{PLAYER}をBAN解除しますか？',
+          success: '{PLAYER}はBAN解除されました。'
+        },
+        mute: {
+          label: '{PLAYER}をミュート',
+          confirm: '本当に{PLAYER}をミュートしますか？',
+          success: '{PLAYER} はミュートされました。'
+        },
+        unmute: {
+          label: '{PLAYER}をミュート解除',
+          confirm: '本当に {PLAYER}をミュート解除しますか？',
+          success: '{PLAYER}はミュート解除されました。'
+        },
+        grantBadge: {
+          label: '権限バッジを付与',
+          prompt: '{PLAYER}に付与するバッジIDを入力してください。',
+          success: '{BADGE}を{PLAYER}に付与しました。',
+          fail: '入力されたバッジIDに対応するバッジが見つかりませんでした。'
+        },
+        revokeBadge: {
+          label: '権限バッジの剥奪',
+          prompt: '{PLAYER}から剥奪するバッジIDを入力してください。',
+          success: '{PLAYER}から{BADGE}を剥奪しました。',
+          fail: '入力されたバッジIDに対応するバッジが見つかりませんでした。'
+        },
+        tempban: {
+          label: '{PLAYER}を一時的にBAN',
+          prompt: 'いつ{PLAYER}のBANを解除しますか？（グリニッジ標準時）',
+          success: '{PLAYER}は一時的にBANされました。'
+        },
+        tempmute: {
+          label: '{PLAYER}を一時的にミュート',
+          prompt: 'いつ{PLAYER}のミュートを解除しますか？（グリニッジ標準時）',
+          success: '{PLAYER}は一時的にミュートされました。'
+        }
+      }
+    },
+    account: {
+      login: {
+        errors: {
+          invalidLogin: 'ユーザー名 または パスワードが 間違っています。'
+        }
+      },
+      register: {
+        errors: {
+          confirmPasswordMismatch: 'パスワードが一致しません。',
+          invalidCredentials: '指定されたユーザー名またはパスワードが空、もしくは無効な文字が含まれています。',
+          emailTaken: 'このメールアドレスは既に使用されています。',
+          usernameTaken: 'このユーザー名は既に使用されています。'
+        }
+      },
+      password: {
+        errors: {
+          confirmPasswordMismatch: '変更後のパスワードが一致しません。',
+          badLogin: 'パスワードが間違っています。',
+          internalServerError: 'エラーが発生しました：後でもう一度お試しください。'
+        }
+      }
+    },
+    chat: {
+      globalMessage: 'グローバルメッセージ'
+    },
+    friends: {
+      friend: 'フレンド',
+      categories: {
+        incoming: '受信中 - {COUNT}',
+        outgoing: '申請中 - {COUNT}',
+        online: 'オンライン - {COUNT}',
+        offline: 'オフライン - {COUNT}'
+      }
+    },
+    parties: {
+      emptyMessage: '現在、 活動中の パーティーは ありません。',
+      yourParty: '自分の パーティー',
+      defaultPartyName: '{OWNER}のパーティー',
+      partyOwner: 'パーティーリーダー',
+      confirmDisband: '本当にこのパーティを解散しますか？この操作は取り消せません。',
+      confirmTransferPartyOwner: 'パーティのリーダー権を{PLAYER}に譲渡してもよろしいですか？',
+      offlineMemberSuffix: 'オフラインのメンバー',
+      categories: {
+        online: 'オンライン - {COUNT}',
+        offline: 'オフライン - {COUNT}'
+      },
+      actions: {
+        viewPartyDetails: 'パーティーの詳細を見る',
+        joinParty: 'パーティーに参加する',
+        joinPrivateParty: '非公開のパーティーに参加する',
+        leaveParty: 'パーティーから退出する'
+      }
+    },
+    chatTips: {
+      template: 'TIP: {CONTENT}',
+      tips: {
+        backupReminder:
+          '定期的にセーブデータをダウンロードし、バックアップをとっておくことをお勧めします。そうすれば、ブラウザ版でセーブデータが消えてしまった場合でも、バックアップしていたセーブデータをアップロードすれば進行状況をバックアップした時点に戻すことが出来ます。',
+        menuTheme:
+          '名前の色やプレイヤータブで表示されるスタイルはゲーム内で設定しているメニュータイプに依存しています。',
+        playersInMap:
+          '接続数が表示されているラベルをクリックすると、ゆめ２っきオンライン全体の接続数と同じマップ内の接続数を切り替えることが出来ます。',
+        markdownSupport:
+          'このチャットはテキスト装飾に対応しています。 現在対応しているのは：**太字**（\\*\\*テキスト\\*\\*）、*イタリック体*（\\*テキスト\\*、\\_テキスト\\_）、__下線__（\\_\\_テキスト\\_\\_）、~~打ち消し線~~（\\~\\~テキスト\\~\\~）、||スポイラー||（\\|\\|テキスト\\|\\|）。',
+        tabToChat:
+          'PCでプレイしている場合、タブキーを押すことでゲームの操作とチャット入力を切り替えることができます。この機能は、チャット設定の「タブキーを押してチャット」で無効にすることができます。',
+        chatTabNotifications:
+          '全メッセージ以外のチャットタブを表示している時に他のタブでメッセージが送信されるとそのタブに通知マークが付きます。',
+        clearChat: 'チャットボックスの右上にあるチャット消去ボタンをクリックすると、チャットを全消しできます。',
+        chatHistoryLimit:
+          'チャット欄に表示されているチャットが多くなると、ゲームが重くなることがあります。チャット設定で、チャット表示の上限を設定することで、手動でチャットを消去することなく、このような問題を回避することができます。',
+        parties:
+          'パーティー機能は、他のプレイヤーと一緒に行動するのに最適です。パーティーメンバーの位置が確認でき、パーティーチャットで会話することも可能です。',
+        immersionMode:
+          '多人数プレイよりも、没入感のあるプレイがお好みなら、没入モードをお試しください。ゲーム画面左上にある目のアイコンを押すと、没入モードのon/offができ、没入モードをonにするとグローバルチャット、プレイヤーリスト、接続数ラベルが見えなくなるので、探索中に他のプレイヤーを見つけるとより面白くなります。',
+        friendsMenu:
+          'プレイヤーのアイコンをPCで右クリック、又はタッチデバイスで長押しすると、フレンド申請やメンションできたりブロックできたりします。',
+        easySettingsMenu:
+          'PCでプレイしている場合、F1キーでゲーム設定を開き、キー割り当てを変更したりシステム側設定を調整できたりします。',
+        floatingControls:
+          'タッチデバイスでプレイしている場合、デフォルトの方向キー以外に浮動的なジョイスティックも「モバイルコントローラー型」で設定することができます。',
+        recentBadges:
+          '現セッションで獲得したバッジは、バッジ一覧で獲得状態を「最新獲得」にするといつでも閲覧できるようになります。',
+        desktopHotkeys:
+          'PCでプレイしている場合、AltとEnterキーでフルスクリーンを切り替えたり、F7でスクリーンショットを取ったり、Tキーでゲーム内のチャット入力を開いたりする便利なショートカットがいくつも搭載されています。',
+        badgeControls:
+          'バッジギャラリーで、バッジをドラッグ＆ドロップすることで配置の交換ができます。又は多数のバッジを取り外す時には「バッジを削除する」を活用することが可能です。',
+        cacheSettings:
+          'マップ到達しにくい時や地図の更新が反映されない時には、「キャッシュ」画面からキャッシュを初期化して再更新することができます。',
+        openSource:
+          'YNOprojectはオープンソースであり、コードリポジトリは以下の場所で公開されています。 https://github.com/ynoproject/'
+      }
+    },
+    save: {
+      slot: {
+        title: 'ファイル&nbsp;{SLOT_ID}',
+        readingLabel: 'ファイルデータ読み込み中...',
+        emptyLabel: '空のデータ',
+        errorLabel: 'エラー'
+      },
+      upload: {
+        tooltip: 'セーブデータを アップロード',
+        invalidSaveFile: '有効なセーブファイル（.lsd形式）を選択してください。'
+      },
+      download: {
+        tooltip: 'セーブデータを ダウンロード',
+        emptySlot: 'おっと! スロット番号のセーブファイルが空になっているようです。'
+      },
+      delete: {
+        tooltip: 'セーブデータを 削除',
+        confirmDelete: 'ファイル{SLOT_ID}のセーブデータを削除してもよろしいですか？'
+      }
+    },
+    saveSync: {
+      confirmClearSaveSync:
+        '本当にこのゲームのセーブデータ同期を削除しますか？ セーブデータをローカル保存していない場合、元に戻すことはできません。'
+    },
+    toast: {
+      system: {
+        siteUpdates: 'サイトが更新されました。ページを再読み込みすると、サイトの変更が反映されます。',
+        error:
+          'おっと！エラーが発生しました。エラー内容は、ブラウザのコンソールを確認してください。｢F12キーを押す｣もしくは｢右クリックして｢検証｣をクリックする｣と、開発者ツールが立ち上がります。次に、console（コンソール）タブをクリックするとエラー内容が書かれたログを確認できます。'
+      },
+      account: {
+        loggedIn: '{USER}でログインしました。',
+        loggedOut: 'ログアウトしました。',
+        passwordUpdated: 'パスワードの変更が完了しました。'
+      },
+      players: {
+        playerBlocked: '{PLAYER}をブロックしました。',
+        playerUnblocked: '{PLAYER}をブロック解除しました。'
+      },
+      friends: {
+        add: '{PLAYER}にフレンド申請を送信しました。',
+        remove: '{PLAYER}のフレンドを解除しました。',
+        accept: '{PLAYER}のフレンド申請を承諾しました。',
+        reject: '{PLAYER}のフレンド申請を却下しました。',
+        cancel: '{PLAYER}へのフレンド申請を取り消しました。',
+        incoming: '{PLAYER}からの新しいフレンド申請を受信しました。',
+        playerOnline: '{PLAYER}が オンラインに なりました。',
+        playerOffline: '{PLAYER}が オフラインに なりました。'
+      },
+      parties: {
+        create: '{PARTY}が 作成されました。',
+        update: '{PARTY}が 更新されました。',
+        join: 'あなたは {PARTY}に 参加しました。',
+        leave: 'あなたは {PARTY}から 抜けました。',
+        remove: 'あなたは {PARTY}から 追い出されました。',
+        disband: '{PARTY}は解散 されました。',
+        playerJoin: '{PLAYER}が パーティーに 参加しました。',
+        playerLeave: '{PLAYER}が パーティーから 抜けました。',
+        playerOnline: '{PLAYER}が オンラインに なりました。',
+        playerOffline: '{PLAYER}が オフラインに なりました。',
+        kickPlayer: '{PLAYER}は パーティーから 追い出されました。',
+        transferPartyOwner: '{PLAYER}は パーティーリーダーに 昇格されました。'
+      },
+      events: {
+        complete: '＜ドリームラリー＞ {LOCATION}に 到達したので、 {EXP}を 獲得しました！',
+        freeComplete: '＜ドリームラリー＞ {LOCATION}に 到達しました！',
+        vmComplete: '＜ドリームラリー＞自販機を見つけました！\n{EXP}を獲得しました！',
+        listUpdated: '＜ドリームラリー＞ ドリームリストが 更新されました！'
+      },
+      badges: {
+        badgeUnlocked: 'バッジを獲得しました！'
+      },
+      screenshots: {
+        screenshotTaken: 'スクリーンショットが撮影されました。'
+      },
+      saveSync: {
+        saveUploading: 'スロット{SLOT}からセーブデータをアップロードしています…',
+        saveUploaded: 'スロット{SLOT}のセーブデータがアップロードされました。',
+        saveDownloading: 'スロット{SLOT}のセーブデータを更新中...',
+        saveDownloaded: 'スロット{SLOT}のセーブデータが更新されました。',
+        saveUpToDate: 'セーブデータは最新です。',
+        saveCleared: 'セーブデータ同期が消去されました。なお、端末内に保存されているセーブデータには影響ありません。',
+        saveReminder: '進行状況を失わないように、こまめなセーブとセーブファイルのバックアップを忘れずに。'
+      },
+      timeTrials: {
+        timeTrialsComplete: '{CATEGORY} ゴール！\n記録： {TIME}'
+      }
+    },
+    events: {
+      exp: '{POINTS}ExP',
+      expRank: 'ランク: {RANK}',
+      period: 'シーズン {ORDINAL}',
+      periodEnds: '{DATE}まで',
+      current: '現在',
+      shortcut: 'ショートカットを開通させていると短縮可能',
+      toggleTracked: '場所の追跡のオン／オフ',
+      availableUntilDate: '{DATE} \n まで 利用可能',
+      types: {
+        '0': 'デイリー',
+        '1': 'ウィークリー',
+        '2': 'ウィークエンド',
+        '3': 'スペシャル',
+        '-1': 'エンドレスラリー'
+      },
+      expRanks: {
+        '0': 'ノービス',
+        '1': 'ミドル',
+        '2': 'ブロンズ',
+        '3': 'シルバー',
+        '4': 'ゴールド',
+        '5': 'プラチナ',
+        '6': 'ダイアモンド'
+      }
+    },
+    badges: {
+      null: 'バッジなし',
+      allCategory: '全',
+      badgeTitle: '{TITLE} - {BP} BP',
+      locked: '？？？',
+      location: '場所：',
+      goalProgress: '{CURRENT}/{TOTAL}',
+      percentUnlocked: 'このバッジを持っているプレイヤーの割合：{PERCENT}%',
+      time: '{MINUTES}:{SECONDS}',
+      artCredit: 'Art by {ARTIST}',
+      search: {
+        modifier: {
+          template: '&nbsp;({MODIFIER})',
+          exactMatch: '完全一致'
+        }
+      },
+      sortOrder: {
+        template: '{TYPE}（{ORDER}）',
+        types: {
+          bp: 'BP',
+          percent: '獲得率'
+        },
+        asc: '昇順',
+        desc: '降順'
+      }
+    },
+    badgeGallery: {
+      label: '{PLAYER}のバッジギャラリー',
+      loading: 'ロード中…',
+      bp: '{BP} BP',
+      count: '{COUNT} バッジ',
+      empty: 'バッジギャラリーが設定されていません'
+    },
+    badgePreset: {
+      empty: '未設定プリセット'
+    },
+    rankings: {
+      categories: {
+        badgeCount: {
+          label: 'バッジ',
+          valueLabel: 'バッジ数',
+          value: '{NUMBER}'
+        },
+        bp: {
+          label: 'BP（バッジポイント）',
+          valueLabel: 'BP',
+          value: '{NUMBER} BP'
+        },
+        exp: {
+          label: 'ExP',
+          valueLabel: 'ExP',
+          value: '{NUMBER} ExP'
+        },
+        eventLocationCount: {
+          label: 'ドリームラリー',
+          valueLabel: 'ドリームラリー完了数',
+          value: '{NUMBER}'
+        },
+        freeEventLocationCount: {
+          label: 'エンドレスラリー',
+          valueLabel: 'エンドレスラリー完了数',
+          value: '{NUMBER}'
+        },
+        eventLocationCompletion: {
+          label: 'ラリー完了率',
+          valueLabel: '完了率',
+          value: '{PERCENT}%'
+        },
+        eventVmCount: {
+          label: '自販機見つけ隊',
+          valueLabel: '見つけた自販機数',
+          value: '{NUMBER}'
+        },
+        timeTrial: {
+          label: 'スピードラン',
+          valueLabel: '記録',
+          value: '{MINUTES}:{SECONDS}'
+        },
+        minigame: {
+          label: 'ミニゲーム',
+          valueLabel: '点数',
+          value: '{NUMBER}'
+        }
+      },
+      subCategories: {
+        '2': '全エフェクト回収',
+        all: '全',
+        nasu: 'NASU',
+        rby: 'ミニゲームB',
+        rby_ex: 'ミニゲームB（EXver）',
+        fuji_ex: 'FUJI EX',
+        hozo: 'HOZO',
+        cartoonboy: 'Cartoon Boy',
+        ta_be: 'TA_BE_',
+        ta_be_hardcore: 'TA_BE_ - ハードモード',
+        panerabbit: 'PANErabbit'
+      }
+    },
+    locations: {
+      author: '作成者：{AUTHOR}氏',
+      versionAdded: '最終追加：{VERSION}',
+      versionUpdated: '更新：{VERSION}',
+      track: {
+        tooltip: {
+          on: '場所を追跡する',
+          off: '場所の追跡を止める'
+        }
+      }
+    },
+    screenshots: {
+      playerScreenshot: '{USER}のスクリーンショット',
+      limit: '{LIMIT}枚中{COUNT}枚のスロットを使用中',
+      public: {
+        tooltip: {
+          on: '公開する',
+          off: '非公開にする'
+        }
+      },
+      spoiler: {
+        label: 'ネタバレ',
+        tooltip: {
+          on: 'ネタバレに設定する',
+          off: 'ネタバレを解除する'
+        }
+      },
+      like: {
+        tooltip: {
+          on: 'いいね',
+          off: 'いいねを取り消す'
+        }
+      },
+      delete: {
+        tooltip: '削除',
+        confirm: '本当にこのスクリーンショットを削除してよろしいですか？'
+      }
+    },
+    schedules: {
+      organizer: '主催者：&nbsp;{NAME}',
+      invalidPlatformLink: '配信サイトのURLを修正してください',
+      confirmCancel: 'このイベントをキャンセルしてよろしいですか？',
+      wrongEditGame: '{GAME}以外では編集できません',
+      platforms: {
+        discord: 'Discord',
+        youtube: 'YouTube',
+        twitch: 'Twitch',
+        niconico: 'ニコニコ動画',
+        openrec: 'OPENREC',
+        bilibili: 'Bilibili'
+      },
+      intervals: {
+        perDay: '毎日',
+        days: '{INTERVAL}日おき',
+        perWeek: '毎週{WEEKDAY}',
+        weeks: '{INTERVAL}週間おき',
+        perMonth: '毎月',
+        months: '{INTERVAL}ヶ月おき',
+        perYear: '毎年',
+        years: '{INTERVAL}年おき'
+      }
+    },
+    '2kki': {
+      explorerLink: {
+        generic: 'ゆめ２っきエクスプローラーで見る',
+        multi: '「{LOCATION}」をゆめ２っきエクスプローラーで見る'
+      }
+    },
+    modSettings: {
+      title: 'モデレーター設定',
+      actions: {
+        resetPassword: {
+          label: 'パスワード変更',
+          playerPrompt: 'パスワードをリセットしたいアカウントの名前を入力してください。',
+          success: '{PLAYER}の新しいパスワードは{PASSWORD}です。'
+        },
+        changeUsername: {
+          label: 'ユーザー名変更',
+          playerPrompt: 'ユーザー名を変更したいアカウントの名前を入力してください。',
+          namePrompt: '{PLAYER}の新しいユーザー名を入力してください。',
+          success: '{PLAYER}のユーザー名は{NAME}に変更されました。',
+          error: '{PLAYER}のユーザー名の変更に失敗しました。(このユーザー名は既に使用されています。)'
+        },
+        ban: {
+          label: 'プレイヤーのBAN',
+          playerPrompt: 'BANするアカウントの名前を入力してください。'
+        },
+        unban: {
+          label: 'プレイヤーのBAN解除',
+          playerPrompt: 'BAN解除するアカウントの名前を入力してください。'
+        },
+        mute: {
+          label: 'プレイヤーのミュート',
+          playerPrompt: 'ミュートするアカウントの名前を入力してください。'
+        },
+        unmute: {
+          label: 'プレイヤーのミュート解除',
+          playerPrompt: 'ミュート解除するアカウントの名前を入力してください。'
+        },
+        grantBadge: {
+          label: '権限バッジの付与',
+          playerPrompt: '権限バッジを付与するアカウントの名前を入力してください。'
+        },
+        revokeBadge: {
+          label: '権限バッジの剝奪',
+          playerPrompt: '権限バッジを剝奪するアカウントの名前を入力してください。'
+        },
+        tempban: {
+          label: 'プレイヤーの一時BAN',
+          playerPrompt: '一時的にBANするアカウントの名前を入力してください。',
+          timePrompt: 'BANの終了日時を入力してください。（グリニッジ標準時）'
+        },
+        tempmute: {
+          label: 'プレイヤーの一時ミュート',
+          playerPrompt: '一時的にミュートするアカウントの名前を入力してください。',
+          timePrompt: 'ミュートの終了日時を入力してください。（グリニッジ標準時）'
+        }
+      }
+    }
+  }
+} satisfies Translation;
+
+export default ja;

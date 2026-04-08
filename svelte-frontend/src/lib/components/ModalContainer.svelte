@@ -1,9 +1,8 @@
 <script lang="ts">
   import { modal, type ModalId } from '$lib/stores/modal';
-  import { onDestroy, onMount } from 'svelte';
-  import Modal from './Modal.svelte';
+  import { onDestroy, onMount, type Snippet } from 'svelte';
 
-  const MODAL_ANIM_MS = 200;
+  const { children } : { children?: Snippet } = $props();
 
   let activeModal = $state<ModalId | null>(null);
   let modalData = $state<Record<string, any>>({});
@@ -53,6 +52,10 @@
   }
 </script>
 
+<div role="presentation" inert={isModalVisible}>
+  {@render children?.()}
+</div>
+
 <div
   bind:this={modalContainer}
   class="modalContainer"
@@ -61,9 +64,6 @@
   tabindex={isModalVisible ? 0 : -1}
   aria-hidden={!isModalVisible}
   onclick={handleOverlayClick}
-  onkeydown={(event) => {
-    if ((event.key === 'Enter' || event.key === ' ') && isModalVisible) closeModalHandler();
-  }}
 >
   <div class="modalStack">
     {#if open}
@@ -89,7 +89,7 @@
         {@const { default: SettingsModal } = await import('$lib/modals/SettingsModal.svelte')}
         <SettingsModal />
       {:else if activeModal}
-        {@const { default: Modal } = await import ('$lib/components/Modal.svelte')}
+        {@const { default: Modal } = await import('$lib/components/Modal.svelte')}
         <Modal aria-label={activeModal}>
           <div class="modalHeader">
             Unknown modal {activeModal}

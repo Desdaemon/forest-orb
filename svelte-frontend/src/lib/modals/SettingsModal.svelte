@@ -10,10 +10,12 @@
     type SettingsTabId,
     type GlobalConfig,
     type UserConfig
-  } from '$lib/settingsSchema';
+  } from '$lib/config';
   import { locale } from '../../i18n/i18n-svelte';
   import type { Locales } from '../../i18n/i18n-types';
   import { languageNames } from './SettingsModal';
+  import { tooltip } from '$lib/components/Tooltip.svelte';
+  import { getInitPayload } from '$lib/init';
 
   let activeTab = $state<SettingsTabId>('general');
 
@@ -51,6 +53,13 @@
     setFieldValue(field, parsedValue);
   }
 
+  function onRangeFieldChange(field: SettingField, event: Event) {
+    if (field.kind !== 'range') return;
+    const target = event.currentTarget as HTMLInputElement | null;
+    if (!target) return;
+    setFieldValue(field, Number(target.value));
+  }
+
   function clearCache(cacheType: 'location' | 'map' | 'locationColor') {
     setConfigValue(`cleared_${cacheType}_cache`, Date.now());
   }
@@ -74,22 +83,30 @@
 
     setConfigValue('lang', selectedLanguage);
   }
+
+  const init = getInitPayload();
+
+  const settingVisibilityOverrides = $derived({
+    playBadgeHintSound: $userConfig.badgeHints,
+    enableExplorer: init.gameId === '2kki',
+    questionablePreloads: $globalConfig.preloads && init.gameId === '2kki'
+  });
 </script>
 
-<Modal id="settingsModal" aria-label="Settings" fullscreen>
+<Modal id="settingsModal" aria-label={$LL.ui.modal.settings.title()}>
   <div class="modalHeader">
     <h1 class="modalTitle">{$LL.ui.modal.settings.title()}</h1>
-    <div class="modalTabsContainer settingsTabs">
+    <div class="modalTabsContainer settingsTabs" role="tablist" aria-label="Settings Tabs">
       {#each settingsTabs as tab}
-        <button type="button" class="modalTab" class:active={activeTab === tab.id} onclick={() => (activeTab = tab.id)}>
-          <small class="subTabLabel infoLabel unselectable">{tab.label($LL)}</small>
+        <button type="button" class="modalTab" role="tab" class:active={activeTab === tab.id} onclick={() => (activeTab = tab.id)}>
+          <small class="modalTabLabel unselectable" role="presentation">{tab.label($LL)}</small>
         </button>
       {/each}
     </div>
   </div>
   <div class="modalContent">
-    <ul class="formControls" hidden={activeTab !== 'general'}>
-      <li class="formControlRow">
+    <ul class="formControls" hidden={activeTab === 'cache' || activeTab === 'account'}>
+      <li class="formControlRow" class:hidden={activeTab !== 'general'}>
         <label for="lang">{$LL.ui.modal.settings.fields.lang()}</label>
         <select id="lang" name="lang" value={$locale} onchange={onLanguageChange}>
           {#each Object.entries(languageNames) as [locale, name]}
@@ -97,28 +114,71 @@
           {/each}
         </select>
       </li>
-    </ul>
-
-    <ul class="formControls" hidden={activeTab === 'cache' || activeTab === 'account'}>
       {#each settingsFieldsByTab[activeTab] as field (field.name)}
-        <li class="formControlRow" class:indent={field.kind === 'toggle' ? field.indent : false}>
-          {#if field.kind === 'toggle'}
-            <span class="unselectable">{field.label($LL)}</span>
-            <div>
+        {#if (settingVisibilityOverrides[field.name as keyof typeof settingVisibilityOverrides] ?? true) !== false}
+          <!-- svelte-ignore a11y_click_events_have_key_events -->
+          <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+          <div
+            class={[
+              'formControlRow',
+              {
+                indent: field.kind === 'toggle' ? field.indent : false,
+                toggleRow: field.kind === 'toggle'
+              }
+            ]}
+            role={field.kind === 'toggle' ? 'checkbox' : undefined}
+            tabindex={field.kind === 'toggle' ? 0 : undefined}
+            aria-checked={Boolean(getFieldValue(field))}
+            aria-labelledby="{field.name}-label"
+            onclick={() => field.kind === 'toggle' && toggleField(field)}
+            onkeydown={ev => field.kind === 'toggle' && ev.key === 'Enter' && (ev.preventDefault(), toggleField(field))}
+          >
+            {#if field.kind === 'toggle'}
+              <label for={field.name} class="unselectable" id="{field.name}-label">
+                {field.label($LL)}
+                {#if field.tooltip}
+                  <span class="helpLink iconLink" {@attach tooltip(field.tooltip($LL))}>
+                    <div class="helpIcon icon fillIcon invertFillIcon altIcon">
+                      <svg viewBox="0 0 18 18">
+                        <path
+                          d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 90 0 0 0 3.25"
+                        />
+                      </svg>
+                    </div>
+                  </span>
+                {/if}
+              </label>
               <button
+                id={field.name}
                 type="button"
+                role="checkbox"
+                tabindex="-1"
+                name={field.name}
+                aria-checked={Boolean(getFieldValue(field))}
                 aria-label={field.ariaLabel ? field.ariaLabel($LL) : field.label($LL)}
                 class="checkboxButton unselectable"
                 class:inverseToggle={field.invert}
-                class:toggled={field.invert ? !Boolean(getFieldValue(field)) : Boolean(getFieldValue(field))}
-                onclick={() => toggleField(field)}><span></span></button
+                class:toggled={Boolean(getFieldValue(field))}
               >
-            </div>
-          {:else}
-            <label for={field.name} class="unselectable">{field.label($LL)}</label>
-            <div>
+                <span role="presentation"></span>
+              </button>
+            {:else if field.kind === 'select'}
+              <label for={field.name} class="unselectable">
+                {field.label($LL)}
+                {#if field.tooltip}
+                  <span class="helpLink iconLink" {@attach tooltip(field.tooltip($LL))}>
+                    <div class="helpIcon icon fillIcon invertFillIcon altIcon">
+                      <svg viewBox="0 0 18 18">
+                        <path
+                          d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 90 0 0 0 3.25"
+                        />
+                      </svg>
+                    </div>
+                  </span>
+                {/if}
+              </label>
               <select
-                name={field.name}
+                id={field.name}
                 value={String(getFieldValue(field))}
                 size={field.size}
                 onchange={(event) => onSelectFieldChange(field, event)}
@@ -127,9 +187,34 @@
                   <option value={String(option.value)}>{option.label($LL)}</option>
                 {/each}
               </select>
-            </div>
-          {/if}
-        </li>
+            {:else}
+              <label for={field.name} class="unselectable">{field.label($LL)}</label>
+              {#if field.tooltip}
+                <span class="helpLink iconLink" title={field.tooltip($LL)}>
+                  <div class="helpIcon icon fillIcon invertFillIcon altIcon">
+                    <svg viewBox="0 0 18 18">
+                      <path
+                        d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 90 0 0 0 3.25"
+                      />
+                    </svg>
+                  </div>
+                </span>
+              {/if}
+              <input
+                id={field.name}
+                name={field.name}
+                type="range"
+                min={String(field.min)}
+                max={String(field.max)}
+                step={field.step ? String(field.step) : undefined}
+                value={String(getFieldValue(field))}
+                class="slider"
+                oninput={(event) => onRangeFieldChange(field, event)}
+                onchange={(event) => onRangeFieldChange(field, event)}
+              />
+            {/if}
+          </div>
+        {/if}
       {/each}
     </ul>
 
@@ -221,5 +306,14 @@
 
   .formControls {
     width: 100%;
+  }
+
+  .toggleRow {
+    cursor: pointer;
+    transition: background-color 120ms ease;
+  }
+
+  .toggleRow:hover {
+    background-color: rgba(var(--alt-color), 0.14);
   }
 </style>
