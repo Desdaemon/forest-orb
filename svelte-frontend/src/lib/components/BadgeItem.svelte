@@ -102,7 +102,7 @@
   const shouldLockItem = $derived((badgeId !== 'null' && !badge.unlocked) || (!showBadgeEl && badgeId !== 'null'));
 
   function getBadgeUrl(b: Badge, staticOnly: boolean): string {
-    return b.badgeId ? `images/badge/${b.badgeId}${!staticOnly && b.animated ? '.gif' : '.png'}` : '';
+    return b.badgeId ? `/images/badge/${b.badgeId}${!staticOnly && b.animated ? '.gif' : '.png'}` : '';
   }
 
   const badgeUrl = $derived(showBadgeEl ? getBadgeUrl(badge, !badge.unlocked) : '');

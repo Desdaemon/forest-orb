@@ -39,7 +39,7 @@
   import { activateTheme } from '$lib/stores/uiTheme';
   import ChatMessageItem from './ChatMessageItem.svelte';
   import VirtualList, { type VirtualListController } from './VirtualList.svelte';
-  import BadgeItem from './BadgeItem.svelte';
+  import LL from '../../i18n/i18n-svelte';
 
   const { gameId: currentGameId } = getGameInitState();
 
@@ -273,7 +273,7 @@
   }
 
   function getPlayerBadgeImageUrl(badge: string): string {
-    return `images/badge/${badge}.png`;
+    return `/images/badge/${badge}.png`;
   }
 
   function getPlayerSpriteUrl(player: ChatPlayerProfile): string {
@@ -552,8 +552,8 @@
           </span>
         </div>
         <div id="location" class="info hidden">
-          <span id="locationLabel" class="infoLabel nowrap" data-i18n="[html]chatbox.location">Location:&nbsp;</span
-          ><span id="locationText" class="infoText nofilter"></span>
+          <span id="locationLabel" class="infoLabel nowrap">{$LL.ui.chatbox.location()}&nbsp;</span>
+          <span id="locationText" class="infoText nofilter"></span>
         </div>
       </div>
       <div id="chatboxContent" role="presentation">
@@ -569,7 +569,7 @@
             onclick={() => setTab('chat')}
             onkeydown={(event) => onMainTabKeydown(event, 'chat')}
           >
-            <span class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.chat">Chat</span>
+            <span class="chatboxTabLabel unselectable">{$LL.ui.chatbox.tab.chat()}</span>
           </div>
           <div
             id="chatboxTabPlayers"
@@ -582,7 +582,7 @@
             onclick={() => setTab('players')}
             onkeydown={(event) => onMainTabKeydown(event, 'players')}
           >
-            <span class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.players">Players</span>
+            <span class="chatboxTabLabel unselectable">{$LL.ui.chatbox.tab.players()}</span>
           </div>
           <div
             id="chatboxTabParties"
@@ -595,7 +595,7 @@
             onclick={() => setTab('parties')}
             onkeydown={(event) => onMainTabKeydown(event, 'parties')}
           >
-            <span class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.parties">Parties</span>
+            <span class="chatboxTabLabel unselectable">{$LL.ui.chatbox.tab.parties()}</span>
           </div>
         </div>
         <div id="chat" class="chatboxTabSection" class:hidden={activeTab !== 'chat'}>

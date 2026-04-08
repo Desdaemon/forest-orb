@@ -464,7 +464,7 @@ function getGradientText(colors: [number, number, number][], smooth?: boolean): 
 // ---------- async image loaders (mirror system.js) ----------
 
 function getThemeAssetPath(themeGameId: string, uiTheme: string, fileName: string): string {
-  return `images/ui/${themeGameId}/${uiTheme}/${fileName}`;
+  return `/images/ui/${themeGameId}/${uiTheme}/${fileName}`;
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {

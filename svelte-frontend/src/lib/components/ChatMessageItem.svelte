@@ -45,7 +45,7 @@
     if (value === undefined || value === null || value === '' || value === 'null') return '';
     return String(value);
   });
-  const badgeStyle = $derived(badgeId ? `background-image: url('images/badge/${badgeId}.png');` : '');
+  const badgeStyle = $derived(badgeId ? `background-image: url('/images/badge/${badgeId}.png');` : '');
   const isAccount = $derived((player?.account ?? message.senderAccount) === true);
   const startMarker = $derived(isAccount ? '[' : '<');
   const endMarker = $derived(isAccount ? ']' : '>');

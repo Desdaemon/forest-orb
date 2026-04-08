@@ -83,8 +83,8 @@
           class="uiTheme"
           class:fullBg={autoIsFullBg}
           data-ui-theme="auto"
-          style:background-image="url('images/ui/{gameId}/{autoPreview}/containerbg.png')"
-          style:border-image="url('images/ui/{gameId}/{autoPreview}/border.png') 10 repeat"
+          style:background-image="url('/images/ui/{gameId}/{autoPreview}/containerbg.png')"
+          style:border-image="url('/images/ui/{gameId}/{autoPreview}/border.png') 10 repeat"
           role="button"
           tabindex="0"
           onclick={() => handleSelect('auto')}
@@ -92,8 +92,8 @@
           aria-label="Select auto theme"
           aria-pressed={autoIsSelected}
         >
-          <img src="images/ui/{gameId}/{autoPreview}/arrowup.png" alt="" />
-          <img src="images/ui/{gameId}/{autoPreview}/arrowdown.png" alt="" />
+          <img src="/images/ui/{gameId}/{autoPreview}/arrowup.png" alt="" />
+          <img src="/images/ui/{gameId}/{autoPreview}/arrowdown.png" alt="" />
         </div>
       </div>
     </div>
@@ -106,8 +106,8 @@
             class="uiTheme"
             class:fullBg={isFullBg}
             data-ui-theme={uiTheme}
-            style:background-image="url('images/ui/{gameId}/{uiTheme}/containerbg.png')"
-            style:border-image="url('images/ui/{gameId}/{uiTheme}/border.png') 10 repeat"
+            style:background-image="url('/images/ui/{gameId}/{uiTheme}/containerbg.png')"
+            style:border-image="url('/images/ui/{gameId}/{uiTheme}/border.png') 10 repeat"
             role="button"
             tabindex="0"
             onclick={() => handleSelect(uiTheme)}
