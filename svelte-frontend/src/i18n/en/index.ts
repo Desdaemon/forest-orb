@@ -403,14 +403,23 @@ const en = {
           sortOrder: {
             label: 'Sort Order:&nbsp;',
             values: {
-              default: 'Default'
+              default: 'Default',
+              bp: 'BP',
+              percent: 'Percent'
             }
           },
           search: {
             label: 'Search:&nbsp;',
             name: 'Name:',
-            location: 'Location:'
+            location: 'Location:',
+            artist: 'Artist',
+            badgeIdTag: 'Badge ID / tag',
+            clear: 'Clear search'
           }
+        },
+        error: {
+          loadFailed: 'Failed to load badges',
+          setFailed: 'Could not set badge'
         }
       },
       badgeGallery: {

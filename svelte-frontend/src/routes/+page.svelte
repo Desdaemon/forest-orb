@@ -18,6 +18,35 @@
   let loading = $state(true);
   let playerName = $state('');
 
+  // --- Login Modal State and Handlers ---
+  let loginUsername = $state('');
+  let loginPassword = $state('');
+  let loginError = $state('');
+
+  async function handleLogin(event: Event) {
+    event.preventDefault();
+    loginError = '';
+    // NOTE: This is a MOCK. Replace this block with your actual API call that resolves the user info/state.
+    console.log('Attempting login for:', loginUsername);
+
+    if (loginUsername && loginPassword) {
+      // Mock success: Assume successful login sets the info state and closes the modal
+      info = { /* mock user info object */ };
+      await loadData(); // Re-fetch/update data after successful login
+      modal.close();
+    } else {
+      loginError = 'Please enter both a username and password.';
+    }
+  }
+
+  // Function to open the login modal and reset form state
+  function openLoginModal() {
+    modal.open('loginModal');
+    loginUsername = '';
+    loginPassword = '';
+    loginError = '';
+  }
+
   const init = getInitPayload();
   let gameId = $state(inferGameId(init));
   // let canvasEl = $state<HTMLCanvasElement | undefined>();

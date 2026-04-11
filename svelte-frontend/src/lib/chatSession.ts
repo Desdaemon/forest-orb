@@ -1,7 +1,16 @@
 import { getGameInitState } from './init';
 import type { ChatPlayerProfile } from './stores/chatPlayer';
+import { easyrpgPlayer } from './play';
+import { writable } from 'svelte/store';
 
-type ConnectionStatus = 'Disconnected' | 'Connected' | 'Error';
+export const ConnectionStatus = Object.freeze({
+  DISCONNECTED: 0,
+  CONNECTED: 1,
+  CONNECTING: 2,
+  PRIVATE: 3,
+  SINGLEPLAYER: 4,
+});
+export type ConnectionStatus = typeof ConnectionStatus[keyof typeof ConnectionStatus];
 
 type SessionMessagePayload = {
   senderUuid?: string;
@@ -22,10 +31,8 @@ type SessionMessagePayload = {
 
 type ChatSessionClientOptions = {
   shouldConnect: () => boolean;
-  onStatusChange: (status: ConnectionStatus) => void;
   onReconnectAttemptChange: (attempt: number) => void;
   onOpen: () => void;
-  onPlayerCount: (count: number) => void;
   onAppendMessage: (message: SessionMessagePayload) => void;
   getPlayer: (uuid?: string) => ChatPlayerProfile | undefined;
   onPlayerProfile: (profile: ChatPlayerProfile) => void;
@@ -54,12 +61,25 @@ function getSessionWsUrl() {
   return `${wsBase}/session`;
 }
 
+type SessionState = {
+  connState: ConnectionStatus,
+  playerCount: number,
+}
+
 export function createChatSessionClient(options: ChatSessionClientOptions) {
   let reconnectAttempt = 0;
   let reconnectTimer: number | null = null;
   let sessionWs: WebSocket | null = null;
   let sessionCommandHandlers: Record<string, SessionCommandHandler | undefined> = {};
   let sessionCommandCallbackQueue: Record<string, Array<(args: string[]) => void>> = {};
+  const state = writable<SessionState>({
+    connState: ConnectionStatus.DISCONNECTED,
+    playerCount: 0,
+  });
+
+  function setConnState(connState: ConnectionStatus) {
+    state.update((old) => ({...old, connState}));
+  }
 
   function clearReconnectTimer() {
     if (reconnectTimer !== null) {
@@ -173,7 +193,7 @@ export function createChatSessionClient(options: ChatSessionClientOptions) {
     addSessionCommandHandler('pc', (args) => {
       const nextCount = Number.parseInt(args[0] || '', 10);
       if (!Number.isNaN(nextCount)) {
-        options.onPlayerCount(nextCount);
+        state.update((old) => ({...old, playerCount: nextCount}));
       }
     });
 
@@ -226,11 +246,11 @@ export function createChatSessionClient(options: ChatSessionClientOptions) {
     if (!options.shouldConnect()) return;
     disconnect();
 
-    options.onStatusChange('Disconnected');
+    setConnState(ConnectionStatus.DISCONNECTED);
     try {
       sessionWs = new WebSocket(getSessionWsUrl());
     } catch (err) {
-      options.onStatusChange('Error');
+      setConnState(ConnectionStatus.DISCONNECTED);
       console.error('Failed to create session websocket:', err);
       scheduleReconnect();
       return;
@@ -239,8 +259,9 @@ export function createChatSessionClient(options: ChatSessionClientOptions) {
     sessionWs.onopen = () => {
       reconnectAttempt = 0;
       options.onReconnectAttemptChange(reconnectAttempt);
-      options.onStatusChange('Connected');
+      setConnState(ConnectionStatus.CONNECTED);
       initSessionCommandHandlers();
+      easyrpgPlayer.sessionReady();
       options.onOpen();
     };
 
@@ -251,16 +272,17 @@ export function createChatSessionClient(options: ChatSessionClientOptions) {
     };
 
     sessionWs.onerror = () => {
-      options.onStatusChange('Error');
+      setConnState(ConnectionStatus.DISCONNECTED);
     };
 
     sessionWs.onclose = (event) => {
       sessionWs = null;
       if (event.code === 1028) {
-        options.onStatusChange('Disconnected');
+        setConnState(ConnectionStatus.DISCONNECTED);
+        return;
       }
       if (!options.shouldConnect()) {
-        options.onStatusChange('Disconnected');
+        setConnState(ConnectionStatus.DISCONNECTED);
         return;
       }
       scheduleReconnect();
@@ -269,6 +291,7 @@ export function createChatSessionClient(options: ChatSessionClientOptions) {
 
   return {
     connect,
-    disconnect
+    disconnect,
+    subscribe: state.subscribe,
   };
 }

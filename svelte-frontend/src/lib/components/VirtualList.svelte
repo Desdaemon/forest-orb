@@ -20,8 +20,8 @@
     onScrollStateChange,
     ...props
   }: {
-    items?: TItem[];
-    row?: Snippet<[TItem, number]>;
+    items: TItem[];
+    row: Snippet<[TItem, number]>;
     empty?: Snippet;
     estimatedItemHeight?: number;
     overscan?: number;
@@ -89,7 +89,8 @@
 
   function onScroll(event: Event) {
     scrollTop = (event.currentTarget as HTMLElement).scrollTop;
-    onScrollStateChange?.(isScrolledToBottom());
+    const isBottom = isScrolledToBottom();
+    onScrollStateChange?.(isBottom);
   }
 
   export function isScrolledToBottom(threshold = 16) {
@@ -136,13 +137,16 @@
     }
   }
 
-  const measurer = new RowMeasure();
+  let measurer: RowMeasure | undefined = $state();
 
   onMount(() => {
     if (!containerEl) return;
+    measurer = new RowMeasure();
 
     const observer = new ResizeObserver(() => {
-      setContainerMetrics();
+      requestAnimationFrame(() => {
+        setContainerMetrics();
+      });
     });
 
     observer.observe(containerEl);
@@ -204,7 +208,7 @@
         <div
           role="listitem"
           style="position: absolute; inset-inline: 0; top: {offsets[index]}px;"
-          {@attach measurer.attach(index)}
+          {@attach measurer?.attach(index)}
         >
           {@render row?.(item, index)}
         </div>

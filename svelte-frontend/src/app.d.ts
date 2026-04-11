@@ -32,6 +32,8 @@ declare global {
     | 'nostalgic'
     | 'if'
     | 'unaccomplished';
+
+  async function createEasyRpgPlayer(init: any): Promise<any>;
 }
 
-export {};
+export { };

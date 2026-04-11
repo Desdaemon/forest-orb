@@ -3,7 +3,7 @@
   import { onMount, tick } from 'svelte';
   import { modal } from '$lib/stores/modal';
   import { selectedBadge } from '$lib/stores/badge';
-  // import { apiFetch } from '$lib/api';
+  import { apiFetch } from '$lib/api';
   import Modal from '$lib/components/Modal.svelte';
   import BadgeItem from '$lib/components/BadgeItem.svelte';
 
@@ -98,7 +98,7 @@
       groupsByGame = Object.fromEntries(Object.entries(groupMap).map(([game, set]) => [game, Array.from(set).sort()]));
       updateFiltered();
     } catch (e) {
-      error = e instanceof Error ? e.message : 'Failed to load badges';
+      error = e instanceof Error ? e.message : $LL.ui.modal.badges.error.loadFailed();
     }
   });
 
@@ -220,7 +220,7 @@
 
   function getSearchModeLabel(mode: 'name' | 'location' | 'artist') {
     if (mode === 'location') return $LL.ui.modal.badges.fields.search.location();
-    if (mode === 'artist') return 'Artist';
+    if (mode === 'artist') return $LL.ui.modal.badges.fields.search.artist();
     return $LL.ui.modal.badges.fields.search.name();
   }
 
@@ -284,17 +284,17 @@
 
   async function setBadge(badge: Badge) {
     try {
-      // await apiFetch('/badge?command=set&id=' + encodeURIComponent(badgeId), { method: 'POST' });
+      await apiFetch('/badge?command=set&id=' + encodeURIComponent(badge.badgeId), { method: 'POST' });
       selectedBadge.set(badge);
       modal.close();
     } catch (err) {
       console.error('set badge failed', err);
-      error = 'Could not set badge';
+      error = $LL.ui.modal.badges.error.setFailed();
     }
   }
 </script>
 
-<Modal aria-label="Badges" fullscreen>
+<Modal aria-label={$LL.ui.modal.badges.title()} fullscreen>
   <div class="modalHeader">
     <h1 class="modalTitle">{$LL.ui.modal.badges.title()}</h1>
     <div id="badgeControls" class="uiControls wrap">
@@ -312,8 +312,8 @@
         <label for="badgeSortOrder" class="unselectable">{@html $LL.ui.modal.badges.fields.sortOrder.label()}</label>
         <select id="badgeSortOrder" bind:value={sortOrder} onchange={updateFiltered}>
           <option value="badgeId">{$LL.ui.modal.badges.fields.sortOrder.values.default()}</option>
-          <option value="bp">BP</option>
-          <option value="percent">Percent</option>
+          <option value="bp">{$LL.ui.modal.badges.fields.sortOrder.values.bp()}</option>
+          <option value="percent">{$LL.ui.modal.badges.fields.sortOrder.values.percent()}</option>
         </select>
       </div>
       <div class="uiControl badgeSearchRow">
@@ -325,10 +325,10 @@
             type="text"
             autocomplete="off"
             placeholder={searchMode === 'location'
-              ? 'Map / coordinates'
+              ? $LL.ui.modal.badges.fields.search.location()
               : searchMode === 'artist'
-                ? 'Artist'
-                : 'Badge ID / tag'}
+                ? $LL.ui.modal.badges.fields.search.artist()
+                : $LL.ui.modal.badges.fields.search.badgeIdTag()}
             bind:value={searchTerm}
             onfocus={onSearchFocus}
             onblur={onSearchBlur}
@@ -338,7 +338,7 @@
             }}
           />
           {#if searchTerm.trim()}
-            <button type="button" class="badgeSearchClear" aria-label="Clear search" onclick={clearSearch}>✖</button>
+            <button type="button" class="badgeSearchClear" aria-label={$LL.ui.modal.badges.fields.search.clear()} onclick={clearSearch}>✖</button>
           {/if}
           {#if showSearchOptions && searchTerm.trim()}
             <div class="badgeSearchDropdown">

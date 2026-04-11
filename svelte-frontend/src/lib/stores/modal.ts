@@ -20,6 +20,7 @@ export type ModalId =
   | 'schedulesModal'
   | 'communityScreenshotsModal'
   | 'badgesModal'
+  | 'badgePresetModal'
   | 'screenshotModal'
   | 'confirmModal'
   | 'newModal';

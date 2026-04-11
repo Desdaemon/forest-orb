@@ -29,8 +29,13 @@ export interface EngineAPI {
   // Badges
   onBadgeUpdateRequested(): Promise<void>;
 
-  onUpdateConnectionStatus?(connected: boolean): void;
-  onNametagModeUpdated?(mode: number): void;
+  onUpdateConnectionStatus(connected: boolean): void;
+  onNametagModeUpdated(mode: number): void;
+
+  // Ingame
+  onLoadMap(mapName: string): void;
+  onPlayerTeleported(mapId: string, x: number, y: number): void;
+  onReceiveInputFeedback(inputId: number): void;
 }
 
 // Store handlers that can be registered from the migrated modules
@@ -46,39 +51,39 @@ export function registerEngineAPIHandler<K extends keyof EngineAPI>(key: K, hand
 export function createEngineAPI() {
   if (!browser) return;
   Object.assign(window, {
-    onSaveSlotUpdated(slotId: number) {
+    onSaveSlotUpdated(slotId) {
       apiHandlers.onSaveSlotUpdated?.(slotId);
     },
 
-    onRequestFile(url: string) {
+    onRequestFile(url) {
       apiHandlers.onRequestFile?.(url);
     },
 
-    syncPlayerData(uuid: string, rank: number, account: boolean, badge: string | null, medals: any, id: number) {
+    syncPlayerData(uuid, rank, account, badge, medals, id) {
       apiHandlers.syncPlayerData?.(uuid, rank, account, badge, medals, id);
     },
 
-    shouldConnectPlayer(uuid: string): boolean {
+    shouldConnectPlayer(uuid) {
       return apiHandlers.shouldConnectPlayer?.(uuid) ?? true;
     },
 
-    onPlayerConnectedOrUpdated(systemName: string, name: string, id: number) {
+    onPlayerConnectedOrUpdated(systemName, name, id) {
       apiHandlers.onPlayerConnectedOrUpdated?.(systemName, name, id);
     },
 
-    onPlayerSpriteUpdated(sprite: any, idx: number, id: number) {
+    onPlayerSpriteUpdated(sprite, idx, id) {
       apiHandlers.onPlayerSpriteUpdated?.(sprite, idx, id);
     },
 
-    onPlayerDisconnected(id: number) {
+    onPlayerDisconnected(id) {
       apiHandlers.onPlayerDisconnected?.(id);
     },
 
-    showClientToastMessage(key: string, icon: any) {
+    showClientToastMessage(key, icon) {
       apiHandlers.showClientToastMessage?.(key, icon);
     },
 
-    onUpdateSystemGraphic(name: string) {
+    onUpdateSystemGraphic(name) {
       apiHandlers.onUpdateSystemGraphic?.(name);
     },
 
@@ -86,12 +91,24 @@ export function createEngineAPI() {
       await apiHandlers.onBadgeUpdateRequested?.();
     },
 
-    async onUpdateConnectionStatus(connected: boolean) {
+    async onUpdateConnectionStatus(connected) {
       apiHandlers.onUpdateConnectionStatus?.(connected);
     },
 
-    async onNametagModeUpdated(mode: number) {
+    async onNametagModeUpdated(mode) {
       apiHandlers.onNametagModeUpdated?.(mode);
+    },
+
+    onLoadMap(mapName) {
+      apiHandlers.onLoadMap?.(mapName);
+    },
+
+    onPlayerTeleported(mapId, x, y) {
+      apiHandlers.onPlayerTeleported?.(mapId, x, y);
+    },
+
+    onReceiveInputFeedback(inputId) {
+      apiHandlers.onReceiveInputFeedback?.(inputId);
     }
-  });
+  } satisfies EngineAPI);
 }

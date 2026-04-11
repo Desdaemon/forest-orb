@@ -1,6 +1,6 @@
 import type { GameId } from '$lib/allGameUiThemes';
-import { LATIN_EX_LANGS } from '$lib/play';
-import { globalConfig, registerConfigHook, setGlobalSetting } from '$lib/stores/config';
+import { easyrpgPlayer, LATIN_EX_LANGS } from '$lib/play';
+import { globalConfig, registerConfigHook, userConfig } from '$lib/stores/config';
 import { allGameUiThemes, selectTheme, setHighContrastMode } from '$lib/stores/uiTheme';
 import { get } from 'svelte/store';
 import { locale, setLocale } from '../../i18n/i18n-svelte';
@@ -17,6 +17,7 @@ import {
   ubool,
   type TabConfig
 } from './impl';
+import { registerEngineAPIHandler } from '$lib/engineApi';
 export * from './impl';
 
 const CHAT_HISTORY_KEYS = ['0', '25', '50', '100', '250', '500', '1000', '2500'] as const;
@@ -192,6 +193,12 @@ registerConfigHook('uiTheme', (value, gameId) => {
   if (theme) selectTheme(gameId as GameId, theme as any);
 });
 
+registerEngineAPIHandler('onUpdateSystemGraphic', theme => {
+  if (get(userConfig).uiTheme === 'auto') {
+    selectTheme('2kki', theme as any);
+  }
+});
+
 registerConfigHook('lang', async (value) => {
   const lang = typeof value === 'string' && isLocale(value) ? value : baseLocale;
   if (!(lang in loadedLocales)) await loadLocaleAsync(lang);
@@ -205,6 +212,32 @@ registerConfigHook('highContrast', async (value, gameId) => {
 
 registerConfigHook('unicodeFont', value => {
   updateUnicodeFont(get(locale));
+});
+
+registerConfigHook('mute', value => {
+  if (value) {
+    easyrpgPlayer.setSoundVolume(0);
+    easyrpgPlayer.setMusicVolume(0);
+  } else {
+    const { soundVolume, musicVolume } = get(globalConfig);
+    easyrpgPlayer.setSoundVolume(soundVolume);
+    easyrpgPlayer.setMusicVolume(musicVolume);
+  }
+  easyrpgPlayer.saveConfig();
+})
+
+registerConfigHook('soundVolume', value => {
+  if (!get(userConfig).mute) {
+    easyrpgPlayer.setSoundVolume(+(value as string));
+    easyrpgPlayer.saveConfig();
+  }
+});
+
+registerConfigHook('musicVolume', value => {
+  if (!get(userConfig).mute) {
+    easyrpgPlayer.setMusicVolume(+(value as string));
+    easyrpgPlayer.saveConfig();
+  }
 })
 
 // --- config end ---

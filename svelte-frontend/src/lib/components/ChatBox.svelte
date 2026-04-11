@@ -31,7 +31,7 @@
 
 <script lang="ts">
   import { apiFetch } from '$lib/api';
-  import { createChatSessionClient } from '$lib/chatSession';
+  import { ConnectionStatus, createChatSessionClient } from '$lib/chatSession';
   import { onMount, tick } from 'svelte';
   import { getGameInitState } from '$lib/init';
   import { locationResolver } from '$lib/locationResolver';
@@ -40,10 +40,13 @@
   import ChatMessageItem from './ChatMessageItem.svelte';
   import VirtualList, { type VirtualListController } from './VirtualList.svelte';
   import LL from '../../i18n/i18n-svelte';
+  import type { UserInfo } from '$lib/api';
+  import { playerName } from '$lib/stores/play.svelte';
+  import { tooltipLabel } from './Tooltip.svelte';
 
   const { gameId: currentGameId } = getGameInitState();
 
-  const { show = false }: { show?: boolean } = $props();
+  const { show = false, info = null }: { show?: boolean; info?: UserInfo | null } = $props();
 
   type ChatTab = 'chat' | 'players' | 'parties';
 
@@ -115,8 +118,6 @@
   };
 
   let reconnectAttempt = $state(0);
-  let playerCount = $state<number>(0);
-  let connStatus = $state<'Disconnected' | 'Connected' | 'Error'>('Disconnected');
   let activeTab = $state<ChatTab>('chat');
   let chatScope = $state<'all' | 'map' | 'global'>('all');
   let hideLocations = $state(false);
@@ -138,17 +139,11 @@
   let nextLocalMessageId = 1;
   const sessionClient = createChatSessionClient({
     shouldConnect: () => isMounted && show,
-    onStatusChange: (status) => {
-      connStatus = status;
-    },
     onReconnectAttemptChange: (attempt) => {
       reconnectAttempt = attempt;
     },
     onOpen: () => {
       void loadInitialChatHistory();
-    },
-    onPlayerCount: (count) => {
-      playerCount = count;
     },
     onAppendMessage: (message) => {
       appendMessage(message);
@@ -172,6 +167,8 @@
     },
     onActivatePlayerTheme: activatePlayerTheme
   });
+
+  const connState = $derived($sessionClient.connState);
 
   let playerProfiles = $chatPlayerStore;
   const players = $derived.by(() =>
@@ -397,18 +394,6 @@
     }
   }
 
-  function clearPendingTimers() {
-    if (historyRetryTimer !== null) {
-      clearTimeout(historyRetryTimer);
-      historyRetryTimer = null;
-    }
-  }
-
-  function disconnectSession() {
-    clearPendingTimers();
-    sessionClient.disconnect();
-  }
-
   async function loadInitialChatHistory(force = false) {
     if (isLoadingInitialHistory) return;
     if (hasLoadedInitialHistory && !force) return;
@@ -503,7 +488,7 @@
 
     appendMessage({
       senderUuid: 'you',
-      senderName: 'You',
+      senderName: `((${$playerName}))`,
       contents,
       type: 'global',
       timestamp: Date.now()
@@ -513,14 +498,10 @@
   }
 
   $effect(() => {
-    if (!show) {
-      disconnectSession();
-      connStatus = 'Disconnected';
-      return;
+    if (show) {
+      void loadInitialChatHistory();
+      sessionClient.connect();
     }
-
-    void loadInitialChatHistory();
-    sessionClient.connect();
   });
 
   $effect(() => {
@@ -542,18 +523,41 @@
       <div id="chatboxInfo">
         <div id="onlineInfo" class="info">
           <span id="connStatus" class="infoContainer unselectable">
-            <span id="connStatusIcon" class="punct">●</span>
+            <span
+              id="connStatusIcon"
+              class={[
+                'punct',
+                {
+                  connected: connState === ConnectionStatus.CONNECTED,
+                  connecting: connState === ConnectionStatus.CONNECTING,
+                  privateMode: connState === ConnectionStatus.PRIVATE || connState === ConnectionStatus.SINGLEPLAYER
+                }
+              ]}>●</span
+            >
             <span id="connStatusText" class="infoText">
-              {connStatus}
-              {#if playerCount !== null}
-                ({playerCount})
+              {$LL.messages.connStatus[connState]()}
+              {#if $sessionClient.playerCount}
+                ({$sessionClient.playerCount})
               {/if}
+            </span>
+            <span
+              id="reconnectButton"
+              class="reconnectLink iconLink unselectable"
+              {...tooltipLabel($LL.ui.chatbox.reconnect())}
+            >
+              <div class="reconnectIcon icon fillIcon altIcon">
+                <svg viewBox="0 0 18 18">
+                  <path
+                    d="m0 7q1.5-7 9-7 3 0 5.5 2.5l2-2.5 1.5 8h-8l2-2.5q-5-3.5-8 1.5h-4m18 4q-1.5 7-9 7-3 0-5.5-2.5l-2 2.5-1.5-8h8l-2 2.5q5 3.5 8-1.5h4"
+                  />
+                </svg>
+              </div>
             </span>
           </span>
         </div>
         <div id="location" class="info hidden">
           <span id="locationLabel" class="infoLabel nowrap">{$LL.ui.chatbox.location()}&nbsp;</span>
-          <span id="locationText" class="infoText nofilter"></span>
+          <span id="locationText" class="infoText nofilter">asdkjasaskdj</span>
         </div>
       </div>
       <div id="chatboxContent" role="presentation">
@@ -800,19 +804,42 @@
           </VirtualList>
         </div>
       </div>
-      <div id="chatInputContainer">
-        <form action="javascript:void(0)" onsubmit={onSubmitMessage}>
-          <input
-            id="chatInput"
-            type="text"
-            autocomplete="off"
-            maxlength="150"
-            placeholder="Type a message..."
-            bind:value={draftMessage}
-          />
-        </form>
-      </div>
-      <div id="enterNameContainer"></div>
+      {#if $playerName}
+        <div id="chatInputContainer">
+          <form action="javascript:void(0)" onsubmit={onSubmitMessage}>
+            <input
+              id="chatInput"
+              type="text"
+              autocomplete="off"
+              maxlength="150"
+              placeholder="Type a message..."
+              bind:value={draftMessage}
+            />
+            <div id="globalChatInputOverlay"></div>
+            <div id="chatBorder"></div>
+          </form>
+        </div>
+      {:else}
+        <div id="enterNameContainer">
+          <span id="enterNameInstruction">
+            <span>{$LL.ui.chatbox.chat.nickname.header()}</span>
+            <br />
+            <small>
+              <span>{$LL.ui.chatbox.chat.nickname.rule.maxLength()}</span>
+              <br />
+              <span>{$LL.ui.chatbox.chat.nickname.rule.alphanumeric()}</span>
+            </small>
+          </span>
+          <form
+            id="enterNameForm"
+            onsubmit={function () {
+              playerName.set((this as any).playerName.value);
+            }}
+          >
+            <input id="nameInput" name="playerName" type="text" autocomplete="off" maxlength="10" />
+          </form>
+        </div>
+      {/if}
     </div>
   </div>
 {/if}

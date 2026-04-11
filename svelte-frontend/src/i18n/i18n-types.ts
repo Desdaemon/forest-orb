@@ -1088,6 +1088,14 @@ type RootTranslation = {
 							 * D​e​f​a​u​l​t
 							 */
 							'default': string
+							/**
+							 * B​P
+							 */
+							bp: string
+							/**
+							 * P​e​r​c​e​n​t
+							 */
+							percent: string
 						}
 					}
 					search: {
@@ -1103,7 +1111,29 @@ type RootTranslation = {
 						 * L​o​c​a​t​i​o​n​:
 						 */
 						location: string
+						/**
+						 * A​r​t​i​s​t
+						 */
+						artist: string
+						/**
+						 * B​a​d​g​e​ ​I​D​ ​/​ ​t​a​g
+						 */
+						badgeIdTag: string
+						/**
+						 * C​l​e​a​r​ ​s​e​a​r​c​h
+						 */
+						clear: string
 					}
+				}
+				error: {
+					/**
+					 * F​a​i​l​e​d​ ​t​o​ ​l​o​a​d​ ​b​a​d​g​e​s
+					 */
+					loadFailed: string
+					/**
+					 * C​o​u​l​d​ ​n​o​t​ ​s​e​t​ ​b​a​d​g​e
+					 */
+					setFailed: string
 				}
 			}
 			badgeGallery: {
@@ -4620,6 +4650,14 @@ export type TranslationFunctions = {
 							 * Default
 							 */
 							'default': () => LocalizedString
+							/**
+							 * BP
+							 */
+							bp: () => LocalizedString
+							/**
+							 * Percent
+							 */
+							percent: () => LocalizedString
 						}
 					}
 					search: {
@@ -4635,7 +4673,29 @@ export type TranslationFunctions = {
 						 * Location:
 						 */
 						location: () => LocalizedString
+						/**
+						 * Artist
+						 */
+						artist: () => LocalizedString
+						/**
+						 * Badge ID / tag
+						 */
+						badgeIdTag: () => LocalizedString
+						/**
+						 * Clear search
+						 */
+						clear: () => LocalizedString
 					}
+				}
+				error: {
+					/**
+					 * Failed to load badges
+					 */
+					loadFailed: () => LocalizedString
+					/**
+					 * Could not set badge
+					 */
+					setFailed: () => LocalizedString
 				}
 			}
 			badgeGallery: {

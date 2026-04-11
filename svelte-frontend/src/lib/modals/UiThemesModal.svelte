@@ -5,7 +5,7 @@
   import { allGameUiThemes, allGameFullBgUiThemes, getGameFontStyleIndices, type GameId } from '$lib/allGameUiThemes';
   import { selectedUiTheme, selectedFontStyle, currentSystemName, setFontStyle } from '$lib/stores/uiTheme';
   import Modal from '$lib/components/Modal.svelte';
-  import { globalConfig, setGlobalSetting, setUserSetting, toggleGlobal } from '$lib/stores/config';
+  import { globalConfig, setUserSetting, toggleGlobal } from '$lib/stores/config';
 
   let modalData = $state<Record<string, any>>({});
   const unsubscribeModal = modal.subscribe((state) => {
@@ -71,7 +71,7 @@
   }
 </script>
 
-<Modal fullscreen id="uiThemesModal" aria-label="UI Theme" class="uiThemesModal">
+<Modal fullscreen id="uiThemesModal" aria-label="UI Themes" class="uiThemesModal">
   <div class="modalHeader">
     <h1 class="modalTitle">{$LL.ui.modal.uiTheme.title()}</h1>
   </div>

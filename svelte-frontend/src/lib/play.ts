@@ -1,5 +1,5 @@
 import { getGameInitState } from './init';
-import { createEngineAPI } from './engine-api';
+import { createEngineAPI } from './engineApi';
 import type { GlobalConfig, UserConfig } from './config';
 
 export const defaultGlobalConfig = {
@@ -36,7 +36,8 @@ export const defaultGlobalConfig = {
   highContrast: false,
   unicodeFont: false,
   notifications: true,
-  notificationScreenPosition: 'bottomRight'
+  notificationScreenPosition: 'bottomRight',
+  nametagMode: false,
 };
 
 export const defaultUserConfig = {
@@ -55,6 +56,10 @@ export const defaultUserConfig = {
   filterMentions: false,
   trackedLocationId: null,
 
+  badgeHints: false,
+  playBadgeHintSound: false,
+  questionablePreloads: false,
+
   // 2kki only
   last2kkiVersion: null,
   explorer: false,
@@ -70,6 +75,8 @@ export type ConfigByScope = {
 };
 export type ConfigKey<TScope extends ConfigScope> = keyof ConfigByScope[TScope];
 export type AllConfigKeys = keyof typeof defaultGlobalConfig | keyof typeof defaultUserConfig;
+
+export const easyrpgPlayerLoadFuncs: (() => void)[] = [];
 
 export function loadConfigFromStorage(gameId: string) {
   if (typeof localStorage === 'undefined') return null;
@@ -89,52 +96,83 @@ export function saveConfigToStorage(gameId: string, config: Partial<GlobalConfig
   localStorage.setItem(`ynoproject_config_${gameId}`, JSON.stringify({ ...existing, ...config }));
 }
 
-let easyrpgPlayer: any = null;
-let easyrpgPlayerLoadFuncs: Array<() => void> = [];
-let initBlocker: Promise<void> = Promise.resolve();
+type EasyRpgPlayerApi = {
+  setMusicVolume(vol: number): void;
+  setSoundVolume(vol: number): void;
+  saveConfig(): void;
+  setNametagMode(mode: number): void;
+  sessionReady(): void;
+  toggleMute(): void;
+  preloadFile(dir: string, file: string, graphic: boolean): void;
+  getPlayerCoords(): [number, number];
+  requestReset(): void;
+  resetCanvas(): void;
+}
+
+type EasyRpgPlayer = {
+  initialized: boolean;
+  game: string;
+  saveFs: any;
+  wsUrl: string;
+  /** Initialized by {@linkcode initEasyRpgEngine} */
+  api?: EasyRpgPlayerApi,
+} & {
+  [K in EasyRpgPlayerApiFuncs]: EasyRpgPlayerApi[K];
+}
+
+type EasyRpgPlayerApiFuncs = keyof EasyRpgPlayerApi;
+
+const rawEasyRpgModule: any = { __proxy: true };
+export let easyrpgPlayer: EasyRpgPlayer = new Proxy(rawEasyRpgModule, {
+  get(raw, prop) {
+    if (prop in raw) return raw[prop];
+    return (...args: any[]) => {
+      easyrpgPlayerLoadFuncs.push(() => {
+        try {
+          (raw.api[prop] || raw[prop])(...args);
+        } catch (err) {
+          console.error(err, prop, ...args);
+        }
+      })
+    }
+  }
+}) as any;
+
+if (import.meta.hot) {
+  // explicitly refuse HMR for this module
+  import.meta.hot.accept(() => {
+    window.location.reload();
+  })
+}
 
 export async function initEasyRpgEngine() {
-  if (easyrpgPlayer) return;
-
-  const createFunc = (window as any).createEasyRpgPlayer;
-  if (typeof createFunc !== 'function') {
-    return new Promise((resolve) => setTimeout(() => resolve(initEasyRpgEngine()), 100));
-  }
+  if (!(easyrpgPlayer as any).__proxy) return;
 
   const state = getGameInitState();
+  console.log({ state });
   createEngineAPI();
 
-  easyrpgPlayer = {
+  const easyrpgPlayerInit = {
     initialized: false,
     game: state.ynoGameId || state.gameId,
     saveFs: undefined,
-    wsUrl: `${state.serverUrl}/session`
-  };
+    wsUrl: `${state.serverUrl}`,
+  } satisfies Partial<EasyRpgPlayer> as any;
 
-  easyrpgPlayerLoadFuncs = [];
   easyrpgPlayerLoadFuncs.push(() => {
-    if (!easyrpgPlayer || !easyrpgPlayer.api) return;
     easyrpgPlayer.initialized = true;
-    if (typeof easyrpgPlayer.api.setNametagMode === 'function')
-      easyrpgPlayer.api.setNametagMode(defaultUserConfig.nametagMode);
-    if (typeof easyrpgPlayer.api.setSoundVolume === 'function')
-      easyrpgPlayer.api.setSoundVolume(defaultGlobalConfig.soundVolume);
-    if (typeof easyrpgPlayer.api.setMusicVolume === 'function')
-      easyrpgPlayer.api.setMusicVolume(defaultGlobalConfig.musicVolume);
+    easyrpgPlayer.setMusicVolume(0);
   });
 
-  await initBlocker;
-
-  const module = await createFunc(easyrpgPlayer);
-  if (module && typeof module.initApi === 'function') {
-    module.initApi();
-  }
-  if (module) easyrpgPlayer = module;
+  const module = await createEasyRpgPlayer(easyrpgPlayerInit);
+  module.initApi();
+  delete rawEasyRpgModule.__proxy;
+  Object.assign(rawEasyRpgModule, module, module.api);
   for (const fn of easyrpgPlayerLoadFuncs) {
     try {
       fn();
     } catch (err) {
-      console.error('easyrpgPlayer hook error', err);
+      console.error('easyrpgPlayer hook error', { fn, err, easyrpgPlayer });
     }
   }
 

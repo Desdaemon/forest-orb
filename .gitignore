@@ -5,3 +5,4 @@ ynoengine*.wasm
 
 /images/ynomoji/*.png
 /images/ynomoji/*.webp
+static/

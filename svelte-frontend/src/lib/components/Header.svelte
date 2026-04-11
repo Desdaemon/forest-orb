@@ -5,6 +5,7 @@
   import { tooltipLabel } from './Tooltip.svelte';
   import { LL } from '$lib';
   import { globalConfig } from '$lib/stores/config';
+  import { auth } from '$lib/stores/authStore';
 
   const {
     onOpenModal = () => {}
@@ -30,6 +31,16 @@
 
   function handleBadgeClick() {
     onOpenModal('badgesModal');
+  }
+
+  // Handle login button click (replicates original implementation)
+  function handleLoginClick() {
+    auth.handleLoginClick();
+  }
+
+  // Handle logout button click
+  function handleLogoutClick() {
+    auth.handleLogoutClick();
   }
 </script>
 
@@ -98,27 +109,33 @@
       </button>
     {/if}
     {#if !$globalConfig.hideSchedules}
-    <button
-      id="schedulesButton"
-      class="iconButton fillIcon unselectable"
-      {...tooltipLabel($LL.ui.tooltips.schedules())}
-      onclick={handleSchedulesClick}
-    >
-      <svg
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        xml:space="preserve"
-        width="32"
-        height="32"
-        viewBox="0 0 18 18"
-        role="presentation"
+      <button
+        id="schedulesButton"
+        class="iconButton fillIcon unselectable"
+        {...tooltipLabel($LL.ui.tooltips.schedules())}
+        onclick={handleSchedulesClick}
       >
-        <path
-          d="M18 3V18H0V3H3V4.5a.5.5 90 003 0V3H7.5V4.5a.5.5 90 003 0V3H12V4.5a.5.5 90 003 0V3ZM3.5 4.5a.5.5 90 002 0V1a.5.5 90 00-2 0ZM8 4.5a.5.5 90 002 0V1A.5.5 90 008 1Zm4.5 0a.5.5 90 002 0V1a.5.5 90 00-2 0ZM8 7H1.5v4H8Zm2 0v4h6.5V7ZM1.5 16.5H8v-4H1.5Zm8.5-4v4h6.5v-4Z"
-        />
-      </svg>
-    </button>
+        <svg
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xml:space="preserve"
+          width="32"
+          height="32"
+          viewBox="0 0 18 18"
+          role="presentation"
+        >
+          <path
+            d="M18 3V18H0V3H3V4.5a.5.5 90 003 0V3H7.5V4.5a.5.5 90 003 0V3H12V4.5a.5.5 90 003 0V3ZM3.5 4.5a.5.5 90 002 0V1a.5.5 90 00-2 0ZM8 4.5a.5.5 90 002 0V1A.5.5 90 008 1Zm4.5 0a.5.5 90 002 0V1a.5.5 90 00-2 0ZM8 7H1.5v4H8Zm2 0v4h6.5V7ZM1.5 16.5H8v-4H1.5Zm8.5-4v4h6.5v-4Z"
+          />
+        </svg>
+      </button>
     {/if}
+    <button id="loginButton" type="button" class="unselectable" onclick={handleLoginClick}>
+      {$LL.ui.account.login()}
+    </button>
+    <button id="logoutButton" type="button" class="unselectable" onclick={handleLogoutClick}>
+      {$LL.ui.account.logout()}
+    </button>
   </div>
 </div>

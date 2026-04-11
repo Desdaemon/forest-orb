@@ -81,7 +81,8 @@ export function inferGameName(gameId: GameId, payload: InitPayload = {}) {
 }
 
 export function getApiBase(gameId: GameId) {
-  return `https://connect.ynoproject.net/${gameId}`;
+  return `https://connect.ynoproject.net/${gameId}/`;
+  // return `/connect/${gameId}/`;
 }
 
 export function getApiUrl(gameId: GameId) {

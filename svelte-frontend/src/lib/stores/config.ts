@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { defaultGlobalConfig, defaultUserConfig, loadConfigFromStorage, saveConfigToStorage } from '../play';
+import { defaultGlobalConfig, defaultUserConfig, loadConfigFromStorage, saveConfigToStorage, type AllConfigKeys } from '../play';
 import type { GlobalConfig, GlobalToggles, UserConfig, UserToggles } from '../config';
 
 // A hook receives the raw stored value (or `undefined` if the key was absent) and the game id.
@@ -9,7 +9,7 @@ const _hooks = new Map<string, Set<ConfigHook>>();
 let _gameId = '';
 
 /** Register a side-effect hook that fires for a config key on init and on every update. */
-export function registerConfigHook(key: string, hook: ConfigHook): void {
+export function registerConfigHook<K extends AllConfigKeys>(key: K, hook: ConfigHook): void {
   const hooks = _hooks.get(key) ?? new Set<ConfigHook>();
   hooks.add(hook);
   _hooks.set(key, hooks);
@@ -87,6 +87,7 @@ function _runHook(key: string, value: unknown): void {
   const hooks = _hooks.get(key);
   if (!hooks?.size) return;
   for (const hook of hooks) {
+    console.log('running config hook', { key, value });
     try {
       const result = hook(value, _gameId);
       if (result instanceof Promise) {

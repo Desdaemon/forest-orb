@@ -82,6 +82,9 @@
       {:else if activeModal === 'badgesModal'}
         {@const { default: BadgesModal } = await import('$lib/modals/BadgesModal.svelte')}
         <BadgesModal />
+      {:else if activeModal === 'badgePresetModal'}
+        {@const { default: BadgePresetModal } = await import('$lib/modals/BadgePresetModal.svelte')}
+        <BadgePresetModal />
       {:else if activeModal === 'uiThemesModal'}
         {@const { default: UiThemesModal } = await import('$lib/modals/UiThemesModal.svelte')}
         <UiThemesModal />
