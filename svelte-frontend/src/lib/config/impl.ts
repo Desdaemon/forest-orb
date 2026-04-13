@@ -253,7 +253,7 @@ export function makeTabBuilder(tab: SettingsTabId) {
       label,
       tooltip: opts?.tooltip,
       options,
-      size: options.length > 4 ? undefined : options.length,
+      size: options.length > 4 ? undefined : options.length
     };
   }
 
@@ -276,9 +276,11 @@ export function makeTabBuilder(tab: SettingsTabId) {
 export type TabBuilder = ReturnType<typeof makeTabBuilder>;
 // NB: this pattern allows an object to have both a closed and open set of keys
 // that can be used for type inference
-export type TabConfig = {
-  [K in AllConfigKeys]?: SettingDefinition;
-} | Record<string, SettingsGroupNode<any>>;
+export type TabConfig =
+  | {
+      [K in AllConfigKeys]?: SettingDefinition;
+    }
+  | Record<string, SettingsGroupNode<any>>;
 
 export type SettingsNode<T extends Record<string, any>> = SettingDefinition | SettingsGroupNode<T>;
 type SettingsGroupNode<Fields extends Record<string, any>> = {
@@ -290,15 +292,15 @@ type SettingsSchemaInput = Record<SettingsTabId, Record<string, SettingsNode<any
 
 type InferNode<TName extends string, TNode> = TNode extends { kind: 'group'; fields: infer TFields }
   ? TFields extends Record<string, SettingsNode<infer Ignored>>
-  ? { kind: 'group'; fields: InferFields<TFields> }
-  : never
+    ? { kind: 'group'; fields: InferFields<TFields> }
+    : never
   : TNode extends ToggleSeed<infer TScope>
-  ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
-  : TNode extends SelectSeed<infer TScope>
-  ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
-  : TNode extends RangeSeed<infer TScope>
-  ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
-  : TNode;
+    ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
+    : TNode extends SelectSeed<infer TScope>
+      ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
+      : TNode extends RangeSeed<infer TScope>
+        ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
+        : TNode;
 
 type InferFields<TFields extends Record<string, SettingsNode<any>>> = {
   [K in keyof TFields]: InferNode<K & string, TFields[K]>;
@@ -337,18 +339,18 @@ export type SettingsSchema = typeof settingsSchema;
 type FieldValue<TField> = TField extends { kind: 'toggle' }
   ? boolean
   : TField extends { kind: 'range' }
-  ? number
-  : TField extends { options: Array<{ value: infer TValue }> }
-  ? TValue
-  : never;
+    ? number
+    : TField extends { options: Array<{ value: infer TValue }> }
+      ? TValue
+      : never;
 
 // Recursively extract leaf seeds from raw tab fields using SettingsGroupNode's type
 // parameter directly, avoiding deferred InferNode conditional types
 type FlattenSeeds<T> = {
   [K in keyof T]: T[K] extends SettingsGroupNode<infer F> // If it's a group, recursively flatten its fields
-  ? FlattenSeeds<F>
-  : // If it's a toggle or select seed, convert it to a full field definition with the key
-  Omit<T[K], 'key'> & { key: K & string };
+    ? FlattenSeeds<F>
+    : // If it's a toggle or select seed, convert it to a full field definition with the key
+      Omit<T[K], 'key'> & { key: K & string };
 }[keyof T];
 
 type TabFieldsNodeUnion = {

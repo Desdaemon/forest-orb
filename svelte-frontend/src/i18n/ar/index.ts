@@ -1,4 +1,4 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const ar = {
   translationComplete: '0',
@@ -71,7 +71,8 @@ const ar = {
     disclaimer: {
       pendingApproval: 'Pending approval from developer/publisher',
       hostedWithPermission: 'Hosted with permission from the developer(s)',
-      originalCreation: 'Original creation by the YNOproject community'
+      originalCreation: 'Original creation by the YNOproject community',
+      gameEndDate: 'Available to play on YNOproject until {{date}}'
     },
     modal: {
       common: {
@@ -182,7 +183,9 @@ const ar = {
             label: 'Singleplayer Mode',
             helpText:
               'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
-          }
+          },
+          toggleHideUnnamedPlayers: 'Hide Unnamed Players',
+          highContrast: 'High Contrast Mode'
         },
         blocklist: 'قائمة الحظر',
         chatSettings: 'المحادثة',
@@ -406,7 +409,8 @@ const ar = {
           search: {
             label: 'البحث:&nbsp;',
             name: 'Name:',
-            location: 'Location:'
+            location: 'Location:',
+            artist: 'Artist:'
           }
         }
       },
@@ -428,7 +432,8 @@ const ar = {
       save: {
         title: 'إدارة حفظ البيانات',
         reload: 'اعادة التحميل',
-        info: 'For importing saves, if the last time saved was while using a translation on RPG_RT, the game will display errors until you save once again on EasyRPG without any active translation.'
+        info: 'For importing saves, if the last time saved was while using a translation on RPG_RT, the game will display errors until you save once again on EasyRPG without any active translation.',
+        manageOther: 'Manage Different Game&hellip;'
       },
       uiTheme: {
         title: 'تصميم واجهة المستخدم',
@@ -577,6 +582,14 @@ const ar = {
         rule5: 'لا غش من أي نوع ولأي سبب',
         rule6: 'في حالة وجود مشكلة يرجى إبلاغ المشرفين'
       },
+      warnings: {
+        title: 'Warnings',
+        subtitle: 'Some games may contain the following content. Viewer discretion is advised.',
+        warning1: 'Flashing light sequences or patterns that may affect photosensitive viewers.',
+        warning2: 'References to self-harm or suicide.',
+        warning3: 'Disturbing imagery.',
+        warning4: 'Depictions of drug use.'
+      },
       explorerUndiscoveredLocations: {
         title: 'اماكن غير مكتشفة',
         complete: 'لقد قمت باكتشاف جميع الاماكن المتاحة :)'
@@ -628,6 +641,7 @@ const ar = {
         disbandParty: 'تفكيك الحفلة'
       },
       events: 'الرحلات الاستكشافية',
+      badges: 'Badges',
       locations: 'المواقع',
       communityScreenshots: 'لقطات الشاشة للجميع',
       rankings: 'المراتب',
@@ -641,18 +655,20 @@ const ar = {
     },
     placeholders: {
       scheduleDescription:
-        'Markdown syntax is accepted, use {\\{l:World,optional link name}} to insert a link to yume.wiki'
+        'Markdown syntax is accepted, use {{l:World,optional link name}} to insert a link to yume.wiki'
     },
-    reviewRules: 'مراجعة القواعد'
+    reviewRules: 'مراجعة القواعد',
+    reviewWarnings: 'Review Warnings',
+    highContrast: 'High Contrast'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: 'Yume Nikki (يومي نيكي)',
       '2kki': 'Yume 2kki (يومي تووكي)',
+      cold: '[COLD]',
       unconscious: 'Collective Unconscious (اللاوعي الجماعي)',
       flow: '.flow (دوت فلو)',
-      prayers: 'Answered Prayers (دعوات مستجابة)',
       deepdreams: 'Deep Dreams (احلام عميقة)',
       someday: 'Someday (يوما ما)',
       amillusion: 'Amillusion (الوهم)',
@@ -669,7 +685,8 @@ const ar = {
       nostalgic: 'nostAlgic (حنين)',
       if: 'If',
       unaccomplished: 'Unaccomplished',
-      fog: 'FOG'
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: 'هل أنت متأكد أنك تريد مغادرة الصفحة؟ سيتم فقد أي تقدم غير محفوظ في اللعبة',
     logout: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
@@ -913,7 +930,9 @@ const ar = {
           'In the Badge Gallery menu, you can drag and drop badges to rearrange them, or quickly remove many badges at once using the Remove Badges mode.',
         cacheSettings:
           'Having trouble with location completion or outdated maps? The Cache menu allows you to clear the relevant cache and retrieve the latest data.',
-        openSource: 'YNOproject مفتوح المصدر ومستودعات الكود متاحة على https://github.com/ynoproject/'
+        openSource: 'YNOproject مفتوح المصدر ومستودعات الكود متاحة على https://github.com/ynoproject/',
+        useYnoEmoji:
+          'When you type a colon (:) in the chat field, an YNO emoji palette will appear. You can select and click an emoji from there to input it into the chat field in the format :emojiName:.'
       }
     },
     save: {
@@ -1250,5 +1269,4 @@ const ar = {
     }
   }
 } satisfies Translation;
-
 export default ar;

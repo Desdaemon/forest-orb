@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { getInfo, getSaveSyncTimestamp, type UserInfo } from '$lib/api';
-  import { getInitPayload, inferGameId, inferGameName, gameNameMap } from '$lib/init';
+  import { getInitPayload, inferGameId, inferGameName, gameNameMap, isBrowser } from '$lib/init';
   import { setPlayerName, initEasyRpgEngine } from '$lib/play';
   import Header from '$lib/components/Header.svelte';
   import Controls from '$lib/components/Controls.svelte';
@@ -9,7 +9,9 @@
   import ChatBox from '$lib/components/ChatBox.svelte';
   import ThemeContainer from '$lib/components/ThemeContainer.svelte';
   import ModalContainer from '$lib/components/ModalContainer.svelte';
+  import PendingLoader from '$lib/components/PendingLoader.svelte';
   import { modal, type ModalId } from '$lib/stores/modal';
+  import { addLoader, loaderActive, removeLoader } from '$lib/stores/pendingLoader';
   import '$lib/config';
   import { initConfig } from '$lib/stores/config';
   import Tooltip from '$lib/components/Tooltip.svelte';
@@ -17,6 +19,7 @@
   let info: UserInfo | null = $state(null);
   let loading = $state(true);
   let playerName = $state('');
+  const loadingOverlayActive = loaderActive('loadingOverlay');
 
   // --- Login Modal State and Handlers ---
   let loginUsername = $state('');
@@ -30,8 +33,6 @@
     console.log('Attempting login for:', loginUsername);
 
     if (loginUsername && loginPassword) {
-      // Mock success: Assume successful login sets the info state and closes the modal
-      info = { /* mock user info object */ };
       await loadData(); // Re-fetch/update data after successful login
       modal.close();
     } else {
@@ -66,25 +67,25 @@
   }
 
   onMount(async () => {
-    if (typeof window !== 'undefined') {
-      const urlGame = new URLSearchParams(window.location.search).get('game');
-      if (urlGame && urlGame in gameNameMap) {
-        gameId = urlGame as keyof typeof gameNameMap;
-      }
-      isFirefox = window.navigator.userAgent.includes('Firefox');
-    }
-    await initConfig(gameId);
+    if (!isBrowser) return;
 
-    await initEasyRpgEngine();
-    loadData();
+    addLoader('loadingOverlay');
+    const urlGame = new URLSearchParams(window.location.search).get('game');
+    if (urlGame && urlGame in gameNameMap) {
+      gameId = urlGame as keyof typeof gameNameMap;
+    }
+    isFirefox = window.navigator.userAgent.includes('Firefox');
+    try {
+      await initConfig(gameId);
+      await initEasyRpgEngine();
+      await loadData();
+    } finally {
+      removeLoader('loadingOverlay');
+    }
   });
 
   function onToggleChat() {
     chatboxVisible = !chatboxVisible;
-  }
-
-  function openModal(modalId: string) {
-    modal.open(modalId as ModalId);
   }
 
   $effect(() => {
@@ -96,16 +97,19 @@
 
 <ThemeContainer {gameId}>
   <div id="root-wrapper" role="presentation">
+    <div id="loadingOverlay" class:loaded={!$loadingOverlayActive} role="presentation">
+      <PendingLoader visible={$loadingOverlayActive} text="Loading..." />
+    </div>
     <div id="background" role="presentation"></div>
     <div id="backgroundOverlay" role="presentation"></div>
     <ModalContainer>
       <div id="content" role="presentation">
         <div id="top" role="presentation"></div>
-        <Header onOpenModal={openModal} />
+        <Header />
         <div id="layout" role="main">
           <div id="mainContainer" class="container" role="presentation">
             <div id="gameContainer" role="presentation">
-              <Controls {onToggleChat} onOpenModal={openModal} />
+              <Controls {onToggleChat} />
               <CanvasArea />
             </div>
           </div>

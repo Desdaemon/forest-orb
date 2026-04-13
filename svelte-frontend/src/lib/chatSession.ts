@@ -3,14 +3,26 @@ import type { ChatPlayerProfile } from './stores/chatPlayer';
 import { easyrpgPlayer } from './play';
 import { writable } from 'svelte/store';
 
+type SessionCommandHandler = (args: string[]) => void;
+
+export type SessionClient = {
+  connect: () => void;
+  disconnect: () => void;
+  subscribe: (run: (value: SessionState) => void) => () => void;
+  sendCommand: (command: string, params?: string[]) => void;
+  onCommand: (command: string, handler: SessionCommandHandler | undefined) => void;
+};
+
+export const activeSession = writable<SessionClient | null>(null);
+
 export const ConnectionStatus = Object.freeze({
   DISCONNECTED: 0,
   CONNECTED: 1,
   CONNECTING: 2,
   PRIVATE: 3,
-  SINGLEPLAYER: 4,
+  SINGLEPLAYER: 4
 });
-export type ConnectionStatus = typeof ConnectionStatus[keyof typeof ConnectionStatus];
+export type ConnectionStatus = (typeof ConnectionStatus)[keyof typeof ConnectionStatus];
 
 type SessionMessagePayload = {
   senderUuid?: string;
@@ -40,8 +52,6 @@ type ChatSessionClientOptions = {
   onActivatePlayerTheme: (systemName?: string) => void;
 };
 
-type SessionCommandHandler = (args: string[]) => void;
-
 const wsDelim = '\uffff';
 
 function parseAccountFlag(value: unknown, fallback = false): boolean {
@@ -62,9 +72,9 @@ function getSessionWsUrl() {
 }
 
 type SessionState = {
-  connState: ConnectionStatus,
-  playerCount: number,
-}
+  connState: ConnectionStatus;
+  playerCount: number;
+};
 
 export function createChatSessionClient(options: ChatSessionClientOptions) {
   let reconnectAttempt = 0;
@@ -74,11 +84,11 @@ export function createChatSessionClient(options: ChatSessionClientOptions) {
   let sessionCommandCallbackQueue: Record<string, Array<(args: string[]) => void>> = {};
   const state = writable<SessionState>({
     connState: ConnectionStatus.DISCONNECTED,
-    playerCount: 0,
+    playerCount: 0
   });
 
   function setConnState(connState: ConnectionStatus) {
-    state.update((old) => ({...old, connState}));
+    state.update((old) => ({ ...old, connState }));
   }
 
   function clearReconnectTimer() {
@@ -193,7 +203,7 @@ export function createChatSessionClient(options: ChatSessionClientOptions) {
     addSessionCommandHandler('pc', (args) => {
       const nextCount = Number.parseInt(args[0] || '', 10);
       if (!Number.isNaN(nextCount)) {
-        state.update((old) => ({...old, playerCount: nextCount}));
+        state.update((old) => ({ ...old, playerCount: nextCount }));
       }
     });
 
@@ -289,9 +299,16 @@ export function createChatSessionClient(options: ChatSessionClientOptions) {
     };
   }
 
+  function sendCommand(command: string, params: string[] = []) {
+    if (!sessionWs || sessionWs.readyState !== WebSocket.OPEN) return;
+    sessionWs.send([command, ...params].join(wsDelim));
+  }
+
   return {
     connect,
     disconnect,
     subscribe: state.subscribe,
+    sendCommand,
+    onCommand: addSessionCommandHandler
   };
 }

@@ -178,7 +178,8 @@
             "label": "Modo Solitario",
             "helpText": "Convierte el Modo Privado en el Modo Solitario, quitando de la vista a amigos y miembros del grupo. Perfecto si quieres explorar totalmente por ti mismo."
           },
-          "toggleHideUnnamedPlayers": "Hide Unnamed Players"
+          "toggleHideUnnamedPlayers": "Hide Unnamed Players",
+          "highContrast": "High Contrast Mode"
         },
         "blocklist": "Lista de Bloqueos",
         "chatSettings": "Chat",
@@ -645,10 +646,11 @@
       "mobileControlsType": "Alternativas del tipo de Pad Direccional.<br>Los tipos de Control Flotante solamente están disponibles en el modo pantalla completa de Dispositivos Móviles."
     },
     "placeholders": {
-      "scheduleDescription": "Sintaxis Markdown aceptada, usa {\\{l:Mundo,nombre de link opcional}} para insertar un link hacia yume.wiki"
+      "scheduleDescription": "Sintaxis Markdown aceptada, usa {{l:Mundo,nombre de link opcional}} para insertar un link hacia yume.wiki"
     },
     "reviewRules": "Ver Reglas",
-    "reviewWarnings": "Review Warnings"
+    "reviewWarnings": "Review Warnings",
+    "highContrast": "High Contrast"
   },
   "messages": {
     "games": {

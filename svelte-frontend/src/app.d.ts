@@ -15,7 +15,6 @@ declare global {
     | 'unconscious'
     | 'flow'
     | 'fog'
-    | 'prayers'
     | 'deepdreams'
     | 'someday'
     | 'amillusion'
@@ -36,4 +35,4 @@ declare global {
   async function createEasyRpgPlayer(init: any): Promise<any>;
 }
 
-export { };
+export {};

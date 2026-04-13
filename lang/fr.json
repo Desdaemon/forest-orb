@@ -178,7 +178,8 @@
             "label": "Mode solo",
             "helpText": "Transforme le mode privé en mode solo, cachant tous les amis et membres du groupe de votre champ de vision. Parfait si vous souhaitez jouer au jeu par vous-même."
           },
-          "toggleHideUnnamedPlayers": "Cacher les joueurs sans noms"
+          "toggleHideUnnamedPlayers": "Cacher les joueurs sans noms",
+          "highContrast": "High Contrast Mode"
         },
         "blocklist": "Liste de blocage",
         "chatSettings": "Tchat",
@@ -645,10 +646,11 @@
       "mobileControlsType": "Alternatifs au type de commande de croix directionnelle par défaut.<br>Les types de commande flottants ne sont disponibles qu'en plein écran sur mobile."
     },
     "placeholders": {
-      "scheduleDescription": "La syntaxe Markdown est acceptée, utilisez {\\{l:Monde,nom de lien optionnel}} pour insérer un lien vers yume.wiki"
+      "scheduleDescription": "La syntaxe Markdown est acceptée, utilisez {{l:Monde,nom de lien optionnel}} pour insérer un lien vers yume.wiki"
     },
     "reviewRules": "Relire les règles",
-    "reviewWarnings": "Review Warnings"
+    "reviewWarnings": "Review Warnings",
+    "highContrast": "High Contrast"
   },
   "messages": {
     "games": {

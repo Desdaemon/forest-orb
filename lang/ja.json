@@ -178,7 +178,8 @@
             "label": "シングルプレイヤーモード",
             "helpText": "プライベートモードをシングルプレイヤーモードに切り替え、フレンドやパーティメンバーを含めた全員を非表示にします。一人で探索したい場合に最適です。"
           },
-          "toggleHideUnnamedPlayers": "無名プレイヤーを表示しない"
+          "toggleHideUnnamedPlayers": "無名プレイヤーを表示しない",
+          "highContrast": "High Contrast Mode"
         },
         "blocklist": "ブロックリスト",
         "chatSettings": "チャット",
@@ -645,10 +646,11 @@
       "mobileControlsType": "モバイルコントローラーをデフォルトの方向キーから切り替えられます。<br>浮動コントローラーはモバイルのフルスクリーンの時のみ有効です。"
     },
     "placeholders": {
-      "scheduleDescription": "Markdown記法が使用可能で、{\\{l:英名,和名}}を使ってyume.wikiへのマップURLを記入する"
+      "scheduleDescription": "Markdown記法が使用可能で、{{l:英名,和名}}を使ってyume.wikiへのマップURLを記入する"
     },
     "reviewRules": "ルールを見る",
-    "reviewWarnings": "注意事項を見る"
+    "reviewWarnings": "注意事項を見る",
+    "highContrast": "High Contrast"
   },
   "messages": {
     "games": {

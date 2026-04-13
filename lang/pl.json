@@ -178,7 +178,8 @@
             "label": "Singleplayer Mode",
             "helpText": "Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself."
           },
-          "toggleHideUnnamedPlayers": "Hide Unnamed Players"
+          "toggleHideUnnamedPlayers": "Hide Unnamed Players",
+          "highContrast": "High Contrast Mode"
         },
         "blocklist": "Zablokowani użytkownicy",
         "chatSettings": "Czat",
@@ -645,10 +646,11 @@
       "mobileControlsType": "Alternatives to the default D-Pad control type.<br>Floating control types are only available in mobile fullscreen."
     },
     "placeholders": {
-      "scheduleDescription": "Markdown syntax is accepted, use {\\{l:World,optional link name}} to insert a link to yume.wiki"
+      "scheduleDescription": "Markdown syntax is accepted, use {{l:World,optional link name}} to insert a link to yume.wiki"
     },
     "reviewRules": "Sprawdź zasady",
-    "reviewWarnings": "Review Warnings"
+    "reviewWarnings": "Review Warnings",
+    "highContrast": "High Contrast"
   },
   "messages": {
     "games": {

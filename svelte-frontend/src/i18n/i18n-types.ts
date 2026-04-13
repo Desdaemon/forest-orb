@@ -34,10 +34,6 @@ type RootTranslation = {
 	 * 1
 	 */
 	translationComplete: string
-	/**
-	 * E​n​g​l​i​s​h
-	 */
-	name: string
 	version: {
 		'2kki': {
 			/**
@@ -221,6 +217,10 @@ type RootTranslation = {
 			 * O​r​i​g​i​n​a​l​ ​c​r​e​a​t​i​o​n​ ​b​y​ ​t​h​e​ ​Y​N​O​p​r​o​j​e​c​t​ ​c​o​m​m​u​n​i​t​y
 			 */
 			originalCreation: string
+			/**
+			 * A​v​a​i​l​a​b​l​e​ ​t​o​ ​p​l​a​y​ ​o​n​ ​Y​N​O​p​r​o​j​e​c​t​ ​u​n​t​i​l​ ​{​{​d​a​t​e​}​}
+			 */
+			gameEndDate: string
 		}
 		modal: {
 			common: {
@@ -388,10 +388,9 @@ type RootTranslation = {
 						label: string
 						interval: {
 							/**
-							 * {​i​n​t​e​r​v​a​l​}​ ​m​i​n​u​t​e​s
-							 * @param {unknown} interval
+							 * {​{​i​n​t​e​r​v​a​l​}​}​ ​m​i​n​u​t​e​s
 							 */
-							minutes: RequiredParams<'interval'>
+							minutes: string
 							/**
 							 * N​e​v​e​r
 							 */
@@ -516,6 +515,10 @@ type RootTranslation = {
 						 */
 						helpText: string
 					}
+					/**
+					 * H​i​d​e​ ​U​n​n​a​m​e​d​ ​P​l​a​y​e​r​s
+					 */
+					toggleHideUnnamedPlayers: string
 				}
 				/**
 				 * B​l​o​c​k​l​i​s​t
@@ -1088,14 +1091,6 @@ type RootTranslation = {
 							 * D​e​f​a​u​l​t
 							 */
 							'default': string
-							/**
-							 * B​P
-							 */
-							bp: string
-							/**
-							 * P​e​r​c​e​n​t
-							 */
-							percent: string
 						}
 					}
 					search: {
@@ -1112,28 +1107,10 @@ type RootTranslation = {
 						 */
 						location: string
 						/**
-						 * A​r​t​i​s​t
+						 * A​r​t​i​s​t​:
 						 */
 						artist: string
-						/**
-						 * B​a​d​g​e​ ​I​D​ ​/​ ​t​a​g
-						 */
-						badgeIdTag: string
-						/**
-						 * C​l​e​a​r​ ​s​e​a​r​c​h
-						 */
-						clear: string
 					}
-				}
-				error: {
-					/**
-					 * F​a​i​l​e​d​ ​t​o​ ​l​o​a​d​ ​b​a​d​g​e​s
-					 */
-					loadFailed: string
-					/**
-					 * C​o​u​l​d​ ​n​o​t​ ​s​e​t​ ​b​a​d​g​e
-					 */
-					setFailed: string
 				}
 			}
 			badgeGallery: {
@@ -1191,6 +1168,10 @@ type RootTranslation = {
 				 * F​o​r​ ​i​m​p​o​r​t​i​n​g​ ​s​a​v​e​s​,​ ​i​f​ ​t​h​e​ ​l​a​s​t​ ​t​i​m​e​ ​s​a​v​e​d​ ​w​a​s​ ​w​h​i​l​e​ ​u​s​i​n​g​ ​a​ ​t​r​a​n​s​l​a​t​i​o​n​ ​o​n​ ​R​P​G​_​R​T​,​ ​t​h​e​ ​g​a​m​e​ ​w​i​l​l​ ​d​i​s​p​l​a​y​ ​e​r​r​o​r​s​ ​u​n​t​i​l​ ​y​o​u​ ​s​a​v​e​ ​o​n​c​e​ ​a​g​a​i​n​ ​o​n​ ​E​a​s​y​R​P​G​ ​w​i​t​h​o​u​t​ ​a​n​y​ ​a​c​t​i​v​e​ ​t​r​a​n​s​l​a​t​i​o​n​.
 				 */
 				info: string
+				/**
+				 * M​a​n​a​g​e​ ​D​i​f​f​e​r​e​n​t​ ​G​a​m​e​&​h​e​l​l​i​p​;
+				 */
+				manageOther: string
 			}
 			uiTheme: {
 				/**
@@ -1612,6 +1593,32 @@ type RootTranslation = {
 				 */
 				rule6: string
 			}
+			warnings: {
+				/**
+				 * W​a​r​n​i​n​g​s
+				 */
+				title: string
+				/**
+				 * S​o​m​e​ ​g​a​m​e​s​ ​m​a​y​ ​c​o​n​t​a​i​n​ ​t​h​e​ ​f​o​l​l​o​w​i​n​g​ ​c​o​n​t​e​n​t​.​ ​V​i​e​w​e​r​ ​d​i​s​c​r​e​t​i​o​n​ ​i​s​ ​a​d​v​i​s​e​d​.
+				 */
+				subtitle: string
+				/**
+				 * F​l​a​s​h​i​n​g​ ​l​i​g​h​t​ ​s​e​q​u​e​n​c​e​s​ ​o​r​ ​p​a​t​t​e​r​n​s​ ​t​h​a​t​ ​m​a​y​ ​a​f​f​e​c​t​ ​p​h​o​t​o​s​e​n​s​i​t​i​v​e​ ​v​i​e​w​e​r​s​.
+				 */
+				warning1: string
+				/**
+				 * R​e​f​e​r​e​n​c​e​s​ ​t​o​ ​s​e​l​f​-​h​a​r​m​ ​o​r​ ​s​u​i​c​i​d​e​.
+				 */
+				warning2: string
+				/**
+				 * D​i​s​t​u​r​b​i​n​g​ ​i​m​a​g​e​r​y​.
+				 */
+				warning3: string
+				/**
+				 * D​e​p​i​c​t​i​o​n​s​ ​o​f​ ​d​r​u​g​ ​u​s​e​.
+				 */
+				warning4: string
+			}
 			explorerUndiscoveredLocations: {
 				/**
 				 * U​n​d​i​s​c​o​v​e​r​e​d​ ​L​o​c​a​t​i​o​n​s
@@ -1757,6 +1764,10 @@ type RootTranslation = {
 			 */
 			events: string
 			/**
+			 * B​a​d​g​e​s
+			 */
+			badges: string
+			/**
 			 * L​o​c​a​t​i​o​n​s
 			 */
 			locations: string
@@ -1799,6 +1810,10 @@ type RootTranslation = {
 		 * R​e​v​i​e​w​ ​R​u​l​e​s
 		 */
 		reviewRules: string
+		/**
+		 * R​e​v​i​e​w​ ​W​a​r​n​i​n​g​s
+		 */
+		reviewWarnings: string
 	}
 	messages: {
 		games: {
@@ -1815,6 +1830,10 @@ type RootTranslation = {
 			 */
 			'2kki': string
 			/**
+			 * [​C​O​L​D​]
+			 */
+			cold: string
+			/**
 			 * C​o​l​l​e​c​t​i​v​e​ ​U​n​c​o​n​s​c​i​o​u​s
 			 */
 			unconscious: string
@@ -1822,14 +1841,6 @@ type RootTranslation = {
 			 * .​f​l​o​w
 			 */
 			flow: string
-			/**
-			 * F​O​G
-			 */
-			fog: string
-			/**
-			 * A​n​s​w​e​r​e​d​ ​P​r​a​y​e​r​s
-			 */
-			prayers: string
 			/**
 			 * D​e​e​p​ ​D​r​e​a​m​s
 			 */
@@ -1894,6 +1905,14 @@ type RootTranslation = {
 			 * U​n​a​c​c​o​m​p​l​i​s​h​e​d
 			 */
 			unaccomplished: string
+			/**
+			 * F​O​G
+			 */
+			fog: string
+			/**
+			 * L​o​v​e​ ​Y​o​u
+			 */
+			loveyou: string
 		}
 		/**
 		 * A​r​e​ ​y​o​u​ ​s​u​r​e​ ​y​o​u​ ​w​a​n​t​ ​t​o​ ​l​e​a​v​e​ ​t​h​e​ ​p​a​g​e​?​ ​A​n​y​ ​u​n​s​a​v​e​d​ ​i​n​-​g​a​m​e​ ​p​r​o​g​r​e​s​s​ ​w​i​l​l​ ​b​e​ ​l​o​s​t​.
@@ -2587,6 +2606,10 @@ type RootTranslation = {
 				 * Y​N​O​p​r​o​j​e​c​t​ ​i​s​ ​o​p​e​n​ ​s​o​u​r​c​e​ ​a​n​d​ ​t​h​e​ ​c​o​d​e​ ​r​e​p​o​s​i​t​o​r​i​e​s​ ​a​r​e​ ​a​v​a​i​l​a​b​l​e​ ​a​t​ ​h​t​t​p​s​:​/​/​g​i​t​h​u​b​.​c​o​m​/​y​n​o​p​r​o​j​e​c​t​/
 				 */
 				openSource: string
+				/**
+				 * W​h​e​n​ ​y​o​u​ ​t​y​p​e​ ​a​ ​c​o​l​o​n​ ​(​:​)​ ​i​n​ ​t​h​e​ ​c​h​a​t​ ​f​i​e​l​d​,​ ​a​n​ ​Y​N​O​ ​e​m​o​j​i​ ​p​a​l​e​t​t​e​ ​w​i​l​l​ ​a​p​p​e​a​r​.​ ​Y​o​u​ ​c​a​n​ ​s​e​l​e​c​t​ ​a​n​d​ ​c​l​i​c​k​ ​a​n​ ​e​m​o​j​i​ ​f​r​o​m​ ​t​h​e​r​e​ ​t​o​ ​i​n​p​u​t​ ​i​t​ ​i​n​t​o​ ​t​h​e​ ​c​h​a​t​ ​f​i​e​l​d​ ​i​n​ ​t​h​e​ ​f​o​r​m​a​t​ ​:​e​m​o​j​i​N​a​m​e​:​.
+				 */
+				useYnoEmoji: string
 			}
 		}
 		save: {
@@ -3598,10 +3621,6 @@ export type TranslationFunctions = {
 	 * 1
 	 */
 	translationComplete: () => LocalizedString
-	/**
-	 * English
-	 */
-	name: () => LocalizedString
 	version: {
 		'2kki': {
 			/**
@@ -3784,6 +3803,10 @@ export type TranslationFunctions = {
 			 * Original creation by the YNOproject community
 			 */
 			originalCreation: () => LocalizedString
+			/**
+			 * Available to play on YNOproject until {{date}}
+			 */
+			gameEndDate: (arg0: number | string | boolean) => LocalizedString
 		}
 		modal: {
 			common: {
@@ -3951,9 +3974,9 @@ export type TranslationFunctions = {
 						label: () => LocalizedString
 						interval: {
 							/**
-							 * {interval} minutes
+							 * {{interval}} minutes
 							 */
-							minutes: (arg: { interval: unknown }) => LocalizedString
+							minutes: (arg0: number | string | boolean) => LocalizedString
 							/**
 							 * Never
 							 */
@@ -4078,6 +4101,10 @@ export type TranslationFunctions = {
 						 */
 						helpText: () => LocalizedString
 					}
+					/**
+					 * Hide Unnamed Players
+					 */
+					toggleHideUnnamedPlayers: () => LocalizedString
 				}
 				/**
 				 * Blocklist
@@ -4650,14 +4677,6 @@ export type TranslationFunctions = {
 							 * Default
 							 */
 							'default': () => LocalizedString
-							/**
-							 * BP
-							 */
-							bp: () => LocalizedString
-							/**
-							 * Percent
-							 */
-							percent: () => LocalizedString
 						}
 					}
 					search: {
@@ -4674,28 +4693,10 @@ export type TranslationFunctions = {
 						 */
 						location: () => LocalizedString
 						/**
-						 * Artist
+						 * Artist:
 						 */
 						artist: () => LocalizedString
-						/**
-						 * Badge ID / tag
-						 */
-						badgeIdTag: () => LocalizedString
-						/**
-						 * Clear search
-						 */
-						clear: () => LocalizedString
 					}
-				}
-				error: {
-					/**
-					 * Failed to load badges
-					 */
-					loadFailed: () => LocalizedString
-					/**
-					 * Could not set badge
-					 */
-					setFailed: () => LocalizedString
 				}
 			}
 			badgeGallery: {
@@ -4753,6 +4754,10 @@ export type TranslationFunctions = {
 				 * For importing saves, if the last time saved was while using a translation on RPG_RT, the game will display errors until you save once again on EasyRPG without any active translation.
 				 */
 				info: () => LocalizedString
+				/**
+				 * Manage Different Game&hellip;
+				 */
+				manageOther: () => LocalizedString
 			}
 			uiTheme: {
 				/**
@@ -5174,6 +5179,32 @@ export type TranslationFunctions = {
 				 */
 				rule6: () => LocalizedString
 			}
+			warnings: {
+				/**
+				 * Warnings
+				 */
+				title: () => LocalizedString
+				/**
+				 * Some games may contain the following content. Viewer discretion is advised.
+				 */
+				subtitle: () => LocalizedString
+				/**
+				 * Flashing light sequences or patterns that may affect photosensitive viewers.
+				 */
+				warning1: () => LocalizedString
+				/**
+				 * References to self-harm or suicide.
+				 */
+				warning2: () => LocalizedString
+				/**
+				 * Disturbing imagery.
+				 */
+				warning3: () => LocalizedString
+				/**
+				 * Depictions of drug use.
+				 */
+				warning4: () => LocalizedString
+			}
 			explorerUndiscoveredLocations: {
 				/**
 				 * Undiscovered Locations
@@ -5319,6 +5350,10 @@ export type TranslationFunctions = {
 			 */
 			events: () => LocalizedString
 			/**
+			 * Badges
+			 */
+			badges: () => LocalizedString
+			/**
 			 * Locations
 			 */
 			locations: () => LocalizedString
@@ -5361,6 +5396,10 @@ export type TranslationFunctions = {
 		 * Review Rules
 		 */
 		reviewRules: () => LocalizedString
+		/**
+		 * Review Warnings
+		 */
+		reviewWarnings: () => LocalizedString
 	}
 	messages: {
 		games: {
@@ -5377,6 +5416,10 @@ export type TranslationFunctions = {
 			 */
 			'2kki': () => LocalizedString
 			/**
+			 * [COLD]
+			 */
+			cold: () => LocalizedString
+			/**
 			 * Collective Unconscious
 			 */
 			unconscious: () => LocalizedString
@@ -5384,14 +5427,6 @@ export type TranslationFunctions = {
 			 * .flow
 			 */
 			flow: () => LocalizedString
-			/**
-			 * FOG
-			 */
-			fog: () => LocalizedString
-			/**
-			 * Answered Prayers
-			 */
-			prayers: () => LocalizedString
 			/**
 			 * Deep Dreams
 			 */
@@ -5456,6 +5491,14 @@ export type TranslationFunctions = {
 			 * Unaccomplished
 			 */
 			unaccomplished: () => LocalizedString
+			/**
+			 * FOG
+			 */
+			fog: () => LocalizedString
+			/**
+			 * Love You
+			 */
+			loveyou: () => LocalizedString
 		}
 		/**
 		 * Are you sure you want to leave the page? Any unsaved in-game progress will be lost.
@@ -6084,6 +6127,10 @@ export type TranslationFunctions = {
 				 * YNOproject is open source and the code repositories are available at https://github.com/ynoproject/
 				 */
 				openSource: () => LocalizedString
+				/**
+				 * When you type a colon (:) in the chat field, an YNO emoji palette will appear. You can select and click an emoji from there to input it into the chat field in the format :emojiName:.
+				 */
+				useYnoEmoji: () => LocalizedString
 			}
 		}
 		save: {

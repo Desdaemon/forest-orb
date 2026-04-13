@@ -76,10 +76,6 @@
   let badgesPromise = $state(fetchBadges());
   const badges = $derived(await badgesPromise);
 
-  const unsubscribe = selectedBadge.subscribe((value) => {
-    // just to keep reactivity in header. no need to store locally here.
-  });
-
   onMount(() => {
     try {
       // If /badge.json exists in static, use it.
@@ -299,9 +295,9 @@
     <h1 class="modalTitle">{$LL.ui.modal.badges.title()}</h1>
     <div id="badgeControls" class="uiControls wrap">
       <div class="uiControl">
-        <label for="badgeUnlockStatus" class="unselectable"
-          >{@html $LL.ui.modal.badges.fields.unlockStatus.label()}</label
-        >
+        <label for="badgeUnlockStatus" class="unselectable">
+          {@html $LL.ui.modal.badges.fields.unlockStatus.label()}
+        </label>
         <select id="badgeUnlockStatus" bind:value={unlockFilter} onchange={updateFiltered}>
           <option value="all">{$LL.ui.modal.badges.fields.unlockStatus.values.all()}</option>
           <option value="unlocked">{$LL.ui.modal.badges.fields.unlockStatus.values['1']()}</option>
@@ -316,8 +312,7 @@
           <option value="percent">{$LL.ui.modal.badges.fields.sortOrder.values.percent()}</option>
         </select>
       </div>
-      <div class="uiControl badgeSearchRow">
-        <label for="badgeSearch" class="unselectable">{@html $LL.ui.modal.badges.fields.search.label()}</label>
+      <div class="badgeSearchRow">
         <div class="badgeSearchControl">
           <input
             id="badgeSearch"
@@ -338,7 +333,12 @@
             }}
           />
           {#if searchTerm.trim()}
-            <button type="button" class="badgeSearchClear" aria-label={$LL.ui.modal.badges.fields.search.clear()} onclick={clearSearch}>✖</button>
+            <button
+              type="button"
+              class="badgeSearchClear"
+              aria-label={$LL.ui.modal.badges.fields.search.clear()}
+              onclick={clearSearch}>✖</button
+            >
           {/if}
           {#if showSearchOptions && searchTerm.trim()}
             <div class="badgeSearchDropdown">
@@ -427,53 +427,63 @@
   }
 
   #badgeControls {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
-    align-items: end;
-    column-gap: 28px;
-    row-gap: 10px;
-    max-width: 860px;
+    gap: 12px;
+    max-width: 900px;
     margin: 0 auto;
+    padding: 4px 0;
   }
 
   #badgeControls > .uiControl {
-    min-width: 0;
-  }
-
-  #badgeControls .badgeSearchRow {
-    grid-column: 1 / -1;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    gap: 6px;
+    flex: 0 0 auto;
   }
 
-  #badgeControls .badgeSearchRow > label {
+  #badgeControls label {
     margin: 0;
     white-space: nowrap;
+    font-size: 13px;
+  }
+
+  #badgeControls select {
+    padding: 4px 8px;
+    font-size: 13px;
+    min-width: 140px;
+  }
+
+  .badgeSearchRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    max-width: 350px;
   }
 
   .badgeSearchControl {
     position: relative;
-    width: min(540px, calc(100vw - 280px));
+    flex: 1 1 150px;
     min-width: 0;
-    max-width: 100%;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 768px) {
     #badgeControls {
-      grid-template-columns: minmax(0, 1fr);
-      row-gap: 8px;
-    }
-
-    #badgeControls .badgeSearchRow {
-      justify-content: flex-start;
+      flex-direction: column;
+      align-items: stretch;
       gap: 8px;
     }
 
-    .badgeSearchControl {
-      width: 100%;
+    #badgeControls > .uiControl {
+      justify-content: center;
+    }
+
+    .badgeSearchRow {
+      justify-content: center;
+      max-width: 100%;
     }
   }
 
@@ -547,20 +557,21 @@
   }
 
   #badgeGameTabs {
-    margin-top: 8px;
+    margin-top: 6px;
+    margin-bottom: 4px;
   }
 
   #badgeCategoryTabs {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
-    row-gap: 4px;
-    margin: 4px 0 8px;
+    row-gap: 2px;
+    margin: 2px 0 6px;
   }
 
   #badgeCategoryTabs .subTab {
     position: relative;
-    padding: 2px 2px 0 0;
+    padding: 1px 1px 0 0;
     border: 0;
     background: transparent;
     box-shadow: none;
@@ -571,7 +582,8 @@
     position: relative;
     z-index: 1;
     display: block;
-    padding: 0 8px;
+    padding: 0 6px;
+    font-size: 12px;
   }
 
   #badgeCategoryTabs .subTabBg {

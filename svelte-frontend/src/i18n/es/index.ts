@@ -1,4 +1,4 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const es = {
   translationComplete: '1',
@@ -71,7 +71,8 @@ const es = {
     disclaimer: {
       pendingApproval: 'Aprovación pendiente del desarrollador/editor',
       hostedWithPermission: 'Alojado con la autorización de su(s) desarrollador(es)',
-      originalCreation: 'Creación original por la comunidad de YNOproject'
+      originalCreation: 'Creación original por la comunidad de YNOproject',
+      gameEndDate: 'Available to play on YNOproject until {{date}}'
     },
     modal: {
       common: {
@@ -183,7 +184,9 @@ const es = {
             label: 'Modo Solitario',
             helpText:
               'Convierte el Modo Privado en el Modo Solitario, quitando de la vista a amigos y miembros del grupo. Perfecto si quieres explorar totalmente por ti mismo.'
-          }
+          },
+          toggleHideUnnamedPlayers: 'Hide Unnamed Players',
+          highContrast: 'High Contrast Mode'
         },
         blocklist: 'Lista de Bloqueos',
         chatSettings: 'Chat',
@@ -363,9 +366,9 @@ const es = {
         title: 'Configuración de Caché',
         clear: 'Limpiar',
         fields: {
-          locationCache: 'Caché de Ubicaciones',
-          mapCache: 'Caché de Mapas',
-          locationColorCache: 'Caché de Color de Ubicaciones'
+          locationCache: 'Caché de las Ubicaciones',
+          mapCache: 'Caché de los Mapas',
+          locationColorCache: 'Caché del Color de las Ubicaciones'
         }
       },
       accountSettings: {
@@ -407,7 +410,8 @@ const es = {
           search: {
             label: 'Buscar:&nbsp;',
             name: 'Nombre:',
-            location: 'Ubicación:'
+            location: 'Ubicación:',
+            artist: 'Artista:'
           }
         }
       },
@@ -429,7 +433,8 @@ const es = {
       save: {
         title: 'Gestionar Datos de Guardado',
         reload: 'Guardar Cambios y Recargar',
-        info: 'Para importar archivos de guardado, si la última vez que guardaste fue usando una traducción en RPG_RT, el juego presentará errores hasta que vuelvas a guardar de nuevo en EasyRPG sin alguna traducción activa.'
+        info: 'Para importar archivos de guardado, si la última vez que guardaste fue usando una traducción en RPG_RT, el juego presentará errores hasta que vuelvas a guardar de nuevo en EasyRPG sin alguna traducción activa.',
+        manageOther: 'Manage Different Game&hellip;'
       },
       uiTheme: {
         title: 'Tema de Inferfaz',
@@ -448,7 +453,7 @@ const es = {
           theme: 'Tema'
         },
         showPassword: 'Mostrar Contraseña',
-        hidePassword: 'Esconder Contraseña',
+        hidePassword: 'Ocultar Contraseña',
         submit: 'Crear Grupo'
       },
       joinPrivateParty: {
@@ -457,7 +462,7 @@ const es = {
           password: 'Contraseña'
         },
         showPassword: 'Mostrar Contraseña',
-        hidePassword: 'Esconder Contraseña',
+        hidePassword: 'Ocultar Contraseña',
         incorrectPassword: 'Contraseña Incorrecta: Intente Nuevamente.',
         submit: 'Unirse'
       },
@@ -482,7 +487,7 @@ const es = {
       },
       myScreenshots: {
         title: 'Mis Capturas de Pantalla',
-        screenshotSlotProgress: 'Siguiente Mejora de Ranuras (BP)',
+        screenshotSlotProgress: 'Siguiente Mejora de Ranuras (PI)',
         empty: 'Aún no has guardado ninguna Captura de Pantalla.'
       },
       communityScreenshots: {
@@ -572,11 +577,19 @@ const es = {
       rules: {
         title: 'Reglas',
         rule1: 'Por favor, sé respetuoso y cortés.',
-        rule2: 'No discusiones de temas +18 (NSFW, gore, etc.).',
-        rule3: 'No discusiones de temas políticos.',
+        rule2: 'No discusiones acerca de temas +18 (NSFW, gore, etc.).',
+        rule3: 'No discusiones acerca de temas políticos.',
         rule4: 'No comentarios que inciten al odio (incluyendo insultos).',
         rule5: 'No trampas de ningún tipo por ningún motivo.',
         rule6: 'Si hay problemas, por favor informa a los moderadores.'
+      },
+      warnings: {
+        title: 'Warnings',
+        subtitle: 'Some games may contain the following content. Viewer discretion is advised.',
+        warning1: 'Flashing light sequences or patterns that may affect photosensitive viewers.',
+        warning2: 'References to self-harm or suicide.',
+        warning3: 'Disturbing imagery.',
+        warning4: 'Depictions of drug use.'
       },
       explorerUndiscoveredLocations: {
         title: 'Ubicaciones sin Descubrir',
@@ -629,6 +642,7 @@ const es = {
         disbandParty: 'Eliminar Grupo'
       },
       events: 'Expediciones',
+      badges: 'Insignias',
       locations: 'Ubicaciones',
       communityScreenshots: 'Capturas de Pantalla de la Comunidad',
       rankings: 'Clasificaciones',
@@ -642,19 +656,20 @@ const es = {
     },
     placeholders: {
       scheduleDescription:
-        'Sintaxis Markdown aceptada, usa {\\{l:Mundo,nombre de link opcional}} para insertar un link hacia yume.wiki'
+        'Sintaxis Markdown aceptada, usa {{l:Mundo,nombre de link opcional}} para insertar un link hacia yume.wiki'
     },
-    reviewRules: 'Ver Reglas'
+    reviewRules: 'Ver Reglas',
+    reviewWarnings: 'Review Warnings',
+    highContrast: 'High Contrast'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: 'Yume Nikki',
       '2kki': 'Yume 2kki',
+      cold: '[FRÍO]',
       unconscious: 'Collective Unconscious',
       flow: '.flow',
-      fog: 'FOG',
-      prayers: 'Answered Prayers',
       deepdreams: 'Deep Dreams',
       someday: 'Someday',
       amillusion: 'Amillusion',
@@ -670,7 +685,9 @@ const es = {
       tsushin: 'Yume Tsushin',
       nostalgic: 'nostAlgic',
       if: 'If',
-      unaccomplished: 'Unaccomplished'
+      unaccomplished: 'Unaccomplished',
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: '¿Está seguro de que desea abandonar la página? Todo progreso que no haya sido guardado se perderá.',
     logout: '¿Está seguro que desea cerrar sesión?',
@@ -803,16 +820,16 @@ const es = {
           success: '{PLAYER} puede usar el chat de nuevo.'
         },
         grantBadge: {
-          label: 'Dar Insignia',
-          prompt: 'Ingrese el ID de la Insignia que desea dar a {PLAYER}.',
-          success: '{BADGE} ha sido dada a {PLAYER}.',
-          fail: 'No se encontró una Insignia con el ID seleccionado.'
+          label: 'Otorgar Insignia',
+          prompt: 'Ingresa el ID de la Insignia que deseas otorgarle a {PLAYER}.',
+          success: '{BADGE} ha sido otorgada a {PLAYER}.',
+          fail: 'No se encontró ninguna Insignia con el ID seleccionado.'
         },
         revokeBadge: {
           label: 'Quitar Insignia',
-          prompt: 'Ingrese el ID de la Insignia que deseas quitarle a {PLAYER}.',
+          prompt: 'Ingresa el ID de la Insignia que deseas quitarle a {PLAYER}.',
           success: '{BADGE} le ha sido quitada a {PLAYER}.',
-          fail: 'No se encontró una Insignia con el ID seleccionado.'
+          fail: 'No se encontró ninguna Insignia con el ID seleccionado.'
         },
         tempban: {
           label: 'Banear Temporalmente a {PLAYER}',
@@ -821,7 +838,7 @@ const es = {
         },
         tempmute: {
           label: 'Silenciar Temporalmente a {PLAYER}',
-          prompt: '¿Cuándo Quitar el Silencio a {PLAYER}? (UTC time)',
+          prompt: '¿Cuándo Quitarle el Silencio a {PLAYER}? (UTC time)',
           success: '{PLAYER} ha sido temporalmente Silenciado.'
         }
       }
@@ -866,8 +883,8 @@ const es = {
       yourParty: 'Tu Grupo',
       defaultPartyName: 'Grupo de {OWNER}',
       partyOwner: 'Líder del Grupo',
-      confirmDisband: '¿Estás seguro que quieres eliminar tu grupo? Esta acción no se puede deshacer.',
-      confirmTransferPartyOwner: '¿Estás seguro que quieres transferirle el Liderazgo del Grupo a {PLAYER}?',
+      confirmDisband: '¿Estás seguro de que quieres eliminar tu grupo? Esta acción no se puede deshacer.',
+      confirmTransferPartyOwner: '¿Estás seguro de que quieres transferirle el Liderazgo del Grupo a {PLAYER}?',
       offlineMemberSuffix: 'Miembro Desconectado',
       categories: {
         online: 'Conectados - {COUNT}',
@@ -884,29 +901,29 @@ const es = {
       template: 'CONSEJO: {CONTENT}',
       tips: {
         backupReminder:
-          'Se recomienda descargar frecuentemente los archivos de guardado para evitar perder el progreso en el juego en el caso de que la caché del navegador sea borrada.',
+          'Se recomienda descargar frecuentemente los archivos de guardado para evitar perder el progreso en el juego en el caso de que el caché del navegador sea borrado.',
         menuTheme:
           'Tu color de nombre y estilo en la lista de jugadores cambia dependiendo del menú que selecciones dentro del juego.',
         playersInMap:
-          'Puede alternar entre la cantidad de jugadores conectados y la cantidad de jugadores en el mapa actual presionando el texto correspondiente en la esquina superior derecha de la pantalla.',
+          'Puedes alternar entre la cantidad de jugadores conectados y la cantidad de jugadores en el mapa actual presionando el texto correspondiente en la esquina superior derecha de la pantalla.',
         markdownSupport:
-          'El chat soporta formateo de texto al usar ciertos caracteres especiales, los cuales son: **negrita** (\\*\\*texto\\*\\*), *cursiva* (\\*texto\\*, \\_texto\\_), __subrayado__ (\\_\\_texto\\_\\_), y ||spoiler|| (\\|\\|texto\\|\\|).',
+          'El chat soporta el formateo de texto al usar ciertos caracteres especiales, los cuales son: **negrita** (\\*\\*texto\\*\\*), *cursiva* (\\*texto\\*, \\_texto\\_), __subrayado__ (\\_\\_texto\\_\\_), y ||spoiler|| (\\|\\|texto\\|\\|).',
         tabToChat:
-          "Si juegas en PC, puedes presionar la tecla Tab para alternar entre el juego y el chat. Esta opción puede desactivarse en 'Configuraciones de Chat', bajo la opción 'Presionar Tab para chatear'.",
+          "Si juegas en PC, puedes presionar la tecla Tab para alternar entre el juego y el chat. Esta opción puede desactivarse en 'Configuraciones de Chat', con la opción 'Presionar Tab para chatear'.",
         chatTabNotifications:
-          "Cuando se encuentra en una pestaña de chat diferente a 'Todos', si un nuevo mensaje es recibido en otra pestaña, el título se ennegrecerá, notificando la recepción del mensaje.",
+          "Cuando te encuentres en una pestaña de chat diferente a 'Todos', si un nuevo mensaje es recibido en otra pestaña, el título se ennegrecerá, notificando que hay un nuevo mensaje.",
         clearChat:
-          "Cuando presiona el botón para limpiar los mensajes del chat -encontrado en la esquina superior derecha del chat-, si no te encuentras en la pestaña de 'Todos', solo se borrarán los mensajes de la pestaña actualmente en uso.",
+          "Cuando presionas el botón para limpiar los mensajes del chat -encontrado en la esquina superior derecha del chat-, si no te encuentras en la pestaña de 'Todos', solo se borrarán los mensajes de la pestaña actualmente en uso.",
         chatHistoryLimit:
-          "Si tu historial de chat es demasiado largo, podrías comenzar a experimental problemas de rendimiento. En 'Opciones de Chat' puedes limitar la cantidad de mensajes que almacenará el historial de chat para evitar hacerlo manualmente.",
+          "Si tu historial de chat es demasiado largo, podrías comenzar a experimentar problemas de rendimiento. En 'Opciones de Chat' puedes limitar la cantidad de mensajes que almacenará el historial de chat para evitar hacerlo manualmente.",
         parties:
           'Los equipos son una gran manera de mantener contacto con otros jugadores, ya que permiten ver la ubicación de otros miembros del equipo y hablar con ellos de forma privada.',
         immersionMode:
           'Si prefieres una experiencia inmersiva sobre una social, prueba el Modo Inmersivo. Este desactiva el chat global, lista de jugadores y el contador de jugadores, haciendo más interesante el encontrar jugadores al explorar.',
         friendsMenu:
-          'Dando click derecho en PC, o manteniendo presionado en dispositivos móviles en el ícono de un jugador fuera de las Clasificaciones, una caja de diálogo se abrirá, permitiendote enviarle una solicitud de amistad, mencionar al susodicho o bloquearlo.',
+          'Dando click derecho en PC, o manteniendo presionado en dispositivos móviles en el ícono de un jugador fuera de las Clasificaciones, una caja de diálogo se abrirá, permitiéndote enviar una solicitud de amistad, mencionar al susodicho o bloquearlo.',
         easySettingsMenu:
-          'Si estás jugando desde tu PC, puedes presionar la tecla F1 mientras juegas para abrir el menú de configuración, permitiendote tanto ajustar tus teclas como seleccionar otros ajustes.',
+          'Si estás jugando desde tu PC, puedes presionar la tecla F1 mientras juega para abrir el menú de configuración, permitiendote tanto ajustar tus teclas como seleccionar otros ajustes.',
         floatingControls:
           'Si estás jugando en un dispositivo móvil y no te gustan los controles predeterminados, intenta usar el estilo Flotante de los Controles disponible desde Tipo de Controles para Móviles en Opciones.',
         recentBadges:
@@ -914,11 +931,13 @@ const es = {
         desktopHotkeys:
           'Si estás jugando desde tu PC, Alt+Enter también puede Alternar el Modo Pantalla Completa, F7 de manera predeterminada toma una Captura de Pantalla del Juego, y la Tecla T abre el chat.',
         badgeControls:
-          'En el Menú de la Galería de Insignias, puedes arrastrar y soltar medallas para acomodarlas, o en su defecto rápidamente quitar varias medallas a la vez utilizando el modo Quitar Medallas.',
+          'En el Menú de la Galería de Insignias, puedes arrastrar y soltar insignias para acomodarlas, o en su defecto rápidamente quitar varias insignias a la vez utilizando el modo Quitar Insignias.',
         cacheSettings:
           '¿Tienes problemas Desbloqueando Ubicaciones o con Ubicaciones Desactualizadas? El Menú de Caché te permite limpiar el caché relevante para conseguir los datos más actualizados.',
         openSource:
-          'YNOproject es de código abierto. Los repositorios de código están disponibles en: https://github.com/ynoproject/'
+          'YNOproject es de código abierto. Los repositorios de código están disponibles en: https://github.com/ynoproject/',
+        useYnoEmoji:
+          'Cuando escribes dos puntos (:) en el chat, un menú de emojis de YNO aparecerá. Puedes seleccionar y dar click a un emoji desde ahí para ponerlo en el chat en el formato :nombre_del_emoji:.'
       }
     },
     save: {
@@ -930,7 +949,7 @@ const es = {
       },
       upload: {
         tooltip: 'Cargar archivo de guardado',
-        invalidSaveFile: 'Seleccione un archivo de guardado válido (formato .lsd).'
+        invalidSaveFile: 'Selecciona un archivo de guardado válido (formato .lsd).'
       },
       download: {
         tooltip: 'Descargar archivo de guardado',
@@ -938,12 +957,12 @@ const es = {
       },
       delete: {
         tooltip: 'Descargar archivo de guardado',
-        confirmDelete: '¿Está seguro que desea eliminar el archivo de guardado en la ranura {SLOT_ID}?'
+        confirmDelete: '¿Estás seguro de que deseas eliminar el archivo de guardado en la ranura {SLOT_ID}?'
       }
     },
     saveSync: {
       confirmClearSaveSync:
-        '¿Estás seguro que quieres Borrar la Sincronización de Archivos de Guardado en este juego? Esta acción no puede deshacerse a menos que tengas una copia de tu archivo de guardado.'
+        '¿Estás seguro de que quieres Borrar la Sincronización de Archivos de Guardado en este juego? Esta acción no puede deshacerse a menos que tengas una copia de tu archivo de guardado.'
     },
     toast: {
       system: {
@@ -1005,7 +1024,7 @@ const es = {
         saveCleared:
           'Se ha borrado la información de sincronización de archivos de guardado. Esto no afectará archivos de guardado ya existentes en otros dispositivos.',
         saveReminder:
-          'Recuerda guardar frecuentemente y hacer una copia de tus archivos de guardado para no perder tu progreso.'
+          'Recuerda guardar frecuentemente y hacer una copia de sus archivos de guardado para no perder su progreso.'
       },
       timeTrials: {
         timeTrialsComplete: 'Llegaste a {LOCATION} en {TIME}.'
@@ -1040,11 +1059,11 @@ const es = {
     badges: {
       null: 'Sin Insignia',
       allCategory: 'Todos',
-      badgeTitle: '{TITLE} - {BP} BP',
+      badgeTitle: '{TITLE} - {BP} PI',
       locked: '???',
       location: 'Ubicación:&nbsp;',
       goalProgress: '{CURRENT}/{TOTAL}',
-      percentUnlocked: '{PERCENT}% de jugadores tienen esta medalla',
+      percentUnlocked: '{PERCENT}% de jugadores tienen esta insignia',
       time: '{MINUTES}:{SECONDS}',
       artCredit: 'Arte por {ARTIST}',
       search: {
@@ -1066,7 +1085,7 @@ const es = {
     badgeGallery: {
       label: 'Galería de {PLAYER}',
       loading: 'Cargando...',
-      bp: '{BP} BP',
+      bp: '{BP} PI',
       count: '{COUNT} Insignias',
       empty: 'Galería de Insignias no Establecida'
     },
@@ -1170,7 +1189,7 @@ const es = {
       },
       delete: {
         tooltip: 'Borrar',
-        confirm: '¿Estás seguro que quieres borrar esta captura de pantalla?'
+        confirm: '¿Estás seguro de que quiere borrar esta captura de pantalla?'
       }
     },
     schedules: {
@@ -1208,54 +1227,53 @@ const es = {
       actions: {
         resetPassword: {
           label: 'Reestablecer Contraseña',
-          playerPrompt: 'Ingrese el nombre de la cuenta a la que quiere reestablecerle la contraseña',
+          playerPrompt: 'Ingresa el nombre de la cuenta a la que quieres reestablecerle la contraseña',
           success: 'La nueva contraseña para {PLAYER} es {PASSWORD}'
         },
         changeUsername: {
           label: 'Cambiar Nombre de Usuario',
-          playerPrompt: 'Ingrese el nombre de la cuenta a la que quiere cambiar el nombre de usuario',
-          namePrompt: 'Ingrese el nuevo nombre de usuario para {PLAYER}',
+          playerPrompt: 'Ingresa el nombre de la cuenta a la que quieres cambiarle el nombre de usuario',
+          namePrompt: 'Ingresa el nuevo nombre de usuario para {PLAYER}',
           success: 'El nombre de usuario para {PLAYER} ha sido cambiado a {NAME}',
           error:
             'No se ha podio cambiar el nombre de usuario para {PLAYER}; es posible que el nuevo nombre ya esté en uso'
         },
         ban: {
           label: 'Banear Jugador',
-          playerPrompt: 'Ingrese el nombre de la cuenta que quiere banear'
+          playerPrompt: 'Ingresa el nombre de la cuenta que quieres banear'
         },
         unban: {
           label: 'Desbanear Jugador',
-          playerPrompt: 'Ingrese el nombre de la cuenta que quiere desbanear'
+          playerPrompt: 'Ingresa el nombre de la cuenta que quieres desbanear'
         },
         mute: {
           label: 'Silenciar Jugador',
-          playerPrompt: 'Ingrese el nombre de la cuenta que quiere silenciar'
+          playerPrompt: 'Ingresa el nombre de la cuenta que quieres silenciar'
         },
         unmute: {
-          label: 'Quitar Silencio a Jugador',
-          playerPrompt: 'Ingrese el nombre de la cuenta a la que quiere quitar el silencio'
+          label: 'Quitar Silenciamiento a Jugador',
+          playerPrompt: 'Ingresa el nombre de la cuenta a la que quieres quitarle el silenciamiento'
         },
         grantBadge: {
-          label: 'Otorgar Medalla',
-          playerPrompt: 'Ingrese el nombre de la cuenta a la que quiere otorgar una Insignia'
+          label: 'Otorgar Insignia',
+          playerPrompt: 'Ingresa el nombre de la cuenta a la que quieres otorgarle una Insignia'
         },
         revokeBadge: {
-          label: 'Quitar Medalla',
-          playerPrompt: 'Ingrese el nombre de la cuenta a la que quiere quitar una Insignia'
+          label: 'Quitar Insignia',
+          playerPrompt: 'Ingresa el nombre de la cuenta a la que quieres quitarle una Insignia'
         },
         tempban: {
           label: 'Banear Jugador Temporalmente',
-          playerPrompt: 'Ingrese el nombre de la cuenta a la que quiere banear temporalmente',
+          playerPrompt: 'Ingresa el nombre de la cuenta a la que quieres banear temporalmente',
           timePrompt: 'Ingresa la fecha en la que el ban expirará (UTC time)'
         },
         tempmute: {
           label: 'Silenciar Jugador Temporalmente',
-          playerPrompt: 'Ingrese el nombre de la cuenta a la que quiere silenciar temporalmente',
-          timePrompt: 'Ingresa la fecha en la que el silencio expirará (UTC time)'
+          playerPrompt: 'Ingresa el nombre de la cuenta a la que quieres silenciar temporalmente',
+          timePrompt: 'Ingresa la fecha en la que el silenciamiento expirará (UTC time)'
         }
       }
     }
   }
 } satisfies Translation;
-
 export default es;

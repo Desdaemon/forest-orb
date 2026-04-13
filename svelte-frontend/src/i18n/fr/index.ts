@@ -1,4 +1,4 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const fr = {
   translationComplete: '1',
@@ -30,11 +30,11 @@ const fr = {
     },
     chatbox: {
       location: 'Lieu :',
-      nextLocation: 'Next Loc:&nbsp;',
+      nextLocation: 'Lieu suivant :&nbsp;',
       immersionMode: 'Mode Immersion',
       reconnect: 'Se reconnecter',
       tab: {
-        chat: 'Chat',
+        chat: 'Tchat',
         players: 'Joueurs',
         parties: 'Groupe'
       },
@@ -71,7 +71,8 @@ const fr = {
     disclaimer: {
       pendingApproval: "En attente d'approuvement du développeur/éditeur",
       hostedWithPermission: 'Hébergé avec la permission du/des développeur(s)',
-      originalCreation: 'Création originale de la communauté YNOproject'
+      originalCreation: 'Création originale de la communauté YNOproject',
+      gameEndDate: "Jouable sur YNOproject jusqu'à {{date}}"
     },
     modal: {
       common: {
@@ -157,7 +158,7 @@ const fr = {
           toggleImmersionMode: {
             label: 'Mode Immersion',
             helpText:
-              'Retire le nombre de joueurs, le Chat global, et les cartes pour vous donner une expérience plus immersive'
+              'Retire le nombre de joueurs, le Tchat global, et les cartes pour vous donner une expérience plus immersive'
           },
           timeTrialinfo: {
             label: 'Contre-la-montre'
@@ -183,10 +184,12 @@ const fr = {
             label: 'Mode solo',
             helpText:
               'Transforme le mode privé en mode solo, cachant tous les amis et membres du groupe de votre champ de vision. Parfait si vous souhaitez jouer au jeu par vous-même.'
-          }
+          },
+          toggleHideUnnamedPlayers: 'Cacher les joueurs sans noms',
+          highContrast: 'High Contrast Mode'
         },
         blocklist: 'Liste de blocage',
-        chatSettings: 'Chat',
+        chatSettings: 'Tchat',
         screenshotSettings: "Captures d'écran",
         notificationSettings: 'Notifications',
         cacheSettings: 'Cache',
@@ -198,12 +201,12 @@ const fr = {
         empty: "Votre liste d'utilisateurs bloqués est actuellement vide"
       },
       chatSettings: {
-        title: 'Paramètres du Chat',
+        title: 'Paramètres du Tchat',
         fields: {
           toggleGameChat: {
-            label: 'Surcouche du Chat en jeu',
-            global: 'Surcouche du Chat Global',
-            party: 'Surcouche du Chat de Groupe'
+            label: 'Surcouche du Tchat en jeu',
+            global: 'Surcouche du Tchat Global',
+            party: 'Surcouche du Tchat de Groupe'
           },
           toggleTabToChat: 'Appuyez sur Tab pour discuter',
           togglePlayMentionSound: 'Jouer un son lorsque mentionné(e)',
@@ -220,13 +223,13 @@ const fr = {
             }
           },
           mapChatHistoryLimit: {
-            label: "Limite de l'historique du Chat de Carte"
+            label: "Limite de l'historique du Tchat de Carte"
           },
           globalChatHistoryLimit: {
-            label: "Limite de l'historique du Chat Global"
+            label: "Limite de l'historique du Tchat Global"
           },
           partyChatHistoryLimit: {
-            label: "Limite de l'historique du Chat de Groupe"
+            label: "Limite de l'historique du Tchat de Groupe"
           },
           blurScreenshotEmbeds: "Flouter toutes les captures d'écran"
         }
@@ -407,7 +410,8 @@ const fr = {
           search: {
             label: 'Rechercher :&nbsp;',
             name: 'Nom :',
-            location: 'Lieu :'
+            location: 'Lieu :',
+            artist: 'Artiste :'
           }
         }
       },
@@ -429,7 +433,8 @@ const fr = {
       save: {
         title: 'Gérer les Données de Sauvegarde',
         reload: 'Sauvegarder les changements et recharger la page',
-        info: "Lors de l'export d'une sauvegarde, si la dernière fois que cette sauvegarde a eu lieu était en utilisant une traduction sur YNOproject ou avec EasyRPG, l'utilisation de la sauvegarde sur la version exécutable du jeu affichera une erreur vous empêchant d'utiliser cette sauvegarde tant que la dernière sauvegarde n'est pas effectuée sans traduction active."
+        info: "Lors de l'export d'une sauvegarde, si la dernière fois que cette sauvegarde a eu lieu était en utilisant une traduction sur YNOproject ou avec EasyRPG, l'utilisation de la sauvegarde sur la version exécutable du jeu affichera une erreur vous empêchant d'utiliser cette sauvegarde tant que la dernière sauvegarde n'est pas effectuée sans traduction active.",
+        manageOther: 'Manage Different Game&hellip;'
       },
       uiTheme: {
         title: "Thème d'IU",
@@ -478,7 +483,7 @@ const fr = {
         title: "Votre capture d'écran",
         download: 'Télécharger',
         save: 'Sauvegarder dans Mes captures décran',
-        share: 'Partager avec le Chat'
+        share: 'Partager avec le Tchat'
       },
       myScreenshots: {
         title: 'Mes captures décran',
@@ -578,6 +583,14 @@ const fr = {
         rule5: "Pas de triche de toute sorte, qu'importe la raison.",
         rule6: 'Si il y a des problèmes, veuillez en informer les modérateurs.'
       },
+      warnings: {
+        title: 'Warnings',
+        subtitle: 'Some games may contain the following content. Viewer discretion is advised.',
+        warning1: 'Flashing light sequences or patterns that may affect photosensitive viewers.',
+        warning2: 'References to self-harm or suicide.',
+        warning3: 'Disturbing imagery.',
+        warning4: 'Depictions of drug use.'
+      },
       explorerUndiscoveredLocations: {
         title: 'Lieux non découverts',
         complete: 'Vous avez découvert tous les lieux disponibles ! Félicitations !!'
@@ -609,26 +622,27 @@ const fr = {
       togglePrivateMode: 'Activer le mode privé',
       save: 'Gérer les Données de Sauvegarde',
       uiTheme: 'Thème IU',
-      toggleChat: 'Afficher le Chat',
+      toggleChat: 'Afficher le Tchat',
       toggleExplorer: 'Activer Yume 2kki Navigator',
       screenshot: "Prendre une capture d'écran",
       myScreenshots: 'Mes captures décran',
       settings: 'Paramètres',
       toggleMute: 'Mettre en muet',
       toggleHideLocation: 'Activer le partage de la localisation',
-      toggleGlobalMessage: 'Activer le Chat Global',
+      toggleGlobalMessage: 'Activer le Tchat Global',
       chat: {
         toggleNextLocation: 'Montrer/Cacher le Lieu de la prochaine expédition',
         toggleGlobalMessageLocations: 'Montrer/Cacher les Lieux dans les messages de Chat',
         toggleMessageTimestamps: "Montrer/Cacher l'horodatage des messages de Chat",
         filterMentions: 'Montrer uniquement les mentions',
-        clearChat: 'Effacer le Chat'
+        clearChat: 'Effacer le Tchat'
       },
       parties: {
         createParty: 'Créer un Groupe',
         disbandParty: 'Dissoudre le Groupe'
       },
       events: 'Expéditions',
+      badges: 'Badges',
       locations: 'Lieux',
       communityScreenshots: "Captures d'écran de la communauté",
       rankings: 'Classement',
@@ -642,19 +656,20 @@ const fr = {
     },
     placeholders: {
       scheduleDescription:
-        'La syntaxe Markdown est acceptée, utilisez {\\{l:Monde,nom de lien optionnel}} pour insérer un lien vers yume.wiki'
+        'La syntaxe Markdown est acceptée, utilisez {{l:Monde,nom de lien optionnel}} pour insérer un lien vers yume.wiki'
     },
-    reviewRules: 'Relire les règles'
+    reviewRules: 'Relire les règles',
+    reviewWarnings: 'Review Warnings',
+    highContrast: 'High Contrast'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: 'Yume Nikki',
       '2kki': 'Yume 2kki',
+      cold: '[FROID]',
       unconscious: 'Collective Unconscious',
       flow: '.flow',
-      fog: 'FOG',
-      prayers: 'Answered Prayers',
       deepdreams: 'Deep Dreams',
       someday: 'Someday',
       amillusion: 'Amillusion',
@@ -670,7 +685,9 @@ const fr = {
       tsushin: 'Yume Tsushin',
       nostalgic: 'nostAlgic',
       if: 'If',
-      unaccomplished: 'Unaccomplished'
+      unaccomplished: 'Unaccomplished',
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: 'Êtes-vous sûr de vouloir quitter la page ? Toutes les données non sauvegardées seront perdues.',
     logout: 'Êtes-vous sûr de vouloir vous déconnecter ?',
@@ -893,17 +910,17 @@ const fr = {
         markdownSupport:
           'Il est possible de mettre en forme vos messages en les enveloppant de certains caractères spéciaux&nbsp. Les mises en forme supportées sont;: **gras** (\\*\\*texte\\*\\*), *italique* (\\*texte\\*, \\_texte\\_), __souligné__ (\\_\\_texte\\_\\_), ~~barré~~ (\\~\\~texte\\~\\~), et ||spoiler|| (\\|\\|texte\\|\\|).',
         tabToChat:
-          "Si vous jouez sur un PC, vous pouvez appuyez sur la touche tab pour basculer entre le jeu et la saisie dans le chat. Cette fonctionnalité peut être désactivée dans les Paramètres du Chat avec l'option 'Appuyez sur Tab pour discuter'.",
+          "Si vous jouez sur un PC, vous pouvez appuyez sur la touche tab pour basculer entre le jeu et la saisie dans le tchat. Cette fonctionnalité peut être désactivée dans les Paramètres du Tchat avec l'option 'Appuyez sur Tab pour discuter'.",
         chatTabNotifications:
-          "Lorsque vous êtes dans un onglet de chat autre que 'Tout', si un nouveau message est envoyé dans l'autre onglet filtré, le titre de l'onglet s'affichera en gras pour vous en informer.",
+          "Lorsque vous êtes dans un onglet de tchat autre que 'Tout', si un nouveau message est envoyé dans l'autre onglet filtré, le titre de l'onglet s'affichera en gras pour vous en informer.",
         clearChat:
-          "Lorsque vous cliquez sur le bouton pour effacer le chat en haut à droite de la boîte de chat, si vous n'êtes pas sur l'onglet 'Tout', seuls les messages de l'onglet dans lequel vous vous trouvez seront effacés.",
+          "Lorsque vous cliquez sur le bouton pour effacer le tchat en haut à droite de la boîte de tchat, si vous n'êtes pas sur l'onglet 'Tout', seuls les messages de l'onglet dans lequel vous vous trouvez seront effacés.",
         chatHistoryLimit:
-          'Si votre historique de chat devient trop long, vous risquez de rencontrer des problèmes de performance. Dans les Paramètres du Chat, vous pouvez limiter votre historique de chat en conséquence pour éviter ces problèmes sans avoir à manuellement effacer votre chat.',
+          'Si votre historique de tchat devient trop long, vous risquez de rencontrer des problèmes de performance. Dans les Paramètres du Tchat, vous pouvez limiter votre historique de tchat en conséquence pour éviter ces problèmes sans avoir à manuellement effacer votre tchat.',
         parties:
-          'Les groupes sont un excellent moyen de rester ensemble avec les gens dans une aventure. Vous pouvez voir les emplacements des membres de votre groupe et leur parler dans un chat privé.',
+          'Les groupes sont un excellent moyen de rester ensemble avec les gens dans une aventure. Vous pouvez voir les emplacements des membres de votre groupe et leur parler dans un tchat privé.',
         immersionMode:
-          "Si vous préférez une expérience plus immersive que sociale, essayez le Mode Immersion. Il désactive le chat global, la liste des joueurs et le nombre de joueurs, de sorte à rendre la découverte d'autres joueurs plus intéressante et inattendue lors de vos explorations.",
+          "Si vous préférez une expérience plus immersive que sociale, essayez le Mode Immersion. Il désactive le tchat global, la liste des joueurs et le nombre de joueurs, de sorte à rendre la découverte d'autres joueurs plus intéressante et inattendue lors de vos explorations.",
         friendsMenu:
           "En faisant un clic droit sur PC, ou en maintenant votre touche sur mobile sur l'icône d'un joueur en dehors du Classement, une boîte de dialogue s'ouvrira, vous permettant d'envoyer une demande d'ami, mentionner ledit joueur ou le bloquer.",
         easySettingsMenu:
@@ -913,13 +930,15 @@ const fr = {
         recentBadges:
           'Vous avez supprimé une notification de déblocage de badge par accident ? Vous pouvez toujours revoir les badges que vous avez débloqués durant la session en cours en sélectionnant Récemment débloqués dans la liste des Badges.',
         desktopHotkeys:
-          "Si vous jouez sur un PC, Alt + Entrée peut aussi activer le mode plein écran, F7 par défaut prend une capture d'écran du jeu, et la touche T ouvre le menu d'entrée du chat de jeu.",
+          "Si vous jouez sur un PC, Alt + Entrée peut aussi activer le mode plein écran, F7 par défaut prend une capture d'écran du jeu, et la touche T ouvre le menu d'entrée du tchat de jeu.",
         badgeControls:
           "Dans le menu de la Galerie des Badges, vous pouvez attraper et faire glisser des badges pour les réarranger, ou rapidement retirer plusieurs badges d'un seul coup en utilisant le mode Retirer des badges.",
         cacheSettings:
           "Vous avez un problème avec la complétion des lieux ou avez des cartes obsolètes ? Le menu du Cache vous permet d'effacer le cache obsolète en question et de recharger les dernières données.",
         openSource:
-          'YNOProject est un projet open source dont le code source est disponible sur https://github.com/ynoproject/.'
+          'YNOProject est un projet open source dont le code source est disponible sur https://github.com/ynoproject/.',
+        useYnoEmoji:
+          "Lorsque vous tapez les deux-points (:) dans un tchat, une liste d'émojis de YNOproject apparaît. Vous pouvez sélectionner et cliquer sur un émoji depuis cette liste pour l'écrire dans le tchat sous la forme :emojiName:."
       }
     },
     save: {
@@ -1257,5 +1276,4 @@ const fr = {
     }
   }
 } satisfies Translation;
-
 export default fr;

@@ -1,158 +1,104 @@
 import { browser } from '$app/environment';
 import { modal } from './modal';
+import { LL } from '$lib';
+import { get } from 'svelte/store';
 
-/** 
- * AuthStore - Manages user authentication state and login/logout flow
- */
+type LoginErrorKey = 'invalidLogin';
+type RegisterErrorKey = 'confirmPasswordMismatch' | 'invalidCredentials' | 'usernameTaken';
 
-// Store for auth state (using readable-writable for reactive updates)
+async function authApiFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  return fetch(`/connect/seiko/${path}`, {
+    ...init,
+    credentials: 'include'
+  });
+}
+
+function toSearchParams(formData: FormData): URLSearchParams {
+  const params = new URLSearchParams();
+  for (const [key, value] of formData.entries()) {
+    if (typeof value === 'string') {
+      params.append(key, value);
+    }
+  }
+  return params;
+}
+
 export const auth = {
-  // Current user info (null if not logged in)
   userInfo: browser ? null : undefined,
 
-  /**
-   * Open the login modal and reset state
-   */
-  openLoginModal: () => {
-    // Clear any existing errors
-    if (window && window.loginError) {
-      window.loginError.classList.add('hidden');
-    }
-    if (window && window.loginForm) {
-      window.loginForm.reset();
-    }
-  },
-
-  /**
-   * Handle login button click (replicates original implementation)
-   */
   handleLoginClick: () => {
-    const loginButton = document.getElementById('loginButton');
-    const loginModal = document.getElementById('loginModal');
-    const loginErrorRow = document.getElementById('loginErrorRow');
-
-    // Clear errors
-    if (loginErrorRow) {
-      loginErrorRow.classList.add('hidden');
-    }
-
-    // Reset Turnstile (reCAPTCHA)
-    window.turnstile?.reset();
-
-    // Open modal
-    if (loginModal) {
-      modal.open('loginModal');
-    }
+    modal.open('loginModal');
   },
 
-  /**
-   * Handle logout button click
-   */
   handleLogoutClick: async () => {
-    // Confirm logout
-    const logoutConfirmed = confirm('Are you sure you want to logout?');
+    const logoutConfirmed = confirm(get(LL).messages.logout());
     if (!logoutConfirmed) return;
 
     try {
-      const response = await fetch('/api/auth/logout', { method: 'POST' });
+      const response = await authApiFetch('logout');
       if (!response.ok) {
         console.error('Logout failed:', response.statusText);
+      }
+      if (browser) {
+        window.location.reload();
       }
     } catch (error) {
       console.error('Logout error:', error);
     }
-
-    // Clear session
-    if (window && window.closeSessionWs) {
-      window.closeSessionWs();
-    }
-
-    // Update UI
-    if (window && window.fetchAndUpdatePlayerInfo) {
-      window.fetchAndUpdatePlayerInfo(false);
-    }
   },
 
-  /**
-   * Handle login form submission
-   */
-  handleLoginSubmit: async (formData: FormData, usernameElement: HTMLInputElement, passwordElement: HTMLInputElement) => {
-    const loginErrorRow: HTMLElement = document.getElementById('loginErrorRow');
-    
+  handleLoginSubmit: async (formData: FormData): Promise<{ ok: true } | { ok: false; errorKey: LoginErrorKey }> => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await authApiFetch('login', {
         method: 'POST',
-        body: new URLSearchParams(formData),
+        body: toSearchParams(formData),
         headers: {
+          Accept: 'application/x-www-form-urlencoded',
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        loginErrorRow?.classList.remove('hidden');
-        // Set error message (placeholder - customize with actual API response)
-        console.error('Login failed:', errorText);
-        window.turnstile?.reset();
-        return false;
-      }
-
-      // Success - fetch user info and close modal
-      if (window && window.fetchAndUpdatePlayerInfo) {
-        window.fetchAndUpdatePlayerInfo(true);
+        return { ok: false, errorKey: 'invalidLogin' };
       }
 
       modal.close();
-      return true;
+      if (browser) {
+        window.location.reload();
+      }
+      return { ok: true };
     } catch (error) {
       console.error('Login error:', error);
-      return false;
+      return { ok: false, errorKey: 'invalidLogin' };
     }
   },
 
-  /**
-   * Handle register form submission
-   */
-  handleRegisterSubmit: async (formData: FormData) => {
+  handleRegisterSubmit: async (
+    formData: FormData
+  ): Promise<{ ok: true } | { ok: false; errorKey: RegisterErrorKey }> => {
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await authApiFetch('register', {
         method: 'POST',
-        body: new URLSearchParams(formData),
+        body: toSearchParams(formData),
         headers: {
+          Accept: 'application/x-www-form-urlencoded',
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        const errorRow = document.getElementById('registerErrorRow');
-        
-        if (errorRow) {
-          errorRow.classList.remove('hidden');
-          // Set error message based on error type
-        }
-        
-        window.turnstile?.reset();
-        return false;
+        const errorText = (await response.text()).trim();
+        const errorKey: RegisterErrorKey = errorText === 'user exists' ? 'usernameTaken' : 'invalidCredentials';
+        return { ok: false, errorKey };
       }
 
-      // Success - clear errors and switch to login modal
-      document.getElementById('loginErrorRow')?.classList.add('hidden');
       modal.open('loginModal');
-      window.turnstile?.reset();
-      
-      return true;
+      return { ok: true };
     } catch (error) {
       console.error('Register error:', error);
-      return false;
+      return { ok: false, errorKey: 'invalidCredentials' };
     }
   }
 };
-
-// Initial check if user is logged in
-if (browser && typeof window !== 'undefined') {
-  // Fetch user info if needed
-  // auth.checkAuthStatus();
-}
 
 export default auth;

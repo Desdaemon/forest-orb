@@ -178,7 +178,8 @@
             "label": "Chế độ Chơi đơn",
             "helpText": "Chuyển Chế độ Riêng tư thành Chế độ Chơi đơn và ẩn toàn bộ bạn bè cũng như thành viên cùng nhóm. Khuyên dùng khi bạn muốn hoàn toàn tự khám phá."
           },
-          "toggleHideUnnamedPlayers": "Ẩn các người chơi không tên"
+          "toggleHideUnnamedPlayers": "Ẩn các người chơi không tên",
+          "highContrast": "High Contrast Mode"
         },
         "blocklist": "Danh sách chặn",
         "chatSettings": "Chat",
@@ -645,10 +646,11 @@
       "mobileControlsType": "Các kiểu điều khiển khác thay thế cho kiểu D-Pad mặc định.<br>Kiểu điều khiển nổi chỉ có tác dụng khi bật toàn màn hình trên điện thoại."
     },
     "placeholders": {
-      "scheduleDescription": "Có thể dùng ký hiệu định dạng văn bản. Bạn có thể dùng {\\{l:World,tên tùy chọn cho liên kết}} để chèn liên kết đến yume.wiki"
+      "scheduleDescription": "Có thể dùng ký hiệu định dạng văn bản. Bạn có thể dùng {{l:World,tên tùy chọn cho liên kết}} để chèn liên kết đến yume.wiki"
     },
     "reviewRules": "Xem Nội quy",
-    "reviewWarnings": "Xem Cảnh báo"
+    "reviewWarnings": "Xem Cảnh báo",
+    "highContrast": "High Contrast"
   },
   "messages": {
     "games": {

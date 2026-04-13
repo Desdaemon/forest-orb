@@ -31,7 +31,7 @@
 
 <script lang="ts">
   import { apiFetch } from '$lib/api';
-  import { ConnectionStatus, createChatSessionClient } from '$lib/chatSession';
+  import { ConnectionStatus, createChatSessionClient, activeSession } from '$lib/chatSession';
   import { onMount, tick } from 'svelte';
   import { getGameInitState } from '$lib/init';
   import { locationResolver } from '$lib/locationResolver';
@@ -167,6 +167,8 @@
     },
     onActivatePlayerTheme: activatePlayerTheme
   });
+
+  activeSession.set(sessionClient);
 
   const connState = $derived($sessionClient.connState);
 

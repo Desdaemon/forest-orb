@@ -37,7 +37,7 @@ export const defaultGlobalConfig = {
   unicodeFont: false,
   notifications: true,
   notificationScreenPosition: 'bottomRight',
-  nametagMode: false,
+  nametagMode: false
 };
 
 export const defaultUserConfig = {
@@ -63,7 +63,7 @@ export const defaultUserConfig = {
   // 2kki only
   last2kkiVersion: null,
   explorer: false,
-  enableExplorer: false,
+  enableExplorer: false
 };
 
 export const LATIN_EX_LANGS = ['vi', 'ru', 'uk'];
@@ -107,7 +107,7 @@ type EasyRpgPlayerApi = {
   getPlayerCoords(): [number, number];
   requestReset(): void;
   resetCanvas(): void;
-}
+};
 
 type EasyRpgPlayer = {
   initialized: boolean;
@@ -115,10 +115,10 @@ type EasyRpgPlayer = {
   saveFs: any;
   wsUrl: string;
   /** Initialized by {@linkcode initEasyRpgEngine} */
-  api?: EasyRpgPlayerApi,
+  api?: EasyRpgPlayerApi;
 } & {
   [K in EasyRpgPlayerApiFuncs]: EasyRpgPlayerApi[K];
-}
+};
 
 type EasyRpgPlayerApiFuncs = keyof EasyRpgPlayerApi;
 
@@ -133,8 +133,8 @@ export let easyrpgPlayer: EasyRpgPlayer = new Proxy(rawEasyRpgModule, {
         } catch (err) {
           console.error(err, prop, ...args);
         }
-      })
-    }
+      });
+    };
   }
 }) as any;
 
@@ -142,7 +142,7 @@ if (import.meta.hot) {
   // explicitly refuse HMR for this module
   import.meta.hot.accept(() => {
     window.location.reload();
-  })
+  });
 }
 
 export async function initEasyRpgEngine() {
@@ -156,7 +156,7 @@ export async function initEasyRpgEngine() {
     initialized: false,
     game: state.ynoGameId || state.gameId,
     saveFs: undefined,
-    wsUrl: `${state.serverUrl}`,
+    wsUrl: `${state.serverUrl}`
   } satisfies Partial<EasyRpgPlayer> as any;
 
   easyrpgPlayerLoadFuncs.push(() => {
@@ -175,8 +175,6 @@ export async function initEasyRpgEngine() {
       console.error('easyrpgPlayer hook error', { fn, err, easyrpgPlayer });
     }
   }
-
-  return easyrpgPlayer;
 }
 
 export function setPlayerName(name: string) {

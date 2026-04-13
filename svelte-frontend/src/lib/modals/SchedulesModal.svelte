@@ -5,6 +5,7 @@
   import ScheduleItem, { type Schedule } from '$lib/components/ScheduleItem.svelte';
   import { onMount } from 'svelte';
   import { apiFetch } from '$lib/api';
+  import { modal } from '$lib/stores/modal';
 
   type ScheduleSection = 'official' | 'ongoing' | 'party' | 'future';
 
@@ -63,6 +64,26 @@
       console.error('Failed to follow/unfollow schedule:', err);
       return null;
     }
+  }
+
+  function handleCreateSchedule() {
+    modal.open('editEventModal', {
+      schedule: {},
+      playerData,
+      joinedPartyId,
+      joinedPartyCache: null,
+      gameId: '2kki'
+    });
+  }
+
+  function handleEditSchedule(schedule: Schedule) {
+    modal.open('editEventModal', {
+      schedule,
+      playerData,
+      joinedPartyId,
+      joinedPartyCache: null,
+      gameId: '2kki'
+    });
   }
 
   function categorizeSchedules(scheds: Schedule[]) {
@@ -157,12 +178,28 @@
             </div>
           {:else}
             <div class="scheduleVirtualRow scheduleVirtualItemRow scheduleContainer" style="width:100%">
-              <ScheduleItem schedule={row.schedule} {playerData} {joinedPartyId} onFollow={handleFollowSchedule} />
+              <ScheduleItem
+                schedule={row.schedule}
+                {playerData}
+                {joinedPartyId}
+                onFollow={handleFollowSchedule}
+                onEdit={handleEditSchedule}
+              />
             </div>
           {/if}
         {/snippet}
       </VirtualList>
     {/if}
+  </div>
+  <div class="modalFooter">
+    <button
+      type="button"
+      class="unselectable"
+      onclick={handleCreateSchedule}
+      data-i18n="[html]modal.schedule.doSchedule"
+    >
+      Schedule an Event
+    </button>
   </div>
 </Modal>
 

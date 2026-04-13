@@ -1,4 +1,4 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const vi = {
   translationComplete: '1',
@@ -69,9 +69,10 @@ const vi = {
       hostedWithPermission: 'Đã được sự cho phép của đội ngũ tác giả Yume 2kki'
     },
     disclaimer: {
-      pendingApproval: 'Pending approval from developer/publisher',
-      hostedWithPermission: 'Hosted with permission from the developer(s)',
-      originalCreation: 'Original creation by the YNOproject community'
+      pendingApproval: 'Đang chờ tác giả/nhà phát hành đồng ý',
+      hostedWithPermission: 'Đã được sự cho phép của tác giả',
+      originalCreation: 'Dự án của cộng đồng YNOproject',
+      gameEndDate: 'Có thể chơi trên YNOproject đến {{date}}'
     },
     modal: {
       common: {
@@ -136,7 +137,7 @@ const vi = {
           saveReminder: {
             label: 'Tần suất nhắc lưu trò chơi',
             interval: {
-              minutes: 'Mỗi {interval} phút',
+              minutes: 'Mỗi {{interval}} phút',
               never: 'Đừng nhắc'
             }
           },
@@ -144,11 +145,11 @@ const vi = {
           musicVolume: 'Âm lượng nhạc',
           togglePlayerSounds: 'Âm thanh người chơi',
           toggleEnableBadgeHints: {
-            label: 'Badge Hints',
+            label: 'Gợi ý tìm Huy hiệu',
             helpText:
-              "Badge hints become available once you have unlocked the 'Badge Collector Amulet EX' badge. When enabled, an icon will appear in the top right when you enter a location with at least one badge you haven't unlocked."
+              "Gợi ý tìm Huy hiệu sẽ được mở khi bạn mở khóa 'Bùa hộ mệnh Huy hiệu EX'. Khi kích hoạt gợi ý, một icon báo hiệu sẽ hiện ở góc trên bên phải khi bạn vào một địa điểm có ít nhất 1 huy hiệu chưa mở khóa."
           },
-          togglePlayBadgeHintSound: 'Play Badge Hint Sound',
+          togglePlayBadgeHintSound: 'Bật âm thanh gợi ý',
           toggleEnableExplorer: {
             label: 'Yume 2kki Navigator',
             helpText:
@@ -179,10 +180,12 @@ const vi = {
           toggleSchedules: 'Sự kiện',
           unicodeFont: 'Đổi font giao diện',
           toggleSingleplayerMode: {
-            label: 'Chế độ Một người',
+            label: 'Chế độ Chơi đơn',
             helpText:
-              'Khi Chế độ Riêng tư kích hoạt, bạn sẽ không nhìn thấy bất kì ai bao gồm bạn bè và thành viên cùng nhóm. Khuyên dùng khi bạn muốn hoàn toàn tự lực khám phá.'
-          }
+              'Chuyển Chế độ Riêng tư thành Chế độ Chơi đơn và ẩn toàn bộ bạn bè cũng như thành viên cùng nhóm. Khuyên dùng khi bạn muốn hoàn toàn tự khám phá.'
+          },
+          toggleHideUnnamedPlayers: 'Ẩn các người chơi không tên',
+          highContrast: 'High Contrast Mode'
         },
         blocklist: 'Danh sách chặn',
         chatSettings: 'Chat',
@@ -200,7 +203,7 @@ const vi = {
         title: 'Cài đặt Chat',
         fields: {
           toggleGameChat: {
-            label: 'Chat Overlay trong game',
+            label: 'Hiện Chat Overlay trong cửa sổ game',
             global: 'Overlay chat chung',
             party: 'Overlay chat nhóm'
           },
@@ -246,7 +249,7 @@ const vi = {
         }
       },
       notificationSettings: {
-        title: 'Cài Đặt Thông Báo',
+        title: 'Cài đặt Thông báo',
         fields: {
           toggleNotifications: 'Thông báo',
           screenPosition: {
@@ -327,9 +330,9 @@ const vi = {
             }
           },
           timeTrials: {
-            label: 'Time Trials',
+            label: 'Thử thách Hẹn giờ',
             fields: {
-              goalReached: 'Goal Reached'
+              goalReached: 'Đã đạt thành tích'
             }
           },
           screenshots: {
@@ -359,7 +362,7 @@ const vi = {
         }
       },
       cacheSettings: {
-        title: 'Cài Đặt Cache',
+        title: 'Cài đặt Cache',
         clear: 'Xóa',
         fields: {
           locationCache: 'Cache địa điểm',
@@ -368,7 +371,7 @@ const vi = {
         }
       },
       accountSettings: {
-        title: 'Cài Đặt Tài Khoản',
+        title: 'Cài đặt Tài khoản',
         fields: {
           badge: 'Huy hiệu',
           changePassword: 'Đổi mật khẩu',
@@ -406,7 +409,8 @@ const vi = {
           search: {
             label: 'Tìm kiếm:&nbsp;',
             name: 'Tên:',
-            location: 'Địa điểm:'
+            location: 'Địa điểm:',
+            artist: 'Họa sĩ:'
           }
         }
       },
@@ -428,7 +432,8 @@ const vi = {
       save: {
         title: 'Quản lý Dữ liệu lưu',
         reload: 'Lưu thay đổi và tải lại',
-        info: 'Đối với việc nhập bản lưu, nếu lần lưu cuối là trên một bản dịch trò chơi sử dụng RPG_RT, trò chơi sẽ hiện lỗi đến khi bạn lưu trò chơi trên EasyRPG mà không dùng bản dịch nào.'
+        info: 'Khi nhập bản lưu, nếu lần lưu cuối là trên một bản dịch trò chơi sử dụng RPG_RT, trò chơi sẽ hiện lỗi đến khi bạn lưu trò chơi trên EasyRPG mà không dùng bản dịch nào.',
+        manageOther: 'Manage Different Game&hellip;'
       },
       uiTheme: {
         title: 'Phông Nền',
@@ -577,6 +582,16 @@ const vi = {
         rule5: 'Không gian lận bằng bất kỳ lý do nào.',
         rule6: 'Nếu gặp vấn đề, thông báo cho các kiểm duyệt viên.'
       },
+      warnings: {
+        title: 'Cảnh báo',
+        subtitle:
+          'Một số trò chơi có thể chứa những nội dung nhạy cảm như sau. Người chơi cần thận trọng trước khi tiếp tục.',
+        warning1:
+          'Những cảnh có ánh sáng chớp nháy liên tục hoặc những hoa văn có thể gây ảnh hưởng xấu đến người nhạy cảm ánh sáng.',
+        warning2: 'Ám chỉ tự hoại hoặc tự sát.',
+        warning3: 'Hình ảnh gây khó chịu.',
+        warning4: 'Hành vi sử dụng chất kích thích.'
+      },
       explorerUndiscoveredLocations: {
         title: 'Địa điểm chưa khám phá',
         complete: 'Bạn đã khám phá hết tất cả địa điểm! Chúc mừng!!'
@@ -620,7 +635,7 @@ const vi = {
         toggleNextLocation: 'Hiện/Ẩn Địa điểm kế tiếp trong Thám hiểm',
         toggleGlobalMessageLocations: 'Hiện/Ẩn Địa điểm trong Chat',
         toggleMessageTimestamps: 'Hiện/Ẩn Thời điểm gửi tin nhắn',
-        filterMentions: 'Show Mentions Only',
+        filterMentions: 'Chỉ hiện tin nhắn gắn thẻ bạn',
         clearChat: 'Xóa Chat'
       },
       parties: {
@@ -628,6 +643,7 @@ const vi = {
         disbandParty: 'Giải tán nhóm'
       },
       events: 'Thám hiểm',
+      badges: 'Huy hiệu',
       locations: 'Địa điểm',
       communityScreenshots: 'Ảnh của cộng đồng',
       rankings: 'Bảng xếp hạng',
@@ -641,19 +657,20 @@ const vi = {
     },
     placeholders: {
       scheduleDescription:
-        'Có thể dùng ký hiệu định dạng văn bản. Bạn có thể dùng {\\{l:World,tên tùy chọn cho liên kết}} để chèn liên kết đến yume.wiki'
+        'Có thể dùng ký hiệu định dạng văn bản. Bạn có thể dùng {{l:World,tên tùy chọn cho liên kết}} để chèn liên kết đến yume.wiki'
     },
-    reviewRules: 'Xem Nội quy'
+    reviewRules: 'Xem Nội quy',
+    reviewWarnings: 'Xem Cảnh báo',
+    highContrast: 'High Contrast'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: 'Yume Nikki',
       '2kki': 'Yume 2kki',
+      cold: '[COLD]',
       unconscious: 'Collective Unconscious',
       flow: '.flow',
-      fog: 'FOG',
-      prayers: 'Answered Prayers',
       deepdreams: 'Deep Dreams',
       someday: 'Someday',
       amillusion: 'Amillusion',
@@ -669,7 +686,9 @@ const vi = {
       tsushin: 'Yume Tsushin',
       nostalgic: 'nostAlgic',
       if: 'If',
-      unaccomplished: 'Unaccomplished'
+      unaccomplished: 'Unaccomplished',
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: 'Bạn có chắc muốn rời khỏi trang? Toàn bộ tiến trình không được lưu trong game sẽ bị mất.',
     logout: 'Bạn có chắc muốn đăng xuất?',
@@ -681,7 +700,7 @@ const vi = {
       '1': 'Đã kết nối',
       '2': 'Đang kết nối...',
       '3': 'Riêng tư',
-      '4': 'Một người'
+      '4': 'Chơi đơn'
     },
     lastOnline: {
       template: 'Online lần cuối\n{INTERVAL} trước',
@@ -742,7 +761,7 @@ const vi = {
     },
     playerList: {
       unnamed: 'Không tên',
-      muted: 'Muted',
+      muted: 'Bị cấm chat',
       actions: {
         approveFriend: 'Chấp nhận lời mời',
         rejectFriend: 'Xóa lời mời',
@@ -814,14 +833,14 @@ const vi = {
           fail: 'Không tìm thấy huy hiệu nào với ID đã nhập.'
         },
         tempban: {
-          label: 'Tempban {PLAYER}',
-          prompt: 'When to unban {PLAYER}? (UTC time)',
-          success: '{PLAYER} has been tempbanned.'
+          label: 'Tạm thời ban {PLAYER}',
+          prompt: 'Khi nào unban {PLAYER}? (múi giờ UTC)',
+          success: '{PLAYER} đã bị ban tạm thời.'
         },
         tempmute: {
-          label: 'Tempmute {PLAYER}',
-          prompt: 'When to unmute {PLAYER}? (UTC time)',
-          success: '{PLAYER} has been tempmuted.'
+          label: 'Tạm thời mute {PLAYER}',
+          prompt: 'Khi nào unmute {PLAYER}? (múi giờ UTC)',
+          success: '{PLAYER} đã bị mute tạm thời.'
         }
       }
     },
@@ -915,7 +934,9 @@ const vi = {
           "Trong Kho Huy hiệu, bạn có thể kéo thả huy hiệu để thay đổi vị trí của chúng, hoặc nhấn 'Gỡ huy hiệu' để gỡ cùng lúc nhiều huy hiệu.",
         cacheSettings:
           'Nếu bạn gặp khó khăn trong việc hoàn thành các kì Thám hiểm hoặc bản đồ không cập nhật, trong menu Cache bạn có thể xóa cache thủ công để cập nhật dữ liệu mới nhất.',
-        openSource: 'YNOproject là dự án mã nguồn mở và có thể truy cập kho lưu trữ tại https://github.com/ynoproject/'
+        openSource: 'YNOproject là dự án mã nguồn mở và có thể truy cập kho lưu trữ tại https://github.com/ynoproject/',
+        useYnoEmoji:
+          'Khi bạn nhập dấu hai chấm (:) vào ô chat, một bảng emoji YNO sẽ hiện ra. Bạn có thể chọn emoji từ bảng hoặc nhập tên emoji theo mẫu :tênEmoji: để sử dụng emoji.'
       }
     },
     save: {
@@ -1004,7 +1025,7 @@ const vi = {
         saveReminder: 'Đừng quên lưu trò chơi thường xuyên và sao lưu bản lưu của bạn để không mất tiến trình trò chơi.'
       },
       timeTrials: {
-        timeTrialsComplete: 'Goal! {CATEGORY} completed in {TIME}.'
+        timeTrialsComplete: 'Xong! {CATEGORY} đã hoàn thành trong {TIME}.'
       }
     },
     events: {
@@ -1064,7 +1085,7 @@ const vi = {
       loading: 'Đang tải...',
       bp: '{BP} BP',
       count: '{COUNT} Huy hiệu',
-      empty: 'Badge gallery not set'
+      empty: 'Không có kho huy hiệu'
     },
     badgePreset: {
       empty: 'Khuôn mẫu trống'
@@ -1239,18 +1260,17 @@ const vi = {
           playerPrompt: 'Nhập tên người chơi để thu hồi huy hiệu'
         },
         tempban: {
-          label: 'Tempban a Player',
-          playerPrompt: 'Enter the name of the account to tempban',
-          timePrompt: 'Enter the datetime when the ban expires (UTC time)'
+          label: 'Tạm thời ban Player',
+          playerPrompt: 'Nhập tên người chơi để ban tạm thời',
+          timePrompt: 'Nhập thời điểm bỏ ban (múi giờ UTC)'
         },
         tempmute: {
-          label: 'Tempmute a Player',
-          playerPrompt: 'Enter the name of the account to tempmute',
-          timePrompt: 'Enter the datetime when the mute expires (UTC time)'
+          label: 'Tạm thời mute Player',
+          playerPrompt: 'Nhập tên người chơi để mute tạm thời',
+          timePrompt: 'Nhập thời điểm bỏ mute (múi giờ UTC)'
         }
       }
     }
   }
 } satisfies Translation;
-
 export default vi;

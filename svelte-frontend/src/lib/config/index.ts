@@ -18,7 +18,21 @@ import {
   type TabConfig
 } from './impl';
 import { registerEngineAPIHandler } from '$lib/engineApi';
+import { activeSession } from '$lib/chatSession';
 export * from './impl';
+
+function syncSessionPrivacyState() {
+  const session = get(activeSession);
+  if (!session) return;
+
+  const { privateMode, singleplayerMode, hideLocation } = get(userConfig);
+  const level = privateMode ? (singleplayerMode ? 2 : 1) : 0;
+  session.sendCommand('pr', [String(level)]);
+
+  if (hideLocation || singleplayerMode) {
+    session.sendCommand('hl', [singleplayerMode ? '1' : hideLocation ? '1' : '0']);
+  }
+}
 
 const CHAT_HISTORY_KEYS = ['0', '25', '50', '100', '250', '500', '1000', '2500'] as const;
 const CHAT_HISTORY_VALUES = [25, 50, 100, 250, 500, 1000, 2500, 0] as const;
@@ -43,91 +57,106 @@ export const hideLocation = ubool('hideLocation');
 export const tabFields = {
   general(tab) {
     return {
-      nametagMode: tab.gsel(LL => LL.ui.modal.settings.fields.nametagMode.label(), [
-        { label: LL => LL.ui.modal.settings.fields.nametagMode.values.none(), value: 0 },
-        { label: LL => LL.ui.modal.settings.fields.nametagMode.values.classic(), value: 1 },
-        { label: LL => LL.ui.modal.settings.fields.nametagMode.values.compact(), value: 2 },
-        { label: LL => LL.ui.modal.settings.fields.nametagMode.values.slim(), value: 3 },
-      ]),
-      wikiLinkMode: tab.gsel(LL => LL.ui.modal.settings.fields.wikiLinkMode.label(), [
-        { label: LL => LL.ui.modal.settings.fields.wikiLinkMode.values.always(), value: 2 },
-        { label: LL => LL.ui.modal.settings.fields.wikiLinkMode.values.fullscreen(), value: 1 },
-        { label: LL => LL.ui.modal.settings.fields.wikiLinkMode.values.never(), value: 0 },
-      ]),
-      saveReminder: tab.gsel(LL => LL.ui.modal.settings.fields.saveReminder.label(), [
-        { label: LL => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 10 }), value: 10 },
-        { label: LL => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 15 }), value: 15 },
-        { label: LL => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 20 }), value: 20 },
-        { label: LL => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 30 }), value: 30 },
-        { label: LL => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 45 }), value: 45 },
-        { label: LL => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 60 }), value: 60 },
-        { label: LL => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 90 }), value: 90 },
-        { label: LL => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 120 }), value: 120 },
-        { label: LL => LL.ui.modal.settings.fields.saveReminder.interval.never(), value: 0 },
-      ]),
-      soundVolume: tab.grange(LL => LL.ui.modal.settings.fields.soundVolume(), { min: 0, max: 100, step: 5 }),
-      musicVolume: tab.grange(LL => LL.ui.modal.settings.fields.musicVolume(), { min: 0, max: 100, step: 5 }),
-      disablePlayerSounds: tab.ubool(LL => LL.ui.modal.settings.fields.togglePlayerSounds(), { invert: true }),
-      badgeHints: tab.ubool(LL => LL.ui.modal.settings.fields.toggleEnableBadgeHints.label(), {
-        tooltip: LL => LL.ui.modal.settings.fields.toggleEnableBadgeHints.helpText()
+      nametagMode: tab.gsel(
+        (LL) => LL.ui.modal.settings.fields.nametagMode.label(),
+        [
+          { label: (LL) => LL.ui.modal.settings.fields.nametagMode.values.none(), value: 0 },
+          { label: (LL) => LL.ui.modal.settings.fields.nametagMode.values.classic(), value: 1 },
+          { label: (LL) => LL.ui.modal.settings.fields.nametagMode.values.compact(), value: 2 },
+          { label: (LL) => LL.ui.modal.settings.fields.nametagMode.values.slim(), value: 3 }
+        ]
+      ),
+      wikiLinkMode: tab.gsel(
+        (LL) => LL.ui.modal.settings.fields.wikiLinkMode.label(),
+        [
+          { label: (LL) => LL.ui.modal.settings.fields.wikiLinkMode.values.always(), value: 2 },
+          { label: (LL) => LL.ui.modal.settings.fields.wikiLinkMode.values.fullscreen(), value: 1 },
+          { label: (LL) => LL.ui.modal.settings.fields.wikiLinkMode.values.never(), value: 0 }
+        ]
+      ),
+      saveReminder: tab.gsel(
+        (LL) => LL.ui.modal.settings.fields.saveReminder.label(),
+        [
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 10 }), value: 10 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 15 }), value: 15 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 20 }), value: 20 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 30 }), value: 30 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 45 }), value: 45 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 60 }), value: 60 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 90 }), value: 90 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 120 }), value: 120 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.never(), value: 0 }
+        ]
+      ),
+      soundVolume: tab.grange((LL) => LL.ui.modal.settings.fields.soundVolume(), { min: 0, max: 100, step: 5 }),
+      musicVolume: tab.grange((LL) => LL.ui.modal.settings.fields.musicVolume(), { min: 0, max: 100, step: 5 }),
+      disablePlayerSounds: tab.ubool((LL) => LL.ui.modal.settings.fields.togglePlayerSounds(), { invert: true }),
+      badgeHints: tab.ubool((LL) => LL.ui.modal.settings.fields.toggleEnableBadgeHints.label(), {
+        tooltip: (LL) => LL.ui.modal.settings.fields.toggleEnableBadgeHints.helpText()
       }),
-      playBadgeHintSound: tab.ubool(LL => LL.ui.modal.settings.fields.togglePlayBadgeHintSound(), {
-        indent: true,
+      playBadgeHintSound: tab.ubool((LL) => LL.ui.modal.settings.fields.togglePlayBadgeHintSound(), {
+        indent: true
       }),
-      enableExplorer: tab.ubool(LL => LL.ui.modal.settings.fields.toggleEnableExplorer.label(), {
-        tooltip: LL => LL.ui.modal.settings.fields.toggleEnableExplorer.helpText()
+      enableExplorer: tab.ubool((LL) => LL.ui.modal.settings.fields.toggleEnableExplorer.label(), {
+        tooltip: (LL) => LL.ui.modal.settings.fields.toggleEnableExplorer.helpText()
       }),
-      immersionMode: tab.ubool(LL => LL.ui.modal.settings.fields.toggleImmersionMode.label(), {
-        tooltip: LL => LL.ui.modal.settings.fields.toggleImmersionMode.helpText()
+      immersionMode: tab.ubool((LL) => LL.ui.modal.settings.fields.toggleImmersionMode.label(), {
+        tooltip: (LL) => LL.ui.modal.settings.fields.toggleImmersionMode.helpText()
       }),
-      singleplayerMode: tab.ubool(LL => LL.ui.modal.settings.fields.toggleSingleplayerMode.label(), {
-        tooltip: LL => LL.ui.modal.settings.fields.toggleSingleplayerMode.helpText()
+      singleplayerMode: tab.ubool((LL) => LL.ui.modal.settings.fields.toggleSingleplayerMode.label(), {
+        tooltip: (LL) => LL.ui.modal.settings.fields.toggleSingleplayerMode.helpText()
       }),
-      mobileControls: tab.gbool(LL => LL.ui.modal.settings.fields.toggleMobileControls()),
-      mobileControlsType: tab.gsel(LL => LL.ui.modal.settings.fields.mobileControlsType.label(), [
-        { label: LL => LL.ui.modal.settings.fields.mobileControlsType.default(), value: 'default' },
-        { label: LL => LL.ui.modal.settings.fields.mobileControlsType.joystick(), value: 'joystick' },
-        { label: LL => LL.ui.modal.settings.fields.mobileControlsType.dpad(), value: 'dpad' },
-      ], {
-        tooltip: LL => LL.ui.tooltips.mobileControlsType()
+      mobileControls: tab.gbool((LL) => LL.ui.modal.settings.fields.toggleMobileControls()),
+      mobileControlsType: tab.gsel(
+        (LL) => LL.ui.modal.settings.fields.mobileControlsType.label(),
+        [
+          { label: (LL) => LL.ui.modal.settings.fields.mobileControlsType.default(), value: 'default' },
+          { label: (LL) => LL.ui.modal.settings.fields.mobileControlsType.joystick(), value: 'joystick' },
+          { label: (LL) => LL.ui.modal.settings.fields.mobileControlsType.dpad(), value: 'dpad' }
+        ],
+        {
+          tooltip: (LL) => LL.ui.tooltips.mobileControlsType()
+        }
+      ),
+      locationDisplay: tab.gbool((LL) => LL.ui.modal.settings.fields.toggleLocationDisplay()),
+      hideRankings: tab.gbool((LL) => LL.ui.modal.settings.fields.toggleRankings(), { invert: true }),
+      hideSchedules: tab.gbool((LL) => LL.ui.modal.settings.fields.toggleSchedules(), { invert: true }),
+      preloads: tab.gbool((LL) => LL.ui.modal.settings.fields.togglePreloads.label(), {
+        tooltip: (LL) => LL.ui.modal.settings.fields.togglePreloads.helpText()
       }),
-      locationDisplay: tab.gbool(LL => LL.ui.modal.settings.fields.toggleLocationDisplay()),
-      hideRankings: tab.gbool(LL => LL.ui.modal.settings.fields.toggleRankings(), { invert: true }),
-      hideSchedules: tab.gbool(LL => LL.ui.modal.settings.fields.toggleSchedules(), { invert: true }),
-      preloads: tab.gbool(LL => LL.ui.modal.settings.fields.togglePreloads.label(), {
-        tooltip: LL => LL.ui.modal.settings.fields.togglePreloads.helpText(),
+      questionablePreloads: tab.ubool((LL) => LL.ui.modal.settings.fields.toggleQuestionablePreloads(), {
+        indent: true
       }),
-      questionablePreloads: tab.ubool(LL => LL.ui.modal.settings.fields.toggleQuestionablePreloads(), { indent: true }),
-      unicodeFont: tab.gbool(LL => LL.ui.modal.settings.fields.unicodeFont()),
-      highContrast: tab.gbool(LL => LL.ui.modal.settings.fields.highContrast()),
+      unicodeFont: tab.gbool((LL) => LL.ui.modal.settings.fields.unicodeFont()),
+      highContrast: tab.gbool((LL) => LL.ui.modal.settings.fields.highContrast())
     } satisfies TabConfig;
   },
 
   chat(tab) {
     return {
       overlay: group({
-        gameChat: tab.gbool(LL => LL.ui.modal.chatSettings.fields.toggleGameChat.label()),
-        gameChatGlobal: tab.gbool(LL => LL.ui.modal.chatSettings.fields.toggleGameChat.global(), {
+        gameChat: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.toggleGameChat.label()),
+        gameChatGlobal: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.toggleGameChat.global(), {
           indent: true
         }),
-        gameChatParty: tab.gbool(LL => LL.ui.modal.chatSettings.fields.toggleGameChat.party(), {
+        gameChatParty: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.toggleGameChat.party(), {
           indent: true
         })
       }),
-      tabToChat: tab.gbool(LL => LL.ui.modal.chatSettings.fields.toggleTabToChat()),
-      playMentionSound: tab.gbool(LL => LL.ui.modal.chatSettings.fields.togglePlayMentionSound()),
-      blurScreenshotEmbeds: tab.gbool(LL => LL.ui.modal.chatSettings.fields.blurScreenshotEmbeds()),
+      tabToChat: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.toggleTabToChat()),
+      playMentionSound: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.togglePlayMentionSound()),
+      blurScreenshotEmbeds: tab.gbool((LL) => LL.ui.modal.chatSettings.fields.blurScreenshotEmbeds()),
       history: group({
         mapChatHistoryLimit: tab.gsel(
-          LL => LL.ui.modal.chatSettings.fields.mapChatHistoryLimit.label(),
+          (LL) => LL.ui.modal.chatSettings.fields.mapChatHistoryLimit.label(),
           chatHistoryOptions
         ),
         globalChatHistoryLimit: tab.gsel(
-          LL => LL.ui.modal.chatSettings.fields.globalChatHistoryLimit.label(),
+          (LL) => LL.ui.modal.chatSettings.fields.globalChatHistoryLimit.label(),
           chatHistoryOptions
         ),
         partyChatHistoryLimit: tab.gsel(
-          LL => LL.ui.modal.chatSettings.fields.partyChatHistoryLimit.label(),
+          (LL) => LL.ui.modal.chatSettings.fields.partyChatHistoryLimit.label(),
           chatHistoryOptions
         )
       })
@@ -136,14 +165,14 @@ export const tabFields = {
 
   screenshots(tab) {
     return {
-      autoDownloadScreenshots: tab.gbool(LL => LL.ui.modal.screenshotSettings.fields.autoDownloadScreenshots()),
+      autoDownloadScreenshots: tab.gbool((LL) => LL.ui.modal.screenshotSettings.fields.autoDownloadScreenshots()),
       screenshotResolution: tab.gsel(
-        LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.label(),
+        (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.label(),
         [
-          { label: LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['1'](), value: 1 },
-          { label: LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['2'](), value: 2 },
-          { label: LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['3'](), value: 3 },
-          { label: LL => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['4'](), value: 4 }
+          { label: (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['1'](), value: 1 },
+          { label: (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['2'](), value: 2 },
+          { label: (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['3'](), value: 3 },
+          { label: (LL) => LL.ui.modal.screenshotSettings.fields.screenshotResolution.values['4'](), value: 4 }
         ]
       )
     } satisfies TabConfig;
@@ -151,20 +180,20 @@ export const tabFields = {
 
   notifications(tab) {
     return {
-      notifications: tab.gbool(LL => LL.ui.modal.notificationSettings.fields.toggleNotifications()),
+      notifications: tab.gbool((LL) => LL.ui.modal.notificationSettings.fields.toggleNotifications()),
       notificationScreenPosition: tab.gsel(
-        LL => LL.ui.modal.notificationSettings.fields.screenPosition.label(),
+        (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.label(),
         [
           {
-            label: LL => LL.ui.modal.notificationSettings.fields.screenPosition.values.bottomLeft(),
+            label: (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.values.bottomLeft(),
             value: 'bottomLeft'
           },
           {
-            label: LL => LL.ui.modal.notificationSettings.fields.screenPosition.values.bottomRight(),
+            label: (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.values.bottomRight(),
             value: 'bottomRight'
           },
-          { label: LL => LL.ui.modal.notificationSettings.fields.screenPosition.values.topLeft(), value: 'topLeft' },
-          { label: LL => LL.ui.modal.notificationSettings.fields.screenPosition.values.topRight(), value: 'topRight' }
+          { label: (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.values.topLeft(), value: 'topLeft' },
+          { label: (LL) => LL.ui.modal.notificationSettings.fields.screenPosition.values.topRight(), value: 'topRight' }
         ],
         { size: 4 }
       )
@@ -182,9 +211,11 @@ export const tabFields = {
 
 function updateUnicodeFont(lang: string) {
   if (LATIN_EX_LANGS.includes(lang) !== get(globalConfig).unicodeFont)
-    document.documentElement.style.setProperty('--font-override', '-apple-system, BlinkMacSystemFont, xlatin-sans, PGothic, JF-Dot-Shinonome, sans-serif');
-  else
-    document.documentElement.style.setProperty('--font-override', 'unset');
+    document.documentElement.style.setProperty(
+      '--font-override',
+      '-apple-system, BlinkMacSystemFont, xlatin-sans, PGothic, JF-Dot-Shinonome, sans-serif'
+    );
+  else document.documentElement.style.setProperty('--font-override', 'unset');
 }
 
 registerConfigHook('uiTheme', (value, gameId) => {
@@ -193,7 +224,7 @@ registerConfigHook('uiTheme', (value, gameId) => {
   if (theme) selectTheme(gameId as GameId, theme as any);
 });
 
-registerEngineAPIHandler('onUpdateSystemGraphic', theme => {
+registerEngineAPIHandler('onUpdateSystemGraphic', (theme) => {
   if (get(userConfig).uiTheme === 'auto') {
     selectTheme('2kki', theme as any);
   }
@@ -210,11 +241,11 @@ registerConfigHook('highContrast', async (value, gameId) => {
   await setHighContrastMode(Boolean(value), gameId);
 });
 
-registerConfigHook('unicodeFont', value => {
+registerConfigHook('unicodeFont', (value) => {
   updateUnicodeFont(get(locale));
 });
 
-registerConfigHook('mute', value => {
+registerConfigHook('mute', (value) => {
   if (value) {
     easyrpgPlayer.setSoundVolume(0);
     easyrpgPlayer.setMusicVolume(0);
@@ -224,21 +255,33 @@ registerConfigHook('mute', value => {
     easyrpgPlayer.setMusicVolume(musicVolume);
   }
   easyrpgPlayer.saveConfig();
-})
+});
 
-registerConfigHook('soundVolume', value => {
+registerConfigHook('soundVolume', (value) => {
   if (!get(userConfig).mute) {
     easyrpgPlayer.setSoundVolume(+(value as string));
     easyrpgPlayer.saveConfig();
   }
 });
 
-registerConfigHook('musicVolume', value => {
+registerConfigHook('musicVolume', (value) => {
   if (!get(userConfig).mute) {
     easyrpgPlayer.setMusicVolume(+(value as string));
     easyrpgPlayer.saveConfig();
   }
-})
+});
+
+registerConfigHook('privateMode', (value) => {
+  syncSessionPrivacyState();
+});
+
+registerConfigHook('hideLocation', (value) => {
+  syncSessionPrivacyState();
+});
+
+registerConfigHook('singleplayerMode', (value) => {
+  syncSessionPrivacyState();
+});
 
 // --- config end ---
 

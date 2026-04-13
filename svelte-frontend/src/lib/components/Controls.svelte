@@ -1,25 +1,45 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { ModalId } from '$lib/stores/modal';
+  import { modal, type ModalId } from '$lib/stores/modal';
   import { tooltipLabel } from './Tooltip.svelte';
   import { LL } from '$lib';
   import { disableChat, hideLocation, mute, privateMode } from '$lib/config';
 
-  const { onToggleChat = () => {}, onOpenModal = () => {} } = $props<{
+  const { onToggleChat = () => {} } = $props<{
     onToggleChat?: () => void;
-    onOpenModal?: (modalId: ModalId) => void;
   }>();
 
   function handleThemeClick() {
-    onOpenModal('uiThemesModal');
+    modal.open('uiThemesModal');
   }
 
   function handleSettingsClick() {
-    onOpenModal('settingsModal');
+    modal.open('settingsModal');
   }
 
   function handleEventsClick() {
-    onOpenModal('eventsModal');
+    // onOpenModal('eventsModal');
+    modal.open('testStage1');
+  }
+
+  function handleSaveClick() {
+    console.warn('Save Data modal is not ported yet.');
+  }
+
+  function handleScreenshotClick() {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    requestAnimationFrame(() => {
+      const screenshotCanvas = document.createElement('canvas');
+      screenshotCanvas.width = 320;
+      screenshotCanvas.height = 240;
+      screenshotCanvas.getContext('2d')?.drawImage(canvas, 0, 0, 320, 240);
+      const url = screenshotCanvas.toDataURL();
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `screenshot-${Date.now()}.png`;
+      a.click();
+    });
   }
 
   type FullscreenLayout = HTMLElement & {
@@ -82,7 +102,12 @@
         <path d="m9 4a1 1 90 0 0 0 5 1 1 90 0 0 0-5m-4 13c0-5 1-7 4-7s4 2 4 7q-4 2-8 0" /></svg
       >
     </button>
-    <button id="saveButton" class="iconButton unselectable" {...tooltipLabel($LL.ui.tooltips.save())}>
+    <button
+      id="saveButton"
+      class="iconButton unselectable"
+      {...tooltipLabel($LL.ui.tooltips.save())}
+      onclick={handleSaveClick}
+    >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
         <path
           d="m0 1.5q0-1.5 1.5-1.5h11.25l2.25 2.25v12.75q0 1.5-1.5 1.5h-12q-1.5 0-1.5-1.5v-13.5m4.5-1.5v3.75q0 0.75 0.75 0.75h4.5q0.75 0 0.75-0.75v-3.75m-1.75 1v2.5h0.75v-2.5h-0.75m-5.75 15.5v-6.75q0-0.75 0.75-0.75h7.5q0.75 0 0.75 0.75v6.75m-7.5-6h6m-6 2.25h6m-6 2.25h6"
@@ -118,7 +143,12 @@
         <path d="m-2 16l22-14" />
       </svg>
     </button>
-    <button id="screenshotButton" class="iconButton unselectable" {...tooltipLabel($LL.ui.tooltips.screenshot())}>
+    <button
+      id="screenshotButton"
+      class="iconButton unselectable"
+      {...tooltipLabel($LL.ui.tooltips.screenshot())}
+      onclick={handleScreenshotClick}
+    >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
         <path
           d="m3 8q0-1 1-1h1.5c1 0 1-2 2-2h3c1 0 1 2 2 2h1.5q1 0 1 1v4q0 1-1 1h-10q-1 0-1-1zm6-0.5a2 2 90 0 0 0 4 2 2 90 0 0 0 -4m-9-2.5v-2q0-1 1-1h2m12 0h2q1 0 1 1v2m0 8v2q0 1-1 1h-2m-12 0h-2q-1 0-1-1v-2"
@@ -129,6 +159,7 @@
       id="myScreenshotsButton"
       class="iconButton accountRequired unselectable"
       {...tooltipLabel($LL.ui.tooltips.myScreenshots())}
+      onclick={() => console.warn('My Screenshots modal is not ported yet.')}
     >
       <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
         <path
@@ -179,6 +210,68 @@
     <div id="badgeHintControls"></div>
     <div id="mapControls"></div>
     <div id="explorerControls"></div>
+    <div id="eventControls" class="" onclick={handleEventsClick}>
+      <button id="eventsButton" class="iconButton unselectable" data-i18n="[title]tooltips.events">
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+          ><path
+            d="m0 9l6.5-1.5-1.5-2.5 2.5 1.5 1.5-6.5 1.5 6.5 2.5-1.5-1.5 2.5 6.5 1.5-6.5 1.5 1.5 2.5-2.5-1.5-1.5 6.5-1.5-6.5-2.5 1.5 1.5-2.5-6.5-1.5m7.75-6q-4.75 0-4.75 4.75m7.25-4.75q4.75 0 4.75 4.75m-7.25 7.25q-4.75 0-4.75-4.75m7.2656 4.75q4.7344 0 4.7344-4.75m-6-2.75a1 1 90 0 0 0 3 1 1 90 0 0 0 -3"
+          /></svg
+        >
+      </button>
+    </div>
+
+    <!-- Fullscreen-only controls -->
+    <button
+      id="fsBadgesButton"
+      class="iconButton fillIcon unselectable fsOnlyControl accountRequired"
+      data-i18n="[title]tooltips.badges"
+    >
+      <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
+          d="m9 0 2 2.5 3.5-1v3.5l3.5 1-1.5 3 1.5 3-3.5 1v3.5l-3.5-1-2 2.5-2-2.5-3.5 1v-3.5l-3.5-1 1.5-3-1.5-3 3.5-1v-3.5l3.5 1 2-2.5m0-3v7"
+        />
+      </svg>
+    </button>
+    <button
+      id="fsLocationsButton"
+      class="iconButton fillIcon unselectable fsOnlyControl"
+      data-i18n="[title]tooltips.locations"
+    >
+      <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path d="m0 14zv-2.5l3.75-4 3 2 5.25-5 6 4.5v5zm0-9.5a1.0313 1.0313 90 0 0 4 0 1.0313 1.0313 90 0 0-4 0z" />
+      </svg>
+    </button>
+    <button
+      id="fsCommunityScreenshotsButton"
+      class="iconButton fillIcon unselectable fsOnlyControl"
+      data-i18n="[title]tooltips.communityScreenshots"
+    >
+      <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
+          d="m0.75 5.5h14.5v9.25h-1.25v-8h-13.25zm14.5 9.25v1.25h-14.5v-9.25h1.25v8zm-12.5-0.75v-1.25l2.25-2.5 1.75 1.25 3-3 3.5 2.5v3zm0-5.5a0.5 0.5 90 0 0 2.5 0 0.5 0.5 90 0 0-2.5 0zm0-4.25h13.75v9.75h-1v-8.75h-12.75v-1m2-1.25h13v9h-1v-8h-12v-1"
+        />
+      </svg>
+    </button>
+    <button
+      id="fsRankingsButton"
+      class="iconButton fillIcon unselectable fsOnlyControl"
+      data-i18n="[title]tooltips.rankings"
+    >
+      <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path d="m0 18v-11h5.75v11m0.5 0v-16h5.5v16m0.5-6h5.75v6h-5.75v-6" />
+      </svg>
+    </button>
+    <button
+      id="fsSchedulesButton"
+      class="iconButton fillIcon unselectable fsOnlyControl"
+      data-i18n="[title]tooltips.schedules"
+    >
+      <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+        <path
+          d="M18 3V18H0V3H3V4.5a.5.5 90 003 0V3H7.5V4.5a.5.5 90 003 0V3H12V4.5a.5.5 90 003 0V3ZM3.5 4.5a.5.5 90 002 0V1a.5.5 90 00-2 0ZM8 4.5a.5.5 90 002 0V1A.5.5 90 008 1Zm4.5 0a.5.5 90 002 0V1a.5.5 90 00-2 0ZM8 7H1.5v4H8Zm2 0v4h6.5V7ZM1.5 16.5H8v-4H1.5Zm8.5-4v4h6.5v-4Z"
+        />
+      </svg>
+    </button>
     <div id="eventControls" class="accountRequired" style="display: none">
       <button
         id="eventsButton"

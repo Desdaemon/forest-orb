@@ -56,7 +56,7 @@
       <div class="formControlRow">
         <label for="badgePresetSelection">Select Preset</label>
         <select id="badgePresetSelection" bind:value={selectedPreset} onchange={fetchPreset}>
-          {#each [0,1,2] as preset}
+          {#each [0, 1, 2] as preset}
             <option value={preset}>{$LL.ui.modal.badgePreset.presetName(preset + 1)}</option>
           {/each}
         </select>
@@ -76,7 +76,7 @@
             {#each row as badgeId, c}
               <div class="badgeSlot" data-row={r} data-col={c}>
                 {#if badgeId !== 'null'}
-                  <img src={`/images/badge/${badgeId}.png`} alt={badgeId} />
+                  <img src="/images/badge/{badgeId}.png" alt={badgeId} />
                 {:else}
                   <div class="emptySlot"></div>
                 {/if}
@@ -132,7 +132,8 @@
     height: 100%;
     background: #eee;
   }
-  .loading, .error {
+  .loading,
+  .error {
     padding: 1rem;
     text-align: center;
   }

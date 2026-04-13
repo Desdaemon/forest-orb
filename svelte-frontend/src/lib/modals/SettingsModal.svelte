@@ -1,3 +1,26 @@
+<script module lang="ts">
+  export const languageNames = Object.freeze({
+    en: 'English',
+    ar: 'العربية',
+    de: 'Deutsch',
+    eo: 'Esperanto',
+    es: 'Español',
+    fr: 'Français',
+    id: 'Bahasa Indonesia',
+    it: 'Italiano',
+    ja: '日本語',
+    ko: '한국어',
+    pl: 'Polski',
+    pt: 'Português',
+    ro: 'Română',
+    ru: 'Русский',
+    tr: 'Türkçe',
+    uk: 'Українська',
+    vi: 'Tiếng Việt',
+    zh: '中文'
+  });
+</script>
+
 <script lang="ts">
   import { LL } from '$lib';
   import Modal from '$lib/components/Modal.svelte';
@@ -13,7 +36,6 @@
   } from '$lib/config';
   import { locale } from '../../i18n/i18n-svelte';
   import type { Locales } from '../../i18n/i18n-types';
-  import { languageNames } from './SettingsModal';
   import { tooltip } from '$lib/components/Tooltip.svelte';
   import { getInitPayload } from '$lib/init';
 
@@ -98,7 +120,13 @@
     <h1 class="modalTitle">{$LL.ui.modal.settings.title()}</h1>
     <div class="modalTabsContainer settingsTabs" role="tablist" aria-label="Settings Tabs">
       {#each settingsTabs as tab}
-        <button type="button" class="modalTab" role="tab" class:active={activeTab === tab.id} onclick={() => (activeTab = tab.id)}>
+        <button
+          type="button"
+          class="modalTab"
+          role="tab"
+          class:active={activeTab === tab.id}
+          onclick={() => (activeTab = tab.id)}
+        >
           <small class="modalTabLabel unselectable" role="presentation">{tab.label($LL)}</small>
         </button>
       {/each}
@@ -131,7 +159,8 @@
             aria-checked={Boolean(getFieldValue(field))}
             aria-labelledby="{field.name}-label"
             onclick={() => field.kind === 'toggle' && toggleField(field)}
-            onkeydown={ev => field.kind === 'toggle' && ev.key === 'Enter' && (ev.preventDefault(), toggleField(field))}
+            onkeydown={(ev) =>
+              field.kind === 'toggle' && ev.key === 'Enter' && (ev.preventDefault(), toggleField(field))}
           >
             {#if field.kind === 'toggle'}
               <label for={field.name} class="unselectable" id="{field.name}-label">

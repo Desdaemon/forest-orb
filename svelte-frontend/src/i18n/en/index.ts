@@ -1,8 +1,7 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const en = {
   translationComplete: '1',
-  name: 'English',
   version: {
     '2kki': {
       label: 'Yume 2kki Version {VERSION}',
@@ -73,7 +72,8 @@ const en = {
     disclaimer: {
       pendingApproval: 'Pending approval from developer/publisher',
       hostedWithPermission: 'Hosted with permission from the developer(s)',
-      originalCreation: 'Original creation by the YNOproject community'
+      originalCreation: 'Original creation by the YNOproject community',
+      gameEndDate: 'Available to play on YNOproject until {{date}}'
     },
     modal: {
       common: {
@@ -138,7 +138,7 @@ const en = {
           saveReminder: {
             label: 'Save Reminder Frequency',
             interval: {
-              minutes: '{interval} minutes',
+              minutes: '{{interval}} minutes',
               never: 'Never'
             }
           },
@@ -185,7 +185,8 @@ const en = {
             label: 'Singleplayer Mode',
             helpText:
               'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
-          }
+          },
+          toggleHideUnnamedPlayers: 'Hide Unnamed Players'
         },
         blocklist: 'Blocklist',
         chatSettings: 'Chat',
@@ -403,23 +404,15 @@ const en = {
           sortOrder: {
             label: 'Sort Order:&nbsp;',
             values: {
-              default: 'Default',
-              bp: 'BP',
-              percent: 'Percent'
+              default: 'Default'
             }
           },
           search: {
             label: 'Search:&nbsp;',
             name: 'Name:',
             location: 'Location:',
-            artist: 'Artist',
-            badgeIdTag: 'Badge ID / tag',
-            clear: 'Clear search'
+            artist: 'Artist:'
           }
-        },
-        error: {
-          loadFailed: 'Failed to load badges',
-          setFailed: 'Could not set badge'
         }
       },
       badgeGallery: {
@@ -440,7 +433,8 @@ const en = {
       save: {
         title: 'Manage Save Data',
         reload: 'Save Changes and Reload',
-        info: 'For importing saves, if the last time saved was while using a translation on RPG_RT, the game will display errors until you save once again on EasyRPG without any active translation.'
+        info: 'For importing saves, if the last time saved was while using a translation on RPG_RT, the game will display errors until you save once again on EasyRPG without any active translation.',
+        manageOther: 'Manage Different Game&hellip;'
       },
       uiTheme: {
         title: 'UI Theme',
@@ -589,6 +583,14 @@ const en = {
         rule5: 'No cheating of any kind for any reason.',
         rule6: "If there's trouble, please inform the moderators."
       },
+      warnings: {
+        title: 'Warnings',
+        subtitle: 'Some games may contain the following content. Viewer discretion is advised.',
+        warning1: 'Flashing light sequences or patterns that may affect photosensitive viewers.',
+        warning2: 'References to self-harm or suicide.',
+        warning3: 'Disturbing imagery.',
+        warning4: 'Depictions of drug use.'
+      },
       explorerUndiscoveredLocations: {
         title: 'Undiscovered Locations',
         complete: "You've discovered every available location! Congrats!!"
@@ -640,6 +642,7 @@ const en = {
         disbandParty: 'Disband Party'
       },
       events: 'Expeditions',
+      badges: 'Badges',
       locations: 'Locations',
       communityScreenshots: 'Community Screenshots',
       rankings: 'Rankings',
@@ -655,17 +658,17 @@ const en = {
       scheduleDescription:
         'Markdown syntax is accepted, use {{l:World,optional link name}} to insert a link to yume.wiki'
     },
-    reviewRules: 'Review Rules'
+    reviewRules: 'Review Rules',
+    reviewWarnings: 'Review Warnings'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: 'Yume Nikki',
       '2kki': 'Yume 2kki',
+      cold: '[COLD]',
       unconscious: 'Collective Unconscious',
       flow: '.flow',
-      fog: 'FOG',
-      prayers: 'Answered Prayers',
       deepdreams: 'Deep Dreams',
       someday: 'Someday',
       amillusion: 'Amillusion',
@@ -681,7 +684,9 @@ const en = {
       tsushin: 'Yume Tsushin',
       nostalgic: 'nostAlgic',
       if: 'If',
-      unaccomplished: 'Unaccomplished'
+      unaccomplished: 'Unaccomplished',
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: 'Are you sure you want to leave the page? Any unsaved in-game progress will be lost.',
     logout: 'Are you sure you want to log out?',
@@ -927,7 +932,9 @@ const en = {
         cacheSettings:
           'Having trouble with location completion or outdated maps? The Cache menu allows you to clear the relevant cache and retrieve the latest data.',
         openSource:
-          'YNOproject is open source and the code repositories are available at https://github.com/ynoproject/'
+          'YNOproject is open source and the code repositories are available at https://github.com/ynoproject/',
+        useYnoEmoji:
+          'When you type a colon (:) in the chat field, an YNO emoji palette will appear. You can select and click an emoji from there to input it into the chat field in the format :emojiName:.'
       }
     },
     save: {
@@ -1263,5 +1270,4 @@ const en = {
     }
   }
 } satisfies BaseTranslation;
-
 export default en;

@@ -1,5 +1,11 @@
 import { writable } from 'svelte/store';
-import { defaultGlobalConfig, defaultUserConfig, loadConfigFromStorage, saveConfigToStorage, type AllConfigKeys } from '../play';
+import {
+  defaultGlobalConfig,
+  defaultUserConfig,
+  loadConfigFromStorage,
+  saveConfigToStorage,
+  type AllConfigKeys
+} from '../play';
 import type { GlobalConfig, GlobalToggles, UserConfig, UserToggles } from '../config';
 
 // A hook receives the raw stored value (or `undefined` if the key was absent) and the game id.

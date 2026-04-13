@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ModalId } from '$lib/stores/modal';
+  import { modal, type ModalId } from '$lib/stores/modal';
   import { selectedBadge } from '$lib/stores/badge';
   import BadgeItem from './BadgeItem.svelte';
   import { tooltipLabel } from './Tooltip.svelte';
@@ -7,30 +7,24 @@
   import { globalConfig } from '$lib/stores/config';
   import { auth } from '$lib/stores/authStore';
 
-  const {
-    onOpenModal = () => {}
-  }: {
-    onOpenModal?: (modalId: ModalId) => void;
-  } = $props();
-
   function handleSchedulesClick() {
-    onOpenModal('schedulesModal');
+    modal.open('schedulesModal');
   }
 
   function handleLocationsClick() {
-    onOpenModal('locationsModal');
+    modal.open('locationsModal');
   }
 
   function handleCommunityScreenshotsClick() {
-    onOpenModal('communityScreenshotsModal');
+    modal.open('communityScreenshotsModal');
   }
 
   function handleRankingsClick() {
-    onOpenModal('rankingsModal');
+    modal.open('rankingsModal');
   }
 
   function handleBadgeClick() {
-    onOpenModal('badgesModal');
+    modal.open('badgesModal');
   }
 
   // Handle login button click (replicates original implementation)
@@ -76,7 +70,7 @@
     <BadgeItem badge={$selectedBadge} onclick={handleBadgeClick} emptyIcon />
     <button
       id="locationsButton"
-      class="iconButton fillIcon unselectable hidden"
+      class="iconButton fillIcon unselectable"
       {...tooltipLabel($LL.ui.tooltips.locations())}
       onclick={handleLocationsClick}
     >

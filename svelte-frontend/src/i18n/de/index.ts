@@ -1,4 +1,4 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const de = {
   translationComplete: '1',
@@ -71,7 +71,8 @@ const de = {
     disclaimer: {
       pendingApproval: 'Pending approval from developer/publisher',
       hostedWithPermission: 'Mit der Erlaubnis der Entwickler gehostet',
-      originalCreation: 'Originales Projekt der YNOproject Community'
+      originalCreation: 'Originales Projekt der YNOproject Community',
+      gameEndDate: 'Available to play on YNOproject until {{date}}'
     },
     modal: {
       common: {
@@ -182,7 +183,9 @@ const de = {
             label: 'Singleplayer Mode',
             helpText:
               'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
-          }
+          },
+          toggleHideUnnamedPlayers: 'Hide Unnamed Players',
+          highContrast: 'High Contrast Mode'
         },
         blocklist: 'Blockliste',
         chatSettings: 'Chat',
@@ -406,7 +409,8 @@ const de = {
           search: {
             label: 'Suchen nach:&nbsp;',
             name: 'Name:',
-            location: 'Ort:'
+            location: 'Ort:',
+            artist: 'Artist:'
           }
         }
       },
@@ -428,7 +432,8 @@ const de = {
       save: {
         title: 'Save verwalten',
         reload: 'Änderungen speichern und neu laden',
-        info: 'Beim importieren von Spielständen, falls du das letzte Mal eine Übersetzung auf RPG_RT benutzt hast, wird das Spiel Fehler anzeigen bis du wieder mit EasyRPG ohne aktive Übersetzung, speicherst.'
+        info: 'Beim importieren von Spielständen, falls du das letzte Mal eine Übersetzung auf RPG_RT benutzt hast, wird das Spiel Fehler anzeigen bis du wieder mit EasyRPG ohne aktive Übersetzung, speicherst.',
+        manageOther: 'Manage Different Game&hellip;'
       },
       uiTheme: {
         title: 'UI Stil',
@@ -577,6 +582,14 @@ const de = {
         rule5: 'Kein cheaten jeglicher Art.',
         rule6: 'Sollte es Probleme geben, kontaktiere die Moderatoren.'
       },
+      warnings: {
+        title: 'Warnings',
+        subtitle: 'Some games may contain the following content. Viewer discretion is advised.',
+        warning1: 'Flashing light sequences or patterns that may affect photosensitive viewers.',
+        warning2: 'References to self-harm or suicide.',
+        warning3: 'Disturbing imagery.',
+        warning4: 'Depictions of drug use.'
+      },
       explorerUndiscoveredLocations: {
         title: 'Unentdeckte Orte',
         complete: 'Du hast jeden verfügbaren Standort gefunden! Gut gemacht!'
@@ -628,6 +641,7 @@ const de = {
         disbandParty: 'Gruppe löschen'
       },
       events: 'Expeditionen',
+      badges: 'Badges',
       locations: 'Orte',
       communityScreenshots: 'Community Screenshots',
       rankings: 'Rankings',
@@ -641,19 +655,20 @@ const de = {
     },
     placeholders: {
       scheduleDescription:
-        'Markdown Syntax ist akzeptiert, benutze {\\{l:Welt,optionaler Linkname}} um einen Link auf yume.wiki einzufügen.'
+        'Markdown Syntax ist akzeptiert, benutze {{l:Welt,optionaler Linkname}} um einen Link auf yume.wiki einzufügen.'
     },
-    reviewRules: 'Regeln nochmal anzeigen'
+    reviewRules: 'Regeln nochmal anzeigen',
+    reviewWarnings: 'Review Warnings',
+    highContrast: 'High Contrast'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: 'Yume Nikki',
       '2kki': 'Yume 2kki',
+      cold: '[COLD]',
       unconscious: 'Collective Unconscious',
       flow: '.flow',
-      fog: 'FOG',
-      prayers: 'Answered Prayers',
       deepdreams: 'Deep Dreams',
       someday: 'Someday',
       amillusion: 'Amillusion',
@@ -669,7 +684,9 @@ const de = {
       tsushin: 'Yume Tsushin',
       nostalgic: 'nostAlgic',
       if: 'If',
-      unaccomplished: 'Unaccomplished'
+      unaccomplished: 'Unaccomplished',
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: 'Willst du wirklich die Seite verlassen? Nicht gespeicherte Fortschritte gehen verloren.',
     logout: 'Bist du dir sicher, dass du dich abmelden willst?',
@@ -915,7 +932,9 @@ const de = {
         cacheSettings:
           'Probleme einen Ort komplett zu erkunden oder veraltete Karten? Im Cache Menü kannst du relevante Caches leeren und die neusten Daten runterladen.',
         openSource:
-          'YNOproject ist ein Open-Source-Projekt und das Repository ist unter https://github.com/ynoproject/ aufzufinden'
+          'YNOproject ist ein Open-Source-Projekt und das Repository ist unter https://github.com/ynoproject/ aufzufinden',
+        useYnoEmoji:
+          'When you type a colon (:) in the chat field, an YNO emoji palette will appear. You can select and click an emoji from there to input it into the chat field in the format :emojiName:.'
       }
     },
     save: {
@@ -1252,5 +1271,4 @@ const de = {
     }
   }
 } satisfies Translation;
-
 export default de;

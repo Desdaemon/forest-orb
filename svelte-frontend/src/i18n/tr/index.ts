@@ -1,4 +1,4 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const tr = {
   translationComplete: '1',
@@ -71,7 +71,8 @@ const tr = {
     disclaimer: {
       pendingApproval: 'Pending approval from developer/publisher',
       hostedWithPermission: 'Yapımcı(lar) tarafından izin alınarak kullanılmıştır',
-      originalCreation: 'YNOproject komünitesi tarafından orijinal yapımdır'
+      originalCreation: 'YNOproject komünitesi tarafından orijinal yapımdır',
+      gameEndDate: 'Available to play on YNOproject until {{date}}'
     },
     modal: {
       common: {
@@ -182,7 +183,9 @@ const tr = {
             label: 'Singleplayer Mode',
             helpText:
               'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
-          }
+          },
+          toggleHideUnnamedPlayers: 'Hide Unnamed Players',
+          highContrast: 'High Contrast Mode'
         },
         blocklist: 'Engel Listesi',
         chatSettings: 'Sohbet',
@@ -406,7 +409,8 @@ const tr = {
           search: {
             label: 'Ara:&nbsp;',
             name: 'İsim:',
-            location: 'Konum:'
+            location: 'Konum:',
+            artist: 'Artist:'
           }
         }
       },
@@ -428,7 +432,8 @@ const tr = {
       save: {
         title: 'Kayıt Verisini Yönet',
         reload: 'Değişiklikleri Kaydet ve Yenile',
-        info: "Kayıf dosyası kaydederken, eğer RPG_RT'deki son kaydedişinde çeviri kullandıysan, oyun sen EasyRPGde çeviri olmadan kaydedene kadar hatalar gösterecek."
+        info: "Kayıf dosyası kaydederken, eğer RPG_RT'deki son kaydedişinde çeviri kullandıysan, oyun sen EasyRPGde çeviri olmadan kaydedene kadar hatalar gösterecek.",
+        manageOther: 'Manage Different Game&hellip;'
       },
       uiTheme: {
         title: 'UI Teması',
@@ -577,6 +582,14 @@ const tr = {
         rule5: 'Herhangi bir sebepten ötürü hile kullanmak yasak.',
         rule6: 'Herhangi bir huzursuzluk varsa, bir moderatöre haber verin.'
       },
+      warnings: {
+        title: 'Warnings',
+        subtitle: 'Some games may contain the following content. Viewer discretion is advised.',
+        warning1: 'Flashing light sequences or patterns that may affect photosensitive viewers.',
+        warning2: 'References to self-harm or suicide.',
+        warning3: 'Disturbing imagery.',
+        warning4: 'Depictions of drug use.'
+      },
       explorerUndiscoveredLocations: {
         title: 'Keşfedilmeyen Konumlar',
         complete: 'Mevcut her konumu keşfettiniz! Tebrikler!!'
@@ -628,6 +641,7 @@ const tr = {
         disbandParty: 'Partiyi Dağıt'
       },
       events: 'Seyahat',
+      badges: 'Badges',
       locations: 'Konumlar',
       communityScreenshots: 'Topluluk Ekran Görüntüleri',
       rankings: 'Sıralamalar',
@@ -641,19 +655,20 @@ const tr = {
     },
     placeholders: {
       scheduleDescription:
-        "Gömülü Bağlantılar desteklenir, yume.wiki'den bir link yapıştırmak için {\\{l:World,optional link name}} kullanabilirsin"
+        "Gömülü Bağlantılar desteklenir, yume.wiki'den bir link yapıştırmak için {{l:World,optional link name}} kullanabilirsin"
     },
-    reviewRules: 'Kuralları Göster'
+    reviewRules: 'Kuralları Göster',
+    reviewWarnings: 'Review Warnings',
+    highContrast: 'High Contrast'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: 'Yume Nikki',
       '2kki': 'Yume 2kki',
+      cold: '[COLD]',
       unconscious: 'Collective Unconscious',
       flow: '.flow',
-      fog: 'FOG',
-      prayers: 'Answered Prayers',
       deepdreams: 'Deep Dreams',
       someday: 'Someday',
       amillusion: 'Amillusion',
@@ -669,7 +684,9 @@ const tr = {
       tsushin: 'Yume Tsushin',
       nostalgic: 'nostAlgic',
       if: 'If',
-      unaccomplished: 'Unaccomplished'
+      unaccomplished: 'Unaccomplished',
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: 'Sayfayı terk etmek istediğinden emin misin? Kaydedilmemiş herhangi bir bilgi kaybedilecek.',
     logout: 'Hesaptan çıkmak istediğinden emin misin?',
@@ -914,7 +931,9 @@ const tr = {
           'Rozetler menüsünde, tutup bırakarak rozetlerini düzenleyebilirsin, ya da Rozet Kaldırma modunda çabucak birden fazla rozeti kaldırabilirsin.',
         cacheSettings:
           'Lokasyon tamamlama ya da Eskimiş Yerlerle alakalı sıkıntı mı yaşıyorsun? Veri Menüsünden ilgili veriyi temizleyip en son verileri alabilirs.',
-        openSource: 'YNOproject açık kaynaklıdır ve kod depoları şu sitede mevcuttur: https://github.com/ynoproject/'
+        openSource: 'YNOproject açık kaynaklıdır ve kod depoları şu sitede mevcuttur: https://github.com/ynoproject/',
+        useYnoEmoji:
+          'When you type a colon (:) in the chat field, an YNO emoji palette will appear. You can select and click an emoji from there to input it into the chat field in the format :emojiName:.'
       }
     },
     save: {
@@ -1251,5 +1270,4 @@ const tr = {
     }
   }
 } satisfies Translation;
-
 export default tr;

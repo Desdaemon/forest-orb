@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.7.6",
+    "svelte-tiny-virtual-list": "^3.0.1",
     "typesafe-i18n": "^5.27.1"
   }
 }

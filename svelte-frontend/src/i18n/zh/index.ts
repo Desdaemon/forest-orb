@@ -1,4 +1,4 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const zh = {
   translationComplete: '1',
@@ -69,14 +69,15 @@ const zh = {
       hostedWithPermission: '本站游戏由梦２记开发组官方授权提供'
     },
     disclaimer: {
-      pendingApproval: 'Pending approval from developer/publisher',
-      hostedWithPermission: 'Hosted with permission from the developer(s)',
-      originalCreation: 'Original creation by the YNOproject community'
+      pendingApproval: '正在等待开发者/发行商授权',
+      hostedWithPermission: '已获得开发者授权托管',
+      originalCreation: '由YNOproject社区原创',
+      gameEndDate: '可在YNOproject上游玩至 {{date}}'
     },
     modal: {
       common: {
-        save: 'Save',
-        apply: 'Apply'
+        save: '保存',
+        apply: '应用'
       },
       confirm: {
         ok: '确认',
@@ -144,11 +145,10 @@ const zh = {
           musicVolume: '音乐音量',
           togglePlayerSounds: '同步玩家音效',
           toggleEnableBadgeHints: {
-            label: 'Badge Hints',
-            helpText:
-              "Badge hints become available once you have unlocked the 'Badge Collector Amulet EX' badge. When enabled, an icon will appear in the top right when you enter a location with at least one badge you haven't unlocked."
+            label: '徽章提示',
+            helpText: '解锁“梦笔生花”徽章后可用。开启后，当您进入的地图至少有一个未解锁徽章时，右上角将显示提示图标。'
           },
-          togglePlayBadgeHintSound: 'Play Badge Hint Sound',
+          togglePlayBadgeHintSound: '播放徽章提示音效',
           toggleEnableExplorer: {
             label: '梦２记导航窗',
             helpText:
@@ -176,12 +176,13 @@ const zh = {
           },
           toggleQuestionablePreloads: '预加载电脑壁纸',
           toggleSchedules: '显示活动招募',
-          unicodeFont: 'Alternate Font',
+          unicodeFont: '备选字体',
           toggleSingleplayerMode: {
-            label: 'Singleplayer Mode',
-            helpText:
-              'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
-          }
+            label: '单人模式',
+            helpText: '将隐私模式转变为单人模式，隐藏包括好友和队伍成员在内的所有人。适合想要独自探索的玩家。'
+          },
+          toggleHideUnnamedPlayers: '隐藏匿名玩家',
+          highContrast: 'High Contrast Mode'
         },
         blocklist: '黑名单',
         chatSettings: '聊天',
@@ -189,7 +190,7 @@ const zh = {
         notificationSettings: '通知',
         cacheSettings: '缓存',
         accountSettings: '账号',
-        engineSettings: 'Engine (F1)'
+        engineSettings: '游戏引擎 (F1)'
       },
       blocklist: {
         title: '黑名单',
@@ -326,9 +327,9 @@ const zh = {
             }
           },
           timeTrials: {
-            label: 'Time Trials',
+            label: '计时模式',
             fields: {
-              goalReached: 'Goal Reached'
+              goalReached: '目标达成'
             }
           },
           screenshots: {
@@ -405,7 +406,8 @@ const zh = {
           search: {
             label: '搜索:&nbsp;',
             name: '名称:',
-            location: '取得位置:'
+            location: '取得位置:',
+            artist: '作者:'
           }
         }
       },
@@ -417,17 +419,18 @@ const zh = {
           activate: '移除徽章',
           deactivate: '完成'
         },
-        manageBadgePreset: 'Manage Presets'
+        manageBadgePreset: '管理预设'
       },
       badgePreset: {
-        title: 'Manage Badge Presets',
-        selectPreset: 'Select Preset',
-        presetName: 'Preset {{index}}'
+        title: '管理徽章预设',
+        selectPreset: '选择预设',
+        presetName: '预设 {{index}}'
       },
       save: {
         title: '存档',
         reload: '保存更改',
-        info: '在导入存档时，如果最近一次存档是于 RPG_RT 上保存且使用了游戏翻译，则游戏会报错。请在 EasyRPG 上解除翻译后再次保存。'
+        info: '在导入存档时，如果最近一次存档是于 RPG_RT 上保存且使用了游戏翻译，则游戏会报错。请在 EasyRPG 上解除翻译后再次保存。',
+        manageOther: '管理其他游戏&hellip;'
       },
       uiTheme: {
         title: '界面样式',
@@ -470,7 +473,7 @@ const zh = {
       },
       rankings: {
         title: '排行榜',
-        player: 'Player'
+        player: '玩家'
       },
       screenshot: {
         title: '屏幕截图',
@@ -550,20 +553,20 @@ const zh = {
         }
       },
       report: {
-        title: 'Report',
-        submit: 'Submit',
+        title: '举报',
+        submit: '提交',
         fields: {
           reason: {
-            '1': 'Slurs, harmful or inappropriate language',
-            '2': 'Harassment, bullying, stalking',
-            '3': 'Inappropriate names',
-            '4': 'Ban evasion',
-            '5': 'Cheating, abusing exploits',
-            '6': 'Underage player',
-            '7': 'Spam',
-            title: 'Reason',
-            placeholder: 'Custom reason (max 50 characters)',
-            other: 'Other (specify)'
+            '1': '侮辱、有害或不恰当的语言',
+            '2': '骚扰、霸凌、跟踪',
+            '3': '不恰当的玩家名',
+            '4': '逃避封禁',
+            '5': '作弊、利用漏洞',
+            '6': '低龄玩家',
+            '7': '垃圾信息',
+            title: '举报原因',
+            placeholder: '自定义原因（最多50个字符）',
+            other: '其他（请注明）'
           }
         }
       },
@@ -575,6 +578,14 @@ const zh = {
         rule4: '禁止侮辱性称呼（如各类种族歧视称呼）。',
         rule5: '不要在游戏中作弊。',
         rule6: '如遇到问题，请联系管理员。'
+      },
+      warnings: {
+        title: '警告',
+        subtitle: '部分游戏可能包含以下内容，建议玩家谨慎游玩。',
+        warning1: '伴有强烈闪光的场景，可能会对光过敏症患者造成影响。',
+        warning2: '涉及自残或自杀的内容。',
+        warning3: '令人不安的图像。',
+        warning4: '药物使用的描写。'
       },
       explorerUndiscoveredLocations: {
         title: '未探索地域',
@@ -604,7 +615,7 @@ const zh = {
       }
     },
     tooltips: {
-      togglePrivateMode: '多人/单人模式切换',
+      togglePrivateMode: '公开/隐私模式切换',
       save: '存档数据管理',
       uiTheme: '界面样式',
       toggleChat: '显示/隐藏聊天栏',
@@ -619,7 +630,7 @@ const zh = {
         toggleNextLocation: '显示/隐藏 远征导航',
         toggleGlobalMessageLocations: '显示/隐藏 聊天信息的发送位置',
         toggleMessageTimestamps: '显示/隐藏 聊天信息时间戳',
-        filterMentions: 'Show Mentions Only',
+        filterMentions: '仅显示提到我的消息',
         clearChat: '清空记录'
       },
       parties: {
@@ -627,6 +638,7 @@ const zh = {
         disbandParty: '解散队伍'
       },
       events: '梦远征',
+      badges: 'Badges',
       locations: '地点列表',
       communityScreenshots: '社区截图',
       rankings: '瞅一眼排行榜',
@@ -637,19 +649,20 @@ const zh = {
       mobileControlsType: '可替代默认的方向键操控模式。<br>浮动操控模式只有在移动端全屏模式下才可用。'
     },
     placeholders: {
-      scheduleDescription: '支持Markdown格式符。使用 {\\{l:世界名,可选链接名}} 可链接至yume.wiki词条页'
+      scheduleDescription: '支持Markdown格式符。使用 {{l:世界名,可选链接名}} 可链接至yume.wiki词条页'
     },
-    reviewRules: '多人游戏守则'
+    reviewRules: '多人游戏守则',
+    reviewWarnings: '查阅内容警告',
+    highContrast: 'High Contrast'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: '梦日记',
       '2kki': '梦２记',
+      cold: '[COLD]',
       unconscious: 'Collective Unconscious',
       flow: '.flow',
-      fog: 'FOG',
-      prayers: 'Answered Prayers',
       deepdreams: 'Deep Dreams',
       someday: 'Someday',
       amillusion: 'Amillusion',
@@ -665,7 +678,9 @@ const zh = {
       tsushin: '梦通信',
       nostalgic: 'nostAlgic',
       if: 'If',
-      unaccomplished: '无期'
+      unaccomplished: '无期',
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: '确定要离开此页面吗？所有未保存的游戏进度都将丢失。',
     logout: '确定要登出吗？',
@@ -676,8 +691,8 @@ const zh = {
       '0': '已断开',
       '1': '已连接',
       '2': '连接中',
-      '3': '单人模式',
-      '4': 'Singleplayer'
+      '3': '隐私模式',
+      '4': '单人模式'
     },
     lastOnline: {
       template: '最近登陆\n{INTERVAL}前',
@@ -774,7 +789,7 @@ const zh = {
         confirm: '确定要解除屏蔽 {PLAYER} 吗？'
       },
       report: {
-        label: 'Report {PLAYER}'
+        label: '举报 {PLAYER}'
       },
       admin: {
         ban: {
@@ -810,14 +825,14 @@ const zh = {
           fail: '无法找到该ID对应的徽章。'
         },
         tempban: {
-          label: 'Tempban {PLAYER}',
-          prompt: 'When to unban {PLAYER}? (UTC time)',
-          success: '{PLAYER} has been tempbanned.'
+          label: '临时封禁 {PLAYER}',
+          prompt: '何时解除对 {PLAYER} 的封禁？（UTC时间）',
+          success: '{PLAYER} 已被临时封禁。'
         },
         tempmute: {
-          label: 'Tempmute {PLAYER}',
-          prompt: 'When to unmute {PLAYER}? (UTC time)',
-          success: '{PLAYER} has been tempmuted.'
+          label: '临时禁言 {PLAYER}',
+          prompt: '何时解除对 {PLAYER} 的禁言？（UTC时间）',
+          success: '{PLAYER} 已被临时禁言。'
         }
       }
     },
@@ -902,7 +917,9 @@ const zh = {
           '如果您在 PC 端游玩，可以用 Alt+Enter 切换全屏模式，F7 默认为截图键，T 键则会打开游戏内聊天输入。',
         badgeControls: '在徽章展柜管理菜单中，您可以拖动徽章来重新排序，或使用“移除徽章”模式一次性删除多个徽章。',
         cacheSettings: '在抵达目的地时未能触发判定？地图过期？“缓存”菜单允许您清除相关缓存并获取最新数据。',
-        openSource: 'YNOproject是开源项目，您可在：https://github.com/ynoproject/ 查阅源代码。'
+        openSource: 'YNOproject是开源项目，您可在：https://github.com/ynoproject/ 查阅源代码。',
+        useYnoEmoji:
+          '在聊天框中输入英文冒号（:）时，会弹出YNO表情面板。您可以从面板中选择并点击表情，它会以 :表情名称: 的格式插入到聊天框中。'
       }
     },
     save: {
@@ -988,7 +1005,7 @@ const zh = {
         saveReminder: '记得经常存档和备份，防止您的进度意外丢失。'
       },
       timeTrials: {
-        timeTrialsComplete: 'Goal! {CATEGORY} completed in {TIME}.'
+        timeTrialsComplete: '目标达成！ {CATEGORY} 已完成，用时 {TIME}.'
       }
     },
     events: {
@@ -1048,10 +1065,10 @@ const zh = {
       loading: '加载中...',
       bp: '{BP} BP',
       count: '{COUNT} 徽章',
-      empty: 'Badge gallery not set'
+      empty: '未设置徽章展柜'
     },
     badgePreset: {
-      empty: 'This preset is empty.'
+      empty: '该预设是空的'
     },
     rankings: {
       categories: {
@@ -1167,14 +1184,14 @@ const zh = {
         bilibili: 'Bilibili'
       },
       intervals: {
-        perDay: 'Every day',
-        days: 'Every {INTERVAL} days',
-        perWeek: 'Every {WEEKDAY}',
-        weeks: 'Every {INTERVAL} weeks',
-        perMonth: 'Every month',
-        months: 'Every {INTERVAL} months',
-        perYear: 'Every year',
-        years: 'Every {INTERVAL} years'
+        perDay: '每天',
+        days: '每 {INTERVAL} 天',
+        perWeek: '每个 {WEEKDAY}',
+        weeks: '每 {INTERVAL} 周',
+        perMonth: '每月',
+        months: '每 {INTERVAL} 个月',
+        perYear: '每年',
+        years: '每 {INTERVAL} 年'
       }
     },
     '2kki': {
@@ -1223,18 +1240,17 @@ const zh = {
           playerPrompt: '请输入要收回徽章的用户名'
         },
         tempban: {
-          label: 'Tempban a Player',
-          playerPrompt: 'Enter the name of the account to tempban',
-          timePrompt: 'Enter the datetime when the ban expires (UTC time)'
+          label: '临时封禁玩家',
+          playerPrompt: '请输入要临时封禁的用户名',
+          timePrompt: '请输入解封时间（UTC时间）'
         },
         tempmute: {
-          label: 'Tempmute a Player',
-          playerPrompt: 'Enter the name of the account to tempmute',
-          timePrompt: 'Enter the datetime when the mute expires (UTC time)'
+          label: '临时禁言玩家',
+          playerPrompt: '请输入要临时禁言的用户名',
+          timePrompt: '请输入解禁时间（UTC时间）'
         }
       }
     }
   }
 } satisfies Translation;
-
 export default zh;

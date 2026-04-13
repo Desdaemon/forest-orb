@@ -1,4 +1,4 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const eo = {
   translationComplete: '1',
@@ -71,7 +71,8 @@ const eo = {
     disclaimer: {
       pendingApproval: 'Pending approval from developer/publisher',
       hostedWithPermission: 'Hosted with permission from the developer(s)',
-      originalCreation: 'Original creation by the YNOproject community'
+      originalCreation: 'Original creation by the YNOproject community',
+      gameEndDate: 'Available to play on YNOproject until {{date}}'
     },
     modal: {
       common: {
@@ -183,7 +184,9 @@ const eo = {
             label: 'Singleplayer Mode',
             helpText:
               'Turns Private Mode into Singleplayer Mode, hiding all friends and party members from view. Perfect if you want to explore entirely by yourself.'
-          }
+          },
+          toggleHideUnnamedPlayers: 'Hide Unnamed Players',
+          highContrast: 'High Contrast Mode'
         },
         blocklist: 'Listo de Blokitoj',
         chatSettings: 'Babilejo',
@@ -407,7 +410,8 @@ const eo = {
           search: {
             label: 'Serĉi:&nbsp;',
             name: 'Nomo:',
-            location: 'Loko:'
+            location: 'Loko:',
+            artist: 'Artist:'
           }
         }
       },
@@ -429,7 +433,8 @@ const eo = {
       save: {
         title: 'Administri Konservdatumojn',
         reload: 'Konservi Ŝanĝojn kaj Reŝargi',
-        info: 'Por importado de konservoj, se vi lastafoje konservis dum uzante tradukon per RPG_RT, la ludo montros erarojn ĝis vi konservos denove per EasyRPG sen aktiva traduko.'
+        info: 'Por importado de konservoj, se vi lastafoje konservis dum uzante tradukon per RPG_RT, la ludo montros erarojn ĝis vi konservos denove per EasyRPG sen aktiva traduko.',
+        manageOther: 'Manage Different Game&hellip;'
       },
       uiTheme: {
         title: 'Fasada Etoso',
@@ -578,6 +583,14 @@ const eo = {
         rule5: 'Ne trompu ial ajn.',
         rule6: 'Se estas problemoj, bonvolu sciigi la kontrolantojn.'
       },
+      warnings: {
+        title: 'Warnings',
+        subtitle: 'Some games may contain the following content. Viewer discretion is advised.',
+        warning1: 'Flashing light sequences or patterns that may affect photosensitive viewers.',
+        warning2: 'References to self-harm or suicide.',
+        warning3: 'Disturbing imagery.',
+        warning4: 'Depictions of drug use.'
+      },
       explorerUndiscoveredLocations: {
         title: 'Nemalkovritaj Lokoj',
         complete: 'Vi malkovris ĉiujn disponeblajn lokojn! Gratulon!!'
@@ -629,6 +642,7 @@ const eo = {
         disbandParty: 'Disigi Grupon'
       },
       events: 'Ekspedicioj',
+      badges: 'Badges',
       locations: 'Lokoj',
       communityScreenshots: 'Komunumaj Ekrankopioj',
       rankings: 'Rangolisto',
@@ -642,19 +656,20 @@ const eo = {
     },
     placeholders: {
       scheduleDescription:
-        'Markdown syntax is accepted, use {\\{l:World,optional link name}} to insert a link to yume.wiki'
+        'Markdown syntax is accepted, use {{l:World,optional link name}} to insert a link to yume.wiki'
     },
-    reviewRules: 'Montri Regulojn'
+    reviewRules: 'Montri Regulojn',
+    reviewWarnings: 'Review Warnings',
+    highContrast: 'High Contrast'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: 'Yume Nikki',
       '2kki': 'Yume 2kki',
+      cold: '[COLD]',
       unconscious: 'Collective Unconscious',
       flow: '.flow',
-      fog: 'FOG',
-      prayers: 'Answered Prayers',
       deepdreams: 'Deep Dreams',
       someday: 'Someday',
       amillusion: 'Amillusion',
@@ -670,7 +685,9 @@ const eo = {
       tsushin: 'Yume Tsushin',
       nostalgic: 'nostAlgic',
       if: 'If',
-      unaccomplished: 'Unaccomplished'
+      unaccomplished: 'Unaccomplished',
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: 'Ĉu vi certas, ke vi volas foriri ĉi-retejon? Vi perdos ĉiun nekonservitan progresadon.',
     logout: 'Ĉu vi certas, ke vi volas malkonektiĝi?',
@@ -916,7 +933,9 @@ const eo = {
         cacheSettings:
           'Having trouble with location completion or outdated maps? The Cache menu allows you to clear the relevant cache and retrieve the latest data.',
         openSource:
-          'YNOproject estas malfermitkoda kaj la kodaj deponejoj estas haveblaj en https://github.com/ynoproject/'
+          'YNOproject estas malfermitkoda kaj la kodaj deponejoj estas haveblaj en https://github.com/ynoproject/',
+        useYnoEmoji:
+          'When you type a colon (:) in the chat field, an YNO emoji palette will appear. You can select and click an emoji from there to input it into the chat field in the format :emojiName:.'
       }
     },
     save: {
@@ -1253,5 +1272,4 @@ const eo = {
     }
   }
 } satisfies Translation;
-
 export default eo;

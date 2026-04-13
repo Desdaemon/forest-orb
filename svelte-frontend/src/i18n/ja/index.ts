@@ -1,8 +1,7 @@
-import type { BaseTranslation, Translation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const ja = {
   translationComplete: '1',
-  name: '日本語',
   version: {
     '2kki': {
       label: 'ゆめ２っきver{VERSION}',
@@ -72,7 +71,8 @@ const ja = {
     disclaimer: {
       pendingApproval: '開発者/配信元の承認待ち',
       hostedWithPermission: '開発者の許可を得て掲載しています',
-      originalCreation: 'YNOprojectのコミュニティによるオリジナルの作品'
+      originalCreation: 'YNOprojectのコミュニティによるオリジナルの作品',
+      gameEndDate: 'この作品はYNOprojectで{{date}}までプレイ可能です'
     },
     modal: {
       common: {
@@ -137,7 +137,7 @@ const ja = {
           saveReminder: {
             label: 'セーブリマインダーの頻度',
             interval: {
-              minutes: '{interval}分ごとに',
+              minutes: '{{interval}}分ごとに',
               never: 'しない'
             }
           },
@@ -184,7 +184,9 @@ const ja = {
             label: 'シングルプレイヤーモード',
             helpText:
               'プライベートモードをシングルプレイヤーモードに切り替え、フレンドやパーティメンバーを含めた全員を非表示にします。一人で探索したい場合に最適です。'
-          }
+          },
+          toggleHideUnnamedPlayers: '無名プレイヤーを表示しない',
+          highContrast: 'High Contrast Mode'
         },
         blocklist: 'ブロックリスト',
         chatSettings: 'チャット',
@@ -192,7 +194,7 @@ const ja = {
         notificationSettings: '通知',
         cacheSettings: 'キャッシュ',
         accountSettings: 'アカウント',
-        engineSettings: 'Engine (F1)'
+        engineSettings: 'エンジン (F1)'
       },
       blocklist: {
         title: 'ブロックリスト',
@@ -408,7 +410,8 @@ const ja = {
           search: {
             label: '検索：',
             name: '名：',
-            location: '場所：'
+            location: '場所：',
+            artist: '作者：'
           }
         }
       },
@@ -430,7 +433,8 @@ const ja = {
       save: {
         title: 'セーブデータ管理',
         reload: '変更を保存してリロード',
-        info: 'セーブをアップロードする際、RPG_RT.exeから起動した翻訳版のゲームからセーブした場合、EasyRPGを使用して翻訳未使用のゲームでセーブし直さないと、エラーが表示されます'
+        info: 'セーブをアップロードする際、RPG_RT.exeから起動した翻訳版のゲームからセーブした場合、EasyRPGを使用して翻訳未使用のゲームでセーブし直さないと、エラーが表示されます',
+        manageOther: 'Manage Different Game&hellip;'
       },
       uiTheme: {
         title: 'メニュー タイプ',
@@ -579,6 +583,14 @@ const ja = {
         rule5: 'いかなる理由であれ、不正行為は禁止です。',
         rule6: 'トラブルが発生した場合は、モデレーターにお知らせください。'
       },
+      warnings: {
+        title: '注意事項',
+        subtitle: '一部の作品には、以下の内容が含まれる場合があります。\nご注意ください。',
+        warning1: '激しい光の点滅を伴う場面が、光過敏症のある方に影響を与える可能性があります。',
+        warning2: '自傷行為や自殺についての表現。',
+        warning3: '不快に感じる表現。',
+        warning4: '薬物使用の描写。'
+      },
       explorerUndiscoveredLocations: {
         title: '未発見の場所',
         complete: 'あなたは到達可能なすべての場所を発見しました！おめでとう！！'
@@ -630,6 +642,7 @@ const ja = {
         disbandParty: 'パーティーを解散する'
       },
       events: 'ドリームラリー',
+      badges: 'バッジ',
       locations: '場所一覧',
       communityScreenshots: 'コミュニティのスクリーンショット',
       rankings: 'ランキング',
@@ -641,19 +654,20 @@ const ja = {
         'モバイルコントローラーをデフォルトの方向キーから切り替えられます。<br>浮動コントローラーはモバイルのフルスクリーンの時のみ有効です。'
     },
     placeholders: {
-      scheduleDescription: 'Markdown記法が使用可能で、{\\{l:英名,和名}}を使ってyume.wikiへのマップURLを記入する'
+      scheduleDescription: 'Markdown記法が使用可能で、{{l:英名,和名}}を使ってyume.wikiへのマップURLを記入する'
     },
-    reviewRules: 'ルールを見る'
+    reviewRules: 'ルールを見る',
+    reviewWarnings: '注意事項を見る',
+    highContrast: 'High Contrast'
   },
   messages: {
     games: {
       ynoproject: 'YNOproject',
       yume: 'ゆめにっき',
       '2kki': 'ゆめ２っき',
+      cold: '[COLD]',
       unconscious: 'Collective Unconscious',
       flow: '.flow',
-      fog: 'FOG',
-      prayers: 'Answered Prayers',
       deepdreams: 'Deep Dreams',
       someday: 'Someday',
       amillusion: 'Amillusion',
@@ -669,7 +683,9 @@ const ja = {
       tsushin: '梦通信',
       nostalgic: 'nostAlgic',
       if: 'If',
-      unaccomplished: 'Unaccomplished'
+      unaccomplished: 'Unaccomplished',
+      fog: 'FOG',
+      loveyou: 'Love You'
     },
     leavePage: '本当にこのページから離脱するのですか？保存されていないゲーム内の進行状況はすべて失われます。',
     logout: 'ログアウトしてもよろしいですか？',
@@ -882,11 +898,11 @@ const ja = {
       template: 'TIP: {CONTENT}',
       tips: {
         backupReminder:
-          '定期的にセーブデータをダウンロードし、バックアップをとっておくことをお勧めします。そうすれば、ブラウザ版でセーブデータが消えてしまった場合でも、バックアップしていたセーブデータをアップロードすれば進行状況をバックアップした時点に戻すことが出来ます。',
+          '定期的にセーブデータをダウンロードし、バックアップをとっておくことをお勧めします。そうすれば、ブラウザ版でセーブデータが消えてしまった場合でも、バックアップしていたセーブデータをアップロードすれば進行状況をバックアップした時点に戻すことができます。',
         menuTheme:
           '名前の色やプレイヤータブで表示されるスタイルはゲーム内で設定しているメニュータイプに依存しています。',
         playersInMap:
-          '接続数が表示されているラベルをクリックすると、ゆめ２っきオンライン全体の接続数と同じマップ内の接続数を切り替えることが出来ます。',
+          '接続数が表示されているラベルをクリックすると、ゆめ２っきオンライン全体の接続数と同じマップ内の接続数を切り替えることができます。',
         markdownSupport:
           'このチャットはテキスト装飾に対応しています。 現在対応しているのは：**太字**（\\*\\*テキスト\\*\\*）、*イタリック体*（\\*テキスト\\*、\\_テキスト\\_）、__下線__（\\_\\_テキスト\\_\\_）、~~打ち消し線~~（\\~\\~テキスト\\~\\~）、||スポイラー||（\\|\\|テキスト\\|\\|）。',
         tabToChat:
@@ -899,23 +915,25 @@ const ja = {
         parties:
           'パーティー機能は、他のプレイヤーと一緒に行動するのに最適です。パーティーメンバーの位置が確認でき、パーティーチャットで会話することも可能です。',
         immersionMode:
-          '多人数プレイよりも、没入感のあるプレイがお好みなら、没入モードをお試しください。ゲーム画面左上にある目のアイコンを押すと、没入モードのon/offができ、没入モードをonにするとグローバルチャット、プレイヤーリスト、接続数ラベルが見えなくなるので、探索中に他のプレイヤーを見つけるとより面白くなります。',
+          '多人数プレイよりも、没入感のあるプレイがお好みなら、没入モードをお試しください。ゲーム画面左上にある目のアイコンを押すと、没入モードのon/offができ、没入モードをonにするとグローバルチャット、プレイヤーリスト、接続数ラベルが見えなくなるので、探索中に他のプレイヤーを見つけた時の体験がより面白いものになります。',
         friendsMenu:
-          'プレイヤーのアイコンをPCで右クリック、又はタッチデバイスで長押しすると、フレンド申請やメンションできたりブロックできたりします。',
+          'プレイヤーのアイコンをPCで右クリック、又はタッチデバイスで長押しすると、フレンド申請やメンション、ブロックなどができます。',
         easySettingsMenu:
-          'PCでプレイしている場合、F1キーでゲーム設定を開き、キー割り当てを変更したりシステム側設定を調整できたりします。',
+          'PCでプレイしている場合、F1キーでゲーム設定を開くと、キー割り当ての変更や、システム側の設定の調整などができます。',
         floatingControls:
-          'タッチデバイスでプレイしている場合、デフォルトの方向キー以外に浮動的なジョイスティックも「モバイルコントローラー型」で設定することができます。',
+          'タッチデバイスでプレイしている場合、デフォルトの方向キー以外の他にも、浮動的なジョイスティックを「モバイルコントローラー型」で設定することができます。',
         recentBadges:
           '現セッションで獲得したバッジは、バッジ一覧で獲得状態を「最新獲得」にするといつでも閲覧できるようになります。',
         desktopHotkeys:
-          'PCでプレイしている場合、AltとEnterキーでフルスクリーンを切り替えたり、F7でスクリーンショットを取ったり、Tキーでゲーム内のチャット入力を開いたりする便利なショートカットがいくつも搭載されています。',
+          'PCでプレイしている場合、AltとEnterキーでフルスクリーンの状態を切り替える、F7でスクリーンショットを撮影する、Tキーでゲーム内のチャット入力を開く、などの多数の便利なショートカットが使用可能です。',
         badgeControls:
-          'バッジギャラリーで、バッジをドラッグ＆ドロップすることで配置の交換ができます。又は多数のバッジを取り外す時には「バッジを削除する」を活用することが可能です。',
+          'バッジギャラリーで、バッジをドラッグ＆ドロップすることで配置の交換ができます。また、多数のバッジを取り外す時には「バッジを削除する」で、素早くバッジを取り外すことができます。',
         cacheSettings:
-          'マップ到達しにくい時や地図の更新が反映されない時には、「キャッシュ」画面からキャッシュを初期化して再更新することができます。',
+          'マップの到達やマップの更新が反映されない時には、「キャッシュ」画面からキャッシュを初期化して更新しなおすことができます。',
         openSource:
-          'YNOprojectはオープンソースであり、コードリポジトリは以下の場所で公開されています。 https://github.com/ynoproject/'
+          'YNOprojectはオープンソースであり、コードリポジトリは以下の場所で公開されています。 https://github.com/ynoproject/',
+        useYnoEmoji:
+          'チャット欄でコロン（:）を入力すると絵文字パレットが表示されます。そこから絵文字を選んでクリックすると、:絵文字名:という形式でチャット欄に入力され、絵文字を使用できます。'
       }
     },
     save: {
@@ -1251,5 +1269,4 @@ const ja = {
     }
   }
 } satisfies Translation;
-
 export default ja;

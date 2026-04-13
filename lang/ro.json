@@ -178,7 +178,8 @@
             "label": "Mod Singleplayer",
             "helpText": "Schimbă Modul Privat în Modul Singleplayer, ascunzând toți prietenii și membrii de grup din vedere. Perfect când vrei să explorezi de unul singur."
           },
-          "toggleHideUnnamedPlayers": "Hide Unnamed Players"
+          "toggleHideUnnamedPlayers": "Hide Unnamed Players",
+          "highContrast": "High Contrast Mode"
         },
         "blocklist": "Listă Neagră",
         "chatSettings": "Chat",
@@ -645,10 +646,11 @@
       "mobileControlsType": "Alteernative pentru tipul de control D-Pad implicit.<br>Tipurile de control plutitoare sunt valabile doar în modul fullscreen pe mobil."
     },
     "placeholders": {
-      "scheduleDescription": "Sintaxa Markdown este acceptată, folosește {\\{l:World,optional link name}} pentru a insera un link către yume.wiki"
+      "scheduleDescription": "Sintaxa Markdown este acceptată, folosește {{l:World,optional link name}} pentru a insera un link către yume.wiki"
     },
     "reviewRules": "Revizionează Regulile",
-    "reviewWarnings": "Review Warnings"
+    "reviewWarnings": "Review Warnings",
+    "highContrast": "High Contrast"
   },
   "messages": {
     "games": {

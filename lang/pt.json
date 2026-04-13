@@ -178,7 +178,8 @@
             "label": "Modo de Um Jogador",
             "helpText": "Transforma o Modo Privado em Modo de Um Jogador, ocultando todos os amigos e membros do grupo. Perfeito caso queira explorar tudo por conta própia."
           },
-          "toggleHideUnnamedPlayers": "Hide Unnamed Players"
+          "toggleHideUnnamedPlayers": "Hide Unnamed Players",
+          "highContrast": "High Contrast Mode"
         },
         "blocklist": "Blocklist",
         "chatSettings": "Bate-Papo",
@@ -645,10 +646,11 @@
       "mobileControlsType": "Alternativas para o tipo padrão de controle (D-Pad).<br>Tipos de controle livre só estão disponivel no mobile em tela cheia."
     },
     "placeholders": {
-      "scheduleDescription": "Syntax Markdown é aceito, use {\\{l:World,optional link name}} para inserir um link a yume.wiki"
+      "scheduleDescription": "Syntax Markdown é aceito, use {{l:World,optional link name}} para inserir um link a yume.wiki"
     },
     "reviewRules": "Ver Regras",
-    "reviewWarnings": "Review Warnings"
+    "reviewWarnings": "Review Warnings",
+    "highContrast": "High Contrast"
   },
   "messages": {
     "games": {
