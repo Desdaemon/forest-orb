@@ -2,7 +2,6 @@
   import { modal } from '$lib/stores/modal';
   import type { Snippet } from 'svelte';
   import type { HTMLAttributes } from 'svelte/elements';
-  import { scale } from 'svelte/transition';
 
   let modalEl = $state<HTMLDivElement | null>(null);
 
@@ -25,18 +24,25 @@
 
 <div
   bind:this={modalEl}
-  transition:scale={{ duration: 200, start: 0.7 }}
+  class={['modal', { fullscreenModal, wideModal }, props.class]}
   onoutroend={handleOutroEnd}
+  onintrostart={() => modalEl?.dispatchEvent(new CustomEvent('YNO_INTROSTART', { bubbles: true }))}
+  onoutrostart={() => modalEl?.dispatchEvent(new CustomEvent('YNO_OUTROSTART', { bubbles: true }))}
   role="dialog"
   aria-modal="true"
   {...props}
-  class={['modal', { fullscreenModal, wideModal }, props.class]}
 >
   <div
     tabindex="0"
     class="modalClose"
-    onclick={modal.close}
-    onkeydown={(e) => e.key === 'Enter' && modal.close()}
+    onclick={() => {
+      // @ts-ignore - close can be called without arguments
+      modal.close();
+    }}
+    onkeydown={(e) => {
+      // @ts-ignore - close can be called without arguments
+      if (e.key === 'Enter') modal.close();
+    }}
     aria-label="Close modal"
     role="button"
   >
@@ -44,3 +50,40 @@
   </div>
   {@render children?.()}
 </div>
+
+<style>
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    animation: modalScale 0.2s ease-out;
+  }
+
+  .modal.hidden {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+
+  .wideModal {
+    max-width: 80%;
+  }
+
+  @keyframes modalScale {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+</style>

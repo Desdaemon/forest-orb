@@ -77,14 +77,14 @@ export const tabFields = {
       saveReminder: tab.gsel(
         (LL) => LL.ui.modal.settings.fields.saveReminder.label(),
         [
-          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 10 }), value: 10 },
-          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 15 }), value: 15 },
-          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 20 }), value: 20 },
-          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 30 }), value: 30 },
-          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 45 }), value: 45 },
-          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 60 }), value: 60 },
-          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 90 }), value: 90 },
-          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes({ interval: 120 }), value: 120 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes(10), value: 10 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes(15), value: 15 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes(20), value: 20 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes(30), value: 30 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes(45), value: 45 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes(60), value: 60 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes(90), value: 90 },
+          { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.minutes(120), value: 120 },
           { label: (LL) => LL.ui.modal.settings.fields.saveReminder.interval.never(), value: 0 }
         ]
       ),

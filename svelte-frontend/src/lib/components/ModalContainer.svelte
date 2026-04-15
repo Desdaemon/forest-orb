@@ -2,7 +2,7 @@
   import TestStage1 from '$lib/modals/TestStage1.svelte';
   import TestStage2 from '$lib/modals/TestStage2.svelte';
   import { modal } from '$lib/stores/modal';
-  import { onMount, type Snippet } from 'svelte';
+  import { onMount, onDestroy, type Snippet } from 'svelte';
 
   const { children }: { children?: Snippet } = $props();
 
@@ -17,6 +17,30 @@
     modal.close();
   }
 
+  function handleModalOutroEnd() {
+    if (isModalVisible) return;
+
+    modal.finalizeClose();
+  }
+
+  function handleModalIntroStart() {
+    // Add fadeIn class for the new modal
+    const modalEl = document.getElementById(`modal-${modalStack[modalStack.length - 1]?.id}`);
+    if (modalEl) {
+      modalEl.classList.remove('hidden');
+      modalEl.classList.add('fadeIn');
+    }
+  }
+
+  function handleModalOutroStart() {
+    // Remove fadeIn class and add hidden class for the closing modal
+    const modalEl = document.getElementById(`modal-${modalStack[modalStack.length - 1]?.id}`);
+    if (modalEl) {
+      modalEl.classList.remove('fadeIn');
+      modalEl.classList.add('hidden');
+    }
+  }
+
   function handleOverlayClick(event: MouseEvent) {
     if (event.target === event.currentTarget) {
       closeModalHandler();
@@ -26,14 +50,18 @@
   onMount(() => {
     if (modalContainer) {
       modalContainer.addEventListener('YNO_OUTROEND', handleModalOutroEnd);
+      modalContainer.addEventListener('YNO_INTROSTART', handleModalIntroStart);
+      modalContainer.addEventListener('YNO_OUTROSTART', handleModalOutroStart);
     }
   });
 
-  function handleModalOutroEnd() {
-    if (isModalVisible) return;
-
-    modal.finalizeClose();
-  }
+  onDestroy(() => {
+    if (modalContainer) {
+      modalContainer.removeEventListener('YNO_OUTROEND', handleModalOutroEnd);
+      modalContainer.removeEventListener('YNO_INTROSTART', handleModalIntroStart);
+      modalContainer.removeEventListener('YNO_OUTROSTART', handleModalOutroStart);
+    }
+  });
 </script>
 
 <div role="presentation" inert={isModalVisible}>
@@ -52,7 +80,7 @@
   <div class="modalStack">
     {#if open}
       {#each modalStack as modalItem, idx (`${modalItem.id}::${idx}`)}
-        <div class:hidden={idx !== modalStack.length - 1}>
+        <div class:hidden={idx !== modalStack.length - 1} class:fadeIn={idx === modalStack.length - 1}>
           {#if modalItem.id === 'loginModal'}
             {@const { default: LoginModal } = await import('$lib/modals/LoginModal.svelte')}
             <LoginModal />
@@ -93,6 +121,19 @@
             <TestStage1 />
           {:else if modalItem.id === 'testStage2'}
             <TestStage2 />
+          {:else if modalItem.id === 'confirmModal'}
+            {@const { default: ConfirmModal } = await import('$lib/modals/ConfirmModal.svelte')}
+            <ConfirmModal 
+              message={modalItem.data?.message}
+              onOk={() => {
+                modal.close('confirmModal', undefined);
+                if (modalItem.data?.onOk) modalItem.data.onOk();
+              }}
+              onCancel={() => {
+                modal.close('confirmModal', undefined);
+                if (modalItem.data?.onCancel) modalItem.data.onCancel();
+              }}
+            />
           {:else if modalItem.id}
             {@const { default: Modal } = await import('$lib/components/Modal.svelte')}
             <Modal aria-label={modalItem.id}>
@@ -135,12 +176,13 @@
 
   .modalStack {
     position: absolute;
-    inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 19;
     pointer-events: none;
+    width: 100%;
+    height: 100%;
   }
 
   .modalStack > * {
@@ -148,6 +190,20 @@
   }
 
   .modalStack > :global(*) {
+    pointer-events: auto;
+  }
+
+  .modalStack > *:not(:global(*)) {
+    pointer-events: auto;
+  }
+
+  .modalStack > *:not(:global(*)):not(.fadeIn) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .modalStack > *:not(:global(*)).fadeIn {
+    opacity: 1;
     pointer-events: auto;
   }
 </style>
