@@ -117,6 +117,9 @@
           {:else if modalItem.id === 'settingsModal'}
             {@const { default: SettingsModal } = await import('$lib/modals/SettingsModal.svelte')}
             <SettingsModal />
+          {:else if modalItem.id === 'saveDataModal'}
+            {@const { default: SaveDataModal } = await import('$lib/modals/SaveDataModal.svelte')}
+            <SaveDataModal />
           {:else if modalItem.id === 'testStage1'}
             <TestStage1 />
           {:else if modalItem.id === 'testStage2'}

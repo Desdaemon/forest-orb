@@ -72,14 +72,21 @@ function getSpriteSrc(gameId: string, sprite: string, fallback = false) {
   return `/data/${gameId}/CharSet/${encodedSprite}.png`;
 }
 
-function clearTransparentPixels(imageData: ImageData) {
+function clearTransparentPixels(imageData: ImageData, isBrave: boolean) {
   const { data } = imageData;
   const transRed = data[0];
   const transGreen = data[1];
   const transBlue = data[2];
 
+  const checkPixelTransparent = isBrave
+    ? (i: number) =>
+        (data[i] === transRed || data[i] - 1 === transRed) &&
+        (data[i + 1] === transGreen || data[i + 1] - 1 === transGreen) &&
+        (data[i + 2] === transBlue || data[i + 2] - 1 === transBlue)
+    : (i: number) => data[i] === transRed && data[i + 1] === transGreen && data[i + 2] === transBlue;
+
   for (let offset = 0; offset < data.length; offset += 4) {
-    if (data[offset] === transRed && data[offset + 1] === transGreen && data[offset + 2] === transBlue) {
+    if (checkPixelTransparent(offset)) {
       data[offset + 3] = 0;
     }
   }
@@ -100,7 +107,7 @@ async function loadSpriteSheet(src: string) {
   });
 }
 
-async function createFrameUrl(img: HTMLImageElement, idx: number, frameIdx: LoaderFrameIndex) {
+async function createFrameUrl(img: HTMLImageElement, idx: number, frameIdx: LoaderFrameIndex, isBrave: boolean) {
   const canvas = document.createElement('canvas');
   canvas.width = FRAME_WIDTH;
   canvas.height = FRAME_HEIGHT;
@@ -116,8 +123,8 @@ async function createFrameUrl(img: HTMLImageElement, idx: number, frameIdx: Load
   context.drawImage(img, startX, startY, FRAME_WIDTH, FRAME_HEIGHT, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
   const imageData = context.getImageData(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-  clearTransparentPixels(imageData);
-  context.putImageData(imageData, 0, 0);
+  clearTransparentPixels(imageData, isBrave);
+  context.putImageData(imageData, 0, 0, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
   const blob = await new Promise<Blob>((resolve, reject) => {
     canvas.toBlob((nextBlob) => {
@@ -134,13 +141,16 @@ async function createFrameUrl(img: HTMLImageElement, idx: number, frameIdx: Load
 }
 
 async function loadProcessedFrames(gameId: GameId, sprite: string, idx: number) {
+  const nav = navigator as Navigator & { brave?: { isBrave: () => Promise<boolean> } };
+  const isBrave = nav.brave ? await nav.brave.isBrave() : false;
+
   const sources = [getSpriteSrc(gameId, sprite), getSpriteSrc(gameId, sprite, true)];
 
   for (const src of sources) {
     try {
       const img = await loadSpriteSheet(src);
       const entries = await Promise.all(
-        LOADER_FRAME_INDEXES.map(async (frameIdx) => [frameIdx, await createFrameUrl(img, idx, frameIdx)] as const)
+        LOADER_FRAME_INDEXES.map(async (frameIdx) => [frameIdx, await createFrameUrl(img, idx, frameIdx, isBrave)] as const)
       );
 
       return {

@@ -23,7 +23,7 @@
   }
 
   function handleSaveClick() {
-    console.warn('Save Data modal is not ported yet.');
+    modal.open('saveDataModal');
   }
 
   function handleScreenshotClick() {
