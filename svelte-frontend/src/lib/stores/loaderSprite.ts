@@ -150,7 +150,9 @@ async function loadProcessedFrames(gameId: GameId, sprite: string, idx: number) 
     try {
       const img = await loadSpriteSheet(src);
       const entries = await Promise.all(
-        LOADER_FRAME_INDEXES.map(async (frameIdx) => [frameIdx, await createFrameUrl(img, idx, frameIdx, isBrave)] as const)
+        LOADER_FRAME_INDEXES.map(
+          async (frameIdx) => [frameIdx, await createFrameUrl(img, idx, frameIdx, isBrave)] as const
+        )
       );
 
       return {

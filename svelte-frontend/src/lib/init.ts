@@ -1,31 +1,6 @@
-export const gameIds = [
-  '2kki',
-  'amillusion',
-  'braingirl',
-  'unconscious',
-  'deepdreams',
-  'flow',
-  'fog',
-  'genie',
-  'if',
-  'mikan',
-  'muma',
-  'nostalgic',
-  'oversomnia',
-  'oneshot',
-  'prayers',
-  'sheawaits',
-  'someday',
-  'tsushin',
-  'ultraviolet',
-  'unaccomplished',
-  'unevendream',
-  'yume'
-] as const;
+import type { GameId } from "./allGameUiThemes";
 
-export type GameId = (typeof gameIds)[number];
-
-export const gameNameMap: Record<GameId, string> = {
+export const gameNameMap = Object.freeze({
   '2kki': 'Yume 2kki',
   amillusion: 'Amillusion',
   braingirl: 'Braingirl',
@@ -40,7 +15,6 @@ export const gameNameMap: Record<GameId, string> = {
   nostalgic: 'nostAlgic',
   oversomnia: 'Oversomnia',
   oneshot: 'OneShot',
-  prayers: 'Answered Prayers',
   sheawaits: 'She Awaits',
   someday: 'Someday',
   tsushin: 'Yume Tsushin',
@@ -48,7 +22,7 @@ export const gameNameMap: Record<GameId, string> = {
   unaccomplished: 'Unaccomplished',
   unevendream: 'Uneven Dream',
   yume: 'Yume Nikki'
-};
+} satisfies Record<GameId, string>);
 
 export type InitPayload = {
   gameId?: GameId;
@@ -61,17 +35,18 @@ export const isBrowser = typeof window !== 'undefined';
 
 export function getInitPayload(): InitPayload {
   if (!isBrowser) return {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (window as any).YNO_INIT || {};
 }
 
 export function inferGameId(payload: InitPayload = {}): GameId {
   const candidate = (payload.gameId || '').toString();
-  if (candidate && gameIds.includes(candidate as GameId)) {
+  if (candidate && candidate in gameNameMap) {
     return candidate as GameId;
   }
   if (isBrowser) {
     const query = new URLSearchParams(window.location.search).get('game');
-    if (query && gameIds.includes(query as GameId)) return query as GameId;
+    if (query && query in gameNameMap) return query as GameId;
   }
   return '2kki';
 }
@@ -109,6 +84,11 @@ export const tippyConfig = {
 };
 
 export const sessionIdKey = 'ynoproject_sessionId';
+
+export function getGameId() {
+  const payload = getInitPayload();
+  return inferGameId(payload);
+}
 
 export function getGameInitState() {
   const payload = getInitPayload();

@@ -40,7 +40,7 @@
           <label for="loginPassword" class="unselectable">{$LL.ui.modal.login.fields.password()}</label>
           <input id="loginPassword" name="password" type="password" autocomplete="off" bind:value={password} />
         </li>
-        <li id="loginErrorRow" class="formControlRow" class:hidden={!error}>
+        <li id="loginErrorRow" class={['formControlRow', { hidden: !error }]}>
           <p id="loginError">{error}</p>
         </li>
       </ul>

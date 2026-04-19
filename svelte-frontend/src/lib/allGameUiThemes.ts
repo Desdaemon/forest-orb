@@ -229,7 +229,6 @@ export const allGameUiThemes = Object.freeze({
     'window-j',
     'window-temp1'
   ],
-  prayers: ['grey-and-chartreuse', 'chartreuse', 'customsystem'],
   sheawaits: [
     'system_sa1',
     'system_stripedpink',
@@ -320,7 +319,6 @@ export const allGameFullBgUiThemes: Record<string, string[]> = {
   nostalgic: [],
   oneshot: [],
   oversomnia: [],
-  prayers: ['grey-and-chartreuse', 'chartreuse', 'customsystem'],
   sheawaits: [],
   someday: [],
   tsushin: [],

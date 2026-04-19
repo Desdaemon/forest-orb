@@ -130,7 +130,7 @@
 </script>
 
 <div>
-  <h3 class="tooltipTitle" class:altText={badge.hidden}>{titleWithBp}</h3>
+  <h3 class={['tooltipTitle', { altText: badge.hidden }]}>{titleWithBp}</h3>
 
   {#if canRevealBadgeInfo && localizedBadge?.description}
     <div class="tooltipContent">{localizedBadge.description}</div>
@@ -141,6 +141,7 @@
     <span class="tooltipLocation">
       <span class="tooltipLabel">{LOCATION_LABEL}</span>
       {#if badgeLocation?.url}
+        <!-- svelte-ignore no-navigation-without-resolve -->
         <a href={badgeLocation.url} target="_blank" rel="noopener noreferrer">{badgeLocation.name}</a>
       {:else}
         <span>{badgeLocation?.name || `MAP${mapIdString}`}</span>
@@ -150,7 +151,7 @@
 
   {#if conditionSegments}
     <div class="tooltipContent">
-      {#each conditionSegments as seg}{#if seg.achieved}<tag>{seg.text}</tag>{:else}{seg.text}{/if}{/each}
+      {#each conditionSegments as seg (seg.text)}{#if seg.achieved}<tag>{seg.text}</tag>{:else}{seg.text}{/if}{/each}
     </div>
   {:else if !canRevealBadgeInfo && badge.secretCondition}
     <h3 class="tooltipTitle">{LOCKED_TEXT}</h3>

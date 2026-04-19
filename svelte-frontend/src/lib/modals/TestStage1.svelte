@@ -1,14 +1,14 @@
 <script>
-  import Modal from "$lib/components/Modal.svelte";
-  import { modal } from "$lib/stores/modal";
+  import Modal from '$lib/components/Modal.svelte';
+  import { modal } from '$lib/stores/modal';
 
   let response = $state();
 
   async function onclick() {
     response = await modal.open('testStage2');
   }
-
 </script>
+
 <Modal aria-label="Stage 1">
   <button {onclick}>
     {#if response}

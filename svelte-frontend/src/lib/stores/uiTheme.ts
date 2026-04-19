@@ -845,9 +845,7 @@ export async function initUiThemeFontStyles(
   }
 }
 
-// ---------- public API ----------
-
-export async function setUiTheme(uiTheme: string, gameId: string, fontStyle: number = 0): Promise<void> {
+async function applyUiTheme(uiTheme: string, gameId: string, fontStyle: number = 0): Promise<void> {
   if (typeof document === 'undefined') return;
 
   await Promise.all([
@@ -860,6 +858,8 @@ export async function setUiTheme(uiTheme: string, gameId: string, fontStyle: num
   document.getElementById('header')?.classList.toggle('fullBg', isFullBg);
   document.body.classList.toggle('fullBg', isFullBg);
 }
+
+// ---------- public API ----------
 
 /** Add a theme to the activated set (no-op if already present) and select it. */
 export function selectTheme<Game extends GameId, Theme extends AllGameThemes[GameId][number]>(
@@ -875,7 +875,7 @@ export function selectTheme<Game extends GameId, Theme extends AllGameThemes[Gam
     return [...themes, { gameId, uiTheme: themeToActivate }];
   });
   selectedUiTheme.set(uiTheme);
-  setUiTheme(resolvedTheme, gameId, get(selectedFontStyle));
+  applyUiTheme(resolvedTheme, gameId, get(selectedFontStyle));
 }
 
 /** Change the font style for the current theme. */
@@ -896,7 +896,7 @@ export async function setHighContrastMode(enabled: boolean, gameId: string): Pro
   const resolvedTheme = getSelectedThemeForGame(gameId);
   if (!resolvedTheme) return;
 
-  await setUiTheme(resolvedTheme, gameId, get(selectedFontStyle));
+  await applyUiTheme(resolvedTheme, gameId, get(selectedFontStyle));
 }
 
 // async function benchmark<T>(fn: () => Promise<T>): Promise<T> {

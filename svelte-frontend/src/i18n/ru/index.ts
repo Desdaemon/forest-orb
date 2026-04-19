@@ -629,6 +629,7 @@ const ru = {
       settings: 'Настройки',
       toggleMute: 'Переключить звук',
       toggleHideLocation: 'Переключить сокрытие локации',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Переключить отправку в общий чат',
       chat: {
         toggleNextLocation: 'Показать/Скрыть локацию следующей экспедиции',

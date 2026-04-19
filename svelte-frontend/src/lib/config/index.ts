@@ -1,4 +1,7 @@
+import { browser } from '$app/environment';
 import type { GameId } from '$lib/allGameUiThemes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { apiFetch, apiJsonPost } from '$lib/api';
 import { easyrpgPlayer, LATIN_EX_LANGS } from '$lib/play';
 import { globalConfig, registerConfigHook, userConfig } from '$lib/stores/config';
 import { allGameUiThemes, selectTheme, setHighContrastMode } from '$lib/stores/uiTheme';
@@ -37,11 +40,13 @@ function syncSessionPrivacyState() {
 const CHAT_HISTORY_KEYS = ['0', '25', '50', '100', '250', '500', '1000', '2500'] as const;
 const CHAT_HISTORY_VALUES = [25, 50, 100, 250, 500, 1000, 2500, 0] as const;
 
-const chatHistoryOptions = CHAT_HISTORY_VALUES.map((value) => ({
-  label: (LL: TranslationFunctions) =>
-    LL.ui.modal.chatSettings.fields.chatHistoryLimit.values[String(value) as (typeof CHAT_HISTORY_KEYS)[number]](),
-  value
-}));
+const chatHistoryOptions = CHAT_HISTORY_VALUES.map(
+  (value) => ({
+    label: (LL: TranslationFunctions) =>
+      LL.ui.modal.chatSettings.fields.chatHistoryLimit.values[String(value) as (typeof CHAT_HISTORY_KEYS)[number]](),
+    value
+  })
+);
 
 // if a setting shouldn't live in settings, its store can live here instead
 
@@ -221,11 +226,13 @@ function updateUnicodeFont(lang: string) {
 registerConfigHook('uiTheme', (value, gameId) => {
   const validThemes = (allGameUiThemes as Record<string, readonly string[]>)[gameId] ?? [];
   const theme = typeof value === 'string' && validThemes.includes(value) ? value : validThemes[0];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (theme) selectTheme(gameId as GameId, theme as any);
 });
 
 registerEngineAPIHandler('onUpdateSystemGraphic', (theme) => {
   if (get(userConfig).uiTheme === 'auto') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     selectTheme('2kki', theme as any);
   }
 });
@@ -281,6 +288,27 @@ registerConfigHook('hideLocation', (value) => {
 
 registerConfigHook('singleplayerMode', (value) => {
   syncSessionPrivacyState();
+});
+
+registerConfigHook('pushNotifications', async (value) => {
+  if (!browser || typeof navigator === 'undefined') return;
+  if (!('serviceWorker' in navigator)) return;
+
+  if (!get(globalConfig).notifications) return;
+
+  const registration = await navigator.serviceWorker.getRegistration('/');
+  if (!registration) return;
+
+  const subscription = await registration.pushManager.getSubscription();
+  if (subscription && !value) {
+    await apiJsonPost('unregisternotification', { endpoint: subscription.endpoint });
+    await subscription.unsubscribe();
+  } else if (!subscription && value) {
+    const resp = await fetch(`/connect/2kki/api/vapidpublickey`);
+    const vapidKey = await resp.text();
+    const newSub = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: vapidKey });
+    await apiJsonPost('registernotification', newSub.toJSON());
+  }
 });
 
 // --- config end ---

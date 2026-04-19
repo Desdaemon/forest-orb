@@ -1,9 +1,9 @@
 <script module lang="ts">
   import { getInitPayload, inferGameId, isBrowser } from '$lib/init';
   import { activateTheme, allGameUiThemes } from '$lib/stores/uiTheme';
-  export { loadLocalizedBadges, type LocalizedBadge } from '$lib/badgeLocalization';
 
   const currentGameId = inferGameId(getInitPayload());
+  // eslint-disable-next-line svelte/prefer-svelte-reactivity
   const activatedThemeKeys = new Set<string>();
 
   function getDefaultThemeForGame(gameId?: string): string {
@@ -83,6 +83,7 @@
     lockedIcon = false,
     scaled = false,
     selected = false,
+    tooltip: useTooltip = true,
     ...props
   }: {
     /** Either a badge ID or a full badge */
@@ -91,6 +92,7 @@
     lockedIcon?: boolean;
     scaled?: boolean;
     selected?: boolean;
+    tooltip?: boolean;
     onclick?(): void;
   } & Omit<HTMLAttributes<HTMLDivElement>, 'onclick'> = $props();
 
@@ -120,7 +122,7 @@
   const badgeThemeClass = $derived.by(() => (badge.game && badgeTheme ? getThemeClass(badgeTheme, badge.game) : ''));
 
   const LOCKED_TEXT = '???';
-  const LOCATION_LABEL = 'Location:';
+
   const NO_BADGE_TEXT = 'No Badge';
 
   function formatBadgeTitle(title: string, bp?: number): string {
@@ -161,7 +163,7 @@
   role={typeof props.onclick === 'function' ? 'button' : 'img'}
   tabindex={typeof props.onclick === 'function' ? 0 : undefined}
   {...props}
-  {@attach tooltip(badgeTooltip, { themeClass: badgeThemeClass || undefined })}
+  {@attach (useTooltip ? tooltip : undefined)?.(badgeTooltip, { themeClass: badgeThemeClass || undefined })}
   aria-label={tooltipAriaLabel}
   onkeydown={(e) => e.key === 'Enter' && props.onclick?.()}
   onclick={() => props.onclick?.()}
@@ -176,25 +178,20 @@
     props.class
   ]}
 >
-  <div class="badgeContainer" class:special={badge.hidden && badge.unlocked} class:selected>
+  <div class={['badgeContainer', { special: badge.hidden && badge.unlocked, selected }]}>
     {#if showBadgeEl}
       <div
-        class="badge"
-        class:scaledBadge={scaled}
-        class:overlayBadge={hasOverlay}
+        class={['badge', { scaledBadge: scaled, overlayBadge: hasOverlay }]}
         style="background-image: url('{badgeUrl}');"
       >
         {#if hasOverlay}
           <div
-            class="badgeOverlay"
-            class:badgeOverlayMultiply={hasMultiply}
-            class:badgeOverlayBase={hasDual}
+            class={['badgeOverlay', { badgeOverlayMultiply: hasMultiply, badgeOverlayBase: hasDual }]}
             style="-webkit-mask-image: ${badgeMaskValue}; mask-image: ${badgeMaskValue};"
           ></div>
           {#if hasDual}
             <div
-              class="badgeOverlay badgeOverlay2 badgeOverlayAlt"
-              class:badgeOverlayMultiply={hasMultiply}
+              class={['badgeOverlay badgeOverlay2 badgeOverlayAlt', { badgeOverlayMultiply: hasMultiply }]}
               style="-webkit-mask-image: ${badgeMask2Value}; mask-image: ${badgeMask2Value};"
             ></div>
           {/if}

@@ -629,6 +629,7 @@ const eo = {
       settings: 'Agordoj',
       toggleMute: 'Baskuligi Silenton',
       toggleHideLocation: 'Toggle Location Sharing',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Baskuligi Tutmondan Babiladon',
       chat: {
         toggleNextLocation: 'Show/Hide Next Expedition Location',

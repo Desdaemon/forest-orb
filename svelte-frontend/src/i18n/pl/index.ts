@@ -627,6 +627,7 @@ const pl = {
       settings: 'Ustawienia',
       toggleMute: 'Wycisz',
       toggleHideLocation: 'Toggle Location Sharing',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Czatuj globalnie/lokalnie',
       chat: {
         toggleNextLocation: 'Show/Hide Next Expedition Location',

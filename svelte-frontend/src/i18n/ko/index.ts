@@ -628,6 +628,7 @@ const ko = {
       settings: '옵션',
       toggleMute: '음소거',
       toggleHideLocation: '장소 공유 활성화',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: '글로벌 채팅 활성화',
       chat: {
         toggleNextLocation: '다음 탐험 장소 보이기/숨기기',

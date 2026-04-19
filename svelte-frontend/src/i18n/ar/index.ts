@@ -628,6 +628,7 @@ const ar = {
       settings: 'إعدادات',
       toggleMute: 'تفعيل كتم الصوت',
       toggleHideLocation: 'Toggle Location Sharing',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'وضع المحادثة العامة',
       chat: {
         toggleNextLocation: 'Show/Hide Next Expedition Location',

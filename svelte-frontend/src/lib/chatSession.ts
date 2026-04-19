@@ -1,7 +1,9 @@
 import { getGameInitState } from './init';
 import type { ChatPlayerProfile } from './stores/chatPlayer';
 import { easyrpgPlayer } from './play';
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
+import { toast } from './stores/toast';
+import LL from '../i18n/i18n-svelte';
 
 type SessionCommandHandler = (args: string[]) => void;
 
@@ -208,7 +210,23 @@ export function createChatSessionClient(options: ChatSessionClientOptions) {
     });
 
     addSessionCommandHandler('lcol');
-    addSessionCommandHandler('ttr');
+
+    addSessionCommandHandler('ttr', (args) => {
+      const mapId = (args[0] || '0000').toString().padStart(4, '0');
+      const timeSec = Number.parseInt(args[1] || '0', 10);
+      if (Number.isNaN(timeSec) || timeSec <= 0) return;
+
+      const mins = Math.floor(timeSec / 60);
+      const sec = timeSec % 60;
+      const formattedTime = `${String(mins).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+
+      const categoryKey = args[0] || '';
+      const subCategories = get(LL).messages.rankings.subCategories;
+      const categoryName =
+        categoryKey in subCategories ? subCategories[categoryKey as keyof typeof subCategories]() : mapId;
+
+      toast.show(get(LL).messages.toast.timeTrials.timeTrialsComplete({ TIME: formattedTime, CATEGORY: categoryName }));
+    });
   }
 
   function onSessionMessage(data: string) {

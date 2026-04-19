@@ -7,6 +7,7 @@
  */
 
 import { browser } from '$app/environment';
+import { toast } from '$lib/stores/toast';
 
 export interface EngineAPI {
   // Save sync
@@ -16,13 +17,16 @@ export interface EngineAPI {
   onRequestFile(url: string): void;
 
   // Player data & connection
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   syncPlayerData(uuid: string, rank: number, account: boolean, badge: string | null, medals: any, id: number): void;
   shouldConnectPlayer(uuid: string): boolean;
   onPlayerConnectedOrUpdated(systemName: string, name: string, id: number): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onPlayerSpriteUpdated(sprite: any, idx: number, id: number): void;
   onPlayerDisconnected(id: number): void;
 
   // UI
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   showClientToastMessage(key: string, icon: any): void;
   onUpdateSystemGraphic(name: string): void;
 
@@ -35,6 +39,7 @@ export interface EngineAPI {
   // Ingame
   onLoadMap(mapName: string): void;
   onPlayerTeleported(mapId: string, x: number, y: number): void;
+  onRoomSwitch(): void;
   onReceiveInputFeedback(inputId: number): void;
 }
 
@@ -107,8 +112,17 @@ export function createEngineAPI() {
       apiHandlers.onPlayerTeleported?.(mapId, x, y);
     },
 
+    onRoomSwitch() {
+      apiHandlers.onRoomSwitch?.();
+    },
+
     onReceiveInputFeedback(inputId) {
       apiHandlers.onReceiveInputFeedback?.(inputId);
     }
   } satisfies EngineAPI);
 }
+
+// Default handler: maps engine showClientToastMessage calls to the Svelte toast store
+registerEngineAPIHandler('showClientToastMessage', (key: string, icon: string) => {
+  toast.system(key, icon);
+});

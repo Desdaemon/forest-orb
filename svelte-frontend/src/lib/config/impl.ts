@@ -125,7 +125,7 @@ type ValueConfigStore<T> = Readable<T> & {
   update(updater: (value: T) => T): void;
 };
 
-export function gbool<Key extends keyof typeof defaultGlobalConfig>(key: Key, ..._: any[]): BoolConfigStore {
+export function gbool<Key extends keyof typeof defaultGlobalConfig>(key: Key, ..._: unknown[]): BoolConfigStore {
   return {
     subscribe(run, invalidate) {
       return globalConfig.subscribe((config) => run(Boolean(config[key])), invalidate);
@@ -154,7 +154,7 @@ export function ubool<Key extends keyof typeof defaultUserConfig>(key: Key): Boo
 }
 
 function makeValueStore<T>(
-  key: string,
+  key: AllConfigKeys,
   fallback: () => T,
   toStored: (value: T) => EncodableValue
 ): ValueConfigStore<T> {
@@ -180,15 +180,9 @@ function makeValueStore<T>(
   };
 }
 
-export function gval<Key extends keyof typeof defaultGlobalConfig>(
-  key: Key,
-  ..._: any[]
-): ValueConfigStore<(typeof defaultGlobalConfig)[Key]>;
-export function gval<T extends EncodableValue = EncodableValue>(
-  key: string,
-  ..._: any[]
-): ValueConfigStore<T | undefined>;
-export function gval<T extends EncodableValue = EncodableValue>(key: string, ..._: any[]) {
+export function gval<Key extends keyof typeof defaultGlobalConfig>(key: AllConfigKeys): ValueConfigStore<(typeof defaultGlobalConfig)[Key]>;
+export function gval<T extends EncodableValue = EncodableValue>(key: AllConfigKeys): ValueConfigStore<T | undefined>;
+export function gval<T extends EncodableValue = EncodableValue>(key: AllConfigKeys) {
   const hasDefault = key in defaultGlobalConfig;
   return makeValueStore<T | undefined>(
     key,
@@ -197,15 +191,9 @@ export function gval<T extends EncodableValue = EncodableValue>(key: string, ...
   );
 }
 
-export function uval<Key extends keyof typeof defaultUserConfig>(
-  key: Key,
-  ..._: any[]
-): ValueConfigStore<(typeof defaultUserConfig)[Key]>;
-export function uval<T extends EncodableValue = EncodableValue>(
-  key: string,
-  ..._: any[]
-): ValueConfigStore<T | undefined>;
-export function uval<T extends EncodableValue = EncodableValue>(key: string, ..._: any[]) {
+export function uval<Key extends keyof typeof defaultUserConfig>(key: AllConfigKeys): ValueConfigStore<(typeof defaultUserConfig)[Key]>;
+export function uval<T extends EncodableValue = EncodableValue>(key: AllConfigKeys): ValueConfigStore<T | undefined>;
+export function uval<T extends EncodableValue = EncodableValue>(key: AllConfigKeys) {
   const hasDefault = key in defaultUserConfig;
   return makeValueStore<T | undefined>(
     key,
@@ -278,8 +266,8 @@ export type TabBuilder = ReturnType<typeof makeTabBuilder>;
 // that can be used for type inference
 export type TabConfig =
   | {
-      [K in AllConfigKeys]?: SettingDefinition;
-    }
+    [K in AllConfigKeys]?: SettingDefinition;
+  }
   | Record<string, SettingsGroupNode<any>>;
 
 export type SettingsNode<T extends Record<string, any>> = SettingDefinition | SettingsGroupNode<T>;
@@ -291,16 +279,16 @@ type SettingsGroupNode<Fields extends Record<string, any>> = {
 type SettingsSchemaInput = Record<SettingsTabId, Record<string, SettingsNode<any>>>;
 
 type InferNode<TName extends string, TNode> = TNode extends { kind: 'group'; fields: infer TFields }
-  ? TFields extends Record<string, SettingsNode<infer Ignored>>
-    ? { kind: 'group'; fields: InferFields<TFields> }
-    : never
+  ? TFields extends Record<string, SettingsNode<any>>
+  ? { kind: 'group'; fields: InferFields<TFields> }
+  : never
   : TNode extends ToggleSeed<infer TScope>
-    ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
-    : TNode extends SelectSeed<infer TScope>
-      ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
-      : TNode extends RangeSeed<infer TScope>
-        ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
-        : TNode;
+  ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
+  : TNode extends SelectSeed<infer TScope>
+  ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
+  : TNode extends RangeSeed<infer TScope>
+  ? Omit<TNode, 'key'> & { key: Extract<TName, ConfigKey<TScope>> }
+  : TNode;
 
 type InferFields<TFields extends Record<string, SettingsNode<any>>> = {
   [K in keyof TFields]: InferNode<K & string, TFields[K]>;
@@ -339,18 +327,18 @@ export type SettingsSchema = typeof settingsSchema;
 type FieldValue<TField> = TField extends { kind: 'toggle' }
   ? boolean
   : TField extends { kind: 'range' }
-    ? number
-    : TField extends { options: Array<{ value: infer TValue }> }
-      ? TValue
-      : never;
+  ? number
+  : TField extends { options: Array<{ value: infer TValue }> }
+  ? TValue
+  : never;
 
 // Recursively extract leaf seeds from raw tab fields using SettingsGroupNode's type
 // parameter directly, avoiding deferred InferNode conditional types
 type FlattenSeeds<T> = {
   [K in keyof T]: T[K] extends SettingsGroupNode<infer F> // If it's a group, recursively flatten its fields
-    ? FlattenSeeds<F>
-    : // If it's a toggle or select seed, convert it to a full field definition with the key
-      Omit<T[K], 'key'> & { key: K & string };
+  ? FlattenSeeds<F>
+  : // If it's a toggle or select seed, convert it to a full field definition with the key
+  Omit<T[K], 'key'> & { key: K & string };
 }[keyof T];
 
 type TabFieldsNodeUnion = {

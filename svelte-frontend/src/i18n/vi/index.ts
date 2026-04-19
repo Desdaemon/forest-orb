@@ -630,6 +630,7 @@ const vi = {
       settings: 'Cài đặt',
       toggleMute: 'Bật/Tắt tiếng',
       toggleHideLocation: 'Bật/Tắt Chia sẻ Địa điểm',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Bật/Tắt Chế độ Chat Chung',
       chat: {
         toggleNextLocation: 'Hiện/Ẩn Địa điểm kế tiếp trong Thám hiểm',

@@ -625,6 +625,7 @@ const zh = {
       settings: '设置',
       toggleMute: '静音',
       toggleHideLocation: '开启/关闭位置共享',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: '开启/关闭公屏聊天',
       chat: {
         toggleNextLocation: '显示/隐藏 远征导航',

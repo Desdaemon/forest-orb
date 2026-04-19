@@ -629,6 +629,7 @@ const pt = {
       settings: 'Configurações',
       toggleMute: 'Alternar o Modo Mudo',
       toggleHideLocation: 'Alternar Compartilhamento de Localização',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Alternar Mensagens do Chat Global ',
       chat: {
         toggleNextLocation: 'Mostrar/Ocultar Proxima Localização da Expedição',

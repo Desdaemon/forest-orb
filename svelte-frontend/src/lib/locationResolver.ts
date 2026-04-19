@@ -93,7 +93,7 @@ function decodePrevLocations(prevLocationsStr?: string, prevMapId?: string): Leg
       .filter(Boolean)
       .map((title) => ({ title }));
     return locations.length ? locations : null;
-  } catch (_err) {
+  } catch {
     return null;
   }
 }
@@ -206,7 +206,7 @@ async function queryAndSet2kkiLocation(
           (candidate) => candidate.title && connectedNames.includes(candidate.title)
         );
         return [...locations, ...connectedLocations];
-      } catch (_err) {
+      } catch {
         return locations.length ? locations : null;
       }
     }
@@ -247,7 +247,7 @@ async function getOrQuery2kkiLocations(
     }
 
     return locations;
-  } catch (_err) {
+  } catch {
     return null;
   }
 }
@@ -259,10 +259,6 @@ function query2kkiLocations(
 ): Promise<Legacy2kkiLocation[] | null> {
   const prevLocations = decodePrevLocations(prevLocationsStr, prevMapId);
   return getOrQuery2kkiLocations(mapId, prevMapId === '0000' ? null : prevMapId, prevLocations);
-}
-
-function logResolvedMapName(mapId: string, prevMapId: string, mapName: string, source: string): void {
-  // console.info(`[locationResolver:${source}] mapId=${mapId} prevMapId=${prevMapId} -> ${mapName}`);
 }
 
 function toAltMapIds(mapId: string): string[] {
@@ -462,7 +458,7 @@ async function loadLocationState(gameId: string, lang: string): Promise<Location
       localizedMapLocations,
       sourcePath: localizedRes.path
     };
-  } catch (_err) {
+  } catch {
     return {
       urlRoot,
       mapLocations: baseMapLocations,
@@ -516,7 +512,6 @@ export const locationResolver = {
           const first = filtered[0];
           const path = first?.urlTitle || toWikiPath(first?.title || '');
           const url = buildLocationUrl('https://yume.wiki/2kki/', path);
-          logResolvedMapName(mapId, prevMapId, resolved, '2kki');
           return { name: resolved, url };
         }
       } catch (err) {
@@ -536,7 +531,6 @@ export const locationResolver = {
         const first = resolvedLocations[0];
         const path = first?.urlTitle || toWikiPath(first?.title || '');
         const url = buildLocationUrl(urlRoot, path);
-        logResolvedMapName(mapId, prevMapId, resolved, 'config');
         return { name: resolved, url };
       }
     } catch (err) {
@@ -544,7 +538,6 @@ export const locationResolver = {
     }
 
     const fallback = `Unknown Location (MAP${mapId})`;
-    logResolvedMapName(mapId, prevMapId, fallback, 'fallback');
     return { name: fallback, url: null };
   },
   async resolveCurrentLocationName(input: ResolveLocationInput): Promise<string> {

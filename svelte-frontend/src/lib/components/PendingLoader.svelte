@@ -55,19 +55,26 @@
     }
 
     const el = loaderRef!;
+    let rafId: number | null = null;
     const updateSize = () => {
-      containerWidth = el.offsetWidth;
-      containerHeight = el.offsetHeight;
+      requestAnimationFrame(() => {
+        containerWidth = el.offsetWidth;
+        containerHeight = el.offsetHeight;
+      });
     };
 
     updateSize();
 
     const ro = new ResizeObserver(() => {
-      updateSize();
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateSize);
     });
     ro.observe(el);
 
-    return () => ro.disconnect();
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      ro.disconnect();
+    };
   });
 </script>
 

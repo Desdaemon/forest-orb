@@ -253,7 +253,7 @@
 {#snippet svgGradient(systemName: string, systemGameId: string, colors: GradientStop[], alt: boolean)}
   {@const id = `${alt ? 'alt' : 'base'}Gradient_${systemGameId !== gameId ? `${systemGameId}_` : ''}${systemName.replace(/[ ()]/g, '_')}`}
   <linearGradient xmlns="http://www.w3.org/2000/svg" {id} x1="0%" y1="0%" x2="0%" y2="100%">
-    {#each colors as stop}
+    {#each colors as stop, i (i)}
       <stop stop-color={rgbString(stop.color)} offset="{stop.offset}%" />
     {/each}
   </linearGradient>

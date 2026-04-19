@@ -7,9 +7,10 @@ import {
   type AllConfigKeys
 } from '../play';
 import type { GlobalConfig, GlobalToggles, UserConfig, UserToggles } from '../config';
+import type { GameId } from '$lib/allGameUiThemes';
 
 // A hook receives the raw stored value (or `undefined` if the key was absent) and the game id.
-export type ConfigHook = (value: unknown, gameId: string) => void | Promise<void>;
+export type ConfigHook = (value: unknown, gameId: GameId) => void | Promise<void>;
 
 const _hooks = new Map<string, Set<ConfigHook>>();
 let _gameId = '';
@@ -25,7 +26,7 @@ export const globalConfig = writable<GlobalConfig>({ ...defaultGlobalConfig });
 export const userConfig = writable<UserConfig>({ ...defaultUserConfig });
 
 /** Load config from localStorage into the stores and run all registered hooks. */
-export async function initConfig(gameId: string): Promise<void> {
+export async function initConfig(gameId: GameId): Promise<void> {
   _gameId = gameId;
   const stored: Record<string, unknown> = loadConfigFromStorage(gameId) ?? {};
 
@@ -92,8 +93,8 @@ export function setConfigValue(key: string, value: unknown): void {
 function _runHook(key: string, value: unknown): void {
   const hooks = _hooks.get(key);
   if (!hooks?.size) return;
+  console.log(`running ${hooks.size} config hook(s)`, { key, value });
   for (const hook of hooks) {
-    console.log('running config hook', { key, value });
     try {
       const result = hook(value, _gameId);
       if (result instanceof Promise) {

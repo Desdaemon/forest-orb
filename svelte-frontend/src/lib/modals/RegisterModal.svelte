@@ -72,7 +72,7 @@
             bind:value={confirmPassword}
           />
         </li>
-        <li id="registerErrorRow" class="formControlRow" class:hidden={!error}>
+        <li id="registerErrorRow" class={['formControlRow', { hidden: !error }]}>
           <p id="registerError">{error}</p>
         </li>
       </ul>

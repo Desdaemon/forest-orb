@@ -55,10 +55,12 @@ export const defaultUserConfig = {
   hideGlobalMessageLocations: false,
   filterMentions: false,
   trackedLocationId: null,
+  pushNotifications: true,
 
   badgeHints: false,
   playBadgeHintSound: false,
   questionablePreloads: false,
+  uiTheme: 'auto',
 
   // 2kki only
   last2kkiVersion: null,
@@ -112,7 +114,7 @@ type EasyRpgPlayerApi = {
 type EasyRpgPlayer = {
   initialized: boolean;
   game: string;
-  saveFs: any;
+  saveFs: unknown;
   wsUrl: string;
   /** Initialized by {@linkcode initEasyRpgEngine} */
   api?: EasyRpgPlayerApi;
@@ -123,10 +125,10 @@ type EasyRpgPlayer = {
 type EasyRpgPlayerApiFuncs = keyof EasyRpgPlayerApi;
 
 const rawEasyRpgModule: any = { __proxy: true };
-export let easyrpgPlayer: EasyRpgPlayer = new Proxy(rawEasyRpgModule, {
+export const easyrpgPlayer: EasyRpgPlayer = new Proxy(rawEasyRpgModule, {
   get(raw, prop) {
     if (prop in raw) return raw[prop];
-    return (...args: any[]) => {
+    return (...args: unknown[]) => {
       easyrpgPlayerLoadFuncs.push(() => {
         try {
           (raw.api[prop] || raw[prop])(...args);

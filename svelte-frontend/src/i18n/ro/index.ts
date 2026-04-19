@@ -629,6 +629,7 @@ const ro = {
       settings: 'Setări',
       toggleMute: 'Comută Mute-ul',
       toggleHideLocation: 'Comută Partajarea Locației',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Comută Vorbitul pe Chat Global',
       chat: {
         toggleNextLocation: 'Arată/Ascunde Locația Următoarei Expediții',

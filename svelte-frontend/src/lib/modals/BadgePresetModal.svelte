@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { modal, type ModalId } from '$lib/stores/modal';
+  import { modal } from '$lib/stores/modal';
   import { apiFetch } from '$lib/api';
   import { LL } from '$lib';
   import Modal from '$lib/components/Modal.svelte';
@@ -56,7 +56,7 @@
       <div class="formControlRow">
         <label for="badgePresetSelection">Select Preset</label>
         <select id="badgePresetSelection" bind:value={selectedPreset} onchange={fetchPreset}>
-          {#each [0, 1, 2] as preset}
+          {#each [0, 1, 2] as preset, i (i)}
             <option value={preset}>{$LL.ui.modal.badgePreset.presetName(preset + 1)}</option>
           {/each}
         </select>
@@ -71,9 +71,9 @@
       <div class="error">{error}</div>
     {:else}
       <div class="badgeGrid">
-        {#each presetData as row, r}
+        {#each presetData as row, r (r)}
           <div class="badgeRow">
-            {#each row as badgeId, c}
+            {#each row as badgeId, c (c)}
               <div class="badgeSlot" data-row={r} data-col={c}>
                 {#if badgeId !== 'null'}
                   <img src="/images/badge/{badgeId}.png" alt={badgeId} />

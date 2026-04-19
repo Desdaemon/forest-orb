@@ -629,6 +629,7 @@ const fr = {
       settings: 'Paramètres',
       toggleMute: 'Mettre en muet',
       toggleHideLocation: 'Activer le partage de la localisation',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Activer le Tchat Global',
       chat: {
         toggleNextLocation: 'Montrer/Cacher le Lieu de la prochaine expédition',

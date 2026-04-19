@@ -1,40 +1,17 @@
 <script lang="ts">
   import { LL } from '$lib';
-  import { onDestroy } from 'svelte';
-  import { modal } from '$lib/stores/modal';
-  import { allGameUiThemes, allGameFullBgUiThemes, getGameFontStyleIndices, type GameId } from '$lib/allGameUiThemes';
-  import { selectedUiTheme, selectedFontStyle, currentSystemName, setFontStyle } from '$lib/stores/uiTheme';
+  import { allGameUiThemes, allGameFullBgUiThemes, getGameFontStyleIndices } from '$lib/allGameUiThemes';
+  import { selectedFontStyle, currentSystemName, setFontStyle } from '$lib/stores/uiTheme';
   import Modal from '$lib/components/Modal.svelte';
-  import { globalConfig, setUserSetting, toggleGlobal } from '$lib/stores/config';
+  import { globalConfig, setUserSetting, toggleGlobal, userConfig } from '$lib/stores/config';
+  import { modal } from '$lib/stores/modal';
+  import { getGameId } from '$lib/init';
 
-  let modalData = $state<Record<string, any>>({});
-  const unsubscribeModal = modal.subscribe((state) => {
-    if (state.activeModal === 'uiThemesModal') {
-      modalData = state.modalData ?? {};
-    }
-  });
-  onDestroy(unsubscribeModal);
+  const { gameId = getGameId(), pickerMode = true, pickerTheme: pickerThemeSeed = 'auto' }: App.UiThemeModalData = $props();
 
-  let gameId = $derived<GameId>(modalData.gameId ?? '2kki');
-  let themes = $derived<readonly string[]>(allGameUiThemes[gameId] ?? []);
+  // svelte-ignore state_referenced_locally: gameId is static
+  let themes = allGameUiThemes[gameId];
   let fontStyleIndices = $derived(getGameFontStyleIndices(gameId));
-
-  let currentTheme = $state<string | null>(null);
-  let currentFontStyle = $state<number>(0);
-  let systemName = $state<string | null>(null);
-
-  const unsubTheme = selectedUiTheme.subscribe((t) => {
-    currentTheme = t;
-  });
-  const unsubFontStyle = selectedFontStyle.subscribe((f) => {
-    currentFontStyle = f;
-  });
-  const unsubSystemName = currentSystemName.subscribe((n) => {
-    systemName = n;
-  });
-  onDestroy(unsubTheme);
-  onDestroy(unsubFontStyle);
-  onDestroy(unsubSystemName);
 
   function getFontStyleLabel(index: number) {
     switch (index) {
@@ -57,31 +34,45 @@
     }
   }
 
-  let autoPreview = $derived(systemName ?? themes[0] ?? '');
-  let autoIsFullBg = $derived((allGameFullBgUiThemes[gameId] ?? []).includes(autoPreview));
-  let autoIsSelected = $derived(currentTheme === 'auto');
+  let pickerTheme = $derived(pickerThemeSeed);
+  let autoPreview = $derived(pickerMode ? pickerTheme : $currentSystemName || themes[0] || '');
+  let autoIsFullBg = $derived(allGameFullBgUiThemes[gameId].includes(autoPreview));
+  const userSelectedTheme = $derived(pickerMode ? pickerTheme : $userConfig.uiTheme);
+  let autoIsSelected = $derived(userSelectedTheme === 'auto');
 
   function handleSelect(uiTheme: string) {
-    setUserSetting('uiTheme', uiTheme);
+    if (pickerMode) {
+      pickerTheme = uiTheme;
+    } else {
+      setUserSetting('uiTheme', uiTheme);
+    }
   }
 
-  function handleFontStyleChange(e: Event) {
-    const val = parseInt((e.target as HTMLSelectElement).value, 10);
-    setFontStyle(gameId, val);
+  function willCloseModal() {
+    if (pickerMode) {
+      modal.close('uiThemesModal', pickerTheme);
+    } else {
+      modal.close();
+    }
   }
 </script>
 
-<Modal fullscreen id="uiThemesModal" aria-label="UI Themes" class="uiThemesModal">
+<Modal
+  fullscreen
+  id="uiThemesModal"
+  aria-label={$LL.ui.modal.uiTheme.title()}
+  class="uiThemesModal"
+  onclose={willCloseModal}
+>
   <div class="modalHeader">
     <h1 class="modalTitle">{$LL.ui.modal.uiTheme.title()}</h1>
   </div>
   <div class="modalContent itemContainer">
     <div class="uiThemeItem item auto unselectable">
-      <span class="unselectable">AUTO</span>
-      <div class="uiThemeContainer" class:selected={autoIsSelected}>
+      <span class="unselectable">{$LL.ui.modal.uiTheme.auto()}</span>
+      <div class={['uiThemeContainer', { selected: autoIsSelected }]}>
         <div
-          class="uiTheme"
-          class:fullBg={autoIsFullBg}
+          class={['uiTheme', { fullBg: autoIsFullBg }]}
           data-ui-theme="auto"
           style:background-image="url('/images/ui/{gameId}/{autoPreview}/containerbg.png')"
           style:border-image="url('/images/ui/{gameId}/{autoPreview}/border.png') 10 repeat"
@@ -98,13 +89,12 @@
       </div>
     </div>
     {#each themes as uiTheme (uiTheme)}
-      {@const isFullBg = (allGameFullBgUiThemes[gameId] ?? []).includes(uiTheme)}
-      {@const isSelected = uiTheme === currentTheme}
+      {@const isFullBg = allGameFullBgUiThemes[gameId].includes(uiTheme)}
+      {@const isSelected = uiTheme === userSelectedTheme}
       <div class="uiThemeItem item unselectable">
-        <div class="uiThemeContainer" class:selected={isSelected}>
+        <div class={['uiThemeContainer', { selected: isSelected }]}>
           <div
-            class="uiTheme"
-            class:fullBg={isFullBg}
+            class={['uiTheme', { fullBg: isFullBg }]}
             data-ui-theme={uiTheme}
             style:background-image="url('/images/ui/{gameId}/{uiTheme}/containerbg.png')"
             style:border-image="url('/images/ui/{gameId}/{uiTheme}/border.png') 10 repeat"
@@ -125,8 +115,13 @@
   <div class="modalFooter grid">
     <div class="col-6 col-sm-12">
       <label for="fontStyle" class="unselectable">{$LL.ui.fontStyle.label()}</label>
-      <select id="fontStyle" class="fontStyle" value={currentFontStyle} onchange={handleFontStyleChange}>
-        {#each fontStyleIndices as idx}
+      <select
+        id="fontStyle"
+        class="fontStyle"
+        value={$selectedFontStyle}
+        onchange={(ev) => setFontStyle(gameId, +ev.currentTarget.value)}
+      >
+        {#each fontStyleIndices as idx (idx)}
           <option value={idx}>{getFontStyleLabel(idx)}</option>
         {/each}
       </select>
@@ -179,9 +174,6 @@
     }
   }
 
-  #chat {
-    position: relative;
-  }
   .toggleRow {
     display: flex;
     align-items: center;

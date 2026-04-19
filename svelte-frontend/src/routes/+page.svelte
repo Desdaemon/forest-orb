@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { getInfo, getSaveSyncTimestamp, type UserInfo } from '$lib/api';
   import { getInitPayload, inferGameId, inferGameName, gameNameMap, isBrowser } from '$lib/init';
-  import { setPlayerName, initEasyRpgEngine } from '$lib/play';
+  import { initEasyRpgEngine } from '$lib/play';
   import Header from '$lib/components/Header.svelte';
   import Controls from '$lib/components/Controls.svelte';
   import CanvasArea from '$lib/components/CanvasArea.svelte';
@@ -10,15 +10,18 @@
   import ThemeContainer from '$lib/components/ThemeContainer.svelte';
   import ModalContainer from '$lib/components/ModalContainer.svelte';
   import PendingLoader from '$lib/components/PendingLoader.svelte';
-  import { modal, type ModalId } from '$lib/stores/modal';
+  import { modal } from '$lib/stores/modal';
   import { addLoader, loaderActive, removeLoader } from '$lib/stores/pendingLoader';
   import '$lib/config';
   import { initConfig } from '$lib/stores/config';
-  import Tooltip from '$lib/components/Tooltip.svelte';
+
+  import ToastContainer from '$lib/components/ToastContainer.svelte';
+  import { initPushNotifications } from '$lib/pushNotifications';
+  import { toast } from '$lib/stores/toast';
+  import { onResize, updateCanvasFullscreenSize } from '$lib/canvasResize';
 
   let info: UserInfo | null = $state(null);
   let loading = $state(true);
-  let playerName = $state('');
   const loadingOverlayActive = loaderActive('loadingOverlay');
 
   // --- Login Modal State and Handlers ---
@@ -69,6 +72,14 @@
   onMount(async () => {
     if (!isBrowser) return;
 
+    // Expose modal store globally for testing/debugging
+    (window as any).__svelte_modal = modal;
+
+    window.addEventListener('error', (event) => {
+      if (event.error?.message?.includes('side-effect in debug-evaluate') && event.defaultPrevented) return;
+      toast.system(`error: ${event.error?.message || event.message || event.error}`);
+    });
+
     addLoader('loadingOverlay');
     const urlGame = new URLSearchParams(window.location.search).get('game');
     if (urlGame && urlGame in gameNameMap) {
@@ -79,9 +90,17 @@
       await initConfig(gameId);
       await initEasyRpgEngine();
       await loadData();
+      initPushNotifications((message, icon, persist) => toast.show(message, icon, persist));
     } finally {
       removeLoader('loadingOverlay');
     }
+
+    window.onresize = function () {
+      setTimeout(onResize, 0);
+    };
+    document.addEventListener('fullscreenchange', updateCanvasFullscreenSize);
+
+    setTimeout(onResize, 0);
   });
 
   function onToggleChat() {
@@ -97,7 +116,7 @@
 
 <ThemeContainer {gameId}>
   <div id="root-wrapper" role="presentation">
-    <div id="loadingOverlay" class:loaded={!$loadingOverlayActive} role="presentation">
+    <div id="loadingOverlay" class={[{ loaded: !$loadingOverlayActive }]} role="presentation">
       <PendingLoader visible={$loadingOverlayActive} text="Loading..." />
     </div>
     <div id="background" role="presentation"></div>
@@ -114,10 +133,10 @@
             </div>
           </div>
           <ChatBox show={chatboxVisible} />
-          <Tooltip />
         </div>
       </div>
     </ModalContainer>
+    <ToastContainer />
   </div>
 </ThemeContainer>
 

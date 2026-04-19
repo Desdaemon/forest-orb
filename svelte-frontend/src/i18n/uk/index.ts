@@ -628,6 +628,7 @@ const uk = {
       settings: 'Налаштування',
       toggleMute: 'Увімкнути/вимкнути звук',
       toggleHideLocation: 'Увімкнути/вимкнути показ вашого місцезнаходження',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Увімкнути/вимкнути глобальні повідомлення',
       chat: {
         toggleNextLocation: 'Показати/сховати наступну локацію навігатора',

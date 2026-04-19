@@ -3,25 +3,8 @@
   import { onMount, tick } from 'svelte';
   import { modal } from '$lib/stores/modal';
   import { selectedBadge } from '$lib/stores/badge';
-  import { apiFetch } from '$lib/api';
   import Modal from '$lib/components/Modal.svelte';
-  import BadgeItem from '$lib/components/BadgeItem.svelte';
-
-  type Badge = {
-    badgeId: string;
-    game: string;
-    group?: string;
-    mapId?: number | string;
-    mapX?: number;
-    mapY?: number;
-    art?: string;
-    tags?: string[];
-    bp?: number;
-    percent?: number;
-    unlocked?: boolean;
-    secret?: boolean;
-    hidden?: boolean;
-  };
+  import BadgeItem, { type Badge } from '$lib/components/BadgeItem.svelte';
 
   let filteredBadges = $state<Badge[]>([]);
   let loading = $state(true);
@@ -83,7 +66,7 @@
       // if (!response.ok) throw new Error('badge meta not available');
       // const data = (await response.json()) as Badge[];
       // badges = data.filter((b) => !b.hidden);
-      games = Array.from(new Set(badges.map((b) => b.game).filter(Boolean))).sort();
+      games = Array.from(new Set(badges.map((b) => b.game).filter((g): g is string => !!g))).sort();
       const groupMap: Record<string, Set<string>> = {};
       for (const badge of badges) {
         const game = badge.game || 'unknown';
@@ -93,8 +76,8 @@
       }
       groupsByGame = Object.fromEntries(Object.entries(groupMap).map(([game, set]) => [game, Array.from(set).sort()]));
       updateFiltered();
-    } catch (e) {
-      error = e instanceof Error ? e.message : $LL.ui.modal.badges.error.loadFailed();
+    } catch (error) {
+      console.error({ error });
     }
   });
 
@@ -102,9 +85,15 @@
     if (!scrollContainer) return;
 
     let cancelled = false;
+    let rafId: number | null = null;
     const element = scrollContainer;
     const resizeObserver = new ResizeObserver(() => {
-      if (!cancelled) setContainerSize();
+      if (!cancelled) {
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          if (!cancelled) setContainerSize();
+        });
+      }
     });
 
     resizeObserver.observe(element);
@@ -115,6 +104,7 @@
 
     return () => {
       cancelled = true;
+      if (rafId !== null) cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
     };
   });
@@ -280,12 +270,12 @@
 
   async function setBadge(badge: Badge) {
     try {
-      await apiFetch('/badge?command=set&id=' + encodeURIComponent(badge.badgeId), { method: 'POST' });
+      // await apiFetch('/badge?command=set&id=' + encodeURIComponent(badge.badgeId), { method: 'POST' });
       selectedBadge.set(badge);
       modal.close();
     } catch (err) {
       console.error('set badge failed', err);
-      error = $LL.ui.modal.badges.error.setFailed();
+      // error = $LL.ui.modal.badges.error.setFailed();
     }
   }
 </script>
@@ -308,15 +298,15 @@
         <label for="badgeSortOrder" class="unselectable">{@html $LL.ui.modal.badges.fields.sortOrder.label()}</label>
         <select id="badgeSortOrder" bind:value={sortOrder} onchange={updateFiltered}>
           <option value="badgeId">{$LL.ui.modal.badges.fields.sortOrder.values.default()}</option>
-          <option value="bp">{$LL.ui.modal.badges.fields.sortOrder.values.bp()}</option>
-          <option value="percent">{$LL.ui.modal.badges.fields.sortOrder.values.percent()}</option>
+          <option value="bp">{$LL.messages.badges.sortOrder.types.bp()}</option>
+          <option value="percent">{$LL.messages.badges.sortOrder.types.percent()}</option>
         </select>
       </div>
       <div class="badgeSearchRow">
         <div class="badgeSearchControl">
           <input
             id="badgeSearch"
-            class:activeSearch={!!normalizedSearchTerm.value}
+            class={['', { activeSearch: !!normalizedSearchTerm.value }]}
             type="text"
             autocomplete="off"
             placeholder={searchMode === 'location'
@@ -342,11 +332,10 @@
           {/if}
           {#if showSearchOptions && searchTerm.trim()}
             <div class="badgeSearchDropdown">
-              {#each ['name', 'location', 'artist'] as mode}
+              {#each ['name', 'location', 'artist'] as mode (mode)}
                 <button
                   type="button"
-                  class="badgeSearchOption"
-                  class:active={searchMode === mode}
+                  class={['badgeSearchOption', { active: searchMode === mode }]}
                   onmousedown={(event) => event.preventDefault()}
                   onclick={() => applySearchMode(mode as 'name' | 'location' | 'artist')}
                 >
@@ -363,23 +352,23 @@
   </div>
 
   <div id="badgeGameTabs" class="modalTabsContainer">
-    <button type="button" class="modalTab" class:active={selectedGame === 'all'} onclick={() => selectGame('all')}>
+    <button type="button" class={['modalTab', { active: selectedGame === 'all' }]} onclick={() => selectGame('all')}>
       <span class="modalTabLabel unselectable">All</span>
     </button>
-    {#each games as game}
-      <button type="button" class="modalTab" class:active={selectedGame === game} onclick={() => selectGame(game)}>
+    {#each games as game (game)}
+      <button type="button" class={['modalTab', { active: selectedGame === game }]} onclick={() => selectGame(game)}>
         <span class="modalTabLabel unselectable">{game}</span>
       </button>
     {/each}
   </div>
 
   <div id="badgeCategoryTabs" class="subTabs">
-    <button type="button" class="subTab" class:active={selectedGroup === 'all'} onclick={() => selectGroup('all')}>
+    <button type="button" class={['subTab', { active: selectedGroup === 'all' }]} onclick={() => selectGroup('all')}>
       <small class="badgeCategoryTabLabel subTabLabel infoLabel unselectable">All</small>
       <div class="subTabBg"></div>
     </button>
     {#each currentGroups as group (group)}
-      <button type="button" class="subTab" class:active={selectedGroup === group} onclick={() => selectGroup(group)}>
+      <button type="button" class={['subTab', { active: selectedGroup === group }]} onclick={() => selectGroup(group)}>
         <small class="badgeCategoryTabLabel subTabLabel infoLabel unselectable">{group}</small>
         <div class="subTabBg"></div>
       </button>

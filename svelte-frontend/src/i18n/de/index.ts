@@ -628,6 +628,7 @@ const de = {
       settings: 'Einstellungen',
       toggleMute: 'Mute togglen',
       toggleHideLocation: 'Standortübermittlung togglen',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Globaler Chat Nachrichten',
       chat: {
         toggleNextLocation: 'Nächsten Expeditionsstandort anzeigen/ausblenden',

@@ -628,6 +628,7 @@ const tr = {
       settings: 'Ayarlar',
       toggleMute: 'Susturmayı Değiştir',
       toggleHideLocation: 'Lokasyon Paylaşımını Aç/Kapa',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'Küresel Sohbet Mesajlaşmasını Değiştir',
       chat: {
         toggleNextLocation: 'Sonraki Seyahat Konumunu Göster/Sakla',

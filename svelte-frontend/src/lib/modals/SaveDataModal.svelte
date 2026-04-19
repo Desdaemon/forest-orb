@@ -1,7 +1,12 @@
 <script lang="ts">
   import { LL } from '$lib';
   import Modal from '$lib/components/Modal.svelte';
+  import { tooltip } from '$lib/components/Tooltip.svelte';
   import { getGameInitState } from '$lib/init';
+  import { onMount } from 'svelte';
+  import { modal } from '$lib/stores/modal';
+  import { get } from 'svelte/store';
+  import { globalConfig } from '$lib/stores/config';
 
   type SaveSlotData = {
     timestamp: Date;
@@ -17,12 +22,20 @@
   // Get the current game ID from the init state
   const { ynoGameId } = getGameInitState();
   let gameId = $state<string>(ynoGameId);
+  let availableGames = $state<string[]>([ynoGameId]);
+
+  // Get available game IDs from IndexedDB
+  async function getAvailableGameIds(): Promise<string[]> {
+    const dbs = await indexedDB.databases();
+    return dbs
+      .map((d) => (d.name ? (/^\/easyrpg\/([^/]+)\/Save$/.exec(d.name) || [])[1] : undefined))
+      .filter((id): id is string => !!id);
+  }
 
   // State
   let slots = $state<SaveSlot[]>([]);
   let reloadNeeded = $state(false);
-
-  const MAIN_GAME_OPTION = $derived(gameId === ynoGameId);
+  let manageOtherClicked = $state(false);
 
   // IndexedDB helpers
   async function getSaveSlotData(gameId: string, slotId: number): Promise<SaveSlotData> {
@@ -119,7 +132,7 @@
           const record = objectStoreRequest.result;
 
           if (!record) {
-            alert($LL.save.download.emptySlot());
+            alert($LL.messages.save.download.emptySlot());
             resolve(false);
             return;
           }
@@ -159,28 +172,28 @@
         return;
       }
 
-      const confirmMessage = $LL.save.delete.confirmDelete().replace('{SLOT_ID}', String(slotId));
+      const confirmMessage = $LL.messages.save.delete.confirmDelete({ SLOT_ID: slotId });
 
-      // Use the ConfirmModal for deletion confirmation
-      // This is a simplified version - in production, you'd use the modal stack
-      if (confirm(confirmMessage)) {
-        const request = indexedDB.open(`/easyrpg/${gameId}/Save`);
+      modal.confirm(
+        confirmMessage,
+        () => {
+          const request = indexedDB.open(`/easyrpg/${gameId}/Save`);
 
-        request.onsuccess = () => {
-          const db = request.result;
-          const transaction = db.transaction(['FILE_DATA'], 'readwrite');
-          const objectStoreDeleteRequest = transaction
-            .objectStore('FILE_DATA')
-            .delete(`/easyrpg/${gameId}/Save/Save${slotId}.lsd`);
+          request.onsuccess = () => {
+            const db = request.result;
+            const transaction = db.transaction(['FILE_DATA'], 'readwrite');
+            const objectStoreDeleteRequest = transaction
+              .objectStore('FILE_DATA')
+              .delete(`/easyrpg/${gameId}/Save/Save${slotId}.lsd`);
 
-          objectStoreDeleteRequest.onsuccess = () => resolve(true);
-          objectStoreDeleteRequest.onerror = () => resolve(false);
-        };
+            objectStoreDeleteRequest.onsuccess = () => resolve(true);
+            objectStoreDeleteRequest.onerror = () => resolve(false);
+          };
 
-        request.onerror = () => resolve(false);
-      } else {
-        resolve(false);
-      }
+          request.onerror = () => resolve(false);
+        },
+        () => resolve(false)
+      );
     });
   }
 
@@ -192,15 +205,11 @@
       const data = await getSaveSlotData(gameId, slot.id);
       slot.data = data;
     } catch (err) {
-      slot.error = $LL.save.slot.errorLabel();
+      slot.error = $LL.messages.save.slot.errorLabel();
       console.error(err);
     } finally {
       slot.loading = false;
     }
-  }
-
-  function formatSlotId(slotId: number): string {
-    return slotId < 10 ? `0${slotId}` : slotId.toString();
   }
 
   function handleUpload(slot: SaveSlot, event: Event) {
@@ -245,8 +254,29 @@
     }
   }
 
+  function handleManageOther() {
+    manageOtherClicked = true;
+  }
+
+  function handleGameSelect() {
+    slots = Array.from({ length: 15 }, (_, i) => ({
+      id: i + 1,
+      data: null,
+      loading: true,
+      error: null
+    }));
+    slots.forEach((slot) => loadSlotData(slot));
+  }
+
+  function handleModalClose() {
+    manageOtherClicked = false;
+    gameId = ynoGameId;
+  }
+
   // Initialize slots on mount
-  $effect(() => {
+  onMount(() => {
+    let modalEl: HTMLDivElement;
+
     slots = Array.from({ length: 15 }, (_, i) => ({
       id: i + 1,
       data: null,
@@ -256,210 +286,189 @@
 
     // Load all slots
     slots.forEach((slot) => loadSlotData(slot));
+
+    // Get available game IDs
+    getAvailableGameIds().then((ids) => {
+      availableGames = [...new Set([ynoGameId, ...ids])];
+    });
+
+    // Listen for modal close to reset state
+    const interval = setInterval(() => {
+      const modalElCandidate = document.querySelector('#saveModal');
+      if (modalElCandidate) {
+        modalEl = modalElCandidate as HTMLDivElement;
+        modalEl.addEventListener('YNO_OUTROEND', handleModalClose);
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => {
+      clearInterval(interval);
+      if (modalEl) {
+        modalEl.removeEventListener('YNO_OUTROEND', handleModalClose);
+      }
+    };
   });
 </script>
 
-<Modal aria-label="Manage Save Data">
-  <h1 data-i18n="[html]modal.save.title">Manage Save Data</h1>
-  <a href="#" class="helpLink iconLink" title={$LL.ui.modal.save.info()}>
-    <div class="helpIcon icon fillIcon invertFillIcon altIcon">
-      <svg viewBox="0 0 18 18">
-        <path
-          d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 90 0 0 0 3.25"
-        />
-      </svg>
-    </div>
-  </a>
-
-  {#each slots as slot (slot.id)}
-    <div class="saveSlotListEntry listEntry" data-slot-id={slot.id}>
-      <span class="label" data-i18n="[html]modal.save.slot.title">
-        File {slot.id}
-      </span>
-
-      <div class="saveSlotListEntryContent">
-        {#if slot.loading}
-          <span class="label" data-i18n="[html]modal.save.slot.readingLabel"> Reading File Data... </span>
-        {:else if slot.error}
-          <span class="label altText" data-i18n="[html]modal.save.slot.errorLabel"> Error </span>
-        {:else if slot.data}
-          <span class="label altText">
-            {$LL.ui.timestamp.time(slot.data.timestamp)()}
-          </span>
-        {:else}
-          <span class="label altText" data-i18n="[html]modal.save.slot.emptyLabel"> Empty </span>
-        {/if}
-
-        <div class="saveSlotButtonsContainer">
-          <input type="file" accept=".lsd" class="saveSlotUploadInput" onchange={(e) => handleUpload(slot, e)} />
-          <button
-            class="saveSlotUploadButton saveSlotButton unselectable iconButton"
-            title={$LL.messages.save.upload.tooltip()}
-            type="button"
-            disabled={slot.loading}
-          >
-            <svg class="icon" viewBox="0 0 18 18">
-              <path
-                d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 90 0 0 0 3.25"
-              />
-            </svg>
-          </button>
-
-          <button
-            class="saveSlotDownloadButton saveSlotButton unselectable iconButton {slot.data ? '' : 'hidden'}"
-            title={$LL.messages.save.download.tooltip()}
-            type="button"
-            onclick={() => handleDownload(slot)}
-            disabled={slot.loading}
-          >
-            <svg class="icon" viewBox="0 0 18 18">
-              <path
-                d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 90 0 0 0 3.25"
-              />
-            </svg>
-          </button>
-
-          <button
-            class="saveSlotDeleteButton saveSlotButton unselectable iconButton {slot.data ? '' : 'hidden'}"
-            title={$LL.messages.save.delete.tooltip()}
-            type="button"
-            onclick={() => handleDelete(slot)}
-            disabled={slot.loading}
-          >
-            <svg class="icon" viewBox="0 0 18 18">
-              <path
-                d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 90 0 0 0 3.25"
-              />
-            </svg>
-          </button>
-        </div>
+<Modal aria-label={$LL.ui.modal.save.title()}>
+  <div class="modalHeader">
+    <h1 class="modalTitle">{$LL.ui.modal.save.title()}</h1>
+    <span class="helpLink iconLink" title={$LL.ui.modal.save.info()}>
+      <div class="helpIcon icon fillIcon invertFillIcon altIcon">
+        <svg viewBox="0 0 18 18">
+          <path
+            d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 90 0 0 0 3.25"
+          />
+        </svg>
       </div>
+    </span>
+  </div>
+
+  <div class="modalContent">
+    <div id="saveSlotList" class="scrollableContainer">
+      {#each slots as slot (slot.id)}
+        <div class="saveSlotListEntry listEntry" data-slot-id={slot.id}>
+          <span class="label">{$LL.messages.save.slot.title({ SLOT_ID: slot.id })}</span>
+
+          <div class="saveSlotListEntryContent">
+            {#if slot.loading}
+              <span class="label">{$LL.messages.save.slot.readingLabel()}</span>
+            {:else if slot.error}
+              <span class="label altText">{$LL.messages.save.slot.errorLabel()}</span>
+            {:else if slot.data}
+              <span class="label altText">
+                {slot.data.timestamp.toLocaleString(get(globalConfig).lang === 'en' ? [] : get(globalConfig).lang, {
+                  dateStyle: 'short',
+                  timeStyle: 'short'
+                })}
+              </span>
+            {:else}
+              <span class="label altText">{$LL.messages.save.slot.emptyLabel()}</span>
+            {/if}
+
+            <div class="saveSlotButtonsContainer">
+              {#snippet uploadTooltip()}
+                {$LL.messages.save.upload.tooltip()}
+              {/snippet}
+              {#snippet downloadTooltip()}
+                {$LL.messages.save.download.tooltip()}
+              {/snippet}
+              {#snippet deleteTooltip()}
+                {$LL.messages.save.delete.tooltip()}
+              {/snippet}
+              <input type="file" accept=".lsd" class="saveSlotUploadInput" onchange={(e) => handleUpload(slot, e)} />
+              <div {@attach tooltip(uploadTooltip)}>
+                <button
+                  class="saveSlotUploadButton saveSlotButton unselectable iconButton"
+                  type="button"
+                  disabled={slot.loading}
+                  onclick={() => {
+                    const input = document.querySelector(
+                      `.saveSlotListEntry[data-slot-id="${slot.id}"] .saveSlotUploadInput`
+                    ) as HTMLInputElement;
+                    if (input) input.click();
+                  }}
+                >
+                  <svg class="icon" viewBox="0 0 18 18">
+                    <path
+                      d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 0.25 90 0 0 0 3.25"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {#if slot.data}
+                <div {@attach tooltip(downloadTooltip)}>
+                  <button
+                    class="saveSlotDownloadButton saveSlotButton unselectable iconButton"
+                    type="button"
+                    onclick={() => handleDownload(slot)}
+                    disabled={slot.loading}
+                  >
+                    <svg class="icon" viewBox="0 0 18 18">
+                      <path
+                        d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 0.25 90 0 0 0 3.25"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div {@attach tooltip(deleteTooltip)}>
+                  <button
+                    class="saveSlotDeleteButton saveSlotButton unselectable iconButton"
+                    type="button"
+                    onclick={() => handleDelete(slot)}
+                    disabled={slot.loading}
+                  >
+                    <svg class="icon" viewBox="0 0 18 18">
+                      <path
+                        d="m9 0a1 1 90 0 0 0 18 1 1 90 0 0 0-18m-1.25 10.25a1 1 90 0 0 0 2.5 0.5q0.25-1 1.25-1.5c0.75-0.5 2.5-1.5 2.5-3.75 0-4-7.75-5.5-9.5-0.5a0.25 0.25 90 0 0 2.75 0.5c0.25-1.75 4-2.25 3.75 0.5 0 1.5-3 2.25-3.25 4.25m1.25 6a0.25 0.25 90 0 0 0-3.25 0.25 0.25 0.25 90 0 0 0 3.25"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              {/if}
+            </div>
+          </div>
+        </div>
+      {/each}
     </div>
-  {/each}
+  </div>
 
-  <button
-    class="saveModalManageOtherButton"
-    type="button"
-    data-i18n="[html]modal.save.manageOther"
-    onclick={() => (window.location.href = '?manage_other_saves=1')}
-  >
-    Manage Different Game&hellip;
-  </button>
+  <div class="modalFooter">
+    <button class="saveModalManageOtherButton" type="button" onclick={handleManageOther}>
+      {$LL.ui.modal.save.manageOther()}
+    </button>
 
-  <select
-    class="gameSelect hidden"
-    bind:value={gameId}
-    onchange={() => {
-      // Reload slots when game changes
-      slots = Array.from({ length: 15 }, (_, i) => ({
-        id: i + 1,
-        data: null,
-        loading: true,
-        error: null
-      }));
-      slots.forEach((slot) => loadSlotData(slot));
-    }}
-  >
-    <option value="2kki">Yume 2kki</option>
-    <option value="amillusion">Amillusion</option>
-    <option value="braingirl">Braingirl</option>
-    <option value="cold">[COLD]</option>
-    <option value="unconscious">Collective Unconscious</option>
-    <option value="deepdreams">Deep Dreams</option>
-    <option value="flow">.flow</option>
-    <option value="fog">FOG</option>
-    <option value="genie">Dream Genie</option>
-    <option value="if">If</option>
-    <option value="loveyou">Love You</option>
-    <option value="mikan">Mikan Muzou</option>
-    <option value="muma">Muma Rope</option>
-    <option value="nostalgic">nostAlgic</option>
-    <option value="oneshot">OneShot</option>
-    <option value="oversomnia">Oversomnia</option>
-    <option value="prayers">Answered Prayers</option>
-    <option value="sheawaits">She Awaits</option>
-    <option value="someday">Someday</option>
-    <option value="tsushin">Yume Tsushin</option>
-    <option value="ultraviolet">Ultra Violet</option>
-    <option value="unaccomplished">Unaccomplished</option>
-    <option value="unevendream">Uneven Dream</option>
-    <option value="yume">Yume Nikki</option>
-  </select>
+    <select class="gameSelect {manageOtherClicked ? '' : 'hidden'}" bind:value={gameId} onchange={handleGameSelect}>
+      {#each availableGames as game (game)}
+        <option value={game}>{game}</option>
+      {/each}
+    </select>
 
-  <button
-    class="saveModalReloadButton unselectable {reloadNeeded ? '' : 'hidden'}"
-    type="button"
-    data-i18n="[html]modal.save.reload"
-    onclick={() => (window.location = window.location)}
-  >
-    Save Changes and Reload
-  </button>
+    <button
+      class="saveModalReloadButton unselectable {reloadNeeded ? '' : 'hidden'}"
+      type="button"
+      onclick={() => (window.location.href = window.location.href)}
+    >
+      {$LL.ui.modal.save.reload()}
+    </button>
+  </div>
 </Modal>
 
 <style>
-  :global(.saveSlotListEntry) {
+  :global(#saveSlotList) {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    border: 1px solid var(--borderColor);
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-  }
-
-  :global(.saveSlotListEntryContent) {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    flex-wrap: wrap;
   }
 
-  :global(.saveSlotButtonsContainer) {
+  :global(#saveSlotList .saveSlotListEntry) {
+    width: 214px;
+    height: 64px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px;
+  }
+
+  :global(#saveSlotList .saveSlotListEntry .saveSlotListEntryContent) {
+    margin-top: 8px;
+    height: 100%;
+  }
+
+  :global(#saveSlotList .saveSlotListEntry .saveSlotListEntryContent .saveSlotButtonsContainer) {
     display: flex;
-    gap: 0.5rem;
+    margin-top: 8px;
   }
 
-  :global(.saveSlotButton) {
-    padding: 0.5rem;
-    border-radius: 4px;
-    background: var(--buttonBg);
-    border: 1px solid var(--borderColor);
-    cursor: pointer;
-    transition: background 0.2s;
+  :global(#saveSlotList .saveSlotListEntry .saveSlotListEntryContent .saveSlotButtonsContainer .saveSlotButton) {
+    width: 18px;
+    height: 18px;
+    margin-inline-end: 8px;
   }
 
-  :global(.saveSlotButton:hover) {
-    background: var(--buttonHoverBg);
-  }
-
-  :global(.saveSlotUploadInput) {
+  .saveSlotUploadInput {
     display: none;
-  }
-
-  :global(.saveModalManageOtherButton) {
-    margin-right: auto;
-  }
-
-  :global(.gameSelect) {
-    flex: 1;
-    padding: 0.5rem;
-    border: 1px solid var(--borderColor);
-    border-radius: 4px;
-    background: var(--inputBg);
-    color: var(--textColor);
-  }
-
-  :global(.saveModalReloadButton) {
-    margin-left: auto;
-    padding: 0.75rem 1.5rem;
-    background: var(--primaryColor);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  :global(.saveModalReloadButton:hover) {
-    background: var(--primaryHoverColor);
   }
 </style>

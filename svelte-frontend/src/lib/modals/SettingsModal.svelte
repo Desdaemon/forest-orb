@@ -23,6 +23,7 @@
 
 <script lang="ts">
   import { LL } from '$lib';
+  import { modal } from '$lib/stores/modal';
   import Modal from '$lib/components/Modal.svelte';
   import { globalConfig, userConfig, setGlobalSetting, setUserSetting, setConfigValue } from '$lib/stores/config';
   import {
@@ -119,12 +120,11 @@
   <div class="modalHeader">
     <h1 class="modalTitle">{$LL.ui.modal.settings.title()}</h1>
     <div class="modalTabsContainer settingsTabs" role="tablist" aria-label="Settings Tabs">
-      {#each settingsTabs as tab}
+      {#each settingsTabs as tab (tab.id)}
         <button
           type="button"
-          class="modalTab"
+          class={['modalTab', { active: activeTab === tab.id }]}
           role="tab"
-          class:active={activeTab === tab.id}
           onclick={() => (activeTab = tab.id)}
         >
           <small class="modalTabLabel unselectable" role="presentation">{tab.label($LL)}</small>
@@ -134,10 +134,10 @@
   </div>
   <div class="modalContent">
     <ul class="formControls" hidden={activeTab === 'cache' || activeTab === 'account'}>
-      <li class="formControlRow" class:hidden={activeTab !== 'general'}>
+      <li class={['formControlRow', { hidden: activeTab !== 'general' }]}>
         <label for="lang">{$LL.ui.modal.settings.fields.lang()}</label>
         <select id="lang" name="lang" value={$locale} onchange={onLanguageChange}>
-          {#each Object.entries(languageNames) as [locale, name]}
+          {#each Object.entries(languageNames) as [locale, name] (locale)}
             <option value={locale}>{name}</option>
           {/each}
         </select>
@@ -185,9 +185,10 @@
                 name={field.name}
                 aria-checked={Boolean(getFieldValue(field))}
                 aria-label={field.ariaLabel ? field.ariaLabel($LL) : field.label($LL)}
-                class="checkboxButton unselectable"
-                class:inverseToggle={field.invert}
-                class:toggled={Boolean(getFieldValue(field))}
+                class={[
+                  'checkboxButton unselectable',
+                  { inverseToggle: field.invert, toggled: Boolean(getFieldValue(field)) }
+                ]}
               >
                 <span role="presentation"></span>
               </button>
@@ -212,7 +213,7 @@
                 size={field.size}
                 onchange={(event) => onSelectFieldChange(field, event)}
               >
-                {#each field.options as option}
+                {#each field.options as option (option.value)}
                   <option value={String(option.value)}>{option.label($LL)}</option>
                 {/each}
               </select>
@@ -266,9 +267,11 @@
       <div class="itemContainer">
         <ul class="formControls">
           <li class="formControlRow">
-            <span class="unselectable">Blocked Players</span>
+            <span class="unselectable">{$LL.ui.modal.blocklist.title()}</span>
             <div>
-              <span class="infoLabel">Blocklist management is coming with account API wiring.</span>
+              <button type="button" class="unselectable" onclick={() => modal.open('blocklistModal')}>
+                {$LL.ui.modal.blocklist.title()}
+              </button>
             </div>
           </li>
           <li class="formControlRow">

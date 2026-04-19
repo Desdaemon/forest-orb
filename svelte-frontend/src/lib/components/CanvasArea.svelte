@@ -34,7 +34,7 @@
   <span id="locationDisplayLabelOverlay"></span>
 </div>
 
-<div id="dpad" class="unselectable" class:hidden={!hasTouchscreen}>
+<div id="dpad" class={['unselectable', { hidden: !hasTouchscreen }]}>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" class="baseColorFill">
     <path
       id="dpad-up"
@@ -64,12 +64,12 @@
   </svg>
 </div>
 
-<div id="apad" class="unselectable" class:hidden={!hasTouchscreen}>
+<div id="apad" class={['unselectable', { hidden: !hasTouchscreen }]}>
   <div id="apad-escape" class="baseColorBg apadCircBtn apadBtn" data-key="Escape" data-key-code="27"></div>
   <div id="apad-enter" class="baseColorBg apadCircBtn apadBtn" data-key="Enter" data-key-code="13"></div>
 </div>
 
-<div id="joystick" class="unselectable" class:hidden={!hasTouchscreen}>
+<div id="joystick" class={['unselectable', { hidden: !hasTouchscreen }]}>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" class="baseColorFill hidden" data-style="joystick">
     <defs>
       <mask id="joystickInset">

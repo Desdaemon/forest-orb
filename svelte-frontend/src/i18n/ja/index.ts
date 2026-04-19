@@ -629,6 +629,7 @@ const ja = {
       settings: '設定',
       toggleMute: '消音のオン／オフ',
       toggleHideLocation: '場所の共有のオン／オフ',
+      badgeHint: 'Search for badges at this location',
       toggleGlobalMessage: 'グローバルメッセージのオン／オフ',
       chat: {
         toggleNextLocation: '次のラリーの場所表示のオン／オフ',
