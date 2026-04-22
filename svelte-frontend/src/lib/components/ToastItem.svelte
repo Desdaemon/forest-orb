@@ -19,15 +19,17 @@
 		scheduleClose(): void;
 	}
 
-	let oncloseTimer: any;
 	let fade = $state(false);
 
 	let props: ToastProps = $props();
-	let element: any;
+	let element: HTMLDivElement;
 
 	function scheduleClose() {
 		fade = true;
-		setTimeout(props.onclose, 1000);
+		setTimeout(() => {
+			if (!element) return; // unmounted
+			props.onclose();
+		}, 1000);
 	}
 
 	onMount(() => {
@@ -44,7 +46,7 @@
 		<div class="toastMessage">{@html props.message}</div>
 	</div>
 	<!-- svelte-ignore a11y_invalid_attribute -->
-	<a href="#" role="button" class="closeToast" onclick={props.onclose}>✖</a>
+	<a href="javascript:void(0)" role="button" class="closeToast" onclick={props.onclose}>✖</a>
 </div>
 
 <style>

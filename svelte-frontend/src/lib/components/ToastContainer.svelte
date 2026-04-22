@@ -2,7 +2,6 @@
 	import { notificationConfig } from '$lib/toast.svelte';
 	import { onMount } from 'svelte';
 	import type { Icons } from '$lib/icons';
-	import Icon from './Icon.svelte';
 	import ToastItem, { type ToastProps } from './ToastItem.svelte';
 
 	type ToastItem = Omit<ToastProps, 'onclose'> & { id: number }
@@ -77,8 +76,8 @@
 <svelte:document onvisibilitychange={flushToasts}/>
 
 <div id="toastContainer" bind:this={toastContainer} class={{ anim, top, right }}>
-	{#each toasts as toast, idx (toast.id)}
-		<ToastItem {...toast} onclose={() => toasts.splice(idx, 1)}/>
+	{#each toasts as toast (toast.id)}
+		<ToastItem {...toast} onclose={() => toasts.splice(toasts.indexOf(toast), 1)}/>
 	{/each}
 </div>
 
