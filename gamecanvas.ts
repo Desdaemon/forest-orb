@@ -1,3 +1,5 @@
+import { onResize } from "./play";
+
 const preventNativeKeys = ['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft', ' ', 'F12'];
 const keys = new Map();
 const keysDown = new Map();
@@ -9,6 +11,7 @@ function resetCanvas() {
   return easyrpgPlayer.api.resetCanvas();
 }
 
+// SIDE EFFECT
 // Make EasyRPG player embeddable
 canvas.addEventListener('mouseenter', () => canvas.focus());
 canvas.addEventListener('click', () => canvas.focus());
@@ -24,6 +27,7 @@ canvas.addEventListener('webglcontextrestored', async () => {
   alert('Failed to restore WebGL context after 5 attempts. The page needs to be refreshed.');
 });
 
+// SIDE EFFECT
 // Handle clicking on the fullscreen button
 document.getElementById('controls-fullscreen').addEventListener('click', () => {
   const layout = document.getElementById('layout');
@@ -43,6 +47,7 @@ document.getElementById('controls-fullscreen').addEventListener('click', () => {
   onResize();
 });
 
+// SIDE EFFECT
 {
   const layout = document.getElementById('layout');
   if (!(layout.requestFullscreen || layout.webkitRequestFullscreen)) {
@@ -53,11 +58,11 @@ document.getElementById('controls-fullscreen').addEventListener('click', () => {
 /**
  * Simulate a keyboard event on the emscripten canvas
  *
- * @param {string} eventType Type of the keyboard event
- * @param {string} key Key to simulate
- * @param {number} keyCode Key code to simulate (deprecated)
+ * @param eventType Type of the keyboard event
+ * @param key Key to simulate
+ * @param keyCode Key code to simulate (deprecated)
  */
-function simulateKeyboardEvent(eventType, key, keyCode) {
+function simulateKeyboardEvent(eventType: string, key: string, keyCode: number) {
   const event = new Event(eventType, { bubbles: true });
   event.key = key;
   event.code = key;
@@ -71,10 +76,10 @@ function simulateKeyboardEvent(eventType, key, keyCode) {
 /**
  * Simulate a keyboard input from `keydown` to `keyup`
  *
- * @param {string} key Key to simulate
- * @param {number} keyCode Key code to simulate (deprecated)
+ * @param key Key to simulate
+ * @param keyCode Key code to simulate (deprecated)
  */
-function simulateKeyboardInput(key, keyCode) {
+function simulateKeyboardInput(key: string, keyCode: number) {
   simulateKeyboardEvent('keydown', key, keyCode);
   window.setTimeout(() => {
     simulateKeyboardEvent('keyup', key, keyCode);
@@ -84,11 +89,11 @@ function simulateKeyboardInput(key, keyCode) {
 /**
  * Bind a node by a specific key to simulate on touch
  *
- * @param {*} node The node to bind a key to
- * @param {string} key Key to simulate
- * @param {number} keyCode Key code to simulate (deprecated)
+ * @param node The node to bind a key to
+ * @param key Key to simulate
+ * @param keyCode Key code to simulate (deprecated)
  */
-function bindKey(node, key, keyCode) {
+function bindKey(node: HTMLElement, key: string, keyCode: number) {
   keys.set(node.id, { key, keyCode });
 
   node.addEventListener('touchstart', event => {
@@ -119,7 +124,7 @@ function bindKey(node, key, keyCode) {
 
   // Inspired by https://github.com/pulsejet/mkxp-web/blob/262a2254b684567311c9f0e135ee29f6e8c3613e/extra/js/dpad.js
   node.addEventListener('touchmove', event => {
-    const { target, clientX, clientY } = event.changedTouches[0];
+    const { target, clientX, clientY } = event.changedTouches[0]!;
     const origTargetId = keysDown.get(target.id);
     const nextTargetId = document.elementFromPoint(clientX, clientY).id;
     if (origTargetId === nextTargetId) return;
@@ -141,26 +146,24 @@ function bindKey(node, key, keyCode) {
   })
 }
 
-/** @type {{[key: number]: Gamepad}} */
-const gamepads = {};
+const gamepads: Record<number, Gamepad> = {};
 const haveEvents = 'ongamepadconnected' in window;
 
-function addGamepad(gamepad) {
+function addGamepad(gamepad: Gamepad) {
   if (gamepad == undefined)
     return;
   gamepads[gamepad.index] = gamepad;
   updateTouchControlsVisibility();
 }
 
-function removeGamepad(gamepad) {
+function removeGamepad(gamepad: Gamepad) {
   if (gamepad == undefined)
     return;
   delete gamepads[gamepad.index];
   updateTouchControlsVisibility();
 }
 
-/** @returns {Gamepad[]} */
-function getGamepads() {
+function getGamepads(): (Gamepad | null)[] {
   return navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
 }
 
@@ -176,12 +179,13 @@ function scanGamePads() {
   }
 }
 
+// SIDE EFFECT
 if (!haveEvents) {
   setInterval(scanGamePads, 500);
 }
 
+// SIDE EFFECT
 window.addEventListener('gamepadconnected', e => addGamepad(e.gamepad));
-
 window.addEventListener('gamepaddisconnected', e => removeGamepad(e.gamepad));
 
 function updateTouchControlsVisibility() {
@@ -195,6 +199,7 @@ function updateTouchControlsVisibility() {
   }
 }
 
+// SIDE EFFECT
 // Bind all elements providing a `data-key` attribute with the
 // given key on touch-based devices
 if (hasTouchscreen) {
@@ -373,4 +378,5 @@ if (hasTouchscreen) {
   });
 }
 
+// SIDE EFFECT
 updateTouchControlsVisibility();

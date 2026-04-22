@@ -31,7 +31,7 @@ const eventExpRanks = [
 let eventPeriodCache;
 let eventsCache = {};
 
-function initEventControls() {
+export function initEventControls() {
   const openEvents = () => openModal('eventsModal');
   document.getElementById('eventsButton').onclick = openEvents;
   for (let tab of document.getElementsByClassName('eventTab'))
@@ -50,13 +50,13 @@ function onClickEventTab() {
   }
 }
 
-function updateEventPeriod() {
+export function updateEventPeriod() {
   if (!loggedIn)
     return;
   sendSessionCommand('ep');
 }
 
-function onUpdateEventPeriod(eventPeriod) {
+export function onUpdateEventPeriod(eventPeriod) {
   if (!eventPeriod || eventPeriod.periodOrdinal < 0)
     return;
   
@@ -68,7 +68,7 @@ function onUpdateEventPeriod(eventPeriod) {
   updateEvents();
 }
 
-function updateEvents() {
+export function updateEvents() {
   if (!loggedIn || !eventPeriodCache)
     return;
   sendSessionCommand('e');
@@ -323,7 +323,7 @@ function onUpdateEvents(events, ignoreLocationCheck) {
   updatePlayerExp();
 }
 
-function updateNextLocations(locations) {
+export function updateNextLocations(locations) {
   const nextLocationText = document.getElementById('nextLocationText');
   nextLocationText.innerHTML = getLocalized2kkiLocationsHtml(locations, '<br>', true);
   Array.from(nextLocationText.querySelectorAll('.connTypeIcon'))
@@ -397,7 +397,7 @@ function onClaimEventLocationPoints(location, free, result) {
   updateEvents();
 }
 
-function checkEventLocations() {
+export function checkEventLocations() {
   if (loggedIn && cachedLocations && eventsCache.locations?.length) {
     const incompleteEventLocations = eventsCache.locations.filter(el => !el.complete && el.game === gameId);
     const incompleteEventLocationNames = incompleteEventLocations.map(el => el.title);
@@ -432,6 +432,7 @@ function showEventsToastMessage(key, icon, location, exp) {
   showToastMessage(message, icon);
 }
 
+// SIDE EFFECT
 (function () {
   addSessionCommandHandler('ep', args => onUpdateEventPeriod(JSON.parse(args[0])));
   addSessionCommandHandler('e', args => onUpdateEvents(JSON.parse(args[0])));

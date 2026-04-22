@@ -1,7 +1,8 @@
+export const isBrowser = 'window' in globalThis;
 const gameIds = [ '2kki', 'amillusion', 'braingirl', 'cold', 'unconscious', 'deepdreams', 'flow', 'fog', 'genie', 'if', 'loveyou', 'mikan', 'muma', 'nostalgic', 'oversomnia', 'oneshot', 'prayers', 'sheawaits', 'someday', 'tsushin', 'ultraviolet', 'unaccomplished', 'unevendream', 'yume' ];
-const gameIdMatch = new RegExp('(?:' + gameIds.join('|') + ')').exec(window.location);
-const gameId = gameIdMatch ? gameIdMatch[0] : gameIds[0];
-const ynoGameId = gameIdMatch || !new RegExp('dev').exec(window.location) ? gameId : 'dev';
+const gameIdMatch = isBrowser && new RegExp('(?:' + gameIds.join('|') + ')').exec(window.location);
+export const gameId = '2kki'; // gameIdMatch ? gameIdMatch[0] : gameIds[0];
+const ynoGameId = gameIdMatch || isBrowser && !new RegExp('dev').exec(window.location) ? gameId : 'dev';
 const gameDefaultLangs = {
   '2kki': 'ja',
   'flow': 'ja',
@@ -38,7 +39,7 @@ const gameDefaultSprite = {
 }[gameId];
 const dependencyFiles = {};
 const dependencyMaps = {};
-const hasTouchscreen = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+const hasTouchscreen = isBrowser && window.matchMedia('(hover: none), (pointer: coarse)').matches;
 const tippyConfig = {
   arrow: false,
   animation: 'scale',
@@ -46,16 +47,22 @@ const tippyConfig = {
   touch: /** @type {['hold', number]} */(['hold', 400]),
 };
 
-Object.defineProperty(Object.prototype, 'hasTitle', {
-  enumerable: false,
-  value() {
-    return typeof this === 'string' || 'title' in this;
-  }
-})
+let loadedLang = false;
+let loadedUiTheme = false;
+let loadedFontStyle = false;
 
-Object.defineProperty(String.prototype, 'title', {
-  get() { return this; },
-})
+const playerTooltipCache: Map<string, import('tippy.js').Instance> = new Map;
+
+// Object.defineProperty(Object.prototype, 'hasTitle', {
+//   enumerable: false,
+//   value() {
+//     return typeof this === 'string' || 'title' in this;
+//   }
+// })
+
+// Object.defineProperty(String.prototype, 'title', {
+//   get() { return this; },
+// })
 
 const loggedInKey = 'ynoproject_loggedIn';
 const hostBase = 'ynoproject.net';
@@ -209,7 +216,7 @@ function checkDependenciesModified() {
     checkDependency(0);
 }
 
-function fetchNewest(path, important, req) {
+export function fetchNewest(path, important, req) {
   return new Promise((resolve, reject) => {
     let ret;
     if (!req)
@@ -239,11 +246,11 @@ function fetchNewest(path, important, req) {
   });
 }
 
-function apiFetch(path, isAdmin) {
+export function apiFetch(path, isAdmin?: boolean) {
   return fetch(`${isAdmin ? adminApiUrl : apiUrl}/${path}`, { credentials: "include" });
 }
 
-function apiPost(path, data, contentType) {
+export function apiPost(path, data, contentType) {
   if (!contentType)
     contentType = 'application/json';
   const headers = {
@@ -253,15 +260,15 @@ function apiPost(path, data, contentType) {
   return fetch(`${apiUrl}/${path}`, { method: 'POST', headers: headers, credentials: "include", body: data });
 }
 
-function apiJsonPost(path, data) {
+export function apiJsonPost(path, data) {
   return apiPost(path, JSON.stringify(data));
 }
 
-function authApiFetch(path) {
+export function authApiFetch(path) {
   return fetch(`${authApiUrl}/${path}`, { credentials: "include" });
 }
 
-function authApiPost(path, data, contentType) {
+export function authApiPost(path, data, contentType) {
   if (!contentType)
     contentType = 'application/json';
   const headers = {
@@ -271,7 +278,7 @@ function authApiPost(path, data, contentType) {
   return fetch(`${authApiUrl}/${path}`, { method: 'POST', headers: headers, credentials: "include", body: data });
 }
 
-function wikiApiFetch(action, query) {
+export function wikiApiFetch(action, query) {
   return new Promise((resolve, reject) => {
     if (!yumeWikiSupported)
       reject('Game not supported by yume.wiki');
@@ -286,9 +293,9 @@ function wikiApiFetch(action, query) {
   });
 }
 
-const extractCanvas = document.createElement('canvas');
+const extractCanvas = isBrowser && document.createElement('canvas');
 
-async function getSpriteImg(img, spriteData, sprite, idx, frameIdx, width, height, xOffset, hasYOffset, isBrave) {
+export async function getSpriteImg(img, spriteData, sprite, idx, frameIdx, width, height, xOffset, hasYOffset, isBrave) {
   return new Promise(resolve => {
     extractCanvas.width = 24;
     extractCanvas.height = 32;
@@ -332,10 +339,8 @@ let transparencyChecker = {
   brave: (data, o, transPixel) => (data[o] === transPixel[0] || data[o] - 1 === transPixel[0]) && (data[o + 1] === transPixel[1] || data[o + 1] - 1 === transPixel[1]) && (data[o + 2] === transPixel[2] || data[o + 2] - 1 === transPixel[2]),
 }
 
-/**
- * @param {Element} target 
- */
-function addTooltip(target, content, asTooltipContent, delayed, interactive, options) {
+/** @returns a Tippy instance */
+export function addTooltip(target: Element, content, asTooltipContent = false, delayed = false, interactive = false, options?: unknown) {
   if (!options)
     options = {};
   if (interactive)
@@ -356,14 +361,8 @@ function addTooltip(target, content, asTooltipContent, delayed, interactive, opt
   return tippy(target, Object.assign(options, tippyConfig));
 }
 
-/** @type {Map<string, import('tippy.js').Instance>} */
-const playerTooltipCache = new Map;
 
-/**
- * @param {HTMLElement} target 
- * @param {*} [msgProps]
- */
-function addPlayerContextMenu(target, player, uuid, messageType, msgProps) {
+export function addPlayerContextMenu(target: HTMLElement, player, uuid, messageType, msgProps: any) {
   if (!player || uuid === playerData?.uuid || uuid === defaultUuid) {
     target.addEventListener('contextmenu', event => event.preventDefault());
     return;
@@ -729,7 +728,7 @@ function createPlayerTooltip(target, player, uuid, messageType, msgProps) {
 /**
  * @param {import('tippy.js').Instance} [instance] 
  */
-function addOrUpdateTooltip(target, content, asTooltipContent, delayed, interactive, options, instance) {
+export function addOrUpdateTooltip(target, content, asTooltipContent, delayed, interactive, options, instance) {
   if (!instance)
     return addTooltip(target, content, asTooltipContent, delayed, interactive, options);
 
@@ -743,11 +742,8 @@ function addOrUpdateTooltip(target, content, asTooltipContent, delayed, interact
   return instance;
 }
 
-let loadedLang = false;
-let loadedUiTheme = false;
-let loadedFontStyle = false;
 
-function loadOrInitConfig(configObj, global, configName) {
+export function loadOrInitConfig(configObj, global, configName) {
   if (!configName)
     configName = 'config';
   try {
@@ -1049,7 +1045,7 @@ function loadOrInitConfig(configObj, global, configName) {
   }
 }
 
-function updateConfig(configObj, global, configName) {
+export function updateConfig(configObj, global, configName?: string) {
   if (!configName)
     configName = 'config';
   try {
@@ -1059,13 +1055,13 @@ function updateConfig(configObj, global, configName) {
   }
 }
 
-function setCookie(cName, cValue) {
+export function setCookie(cName, cValue) {
   const expiration = new Date();
   expiration.setTime(new Date().getTime() + 3600000 * 24 * 30);
   document.cookie = `${cName}=${cValue};SameSite=Strict;path=/;expires=${expiration.toUTCString()}`;
 }
 
-function getCookie(cName) {
+export function getCookie(cName) {
   const name = `${cName}=`;
   const ca = document.cookie.split(';');
   for (let i = 0; i < ca.length; i++) {
@@ -1078,7 +1074,9 @@ function getCookie(cName) {
   return "";
 }
 
+// SIDE EFFECT
 (function() {
+  return;
   initNotificationsConfigAndControls();
   loadOrInitConfig(notificationConfig, true, 'notificationConfig');
 

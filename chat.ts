@@ -1,3 +1,7 @@
+import { getLocalized2kkiLocations } from "./2kki";
+import { updateConfig } from "./init";
+
+// SIDE EFFECT
 easyrpgPlayer["onRuntimeInitialized"] = initChat;
 if (typeof ENV === "undefined")
   initChat();
@@ -13,9 +17,12 @@ const SCREENSHOT_FLAGS = {
   SPOILER: 1 << 0,
 };
 
+let savedChatScrollTop = 0;
+let gameChatModeIndex = 0;
+
 const mentionSe = new Audio('./audio/mention.wav');
 
-function chatboxAddMessage(msg, type, player, ignoreNotify, mapId, prevMapId, prevLocationsStr, x, y, msgId, timestamp, shouldScroll = true) {
+function chatboxAddMessage(msg, type, player, ignoreNotify = false, mapId?: unknown, prevMapId?: unknown, prevLocationsStr?: string, x?: number, y?: number, msgId?: string, timestamp?: unknown, shouldScroll = true) {
   const messages = document.getElementById("messages");
 
   if (msgId && messages.querySelector(`.messageContainer[data-msg-id="${msgId}"]`))
@@ -369,14 +376,11 @@ function scrollChatMessages() {
   });
 }
 
-let savedChatScrollTop = 0;
-
-function saveScrollPosition() {
+export function saveScrollPosition() {
   const messages = document.getElementById('messages');
   savedChatScrollTop = messages.scrollTop;
 }
 
-let gameChatModeIndex = 0;
 
 function addGameChatMessage(messageHtml, messageType, senderUuid) {
   const gameChatContainer = document.getElementById('gameChatContainer');
@@ -419,7 +423,7 @@ function addGameChatMessage(messageHtml, messageType, senderUuid) {
   }, 10000);
 }
 
-function setGameChatMode(modeIndex) {
+export function setGameChatMode(modeIndex) {
   const chatModeIcon = document.getElementById('gameChatModeIcon');
   gameChatModeIndex = modeIndex;
   if (modeIndex) {
@@ -439,14 +443,14 @@ function setGameChatMode(modeIndex) {
   document.getElementById('gameChatInputContainer').querySelector('.globalCooldownIcon').classList.toggle('hidden', modeIndex !== 1);
 }
 
-function cycleGameChatMode() {
+export function cycleGameChatMode() {
   if (gameChatModeIndex < 2)
     setGameChatMode(gameChatModeIndex + 1);
   else
     setGameChatMode(0);
 }
 
-function updateGameChatMessageVisibility() {
+export function updateGameChatMessageVisibility() {
   const gameChatMessageContainers = document.getElementsByClassName('gameChatMessageContainer');
   for (let messageContainer of gameChatMessageContainers) {
     if (messageContainer.dataset.messageType == 2)
@@ -527,13 +531,14 @@ function constrainByteLength(inputElement, length) {
   ['input', 'compositionend'].forEach(e => inputElement.addEventListener(e, listener));
 }
 
+// SIDE EFFECT
 constrainByteLength(document.getElementById('chatInput'), 150);
 
 function chatNameCheck() {
   trySetChatName(document.getElementById("nameInput").value);
 }
 
-function trySetChatName(name) {
+export function trySetChatName(name) {
   if (name && !(/^[A-Za-z0-9]+$/.test(name)))
     return;
   playerName = name;
@@ -598,11 +603,13 @@ function initChat() {
   };
 }
 
-function trySendMapMessage(content) {
+function trySendMapMessage(content: string) {
   const chatInputContainer = document.getElementById("chatInputContainer");
   if (!chatInputContainer.classList.contains("globalCooldown")) {
     const chatInputContainers = [ chatInputContainer, document.getElementById("gameChatInputContainer") ];
     sendSessionCommand("say", [ content ]);
+
+    // FIXME: refactor into applyCooldown
     chatInputContainers.forEach(el => el.classList.add("globalCooldown"));
     window.setTimeout(function () {
       chatInputContainers.forEach(el => el.classList.remove("globalCooldown"));
@@ -614,7 +621,7 @@ function trySendMapMessage(content) {
   return false;
 }
 
-function trySendPartyMessage(content) {
+function trySendPartyMessage(content: string) {
   const chatInputContainer = document.getElementById("chatInputContainer");
   if (!chatInputContainer.classList.contains("globalCooldown")) {
     const chatInputContainers = [ chatInputContainer, document.getElementById("gameChatInputContainer") ];
@@ -654,7 +661,7 @@ function trySendGlobalMessage(content) {
   return false;
 }
 
-function addChatTip() {
+export function addChatTip() {
   const tips = localizedMessages.chatTips.tips;
   if (++globalConfig.chatTipIndex >= Object.keys(tips).length)
     globalConfig.chatTipIndex = 0;
@@ -664,10 +671,10 @@ function addChatTip() {
   if (msgContainer) {
     msgContainer.dataset.chatTip = tipKey;
   }
-  updateConfig(globalConfig, true);
+  updateConfig(globalConfig, true, undefined);
 }
 
-function addChatMapLocation(locations) {
+export function addChatMapLocation(locations) {
   const locationHtml = cached2kkiLocations
     ? getLocalized2kkiLocations(cached2kkiLocations, "&nbsp;|&nbsp;")
     : getLocalizedMapLocations(gameId, cachedMapId, cachedPrevMapId, tpX, tpY, "&nbsp;|&nbsp;");
@@ -712,7 +719,7 @@ function addChatMapLocation(locations) {
   }
 }
 
-function markMapUpdateInChat() {
+export function markMapUpdateInChat() {
   const messages = document.getElementById("messages");
   const allTabMessageContainers = messages.querySelectorAll(".messageContainer:not(.map)");
   const mapTabMessageContainers = messages.querySelectorAll(".messageContainer:not(.global)");
@@ -740,14 +747,14 @@ function getChatMessageTimestampLabel(timestamp, defaultDate) {
   return timestampLabel;
 }
 
-function updateChatMessageTimestamps() {
+export function updateChatMessageTimestamps() {
   const timestamps = document.getElementById("messages").querySelectorAll('.messageTimestamp');
 
   for (let timestamp of timestamps)
     timestamp.innerHTML = getChatMessageTimestampLabel(new Date(parseInt(timestamp.dataset.time)));
 }
 
-async function syncChatHistory() {
+export async function syncChatHistory() {
   const messages = document.getElementById("messages");
   const idMessages = messages.querySelectorAll('.messageContainer[data-msg-id]');
   const lastMessageId = idMessages.length ? idMessages[idMessages.length - 1].dataset.msgId : null;
@@ -803,15 +810,15 @@ const markdownSyntax = [
   { p: /\\~/g, r: '~' },
   { p: /\\\|/g, r: '|' },
 ];
-/** @param {string} msg */
-function parseMessageTextForMarkdown(msg) {
+
+export function parseMessageTextForMarkdown(msg: string) {
   for (let syntax of markdownSyntax)
     msg = msg.replace(syntax.p, syntax.r);
 
   return msg;
 }
 
-function populateMessageNodes(msg, node, asHtml) {
+export function populateMessageNodes(msg, node, asHtml) {
   const tagPattern = /<([bisux])>(.*?)<\/\1>/;
   let cursor = 0;
   let result;
@@ -851,7 +858,7 @@ function populateMessageNodes(msg, node, asHtml) {
   }
 }
 
-function wrapMessageEmojis(node, force) {
+export function wrapMessageEmojis(node, force) {
   if (node.childNodes.length && !force) {
     for (let childNode of node.childNodes) {
       if (/\p{Extended_Pictographic}/u.test(childNode.textContent) || /:([a-z0-9_\-]+):/i.test(childNode.textContent)) {
@@ -938,6 +945,7 @@ function tryEmbedScreenshot(node, uuid) {
   return false;
 }
 
+// SIDE EFFECT
 (function () {
   addSessionCommandHandler('say', args => {
     const uuid = args[0];
@@ -974,6 +982,7 @@ function tryEmbedScreenshot(node, uuid) {
   });
 })();
 
+// SIDE EFFECT, FIXME: delete
 (function() {
   async function sleep(milliseconds) {
     return await new Promise(r => setTimeout(r, milliseconds));

@@ -6,6 +6,11 @@
  * @property {number} y2
  */
 
+import { viewBadgeLocationInModal } from "./badges";
+import { updateGameChatMessageVisibility } from "./chat";
+import { initEventControls, onUpdateEventPeriod, updateEventPeriod, updateEvents } from "./events";
+import { addTooltip, updateConfig, wikiApiFetch } from "./init";
+
 /**
  * @typedef {object} MapTitle
  * @property {string} title 
@@ -52,6 +57,10 @@ let yumeWikiSupported;
 
 /** @type {WeakRef<any>} */
 let gameMapHandle = new WeakRef({});
+
+let playerName;
+let systemName;
+let modalUiTheme;
 
 const modalTransitionDuration = 230;
 
@@ -117,6 +126,9 @@ let config = {
   filterMentions: false,
   trackedLocationId: null,
   hideUnnamedPlayers: false,
+
+  fontStyle: 0,
+  uiTheme: 'Default',
 };
 
 const locI18nextOptions = {
@@ -124,6 +136,7 @@ const locI18nextOptions = {
   useOptionsAttr: true,
 };
 
+// SIDE EFFECT
 if (gameId === '2kki') {
   config.last2kkiVersion = document.querySelector('meta[name="2kkiVersion"]').content;
   config.explorer = false;
@@ -166,7 +179,7 @@ function iOS() {
 }
 
 // EXTERNAL
-function onUpdateConnectionStatus(status) {
+function onUpdateConnectionStatus(status: number) {
   if (status === 1 && config.privateMode)
     status = config.singleplayerMode ? 4 : 3;
 
@@ -214,7 +227,7 @@ function onRoomSwitch() {
   updateJoinedParty();
 }
 
-function fetchAndUpdatePlayerInfo(forLogin) {
+export function fetchAndUpdatePlayerInfo(forLogin) {
   const isLogin = forLogin !== undefined && forLogin;
   const isLogout = forLogin !== undefined && !forLogin;
 
@@ -298,7 +311,7 @@ function fetchAndUpdatePlayerInfo(forLogin) {
     .catch(err => console.error(err));
 }
 
-function checkLogin() {
+export function checkLogin() {
   apiFetch('info')
     .then(response => response.json())
     .then(jsonResponse => {
@@ -314,6 +327,7 @@ function checkLogin() {
 
 let playerCount;
 
+// SIDE EFFECT
 (function () {
   addSessionCommandHandler('pc', args => updatePlayerCount(parseInt(args[0])));
   addSessionCommandHandler('lcol');
@@ -358,7 +372,7 @@ function updatePlayerCount(count) {
   playerCount = count;
 }
 
-function updateMapPlayerCount(count) {
+export function updateMapPlayerCount(count: number) {
   if (isNaN(count))
     return;
   const mapPlayerCountLabel = document.getElementById('mapPlayerCountLabel');
@@ -366,13 +380,11 @@ function updateMapPlayerCount(count) {
     mapPlayerCountLabel.innerHTML = getMassagedLabel(localizedMessages.playersInMap[count == 1 ? 'singular' : 'plural'].replace('{COUNT}', count), true);
 }
 
-let playerName;
-let systemName;
-let modalUiTheme;
-
+// SIDE EFFECT
 setSystemName(getDefaultUiTheme());
 populateUiThemes();
 
+// SIDE EFFECT
 const gameLogoUrl = `../images/logo_${gameId}.png`;
 const gameLogoImg = new Image();
 gameLogoImg.setAttribute('crossOrigin', 'anonymous');
@@ -505,7 +517,7 @@ function checkUpdateLocation(mapId, mapChanged) {
 let locationDisplayTimer;
 let locationDisplayQueue = [];
 
-function updateLocationDisplay(locationHtml, colors) {
+export function updateLocationDisplay(locationHtml, colors) {
   if (!globalConfig.locationDisplay)
     return;
 
@@ -542,7 +554,7 @@ function updateLocationDisplay(locationHtml, colors) {
   }
 }
 
-function hideLocationDisplay(fast) {
+function hideLocationDisplay(fast = false) {
   if (fast)
     locationDisplayContainer.classList.add('fast');
 
@@ -561,6 +573,7 @@ function hideLocationDisplay(fast) {
   }, fast ? 100 : 350);
 }
 
+// SIDE EFFECT
 {
   const cancelKeyCodes = [ 'escape', 'x', 'c', 'v', 'b', 'n', 'numpad0', 'backspace' ];
 
@@ -583,7 +596,7 @@ function syncPrevLocation() {
   sendSessionCommand('ploc', [ prevMapId, prevLocationsStr ]);
 }
 
-function syncLocationChange() {
+export function syncLocationChange() {
   const locationNames = cachedLocations ? cachedLocations.map(l => get2kkiWikiLocationName(l)) : [];
 
   sendSessionCommand('l', locationNames);
@@ -652,13 +665,13 @@ function debounce(fn, timeout = 1000) {
 }
 
 // EXTERNAL
-function onNametagModeUpdated(mode, isInit) {
+export function onNametagModeUpdated(mode, isInit) {
   config.nametagMode = mode;
   if (!isInit)
     updateConfig(config);
 }
 
-function preToggle(buttonElement) {
+export function preToggle(buttonElement) {
   buttonElement.classList.add('preToggled');
   const tryToggleTimer = setInterval(function () {
     if (buttonElement.classList.contains('toggled')) {
@@ -669,6 +682,7 @@ function preToggle(buttonElement) {
   }, 500);
 }
 
+// SIDE EFFECT
 {
   function calcTextareaHeight(value) {
     const numberOfLineBreaks = (value.match(/\n/g) || []).length;
@@ -683,12 +697,12 @@ function preToggle(buttonElement) {
 
 /**
  * Opens a modal.
- * @param {string} modalId The modal's ID.
- * @param {string} [theme] The theme for the modal to use. Player-selected or in-game menu theme is used if none is specified.
- * @param {string} [lastModalId] The previously-opened modal, used when opening sub-modals.
- * @param {Object} [modalData] Data to be passed to the modal.
+ * @param modalId The modal's ID.
+ * @param [theme] The theme for the modal to use. Player-selected or in-game menu theme is used if none is specified.
+ * @param [lastModalId] The previously-opened modal, used when opening sub-modals.
+ * @param [modalData] Data to be passed to the modal.
  */
-function openModal(modalId, theme, lastModalId, modalData) {
+export function openModal(modalId: string, theme?: string, lastModalId?: string, modalData?: object) {
   const modalContainer = document.getElementById('modalContainer');
   modalContainer.classList.remove('fadeOut', 'hidden');
   modalContainer.classList.add('fadeIn');
@@ -754,7 +768,7 @@ function openModal(modalId, theme, lastModalId, modalData) {
   }, modalTransitionDuration);
 }
 
-function closeModal() {
+export function closeModal() {
   const modalFadeOutContainer = document.getElementById('modalFadeOutContainer');
   if (modalFadeOutContainer.childElementCount)
     return;
@@ -796,6 +810,7 @@ function closeModal() {
 
 }
 
+// SIDE EFFECT
 {
   const modalCloseButtons = document.querySelectorAll('#modalContainer .modalClose');
   for (let button of modalCloseButtons)
@@ -803,7 +818,7 @@ function closeModal() {
   document.querySelector('#modalContainer .modalOverlay').onclick = closeModal;
 }
 
-function showConfirmModal(message, okCallback, cancelCallback) {
+export function showConfirmModal(message: string, okCallback, cancelCallback) {
   const modalContainer = document.getElementById('confirmModalContainer');
 
   const modal = document.getElementById('confirmModal');
@@ -851,10 +866,12 @@ function closeConfirmModal(callback) {
     callback();
 }
 
+// SIDE EFFECT
 document.getElementById('enterNameForm').onsubmit = function () {
   setName(document.getElementById('nameInput').value);
 };
 
+// SIDE EFFECT
 {
   function oninputYnomoji() {
     const ynomojiPattern = /:([a-z0-9_\-]+(?::|$)|$)/gi;
@@ -922,6 +939,7 @@ document.getElementById('enterNameForm').onsubmit = function () {
   document.getElementById('chatboxContainer').onmouseleave = document.getElementById('scheduleEditModal').onmouseleave = function () { document.getElementById('ynomojiContainer').classList.add('hidden'); };
 }
 
+// SIDE EFFECT
 {
   function initPrivateMode(active) {
     const layout = document.getElementById('layout');
@@ -961,8 +979,9 @@ document.getElementById('enterNameForm').onsubmit = function () {
   };
 }
 
-let reconnectCooldownTimer;
+let reconnectCooldownTimer: number | null;
 
+// SIDE EFFECT
 document.getElementById('reconnectButton').ondblclick = function () {
   if (reconnectCooldownTimer || connStatus != 2)
     return;
@@ -986,6 +1005,7 @@ document.getElementById('reconnectButton').ondblclick = function () {
   }, 5000);
 }
 
+// SIDE EFFECT
 document.getElementById('reconnectButton').onclick = function () {
   if (reconnectCooldownTimer || connStatus == 2)
     return;
@@ -1010,10 +1030,12 @@ document.getElementById('reconnectButton').onclick = function () {
   }, 5000);
 };
 
+// SIDE EFFECT
 document.getElementById('toggleNextLocationButton').onclick = function () {
   document.getElementById('nextLocationContainer').classList.toggle('hideContents');
 };
 
+// SIDE EFFECT
 document.getElementById('chatButton').onclick = function () {
   this.classList.toggle('toggled');
   document.getElementById('layout').classList.toggle('hideChat');
@@ -1022,6 +1044,7 @@ document.getElementById('chatButton').onclick = function () {
   updateConfig(config);
 };
 
+// SIDE EFFECT
 if (gameId === '2kki') {
   document.getElementById('explorerButton').onclick = function () {
     this.classList.toggle('toggled');
@@ -1032,6 +1055,7 @@ if (gameId === '2kki') {
   };
 }
 
+// SIDE EFFECT
 document.getElementById('globalMessageButton').onclick = function () {
   this.classList.toggle('toggled');
   const chatInput = document.getElementById('chatInput');
@@ -1053,6 +1077,7 @@ document.getElementById('globalMessageButton').onclick = function () {
   updateConfig(config);
 };
 
+// SIDE EFFECT
 document.getElementById('globalMessageLocationsButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1061,6 +1086,7 @@ document.getElementById('globalMessageLocationsButton').onclick = function () {
   updateConfig(config);
 };
 
+// SIDE EFFECT
 document.getElementById('mentionFilterButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1076,6 +1102,7 @@ document.getElementById('mentionFilterButton').onclick = function () {
     messages.scrollTop = savedChatScrollTop;
 };
 
+// SIDE EFFECT
 document.getElementById('messageTimestampsButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1084,6 +1111,7 @@ document.getElementById('messageTimestampsButton').onclick = function () {
   updateConfig(config);
 };
 
+// SIDE EFFECT: init uiThemesModal
 {
   config.uiTheme = 'Default';
 
@@ -1095,12 +1123,12 @@ document.getElementById('messageTimestampsButton').onclick = function () {
     uiTheme.onclick = onSelectUiTheme;
 }
 
-config.fontStyle = 0;
-
+// SIDE EFFECT
 document.querySelector('.fontStyle').onchange = function () {
   setFontStyle(parseInt(this.value));
 };
 
+// SIDE EFFECT
 document.getElementById('clearChatButton').onclick = function () {
   const chatbox = document.getElementById('chatbox');
   const messagesElement = document.getElementById('messages');
@@ -1135,25 +1163,31 @@ document.getElementById('clearChatButton').onclick = function () {
   }
 };
 
+// SIDE EFFECT
 document.getElementById('settingsButton').onclick = () => openModal('settingsModal');
 
+// SIDE EFFECT
 document.getElementById('muteButton').onclick = function () {
   if (easyrpgPlayer.initialized)
     easyrpgPlayer.api.toggleMute();
 };
 
+// SIDE EFFECT
 document.getElementById('soundVolume').oninput = function () {
   setSoundVolume(parseInt(this.value), true);
 };
 
+// SIDE EFFECT
 document.getElementById('soundVolume').onchange = function () {
   setSoundVolume(parseInt(this.value));
 };
 
+// SIDE EFFECT
 document.getElementById('musicVolume').oninput = function () {
   setMusicVolume(parseInt(this.value), true);
 };
 
+// SIDE EFFECT
 document.getElementById('musicVolume').onchange = function () {
   setMusicVolume(parseInt(this.value));
 };
@@ -1183,6 +1217,7 @@ const checkLang = () => {
   }
 };
 
+// SIDE EFFECT
 langSelect.addEventListener('change', checkLang);
 
 const nametagModeSelect = document.getElementById('nametagMode');
@@ -1209,11 +1244,13 @@ const checkNametagMode = () => {
   }
 };
 
+// SIDE EFFECT
 // Monitor fullscreen changes
 document.addEventListener('fullscreenchange', () => {
   updateFullscreenPolling();
 });
 
+// SIDE EFFECT
 if (nametagModeSelect)
   nametagModeSelect.addEventListener('change', checkNametagMode);
 
@@ -1251,6 +1288,7 @@ const stopFullscreenPolling = () => {
   updateFullscreenPolling();
 };
 
+// SIDE EFFECT
 // Start polling if already in fullscreen and settings modal is open
 updateFullscreenPolling();
 
@@ -1278,6 +1316,7 @@ const checkWikiLinkMode = () => {
   }
 };
 
+// SIDE EFFECT
 if (wikiLinkModeSelect) {
   wikiLinkModeSelect.addEventListener('change', checkWikiLinkMode);
 }
@@ -1304,13 +1343,16 @@ const checkSaveReminder = () => {
   }
 };
 
+// SIDE EFFECT
 saveReminderSelect.addEventListener('change', checkSaveReminder);
 
+// SIDE EFFECT
 document.getElementById('playerSoundsButton').onclick = () => {
   if (easyrpgPlayer.initialized)
     easyrpgPlayer.api.togglePlayerSounds();
 };
 
+// SIDE EFFECT
 document.getElementById('badgeHintsButton').onclick = function () {
   const enabled = !this.classList.toggle('toggled');
   globalConfig.badgeHints = enabled;
@@ -1319,12 +1361,14 @@ document.getElementById('badgeHintsButton').onclick = function () {
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('playBadgeHintSoundButton').onclick = function () {
   this.classList.toggle('toggled');
   globalConfig.playBadgeHintSound = !this.classList.contains('toggled');
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('hideLocationButton').onclick = function () {
   config.hideLocation = !config.hideLocation;
   this.classList.toggle('toggled', config.hideLocation);
@@ -1334,6 +1378,7 @@ document.getElementById('hideLocationButton').onclick = function () {
     sendSessionCommand('hl', [ config.hideLocation ? 1 : 0 ]);
 };
 
+// SIDE EFFECT
 if (gameId === '2kki') {
   document.getElementById('enableExplorerButton').onclick = function () {
     this.classList.toggle('toggled');
@@ -1357,6 +1402,7 @@ if (gameId === '2kki') {
   };
 }
 
+// SIDE EFFECT
 document.getElementById('immersionModeButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1373,6 +1419,7 @@ document.getElementById('immersionModeButton').onclick = function () {
   updateConfig(config);
 };
 
+// SIDE EFFECT
 document.getElementById('mobileControlsButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = !this.classList.contains('toggled');
@@ -1382,16 +1429,19 @@ document.getElementById('mobileControlsButton').onclick = function () {
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('mobileControl').oninput = function() {
   setMobileControlType(this.value);
 };
 
+// SIDE EFFECT
 document.getElementById('locationDisplayButton').onclick = function () {
   this.classList.toggle('toggled');
   globalConfig.locationDisplay = this.classList.contains('toggled');
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('toggleRankingsButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1401,6 +1451,7 @@ document.getElementById('toggleRankingsButton').onclick = function () {
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('toggleSchedulesButton').onclick = function () {
   const toggled = this.classList.toggle('toggled');
   document.getElementById('schedulesButton').classList.toggle('hidden', toggled);
@@ -1409,6 +1460,7 @@ document.getElementById('toggleSchedulesButton').onclick = function () {
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('hideUnnamedPlayersButton').onclick = function () {
   const toggled = this.classList.toggle('toggled');
   config.hideUnnamedPlayers = toggled;
@@ -1419,6 +1471,7 @@ document.getElementById('hideUnnamedPlayersButton').onclick = function () {
     sendSessionCommand('hunp', [ 0 ]);
 };
 
+// SIDE EFFECT
 document.getElementById('togglePreloadsButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1428,6 +1481,7 @@ document.getElementById('togglePreloadsButton').onclick = function () {
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('toggleUnicodeFont').onclick = function() {
   const toggled = this.classList.toggle('toggled');
   globalConfig.unicodeFont = toggled;
@@ -1435,6 +1489,7 @@ document.getElementById('toggleUnicodeFont').onclick = function() {
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('gameChatButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1446,6 +1501,7 @@ document.getElementById('gameChatButton').onclick = function () {
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('gameChatGlobalButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1456,6 +1512,7 @@ document.getElementById('gameChatGlobalButton').onclick = function () {
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('gameChatPartyButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1466,18 +1523,21 @@ document.getElementById('gameChatPartyButton').onclick = function () {
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('tabToChatButton').onclick = function () {
   this.classList.toggle('toggled');
   globalConfig.tabToChat = !this.classList.contains('toggled');
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('playMentionSoundButton').onclick = function () {
   this.classList.toggle('toggled');
   globalConfig.playMentionSound = !this.classList.contains('toggled');
   updateConfig(globalConfig, true);
 };
 
+// SIDE EFFECT
 document.getElementById('blurScreenshotEmbedsButton').onclick = function () {
   globalConfig.blurScreenshotEmbeds = this.classList.toggle('toggled');
   updateConfig(globalConfig, true);
@@ -1490,6 +1550,7 @@ if (mapChatHistoryLimitElement) {
   };
 }
 
+// SIDE EFFECT
 const globalChatHistoryLimitElement = document.getElementById('globalChatHistoryLimit');
 if (globalChatHistoryLimitElement) {
   globalChatHistoryLimitElement.onchange = function () {
@@ -1497,6 +1558,7 @@ if (globalChatHistoryLimitElement) {
   };
 }
 
+// SIDE EFFECT
 const partyChatHistoryLimitElement = document.getElementById('partyChatHistoryLimit');
 if (partyChatHistoryLimitElement) {
   partyChatHistoryLimitElement.onchange = function () {
@@ -1504,11 +1566,13 @@ if (partyChatHistoryLimitElement) {
   };
 }
 
+// SIDE EFFECT
 document.getElementById('blocklistButton').onclick = function () {
     updateBlocklist(true);
     openModal('blocklistModal', null, 'settingsModal');
 };
 
+// SIDE EFFECT
 initAccountControls();
 initSaveSyncControls();
 initLocationControls();
@@ -1520,8 +1584,10 @@ initEventControls();
 initRankingControls();
 initReportControls();
 
+// SIDE EFFECT
 document.getElementById('nexusButton').onclick = () => window.location = '../';
 
+// SIDE EFFECT
 if (gameId === '2kki') {
   document.getElementById('2kkiVersion').innerText = document.querySelector('meta[name="2kkiVersion"]').content || '?';
   // Yume 2kki Explorer doesn't support mobile
@@ -1595,6 +1661,7 @@ if (gameId === '2kki') {
 
 }
 
+// SIDE EFFECT
 Array.from(document.querySelectorAll('.playerCountLabel')).forEach(pc => {
   pc.onclick = function () {
     if (config.privateMode)
@@ -1625,9 +1692,11 @@ function onClickChatboxTab() {
   }
 }
 
+// SIDE EFFECT
 for (let tab of document.getElementsByClassName('chatboxTab'))
   tab.onclick = onClickChatboxTab;
 
+// SIDE EFFECT
 function setChatTab(tab, saveConfig) {
   const chatTabs = document.getElementById('chatTabs');
   const tabIndex = Array.prototype.indexOf.call(chatTabs.children, tab);
@@ -1662,10 +1731,11 @@ function setChatTab(tab, saveConfig) {
   }
 }
 
+// SIDE EFFECT
 for (let chatTab of document.getElementsByClassName('chatTab'))
   chatTab.onclick = function () { setChatTab(this, true); };
 
-function setPlayersTab(tab, saveConfig) {
+export function setPlayersTab(tab, saveConfig) {
   const playersTabs = document.getElementById('playersTabs');
   const tabIndex = Array.prototype.indexOf.call(playersTabs.children, tab);
   const activeTabIndex = Array.prototype.indexOf.call(playersTabs.children, playersTabs.querySelector('.active'));
@@ -1691,12 +1761,13 @@ function setPlayersTab(tab, saveConfig) {
   }
 }
 
+// SIDE EFFECT
 for (let tab of document.getElementsByClassName('playersTab'))
   tab.onclick = function () { setPlayersTab(this, true); };
 
 let ignoreSizeChanged = false;
 
-function onResize() {
+export function onResize() {
   const content = document.getElementById('content');
   const layout = document.getElementById('layout');
 
@@ -1777,7 +1848,7 @@ function updateCanvasOverlays() {
   gameChatContainer.style.marginTop = `calc(${canvasElement.offsetHeight / 2}px * var(--canvas-scale))`;
 }
 
-function updateYnomojiContainerPos(isScrollUpdate, chatInput) {
+export function updateYnomojiContainerPos(isScrollUpdate, chatInput) {
   if (!chatInput) chatInput = document.getElementById('chatInput');
   const expandDown = chatInput.dataset.ynomoji === 'expandDown';
   const chatboxContainer = document.getElementById('chatboxContainer');
@@ -1809,7 +1880,7 @@ function updateYnomojiContainerPos(isScrollUpdate, chatInput) {
   }
 }
 
-function onUpdateChatboxInfo() {
+export function onUpdateChatboxInfo() {
   const layout = document.getElementById('layout');
   const chatboxContainer = document.getElementById('chatboxContainer');
   const chatboxInfo = document.getElementById('chatboxInfo');
@@ -1933,10 +2004,13 @@ function updateCanvasFullscreenSize() {
   updateCanvasOverlays();
 }
 
+// SIDE EFFECT
 window.onresize = function () { setTimeout(onResize, 0); };
 
+// SIDE EFFECT
 document.addEventListener('fullscreenchange', updateCanvasFullscreenSize);
 
+// SIDE EFFECT
 document.getElementById('content').addEventListener('scroll', function () {
   document.documentElement.style.setProperty('--content-scroll', `${this.scrollTop}px`);
   if (hasTouchscreen)
@@ -1961,6 +2035,7 @@ function setFullscreenControlsHideTimer() {
   }, 5000);
 }
 
+// SIDE EFFECT
 document.onmousemove = function (ev) {
   if (document.fullscreenElement && !ev.dataTransfer) {
     toggleControls(true);
@@ -1981,7 +2056,7 @@ async function withTimeout(duration, prom) {
 
 const rtlLangs = ['ar'];
 const latinExLangs = ['vi', 'ru', 'uk'];
-function setLang(lang, isInit) {
+export function setLang(lang, isInit) {
   if (rtlLangs.includes(lang))
     document.documentElement.setAttribute('dir', 'rtl');
   else
@@ -2031,13 +2106,13 @@ function setSaveReminder(saveReminder, isInit) {
   resetSaveReminder();
 }
 
-function setName(name, isInit) {
+export function setName(name, isInit) {
   globalConfig.name = name;
   if (!isInit)
     updateConfig(globalConfig, true);
 }
 
-function setSoundVolume(value, isInit) {
+export function setSoundVolume(value, isInit) {
   if (isNaN(value))
     return;
   if (easyrpgPlayer.initialized && !config.mute) {
@@ -2049,7 +2124,7 @@ function setSoundVolume(value, isInit) {
     updateConfig(globalConfig, true);
 }
 
-function setMusicVolume(value, isInit) {
+export function setMusicVolume(value, isInit) {
   if (isNaN(value))
     return;
   if (easyrpgPlayer.initialized && !config.mute) {
@@ -2061,31 +2136,31 @@ function setMusicVolume(value, isInit) {
     updateConfig(globalConfig, true);
 }
 
-function setWikiLinkMode(wikiLinkMode, isInit) {
+export function setWikiLinkMode(wikiLinkMode, isInit) {
   globalConfig.wikiLinkMode = wikiLinkMode;
   if (!isInit)
     updateConfig(globalConfig, true);
 }
 
-function setMapChatHistoryLimit(limit, isInit) {
+export function setMapChatHistoryLimit(limit, isInit) {
   globalConfig.mapChatHistoryLimit = limit;
   if (!isInit)
     updateConfig(globalConfig, true);
 }
 
-function setGlobalChatHistoryLimit(limit, isInit) {
+export function setGlobalChatHistoryLimit(limit, isInit) {
   globalConfig.globalChatHistoryLimit = limit;
   if (!isInit)
     updateConfig(globalConfig, true);
 }
 
-function setPartyChatHistoryLimit(limit, isInit) {
+export function setPartyChatHistoryLimit(limit, isInit) {
   globalConfig.partyChatHistoryLimit = limit;
   if (!isInit)
     updateConfig(globalConfig, true);
 }
 
-function setMobileControlType(value, isInit) {
+export function setMobileControlType(value, isInit) {
   if (!hasTouchscreen) return;
   globalConfig.mobileControlsType = value;
   if (!isInit)
@@ -2112,10 +2187,11 @@ function updateMobileControlType() {
   }
 }
 
+// SIDE EFFECT
 if (hasTouchscreen)
   screen.orientation.addEventListener('change', updateMobileControlType);
 
-function onSelectUiTheme(e) {
+export function onSelectUiTheme(e) {
   const modalContainer = document.getElementById('modalContainer');
   if (modalContainer.dataset.lastModalId?.endsWith('createPartyModal'))
     setPartyTheme(e.target.dataset.uiTheme);
@@ -2164,10 +2240,10 @@ function initLocalization(isInitial) {
 
       const initLocationsCallback = () => {
         fetchAndPopulateRankingCategories();
-          if (eventPeriodCache) {
-            onUpdateEventPeriod(eventPeriodCache);
-            updateEvents();
-          }
+        if (eventPeriodCache) {
+          onUpdateEventPeriod(eventPeriodCache);
+          updateEvents();
+        }
 
         if (!isInitial) {
           // Update chat tips
@@ -2334,7 +2410,7 @@ function getLocalizedVersion(versionText) {
   return versionLabel;
 }
 
-function fetchAndInitLocations(lang, game) {
+export function fetchAndInitLocations(lang, game) {
   return new Promise(resolve => {
     fetchNewest(`locations/${game}/config.json`)
       .then(response => {
@@ -2455,11 +2531,7 @@ function initLocalizedLocations(game) {
   }
 }
 
-/**
- * @param {Record<string, MapDescriptor>} mapLocations
- * @return {MapTitle[]}
- */
-function getMapLocationsArray(mapLocations, mapId, prevMapId, x, y) {
+function getMapLocationsArray(mapLocations: Record<string, MapDescriptor>, mapId, prevMapId, x, y): MapTitle[] {
   if (mapId in mapLocations) {
     const locations = mapLocations[mapId];
     if (locations.hasTitle()) // Text location
@@ -2479,11 +2551,7 @@ function getMapLocationsArray(mapLocations, mapId, prevMapId, x, y) {
   }
 }
 
-/**
- * @param {MapTitle[]} locations
- * @return {MapTitle[]}
- */
-function getMapLocationsFromArray(locations, x, y) {
+function getMapLocationsFromArray(locations: MapTitle[], x, y): MapTitle[] {
   if (Array.isArray(locations) && locations[0].hasOwnProperty('coords') && x !== null && y !== null) {
     const coordLocation = locations.find(l => l.hasOwnProperty('coords') && ((l.coords.x1 === -1 && l.coords.x2 === -1) || (l.coords.x1 <= x && l.coords.x2 >= x)) && ((l.coords.y1 === -1 && l.coords.y2 === -1) || (l.coords.y1 <= y && l.coords.y2 >= y)));
     if (coordLocation)
@@ -2495,7 +2563,7 @@ function getMapLocationsFromArray(locations, x, y) {
   return locations;
 }
 
-function getLocalizedMapLocations(game, mapId, prevMapId, x, y, separator, forDisplay) {
+export function getLocalizedMapLocations(game, mapId, prevMapId, x, y, separator, forDisplay) {
   const localizedLocations = gameLocalizedMapLocations[game]?.[mapId];
   if (localizedLocations) {
     // locations have the same type as localizedLocations
@@ -2519,10 +2587,7 @@ function getLocalizedMapLocations(game, mapId, prevMapId, x, y, separator, forDi
   return localizedMessages.location.unknownLocation;
 }
 
-/**
- * @param {number | `0${number}`} prevMapId 
- */
-function getLocalizedMapLocationsHtml(game, mapId, prevMapId, x, y, separator) {
+export function getLocalizedMapLocationsHtml(game, mapId, prevMapId: number | `0${number}`, x, y, separator) {
   if (gameLocalizedMapLocations[game]?.hasOwnProperty(mapId)) {
     const localizedLocations = gameLocalizedMapLocations[game][mapId];
     const locations = gameMapLocations[game][mapId];
@@ -2578,11 +2643,7 @@ function massageMapLocations(mapLocations, locationUrlTitles) {
   }
 }
 
-/**
- * @param {MapTitle} location 
- * @param {MapTitle} locationEn 
- */
-function getLocalizedLocation(game, location, locationEn, asHtml, forDisplay) {
+export function getLocalizedLocation(game, location: MapTitle, locationEn: MapTitle, asHtml, forDisplay = false) {
   let template = getMassagedLabel(localizedMessages[forDisplay ? 'locationDisplay' : 'location'].template);
   let ret;
   let locationValue;
@@ -2638,7 +2699,7 @@ function massageLabels(data) {
   }
 }
 
-function getMassagedLabel(label, isUI) {
+export function getMassagedLabel(label, isUI) {
   if (label)
     label = label.replaceAll('\n', '<br>');
   if (langLabelMassageFunctions.hasOwnProperty(globalConfig.lang) && label)
@@ -2646,11 +2707,11 @@ function getMassagedLabel(label, isUI) {
   return label;
 }
 
-function getInfoLabel(label) {
+export function getInfoLabel(label) {
   return `<span class="infoLabel">${label}</span>`;
 }
 
-function queryAndSetWikiMaps(locations) {
+function queryAndSetWikiMaps(locations: unknown[]) {
   const maps = [];
   const massagedLocationNames = locations.map(l => {
     let locationName = l.urlTitle || l.title;
@@ -2669,7 +2730,7 @@ function queryAndSetWikiMaps(locations) {
   setMaps([], null, true);
 }
 
-function setMaps(maps, locationNames, cacheMaps, saveMaps) {
+function setMaps(maps, locationNames, cacheMaps, saveMaps = false) {
   const mapControls = document.getElementById('mapControls');
   mapControls.innerHTML = '';
   if (maps && maps.length) {
@@ -2714,7 +2775,7 @@ function getMapButton(url, label) {
 const badgeHintSe = new Audio('./audio/badge_hint.wav');
 let lastMatchedBadgeIdResults;
 
-function updateBadgeHint(locationNames) {
+function updateBadgeHint(locationNames: string[]) {
   if (!badgeCache || !Array.isArray(badgeCache))
     return;
   locationNames = locationNames.map(l => gameLocalizedLocationsMap[gameId]?.[l]?.title || l)
@@ -2760,7 +2821,7 @@ function updateBadgeHint(locationNames) {
   }
 }
 
-function getBadgeHintButton(locationName) {
+function getBadgeHintButton(locationName: string) {
   const ret = document.createElement('button');
   ret.classList.add('badgeHintButton', 'unselectable', 'iconButton');
   //addTooltip(ret, label, true);
@@ -2773,6 +2834,7 @@ function getBadgeHintButton(locationName) {
   return ret;
 }
 
+// SIDE EFFECT
 document.getElementById('canvas').addEventListener('keydown', function(ev) {
   if (ev.key.toLowerCase() === 'f') {
     ev.preventDefault();
@@ -2783,7 +2845,7 @@ document.getElementById('canvas').addEventListener('keydown', function(ev) {
   }
 });
 
-function getOrQueryLocationColors(locationName) {
+export function getOrQueryLocationColors(locationName) {
   return new Promise((resolve, _reject) => {
     if (Array.isArray(locationName) && locationName.length && locationName[0].hasTitle())
       locationName = locationName[0].title;
@@ -2840,7 +2902,7 @@ function cacheLocationColors(locationName, fgColor, bgColor) {
   }
 }
 
-function handleBadgeOverlayLocationColorOverride(badgeOverlay, badgeOverlay2, locations, playerName, mapId, prevMapId, prevLocationsStr, x, y) {
+export function handleBadgeOverlayLocationColorOverride(badgeOverlay, badgeOverlay2, locations, playerName?: string, mapId?: unknown, prevMapId?: unknown, prevLocationsStr?: string, x?: number, y?: number) {
   const setOverlayColors = (fgColor, bgColor) => {
     badgeOverlay.style.background = fgColor;
     if (badgeOverlay2)
@@ -2948,7 +3010,7 @@ function handleFilterInputs(modalInitFunc) {
   setTimeout(modalInitFunc, 250);
 }
 
-function addFilterInputs(modalPrefix, modalInitFunc, ...checkboxes) {
+export function addFilterInputs(modalPrefix, modalInitFunc, ...checkboxes) {
   const modal = document.getElementById(`${modalPrefix}Modal`);
 
   if (modal.querySelector('.filterInput'))
@@ -2994,8 +3056,7 @@ function openWikiLink(url, useDefault, asImage = false) {
 }
 
 function openWikiModal(url, asImg) {
-  /** @type {HTMLIFrameElement} */
-  const wikiFrame = document.getElementById('wikiFrame');
+  const wikiFrame: HTMLIFrameElement = document.getElementById('wikiFrame');
   const wikiModal = document.getElementById('wikiModal');
   // if (wikiFrame.dataset.src !== url) {
   //   wikiFrame.dataset.src = url;
@@ -3067,7 +3128,7 @@ function loadOrInitCache() {
   };
 }
 
-function updateCache(cacheType) {
+export function updateCache(cacheType) {
   if (cache.hasOwnProperty(cacheType)) {
     const request = indexedDB.open(gameId);
 
@@ -3079,15 +3140,14 @@ function updateCache(cacheType) {
   }
 }
 
-function setCacheValue(cacheType, key, value) {
+export function setCacheValue(cacheType, key, value) {
   if (!cache.hasOwnProperty(cacheType))
     return;
 
   cache[cacheType][key] = { time: new Date().getTime(), value: value };
 }
 
-/** @param {HTMLElement?} el */
-function clearCache(cacheType, el) {
+function clearCache(cacheType, el: HTMLElement | null) {
   if (el) el.setAttribute('disabled', '');
   cache[cacheType] = {};
   updateCache(cacheType);
@@ -3104,12 +3164,15 @@ function openCacheSettingsModal(prevModal) {
   openModal('cacheSettingsModal', null, prevModal);
 }
 
+// SIDE EFFECT
 onResize();
 
+// SIDE EFFECT
 loadOrInitConfig(globalConfig, true);
 loadOrInitConfig(config);
 loadOrInitCache();
 
+// SIDE EFFECT
 document.addEventListener('click', e => {    
   const target = e.target.closest('a');
   if (target && target.classList.contains('wikiLink') && openWikiLink(target.href, true)) { 
@@ -3118,12 +3181,14 @@ document.addEventListener('click', e => {
   }
 });
 
+// SIDE EFFECT
 initDefaultSprites();
 updateBadges();
 if (typeof initBadgeTools === 'function')
   initBadgeTools();
 fetchAndPopulateYnomojiConfig();
 
+// SIDE EFFECT
 if (!loadedUiTheme)
   setUiTheme('auto', true);
 if (!loadedFontStyle)
@@ -3133,6 +3198,7 @@ if (!loadedLang) {
   setLang(Array.from(document.getElementById('lang').children).map(e => e.value).indexOf(browserLang) > -1 ? browserLang : 'en', true);
 }
 
+// SIDE EFFECT
 if (!globalConfig.rulesReviewed) {
 	if (!globalConfig.warningsReviewed) {
 		openModal('rulesModal', undefined, 'warningsModal');

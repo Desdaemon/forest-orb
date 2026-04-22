@@ -1,7 +1,7 @@
-let playerFriendsCache = [];
+export let playerFriendsCache = [];
 let pendingOfflineFriendUuids = [];
 
-function updatePlayerFriends() {
+export function updatePlayerFriends() {
   if (loggedIn)
     sendSessionCommand('pf');
   else
@@ -94,7 +94,7 @@ async function onUpdatePlayerFriends(playerFriends) {
   }
 }
 
-function showFriendsToastMessage(key, icon, player, persist) {
+export function showFriendsToastMessage(key, icon, player, persist) {
   if (!notificationConfig.friends.all || !notificationConfig.friends[key])
     return;
   let message = getMassagedLabel(localizedMessages.toast.friends[key], true);
@@ -103,6 +103,7 @@ function showFriendsToastMessage(key, icon, player, persist) {
   showToastMessage(message, icon, true, null, persist);
 }
 
+// SIDE EFFECT
 (function () {
   addSessionCommandHandler('pf', args => onUpdatePlayerFriends(JSON.parse(args[0]) || []));
 })();

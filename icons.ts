@@ -1,4 +1,4 @@
-const icons = {
+export const icons = {
   approve: 'm6 13.5 10-13.5 2 2-12 16-6-7 2-2 4 4.5',
   badges: 'm9 0 2 2.5 3.5-1v3.5l3.5 1-1.5 3 1.5 3-3.5 1v3.5l-3.5-1-2 2.5-2-2.5-3.5 1v-3.5l-3.5-1 1.5-3-1.5-3 3.5-1v-3.5l3.5 1 2-2.5m0-3v7',
   badgeHint: 'm9 0 2 2.5 3.5-1v3.5l3.5 1-1.5 3 1.5 3-3.5 1v3.5l-3.5-1-2 2.5-2-2.5-3.5 1v-3.5l-3.5-1 1.5-3-1.5-3 3.5-1v-3.5l3.5 1 2-2.5m-1 14h2v-2h-2v2m0-3h2v-7h-2v7',
@@ -44,11 +44,9 @@ const icons = {
   visible: 'm0 9c2-3 6-5 9-5s7 1 9 5m-18 0c2 3 6 5 9 5s7-1 9-5m-9-3a1 1 0 0 0 0 6 1 1 0 0 0 0 -6'
 };
 
-/** @param {keyof typeof icons} iconId */
-function getSvgIcon(iconId, fill) {
-  if (!(iconId in icons))
-    return null;
-  
+export type Icons = keyof typeof icons;
+
+export function getSvgIcon(iconId: keyof typeof icons, fill = false) {
   const icon = document.createElement('div');
   icon.classList.add(`${iconId}Icon`, 'icon');
   if (fill)

@@ -1,14 +1,32 @@
+import { addChatMapLocation } from "./chat";
+import { checkEventLocations } from "./events";
+
 const is2kki = gameId === '2kki';
 
 let gameVersion;
-
 const pendingRequests = {};
+const _2kkiVersionPattern = /^(pre\-)?(\d+\.\d+)([a-z])?(?:[0-9])?(?: patch (\d+))?/;
 
-function send2kkiApiRequest(url, callback) {
+const ConnType = {
+  ONE_WAY: 1,
+  NO_ENTRY: 2,
+  UNLOCK: 4,
+  LOCKED: 8,
+  DEAD_END: 16,
+  ISOLATED: 32,
+  EFFECT: 64,
+  CHANCE: 128,
+  LOCKED_CONDITION: 256,
+  SHORTCUT: 512,
+  EXIT_POINT: 1024,
+  SEASONAL: 2048
+};
+
+export function send2kkiApiRequest<T = unknown>(url: string, callback: (_: T) => unknown) {
   if (pendingRequests.hasOwnProperty(url))
     pendingRequests[url].push(callback);
   else {
-    pendingRequests[url] = [ callback ];
+    pendingRequests[url] = [callback];
     const req = new XMLHttpRequest();
     req.responseType = 'json';
     req.open('GET', url);
@@ -28,7 +46,7 @@ function send2kkiApiRequest(url, callback) {
   }
 }
 
-function onLoad2kkiMap(mapId) {
+export function onLoad2kkiMap(mapId) {
   const prevMapId = cachedMapId;
   const prevLocations = prevMapId ? cached2kkiLocations : null;
   const locationKey = `${(prevMapId || '0000')}_${mapId}`;
@@ -40,7 +58,7 @@ function onLoad2kkiMap(mapId) {
 
   if (!cachedMapId)
     document.getElementById('location').classList.remove('hidden');
-  
+
   if (locations && locations.length) {
     const locationNames = Array.isArray(locations) ? locations.map(l => l.title) : null;
     set2kkiClientLocation(mapId, prevMapId, locations, prevLocations);
@@ -87,19 +105,19 @@ function onLoad2kkiMap(mapId) {
   }
 }
 
-function queryAndSet2kkiLocation(mapId, prevMapId, prevLocations, setLocationFunc, forClient) {
+function queryAndSet2kkiLocation(mapId, prevMapId, prevLocations, setLocationFunc, forClient?: boolean) {
   return new Promise((resolve, reject) => {
     let url = `https://explorer.yume.wiki/getMapLocationNames?mapId=${mapId}`;
     if (prevMapId) {
-        url += `&prevMapId=${prevMapId}`;
-        if (prevLocations && prevLocations.length)
-          url += `&prevLocationNames=${prevLocations.map(l => l.title).join('&prevLocationNames=')}`;
+      url += `&prevMapId=${prevMapId}`;
+      if (prevLocations && prevLocations.length)
+        url += `&prevLocationNames=${prevLocations.map(l => l.title).join('&prevLocationNames=')}`;
     }
 
     if (!setLocationFunc)
-      setLocationFunc = () => {};
-      
-    const callback = response => {
+      setLocationFunc = () => { };
+
+    send2kkiApiRequest<{}[]>(url, response => {
       const locationsArray = response;
       const locations = [];
 
@@ -151,13 +169,14 @@ function queryAndSet2kkiLocation(mapId, prevMapId, prevLocations, setLocationFun
 
               cacheAndResolve();
             }).catch(err => reject(err));
-            
+
           return;
-        } else
+        }
+        else
           setLocationFunc(mapId, prevMapId, locations, prevLocations, true, true);
       } else {
         const errCode = !Array.isArray(response) ? response?.err_code : null;
-        
+
         if (errCode)
           console.error({ error: response.error, errCode: errCode });
 
@@ -168,8 +187,7 @@ function queryAndSet2kkiLocation(mapId, prevMapId, prevLocations, setLocationFun
         setLocationFunc(mapId, prevMapId, null, prevLocations, true, true);
       }
       cacheAndResolve();
-    };
-    send2kkiApiRequest(url, callback);
+    });
 
     setLocationFunc(mapId, prevMapId, getMassagedLabel(localizedMessages.location.queryingLocation), prevLocations, true);
   });
@@ -204,14 +222,14 @@ function set2kkiClientLocation(mapId, prevMapId, locations, prevLocations, cache
   }
 }
 
-function getLocalized2kkiLocation(title, titleJP, asHtml, forDisplay) {
+function getLocalized2kkiLocation(title, titleJP, asHtml, forDisplay = false) {
   let template = localizedMessages[forDisplay ? 'locationDisplay' : 'location']['2kki'].template;
   if (asHtml)
     template = template.replace(/}([^{]+)/g, '}<span class="infoLabel">$1</span>');
   return getMassagedLabel(template).replace('{LOCATION}', title).replace('{LOCATION_JP}', titleJP || '');
 }
 
-function getLocalized2kkiLocations(locations, separator, forDisplay) {
+export function getLocalized2kkiLocations(locations, separator, forDisplay = false) {
   return locations && locations.length
     ? Array.isArray(locations)
       ? locations.map(l => getLocalized2kkiLocation(l.title, l.titleJP, false, forDisplay)).join(separator)
@@ -219,7 +237,7 @@ function getLocalized2kkiLocations(locations, separator, forDisplay) {
     : getMassagedLabel(localizedMessages.location.unknownLocation);
 }
 
-function get2kkiLocationHtml(location, showDepth) {
+export function get2kkiLocationHtml(location, showDepth) {
   const urlTitle = location.urlTitle || location.title;
   let urlTitleJP = location.urlTitleJP;
   if (!urlTitleJP && location.titleJP) {
@@ -255,15 +273,15 @@ function get2kkiLocationHtml(location, showDepth) {
   return locationHtmlJP ? getLocalized2kkiLocation(locationHtml, locationHtmlJP, true) : locationHtml;
 }
 
-function getLocalized2kkiLocationsHtml(locations, separator, showDepth) {
+export function getLocalized2kkiLocationsHtml(locations, separator, showDepth) {
   return locations && locations.length
     ? Array.isArray(locations)
-    ? locations.map(l => get2kkiLocationHtml(l, showDepth)).join(separator)
+      ? locations.map(l => get2kkiLocationHtml(l, showDepth)).join(separator)
       : getInfoLabel(locations)
     : getInfoLabel(getMassagedLabel(localizedMessages.location.unknownLocation));
 }
 
-function getOrQuery2kkiLocations(mapId, prevMapId, prevLocations, callback) {
+export function getOrQuery2kkiLocations(mapId, prevMapId, prevLocations, callback) {
   const callbackFunc = (_mapId, _prevMapId, locations, prevLocations, cacheLocation, saveLocation) => {
     callback(locations);
     if (cacheLocation) {
@@ -298,7 +316,7 @@ function getOrQuery2kkiLocations(mapId, prevMapId, prevLocations, callback) {
   }
 }
 
-function set2kkiGlobalChatMessageLocation(globalMessageLocation, mapId, prevMapId, prevLocations) {
+export function set2kkiGlobalChatMessageLocation(globalMessageLocation, mapId, prevMapId, prevLocations) {
   getOrQuery2kkiLocations(mapId, prevMapId, prevLocations, locations => {
     const locationsHtml = getLocalized2kkiLocationsHtml(locations, getInfoLabel('&nbsp;|&nbsp;'));
     fastdom.mutate(() => {
@@ -309,7 +327,7 @@ function set2kkiGlobalChatMessageLocation(globalMessageLocation, mapId, prevMapI
   });
 }
 
-function getOrQuery2kkiLocationsHtml(mapId, callback) {
+export function getOrQuery2kkiLocationsHtml(mapId, callback) {
   let locationKey = `0000_${mapId}`;
   if (locationCache && !locationCache.hasOwnProperty(locationKey)) {
     const locationKeys = Object.keys(locationCache).filter(k => k.endsWith(mapId) && Array.isArray(locationCache[k]));
@@ -340,29 +358,29 @@ function getOrQuery2kkiLocationsHtml(mapId, callback) {
   }
 }
 
-function queryConnected2kkiLocationNames(locationName, connLocationNames) {
+function queryConnected2kkiLocationNames(locationName: string, connLocationNames: string[]) {
   return new Promise((resolve, _reject) => {
     const url = `https://explorer.yume.wiki/getConnectedLocations?locationName=${locationName}&connLocationNames=${connLocationNames.join('&connLocationNames=')}`;
-    const callback = response => {
+    send2kkiApiRequest(url, response => {
       let ret = [];
       let errCode = null;
 
       if (Array.isArray(response))
         ret = response;
+
       else
         errCode = response?.err_code;
-        
+
       if (errCode)
         console.error({ error: response.error, errCode: errCode });
 
       resolve(ret);
-    };
-    send2kkiApiRequest(url, callback);
+    });
   });
 }
 
-function queryAndSet2kkiMaps(locationNames) {
-  return new Promise((resolve, _reject) => {
+export function queryAndSet2kkiMaps(locationNames: string[]) {
+  return new Promise<void>((resolve, _reject) => {
     const massagedLocationNames = locationNames.map(locationName => {
       const colonIndex = locationName.indexOf(':');
       if (colonIndex > -1)
@@ -370,26 +388,26 @@ function queryAndSet2kkiMaps(locationNames) {
       return locationName;
     });
     const url = `https://explorer.yume.wiki/getLocationMaps?locationNames=${massagedLocationNames.join('&locationNames=')}`;
-    const callback = response => {
+    send2kkiApiRequest(url, response => {
       let errCode = null;
 
       if (Array.isArray(response))
         setMaps(response, locationNames, true, true);
+
       else
         errCode = response?.err_code;
-        
+
       if (errCode)
         console.error({ error: response.error, errCode: errCode });
 
       resolve();
-    };
-    send2kkiApiRequest(url, callback);
+    });
 
     setMaps([], null, true);
   });
 }
 
-function set2kkiExplorerLinks(locationNames) {
+export function set2kkiExplorerLinks(locationNames: string[]) {
   const explorerControls = document.getElementById('explorerControls');
   if (!explorerControls)
     return;
@@ -403,7 +421,7 @@ function set2kkiExplorerLinks(locationNames) {
 function get2kkiExplorerButton(locationName, isMulti) {
   const ret = document.createElement('button');
   const localizedExplorerLinks = localizedMessages['2kki'].explorerLink;
-  
+
   addTooltip(ret, getMassagedLabel(!isMulti ? localizedExplorerLinks.generic : localizedExplorerLinks.multi, true).replace('{LOCATION}', locationName), true, true);
   ret.classList.add('unselectable', 'iconButton');
 
@@ -412,7 +430,7 @@ function get2kkiExplorerButton(locationName, isMulti) {
   ret.onclick = () => {
     const handle = window.open(url, '_blank');
     if (handle)
-        handle.focus();
+      handle.focus();
   };
 
   ret.innerHTML = '<svg viewbox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="m6.75 0v4.5h4.5v-4.5h-4.5m2.25 4.5v4.5h-1.5v3h3v-3h-1.5m0-3h-7.5v3h-1.5v3h3v-3h-1.5m7.5-3h7.5v3h-1.5v3h3v-3h-1.5m-7.5 3v3.75h-1.125v2.25h2.25v-2.25h-1.125m0-2.25h-7.5v2.25h-1.125v2.25h2.25v-2.25h-1.125m7.5-2.25h7.5v2.25h-1.125v2.25h2.25v-2.25h-1.125"></path></svg>';
@@ -420,23 +438,21 @@ function get2kkiExplorerButton(locationName, isMulti) {
   return ret;
 }
 
-function get2kkiWikiLocationName(location) {
+export function get2kkiWikiLocationName(location: string | {}) {
   if (typeof location === 'string')
     return location;
   let locationName = location.title;
-    if (location.urlTitle)
-      locationName = location.urlTitle.replace(/%26/g, "&").replace(/%27/g, "'").replace(/\_/g, " ").replace(/#.*/, "");
-    else {
-      const colonIndex = locationName.indexOf(':');
-      if (colonIndex > -1)
-        locationName = locationName.slice(0, colonIndex);
-    }
-    return locationName;
+  if (location.urlTitle)
+    locationName = location.urlTitle.replace(/%26/g, "&").replace(/%27/g, "'").replace(/\_/g, " ").replace(/#.*/, "");
+  else {
+    const colonIndex = locationName.indexOf(':');
+    if (colonIndex > -1)
+      locationName = locationName.slice(0, colonIndex);
+  }
+  return locationName;
 }
 
-const _2kkiVersionPattern = /^(pre\-)?(\d+\.\d+)([a-z])?(?:[0-9])?(?: patch (\d+))?/;
-
-function compare2kkiVersionNames(v1, v2) {
+function compare2kkiVersionNames(v1: string, v2: string) {
   if (v1 === v2)
     return 0;
 
@@ -444,8 +460,8 @@ function compare2kkiVersionNames(v1, v2) {
   const match2 = v2.match(_2kkiVersionPattern);
 
   if (match1 != null && match2 != null) {
-    let verNum1 = parseFloat(match1[2]);
-    let verNum2 = parseFloat(match2[2]);
+    let verNum1 = parseFloat(match1[2]!);
+    let verNum2 = parseFloat(match2[2]!);
 
     if (verNum1 === verNum2) {
       let subVer1 = match1[3];
@@ -473,94 +489,79 @@ function compare2kkiVersionNames(v1, v2) {
         return -1;
       else if (patchVer1 != null)
         return 1;
-  } else
-    return verNum1 < verNum2 ? -1 : 1;
-  if (match1[1] !== undefined) {
-    if (match2[1] === undefined)
-      return -1;
+    } else
+      return verNum1 < verNum2 ? -1 : 1;
+    if (match1[1] !== undefined) {
+      if (match2[1] === undefined)
+        return -1;
     } else if (match2[1] !== undefined)
       return 1;
   } else if (match2 != null)
     return -1;
   else if (match1 != null)
     return 1;
-  
+
   return 0;
 }
-
-const ConnType = {
-  ONE_WAY: 1,
-  NO_ENTRY: 2,
-  UNLOCK: 4,
-  LOCKED: 8,
-  DEAD_END: 16,
-  ISOLATED: 32,
-  EFFECT: 64,
-  CHANCE: 128,
-  LOCKED_CONDITION: 256,
-  SHORTCUT: 512,
-  EXIT_POINT: 1024,
-  SEASONAL: 2048
-};
 
 function getConnTypeChar(connType, typeParams) {
   let char;
   switch (connType) {
-      case ConnType.ONE_WAY:
-          char = "➜";
+    case ConnType.ONE_WAY:
+      char = "➜";
+      break;
+    case ConnType.NO_ENTRY:
+      char = "⛔";
+      break;
+    case ConnType.UNLOCK:
+      char = "🔑";
+      break;
+    case ConnType.LOCKED:
+      char = "🔒";
+      break;
+    case ConnType.DEAD_END:
+      char = "🚩";
+      break;
+    case ConnType.ISOLATED:
+      char = "↩️";
+      break;
+    case ConnType.EFFECT:
+      char = "✨";
+      break;
+    case ConnType.CHANCE:
+      char = "🍀";
+      break;
+    case ConnType.LOCKED_CONDITION:
+      char = "🔐";
+      break;
+    case ConnType.SHORTCUT:
+      char = "📞";
+      break;
+    case ConnType.EXIT_POINT:
+      char = "☎️";
+      break;
+    case ConnType.SEASONAL:
+      const seasonParam = typeParams ? typeParams.params : null;
+      switch (seasonParam || "Summer") {
+        case "Spring":
+          char = "🌸";
           break;
-      case ConnType.NO_ENTRY:
-          char = "⛔";
+        case "Summer":
+          char = "☀️";
           break;
-      case ConnType.UNLOCK:
-          char = "🔑";
+        case "Fall":
+          char = "🍂";
           break;
-      case ConnType.LOCKED:
-          char = "🔒";
+        case "Winter":
+          char = "❄️";
           break;
-      case ConnType.DEAD_END:
-          char = "🚩";
-          break;
-      case ConnType.ISOLATED:
-          char = "↩️";
-          break;
-      case ConnType.EFFECT:
-          char = "✨";
-          break;
-      case ConnType.CHANCE:
-          char = "🍀";
-          break;
-      case ConnType.LOCKED_CONDITION:
-          char = "🔐";
-          break;
-      case ConnType.SHORTCUT:
-          char = "📞";
-          break;
-      case ConnType.EXIT_POINT:
-          char = "☎️";
-          break;
-      case ConnType.SEASONAL:
-          const seasonParam = typeParams ? typeParams.params : null;
-          switch (seasonParam || "Summer") {
-              case "Spring":
-                  char = "🌸";
-                  break;
-              case "Summer":
-                  char = "☀️";
-                  break;
-              case "Fall":
-                  char = "🍂";
-                  break;
-              case "Winter":
-                  char = "❄️";
-                  break;
-          }
-          break;
+      }
+      break;
   }
   return char;
 }
 
-function getDepthRgba(depth, maxDepth) {
+export function getDepthRgba(depth: number, maxDepth: number) {
   const depthColors = [];
   const depthHueIncrement = (1 / maxDepth) * 0.6666;
 
@@ -570,7 +571,7 @@ function getDepthRgba(depth, maxDepth) {
   return depthColors[Math.min(depth, maxDepth)];
 }
 
-function checkShow2kkiVersionUpdate() {
+export function checkShow2kkiVersionUpdate() {
   return new Promise(resolve => {
     const chatboxContainer = document.getElementById('chatboxContainer');
     const versionDisplay = document.querySelector('.versionDisplay');
@@ -589,7 +590,7 @@ function checkShow2kkiVersionUpdate() {
     chatboxContainer.classList.add('hidden');
 
     const versionText = document.querySelector('.version').innerText;
-    
+
     const versionPrefixText = versionText.slice(0, versionText.indexOf(getLocalizedVersion(currentVersion)));
     const versionNewSuffixText = versionText.slice(versionPrefixText.length);
     const versionOldSuffixText = getLocalizedVersion(config.last2kkiVersion);
@@ -640,10 +641,10 @@ function checkShow2kkiVersionUpdate() {
   });
 }
 
-function reloadExplorer(trackedLocations) {
+function reloadExplorer(trackedLocations?: unknown[]) {
   if (!config.enableExplorer)
     return;
-  const explorerFrame = document.getElementById('explorerFrame');
+  const explorerFrame = document.getElementById('explorerFrame') as HTMLIFrameElement;
   if (!cachedLocations) {
     explorerFrame.src = '';
     return;
@@ -657,27 +658,28 @@ function reloadExplorer(trackedLocations) {
         throw new Error(response.statusText);
       return response.text();
     })
-    .then(url => {
-      const newUrl = url ? `${url}&lang=${globalConfig.lang}` : '';
-      if (explorerFrame.src !== newUrl) {
-        explorerFrame.src = newUrl;
-        apiFetch('explorercompletion')
-          .then(response => response.text())
-          .then(textResponse => {
-            const completionPercent = parseInt(textResponse);
-            document.getElementById('explorerUndiscoveredLocationsLink').classList.toggle('hidden', !completionPercent || completionPercent < 95);
-          });
-      } else
-        removeLoader(explorerFrame);
-    })
-    .catch(err => console.error(err));
+      .then(url => {
+        const newUrl = url ? `${url}&lang=${globalConfig.lang}` : '';
+        if (explorerFrame.src !== newUrl) {
+          explorerFrame.src = newUrl;
+          apiFetch('explorercompletion')
+            .then(response => response.text())
+            .then(textResponse => {
+              const completionPercent = parseInt(textResponse);
+              document.getElementById('explorerUndiscoveredLocationsLink').classList.toggle('hidden', !completionPercent || completionPercent < 95);
+            });
+        } else
+          removeLoader(explorerFrame);
+      })
+      .catch(err => console.error(err));
   }
 }
 
-(function () {
+(function() {
   if (!is2kki)
     return;
 
+  // SIDE EFFECT
   compareVersionNames = compare2kkiVersionNames;
 
   addSessionCommandHandler('l', locationIds => {
@@ -691,7 +693,7 @@ function reloadExplorer(trackedLocations) {
         document.getElementById('nextLocationContainer').classList.add('hidden');
         updateConfig(config);
       }
-      sendSessionCommand('nl', [ config.trackedLocationId ], params => reloadExplorer(params));
+      sendSessionCommand('nl', [config.trackedLocationId], params => reloadExplorer(params));
     } else
       reloadExplorer();
   });

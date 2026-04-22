@@ -1,3 +1,6 @@
+import { apiFetch } from './init'
+import { handleBadgeOverlayLocationColorOverride } from './play'
+
 /**
   Either SimpleBadge or Badge
   Cross-check with badges.go in ynoserver
@@ -858,7 +861,7 @@ async function viewBadgeInModal(badgeId, badgeGame) {
   document.getElementById('badgeCategoryTabs').querySelector('.subTab:first-child')?.click();
 }
 
-async function viewBadgeLocationInModal(locationName, gameId, unlockStatus) {
+export async function viewBadgeLocationInModal(locationName, gameId, unlockStatus) {
   const badgeSearch = document.getElementById('badgeSearch');
   badgeSearch.value = `=${locationName}`;
   badgeSearch.classList.add('active');
@@ -878,7 +881,7 @@ async function viewBadgeLocationInModal(locationName, gameId, unlockStatus) {
   document.getElementById('badgeCategoryTabs').querySelector('.subTab:first-child')?.click();
 }
 
-function getMapCacheKey(mapId) {
+export function getMapCacheKey(mapId) {
   if (!mapIdToCacheKey) mapIdToCacheKey = {};
   if (!mapIdToCacheKey[mapId]) {
     for (const key of Object.keys(locationCache)) {
@@ -896,7 +899,7 @@ function getMapCacheKey(mapId) {
  * @param {MapDescriptor} descriptor 
  * @returns {string?}
  */
-function determineTitle(descriptor, x, y) {
+export function determineTitle(descriptor, x, y) {
   if (!descriptor || typeof descriptor === 'string') return descriptor;
   if (Array.isArray(descriptor)) {
     const match = descriptor.find(loc => {
@@ -919,7 +922,7 @@ function determineTitle(descriptor, x, y) {
   return descriptor.title;
 }
 
-function findBadge(badgeId) {
+export function findBadge(badgeId) {
   if (!badgeId || badgeId === 'null') return;
   let left = 0;
   let right = badgeCache.length - 1;
@@ -1011,8 +1014,7 @@ function initBadgePresetModal() {
     });
 }
 
-/** @param {string[][]?} badgeSlots */
-function isEmptyBadgeSlots(badgeSlots) {
+function isEmptyBadgeSlots(badgeSlots: string[][] | undefined) {
   if (!Array.isArray(badgeSlots)) return true;
 
   for (const row of badgeSlots)
@@ -1023,8 +1025,7 @@ function isEmptyBadgeSlots(badgeSlots) {
   return true;
 }
 
-/** @param {string[][]} [preset] */
-function updateCurrentPreset(preset) {
+function updateCurrentPreset(preset: string[][]) {
   badgePresetCache = preset || [];
   const items = document.getElementById('badgePresetModal').querySelector('.modalContent');
   if (isEmptyBadgeSlots(preset)) {
@@ -1038,7 +1039,7 @@ function updateCurrentPreset(preset) {
   items.replaceChildren(badgeSlots);
 }
 
-function updateBadgeButton() {
+export function updateBadgeButton() {
   const badgeId = playerData?.badge || 'null';
   const badge = playerData?.badge ? badgeCache.find(b => b.badgeId === badgeId) : null;
   const badgeButton = document.getElementById('badgeButton');
@@ -1048,7 +1049,7 @@ function updateBadgeButton() {
     handleBadgeOverlayLocationColorOverride(badgeButton.querySelector('.badgeOverlay'), badgeButton.querySelector('.badgeOverlay2'), cachedLocations);
 }
 
-function getBadgeUrl(badge, staticOnly) {
+export function getBadgeUrl(badge, staticOnly) {
   let badgeId;
   if (typeof badge === 'string') {
     badgeId = badge;
@@ -1061,7 +1062,7 @@ function getBadgeUrl(badge, staticOnly) {
 /**
   @param {Badge} badge
 */
-function getBadgeItem(badge, includeTooltip, emptyIcon, lockedIcon, scaled, filterable, parsedSystemName, lazy) {
+export function getBadgeItem(badge, includeTooltip, emptyIcon, lockedIcon, scaled, filterable, parsedSystemName, lazy) {
   const badgeId = badge.badgeId;
 
   const item = document.createElement('div');
@@ -1314,7 +1315,7 @@ function fetchPlayerBadges() {
     })
 };
 
-function updateBadges(callback) {
+export function updateBadges(callback) {
   apiFetch('badge?command=list&simple=true')
     .then(response => {
       if (!response.ok)
@@ -1569,11 +1570,10 @@ function addOrUpdatePlayerBadgeGalleryTooltip(badgeElement, name, sysName, mapId
   return badgeElement._badgeGalleryTippy;
 }
 
-/** @param {string[][]} badgeSlots */
-function formatBadgeContainer(badgeSlots) {
+function formatBadgeContainer(badgeSlots: string[][]) {
   let minRowIndex = badgeSlots.length - 1;
   let maxRowIndex = 0;
-  let minColIndex = badgeSlots[0].length - 1;
+  let minColIndex = badgeSlots[0]!.length - 1;
   let maxColIndex = 0;
 
   for (let r = 0; r < badgeSlots.length; ++r) {
@@ -1698,8 +1698,8 @@ function showBadgeToastMessage(key, icon, badgeId) {
   }
 }
 
-/** @param {Element} element The element on which two-finger panning should be applied. */
-function setUpTwoFingerPan(element, contentElement) {
+/** @param element The element on which two-finger panning should be applied. */
+function setUpTwoFingerPan(element: Element, contentElement) {
   if (!hasTouchscreen) return;
   if (!contentElement) contentElement = element;
   if (!(element && contentElement)) return;
@@ -1743,4 +1743,5 @@ function setUpTwoFingerPan(element, contentElement) {
   });
 }
 
+// SIDE EFFECT
 setUpTwoFingerPan(badgeGalleryModalContent);

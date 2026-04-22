@@ -1,6 +1,6 @@
 let loggedIn = false;
 
-function initAccountControls() {
+export function initAccountControls() {
   document.getElementById('loginButton').onclick = () => {
     document.getElementById('loginErrorRow').classList.add('hidden');
     openModal('loginModal');
@@ -105,7 +105,7 @@ function initAccountControls() {
   };
 }
 
-function initAccountSettingsModal() {
+export function initAccountSettingsModal() {
   const badgeId = playerData?.badge || 'null';
   const badge = playerData?.badge ? badgeCache.find(b => b.badgeId === badgeId) : null;
 
@@ -128,7 +128,7 @@ function initPasswordModal() {
   document.getElementById('passwordErrorRow').classList.add('hidden');
 }
 
-function updateModControls(forceRecreate = false) {
+export function updateModControls(forceRecreate = false) {
   const modSettingsModal = document.getElementById('modSettingsModal');
   if (!modSettingsModal) return;
   const modSettingsControls = modSettingsModal.querySelector('.formControls');
@@ -274,7 +274,7 @@ function updateModControls(forceRecreate = false) {
   }
 }
 
-function showAccountToastMessage(key, icon, username) {
+export function showAccountToastMessage(key, icon, username) {
   if (!notificationConfig.account.all || (notificationConfig.account.hasOwnProperty(key) && !notificationConfig.account[key]))
     return;
   let message = getMassagedLabel(localizedMessages.toast.account[key], true).replace('{USER}', username);

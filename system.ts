@@ -1,3 +1,6 @@
+import { gameId } from "./init";
+import type { ClassValue } from 'svelte/elements'
+
 const allGameUiThemes = {
   '2kki': [
     'system1',
@@ -394,8 +397,8 @@ const allGameUiThemes = {
     '0000000000010',
     '0000000000011'
   ]
-};
-const gameUiThemes = allGameUiThemes[gameId];
+} as const;
+export const gameUiThemes = allGameUiThemes[gameId as '2kki'];
 
 const allGameFullBgUiThemes = {
   '2kki': [],
@@ -414,7 +417,6 @@ const allGameFullBgUiThemes = {
   'nostalgic': [],
   'oneshot': [],
   'oversomnia': [],
-  'prayers': [ 'grey-and-chartreuse', 'chartreuse', 'customsystem' ],
   'sheawaits': [],
   'someday': [],
   'tsushin': [],
@@ -422,7 +424,7 @@ const allGameFullBgUiThemes = {
   'unaccomplished': [],
   'unevendream': [],
   'yume': [ '0000000000010' ]
-};
+} as const;
 
 const gameFullBgUiThemes = allGameFullBgUiThemes[gameId];
 
@@ -430,7 +432,6 @@ const gameLogoBlendModeOverrides = {
   'amillusion': 'screen',
   'braingirl': 'color',
   'cold': 'color',
-  'unconscious': 'color',
   'deepdreams': 'soft-light',
   'fog': 'color',
   'genie': 'color',
@@ -441,13 +442,14 @@ const gameLogoBlendModeOverrides = {
   'unevendream': 'color'
 };
 
-const gameEndDates = {
-  'unconscious': Date.UTC(2025, 11, 28, 5, 0)
+const gameEndDates: Record<string, number> = {
+  // 'unconscious': Date.UTC(2025, 11, 28, 5, 0)
 };
 
-const contrastRatioThreshold = 2.02;
+// const contrastRatioThreshold = 2.02;
+const contrastRatioThreshold = 4.5;
 
-function setSystemName(name) {
+export function setSystemName(name) {
   systemName = name.replace(/'|\s$/g, '');
   if (playerData) {
     playerData.systemName = name;
@@ -474,7 +476,7 @@ function onUpdateSystemGraphic(name) {
   }
 }
 
-function getDefaultUiTheme(themeGameId) {
+export function getDefaultUiTheme(themeGameId: string) {
   if (!themeGameId || !allGameUiThemes.hasOwnProperty(themeGameId))
     themeGameId = gameId;
   return allGameUiThemes[themeGameId][0];
@@ -683,7 +685,20 @@ function initUiThemeFontStyles(uiTheme, themeGameId, fontStyle, setTheme, callba
 /**
  * @type {(el: Element, uiTheme?: string, themeGameId?: string) => Promise<void>}
  */
-let applyThemeStyles;
+export let applyThemeStyles;
+
+/**
+ * Replaces: applyThemeStyles and updateThemedContainer
+ */
+export function themeClass(uiTheme?: string, themeGameId?: keyof typeof allGameFullBgUiThemes): ClassValue | undefined {
+  if (!uiTheme) return undefined;
+  if (!themeGameId)
+    themeGameId = gameId;
+  const themeSuffix = `_${themeGameId !== gameId ? `${themeGameId}___` : ''}${uiTheme}`;
+  const themeStylesId = `theme${themeSuffix}`;
+  // return themeStylesId
+  return [themeStylesId, { fullBg: (allGameFullBgUiThemes[themeGameId] as readonly string[]).includes(uiTheme) }] as const;
+}
 
 {
   const themeStyleTemplate = `
@@ -937,10 +952,7 @@ function getUiThemeOption(uiTheme) {
   return item;
 }
 
-/**
- * @param {HTMLElement} themedContainer 
- */
-function updateThemedContainer(themedContainer) {
+export function updateThemedContainer(themedContainer: HTMLElement) {
   if (!themedContainer)
     return;
 

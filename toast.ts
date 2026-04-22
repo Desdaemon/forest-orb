@@ -1,8 +1,10 @@
-let toastAnimEndTimer;
+import { getDefaultUiTheme } from "./system";
 
-let fadeToastQueue = [];
+let toastAnimEndTimer: number | undefined;
 
-const notificationTypes = /** @type {const} */ ({
+let fadetoastqueue = [];
+
+const notificationTypes = {
   system: [
     'siteUpdates',
     'error',
@@ -68,23 +70,26 @@ const notificationTypes = /** @type {const} */ ({
   schedules: [
     'upcomingSchedules',
   ],
-});
+} as const;
 
-/** @typedef {{ -readonly [T in keyof typeof notificationTypes]: {all: boolean} & { [U in (typeof notificationTypes)[T][number]]: boolean } }} GeneratedConfig */
-/** @typedef {{all: bool; screenPosition: string}} BaseConfig */
+type GeneratedConfig = {
+    -readonly [T in keyof typeof notificationTypes]: { all: boolean; } & {
+        [U in (typeof notificationTypes)[T][number]]?: boolean;
+    };
+};
+type BaseConfig = { all: boolean; screenPosition: string; };
 
-/** @type {BaseConfig & GeneratedConfig} */
-let notificationConfig = {
+let notificationConfig: BaseConfig & Partial<GeneratedConfig> = {
   all: true,
   screenPosition: 'bottomLeft'
 };
 
 const accountNotificationCategories = [ 'account', 'events', 'badges', 'timeTrials', 'saveSync' ];
 
-function initNotificationsConfigAndControls() {
+export function initNotificationsConfigAndControls() {
   const notificationSettingsControls = document.querySelector('#notificationSettingsModal .formControls');
 
-  for (let category of Object.keys(notificationTypes)) {
+  for (let category of Object.keys(notificationTypes) as (keyof typeof notificationTypes)[]) {
     const categoryConfig = { all: true };
     notificationConfig[category] = categoryConfig;
 
@@ -98,7 +103,7 @@ function initNotificationsConfigAndControls() {
     const categoryButtonId = `notificationsButton_${category}`;
 
     const categoryLabel = document.createElement('label');
-    categoryLabel.for = categoryButtonId;
+    categoryLabel.htmlFor = categoryButtonId;
     categoryLabel.classList.add('unselectable');
     categoryLabel.dataset.i18n = `[html]modal.notificationSettings.fields.${category}.label`;
 
@@ -139,7 +144,7 @@ function initNotificationsConfigAndControls() {
 
       const typeLabel = document.createElement('label');
       typeLabel.classList.add('unselectable');
-      typeLabel.for = typeButtonId;
+      typeLabel.htmlFor = typeButtonId;
       typeLabel.dataset.i18n = `[html]modal.notificationSettings.fields.${category}.fields.${type}`;
 
       const typeButtonContainer = document.createElement('div');
@@ -176,7 +181,7 @@ function initNotificationsConfigAndControls() {
   document.getElementById('notificationScreenPosition').onclick = function () { setNotificationScreenPosition(this.value); };
 }
 
-function setNotificationScreenPosition(value) {
+export function setNotificationScreenPosition(value) {
   if (value) {
     const toastContainer = document.getElementById('toastContainer');
     toastContainer.classList.toggle('top', value === 'topLeft' || value === 'topRight');
@@ -212,7 +217,7 @@ function didSetNotificationConfig(category, type, value) {
   }
 }
 
-function showToastMessage(message, icon, iconFill, systemName, persist) {
+export function showToastMessage(message, icon, iconFill, systemName, persist) {
   if (!notificationConfig.all)
     return;
 
@@ -292,7 +297,7 @@ function showClientToastMessage(key, icon) {
   showSystemToastMessage(key, icon);
 }
 
-function showSystemToastMessage(key, icon) {
+export function showSystemToastMessage(key, icon) {
   if (!notificationConfig.system.all || !notificationConfig.system[key] || document.querySelector(`.systemToast[data-notification-key='${key}']`))
     return;
   const toast = showToastMessage(getMassagedLabel(localizedMessages.toast.system[key], true), icon, true, null, true);
@@ -301,6 +306,7 @@ function showSystemToastMessage(key, icon) {
     toast.dataset.notificationKey = key;
 }
 
+// SIDE EFFECT
 document.addEventListener('visibilitychange', () => {
   while (fadeToastQueue.length)
     setTimeout(fadeToastQueue.shift(), 10000);
