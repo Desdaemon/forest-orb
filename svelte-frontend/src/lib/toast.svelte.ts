@@ -1,4 +1,7 @@
 import { getDefaultUiTheme } from "$lib/system";
+import { showSystemToastMessage } from "$lib/components/ToastContainer.svelte";
+import { onMount } from "svelte";
+import { isBrowser } from "./init";
 
 let toastAnimEndTimer: number | undefined;
 
@@ -79,7 +82,7 @@ type GeneratedConfig = {
 };
 type BaseConfig = { all: boolean; screenPosition: string; };
 
-export const notificationConfig: BaseConfig & Partial<GeneratedConfig> = $state({
+export const notificationConfig: BaseConfig & GeneratedConfig = $state({
   all: true,
   screenPosition: 'bottomLeft'
 });
@@ -217,100 +220,7 @@ function didSetNotificationConfig(category, type, value) {
   }
 }
 
-export function showToastMessage(message, icon, iconFill, systemName, persist) {
-  if (!notificationConfig.all)
-    return;
-
-  if (systemName) {
-    if (gameUiThemes.indexOf(systemName) === -1)
-      systemName = getDefaultUiTheme();
-    systemName = systemName.replace(/ /g, '_')
-  }
-
-  const toast = document.createElement('div');
-  toast.classList.add('toast');
-  if (systemName)
-    applyThemeStyles(toast, systemName);
-
-  updateThemedContainer(toast);
-
-  if (icon) {
-    const toastIcon = getSvgIcon(icon, iconFill);
-    toast.appendChild(toastIcon);
-  }
-
-  const toastMessageContainer = document.createElement('div');
-  toastMessageContainer.classList.add('toastMessageContainer');
-
-  const toastMessage = document.createElement('div');
-  toastMessage.classList.add('toastMessage');
-
-  toastMessage.innerHTML = message;
-
-  toastMessageContainer.appendChild(toastMessage);
-  toast.appendChild(toastMessageContainer);
-
-  const closeButton = document.createElement('a');
-  closeButton.classList.add('closeToast');
-  closeButton.innerText = '✖';
-  closeButton.href = 'javascript:void(0);';
-  closeButton.ontouchstart = closeButton.onclick = () => toast.remove();
-
-  toast.appendChild(closeButton);
-
-  const toastContainer = document.getElementById('toastContainer');
-
-  toastContainer.appendChild(toast);
-
-  if (toastAnimEndTimer) {
-    clearInterval(toastAnimEndTimer);
-    toastContainer.classList.remove('anim');
-  }
-
-  const rootStyle = toastContainer.style;
-
-  rootStyle.setProperty('--toast-offset', `-${toast.getBoundingClientRect().height + 8}px`);
-  setTimeout(() => {
-    toastContainer.classList.add('anim');
-    rootStyle.setProperty('--toast-offset', '0');
-    toastAnimEndTimer = setTimeout(() => {
-      toastContainer.classList.remove('anim');
-      toastAnimEndTimer = null;
-      if (!persist) {
-        const fadeToastFunc = () => {
-          toast.classList.add('fade');
-          setTimeout(() => toast.remove(), 1000);
-        };
-        if (document.hidden)
-          fadeToastQueue.push(fadeToastFunc);
-        else
-          setTimeout(fadeToastFunc, 10000);
-      }
-    }, 500);
-  }, 10);
-
-  return toast;
-}
-
 // EXTERNAL
-function showClientToastMessage(key, icon) {
-  showSystemToastMessage(key, icon);
+if (isBrowser) { 
+  window.showClientToastMessage = showSystemToastMessage;
 }
-
-export function showSystemToastMessage(key, icon) {
-  if (!notificationConfig.system.all || !notificationConfig.system[key] || document.querySelector(`.systemToast[data-notification-key='${key}']`))
-    return;
-  const toast = showToastMessage(getMassagedLabel(localizedMessages.toast.system[key], true), icon, true, null, true);
-  toast.classList.add('systemToast');
-  if (toast)
-    toast.dataset.notificationKey = key;
-}
-
-// SIDE EFFECT
-(function() {
-  return;
-  document.addEventListener('visibilitychange', () => {
-    while (fadeToastQueue.length)
-      setTimeout(fadeToastQueue.shift(), 10000);
-  });
-})();

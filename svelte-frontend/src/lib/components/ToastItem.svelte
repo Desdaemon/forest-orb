@@ -3,6 +3,7 @@
 	import { themeClass } from "$lib/system";
 	import { onMount } from "svelte";
 	import Icon from "./Icon.svelte";
+	import type { ClassValue } from "svelte/elements";
 
 	export type ToastProps = {
 		message: string
@@ -12,6 +13,8 @@
 		icon?: Icons
 		filledIcon?: boolean
 		onmount?(_: ToastController): void;
+		class?: ClassValue;
+		['data-special']?: string;
 	}
 
 	type ToastController = {
@@ -21,32 +24,32 @@
 
 	let fade = $state(false);
 
-	let props: ToastProps = $props();
+	let { message, onclose, systemName, icon, filledIcon, onmount, ...divProps }: ToastProps = $props();
 	let element: HTMLDivElement;
 
 	function scheduleClose() {
 		fade = true;
 		setTimeout(() => {
 			if (!element) return; // unmounted
-			props.onclose();
+			onclose();
 		}, 1000);
 	}
 
 	onMount(() => {
-		props.onmount?.({ element, scheduleClose });
+		onmount?.({ element, scheduleClose });
 	});
 </script>
 
 
-<div bind:this={element} class={['toast', { fade }, themeClass(props.systemName)]}>
-	{#if props.icon}
-		<Icon icon={props.icon} fill={props.filledIcon}/>
+<div bind:this={element} {...divProps} class={['toast', { fade }, themeClass(systemName), divProps.class]}>
+	{#if icon}
+		<Icon {icon} fill={filledIcon}/>
 	{/if}
 	<div class="toastMessageContainer">
-		<div class="toastMessage">{@html props.message}</div>
+		<div class="toastMessage">{@html message}</div>
 	</div>
 	<!-- svelte-ignore a11y_invalid_attribute -->
-	<a href="javascript:void(0)" role="button" class="closeToast" onclick={props.onclose}>✖</a>
+	<a href="javascript:void(0)" role="button" class="closeToast" onclick={onclose}>✖</a>
 </div>
 
 <style>

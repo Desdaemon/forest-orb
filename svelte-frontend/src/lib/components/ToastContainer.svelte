@@ -1,35 +1,42 @@
-<script lang="ts">
+<script module lang="ts">
 	import { notificationConfig } from '$lib/toast.svelte';
-	import { onMount } from 'svelte';
 	import type { Icons } from '$lib/icons';
-	import ToastItem, { type ToastProps } from './ToastItem.svelte';
+	import type { ToastProps } from './ToastItem.svelte';
+	import type { ClassValue } from 'svelte/elements';
 
-	type ToastItem = Omit<ToastProps, 'onclose'> & { id: number }
-
-	let toastContainer: HTMLDivElement = $state(undefined as any);
-	let toasts: ToastItem[] = $state([]);
-	let toastId = 0;
 	let toastAnimEndTimer: any;
 	let anim = $state(false);
 	let top = $state(false);
 	let right = $state(false);
 	const fadeToastQueue: any[] = [];
 
+	type ToastRequest = Omit<ToastProps, 'onclose'> & { id: number }
+
+	let toastContainer: HTMLDivElement = $state(undefined as any);
+	let toasts: ToastRequest[] = $state([]);
+	let toastId = 0;
+
 	export function showToastMessage(
 		message: string,
-		icon: Icons,
-		filledIcon: boolean,
-		systemName: string,
-		persist = false
+		{
+			icon = undefined as Icons | undefined,
+			systemName = undefined as string | undefined,
+			filledIcon = false,
+			persist = false,
+			extraClass = undefined as ClassValue | undefined,
+			special = undefined as string | undefined,
+		} = {}
 	) {
 		if (!notificationConfig.all) return;
 
-		const toast: ToastItem = {
+		const toast: ToastRequest = {
 			id: toastId++,
 			message,
 			systemName,
 			icon,
 			filledIcon,
+			class: extraClass,
+			"data-special": special,
 			onmount: ctrl => {
 				const rootStyle = toastContainer.style;
 				rootStyle.setProperty('--toast-offset', `-${ctrl.element.getBoundingClientRect().height + 8}px`);
@@ -60,6 +67,12 @@
 		}
 	}
 
+	export function showSystemToastMessage(key: Exclude<keyof typeof notificationConfig.system, 'all'>, icon: Icons) {
+	  if (!notificationConfig.system.all || !notificationConfig.system[key] || toastContainer.querySelector(`.systemToast[data-special='${key}']`))
+	    return;
+	  showToastMessage(/* getMassagedLabel(localizedMessages.toast.system[key]) */'', { icon, special: key, persist: true, extraClass: 'systemToast' });
+	}
+
 	function flushToasts() {
 		if (!document.hidden) {
 			while (fadeToastQueue.length) {
@@ -67,7 +80,11 @@
 			}
 		}
 	}
+</script>
 
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import ToastItem from './ToastItem.svelte';
 	onMount(() => {
 		window.showToastMessage = showToastMessage;
 	});
