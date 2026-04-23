@@ -15,7 +15,7 @@ To recreate this project with the same configuration:
 
 ```sh
 # recreate this project
-pnpm dlx sv@0.15.1 create --template minimal --types jsdoc --add paraglide="languageTags:en,ja+demo:no" mcp="ide:opencode,vscode+setup:local" prettier eslint --install pnpm svelte-frontend
+pnpm dlx sv@0.15.1 create --template minimal --types ts --add eslint prettier paraglide="languageTags:en,ja+demo:yes" --install pnpm svelte-frontend
 ```
 
 ## Developing

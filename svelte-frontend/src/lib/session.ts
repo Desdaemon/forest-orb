@@ -1,13 +1,15 @@
-let sessionWs;
+import { ynoGameId } from "$lib";
+
+let sessionWs: WebSocket | null;
 
 const wsDelim = '\uffff';
 let sessionCommandHandlers = {};
 let sessionCommandCallbackQueue = {};
 
-let hasConnected;
+let hasConnected = false;
 
-function initSessionWs(attempt) {
-  return new Promise(resolve => {
+export function initSessionWs(attempt = 1) {
+  return new Promise<void>(resolve => {
     if (sessionWs)
       closeSessionWs();
     if (config.singlePlayer) {
@@ -69,12 +71,12 @@ function closeSessionWs() {
   sessionWs = null;
 }
 
-function addSessionCommandHandler(command, handler) {
+export function addSessionCommandHandler(command: string, handler?: Function) {
   sessionCommandHandlers[command] = handler;
   sessionCommandCallbackQueue[command] = [];
 }
 
-function sendSessionCommand(command, commandParams, callbackFunc, callbackCommand) {
+function sendSessionCommand(command: string, commandParams?: any[], callbackFunc?: Function, callbackCommand?: string) {
   if (!sessionWs)
     return;
 

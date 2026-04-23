@@ -1,13 +1,7 @@
-import { getDefaultUiTheme } from "$lib/system";
 import { showSystemToastMessage } from "$lib/components/ToastContainer.svelte";
-import { onMount } from "svelte";
-import { isBrowser } from "./init";
+import { isBrowser } from "$lib";
 
-let toastAnimEndTimer: number | undefined;
-
-let fadetoastqueue = [];
-
-const notificationTypes = {
+export const notificationTypes = {
   system: [
     'siteUpdates',
     'error',
@@ -85,7 +79,7 @@ type BaseConfig = { all: boolean; screenPosition: string; };
 export const notificationConfig: BaseConfig & GeneratedConfig = $state({
   all: true,
   screenPosition: 'bottomLeft'
-});
+} as any);
 
 const accountNotificationCategories = ['account', 'events', 'badges', 'timeTrials', 'saveSync'];
 
