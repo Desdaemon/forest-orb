@@ -1,0 +1,7 @@
+id: remove-fastdom-statement
+language: typescript
+rule:
+  any:
+    - pattern: fastdom.measure(() => { $$$BODY })
+    - pattern: fastdom.mutate(() => { $$$BODY })
+fix: $$$BODY

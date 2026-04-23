@@ -1,7 +1,7 @@
 <script>
-	import ToastContainer from '$lib/components/ToastContainer.svelte'
-	import ChatboxContainer from '$lib/components/ChatboxContainer.svelte'
-	import GameChatContainer from '$lib/components/GameChatContainer.svelte'
+	import ToastContainer from '$lib/components/ToastContainer.svelte';
+	import ChatboxContainer from '$lib/components/ChatboxContainer.svelte';
+	import GameChatContainer from '$lib/components/GameChatContainer.svelte';
 	import { gameId } from '$lib';
 
 	const gameName = 'Yume 2kki';
@@ -408,7 +408,7 @@
 					<canvas id="canvas" tabindex="-1"></canvas>
 				</div>
 
-				<GameChatContainer/>
+				<GameChatContainer />
 
 				<div id="locationDisplayContainer" class="unselectable">
 					<div id="locationDisplayLabelContainer">
@@ -583,7 +583,7 @@
 				</div>
 			</div>
 		</div>
-		<ChatboxContainer/>
+		<ChatboxContainer />
 		<div id="modalContainer" class="modalContainer hidden">
 			<div id="loginModal" class="modal hidden">
 				<a href="javascript:void(0);" class="modalClose">✖</a>

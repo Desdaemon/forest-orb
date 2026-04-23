@@ -1,7 +1,7 @@
 import { isBrowser, gameId } from "$lib";
 import { getLocalized2kkiLocations } from "./2kki";
 import { updateConfig } from "./init";
-import { addSessionCommandHandler } from "./session";
+import { addSessionCommandHandler } from "./session.svelte";
 
 // SIDE EFFECT
 // easyrpgPlayer["onRuntimeInitialized"] = initChat;
@@ -88,7 +88,7 @@ function chatboxAddMessage(msg, type, player, ignoreNotify = false, mapId?: unkn
           set2kkiGlobalChatMessageLocation(playerLocation, mapId, prevMapId, prevLocations);
         } else {
           const locationsHtml = getLocalizedMapLocationsHtml(gameId, mapId, prevMapId, x, y, getInfoLabel("&nbsp;|&nbsp;"));
-          fastdom.mutate(() => playerLocation.innerHTML = locationsHtml);
+          playerLocation.innerHTML = locationsHtml;
         }
 
         playerLocation.classList.add("playerLocation");
@@ -122,9 +122,9 @@ function chatboxAddMessage(msg, type, player, ignoreNotify = false, mapId?: unkn
     msgTimestamp.dataset.time = timestamp.getTime();
 
     const timestampLabel = getChatMessageTimestampLabel(timestamp, defaultDate);
-    fastdom.mutate(() => {
+    {
       msgTimestamp.innerHTML = timestampLabel;
-    });
+    };
     // msgTimestamp.innerHTML = getChatMessageTimestampLabel(timestamp, defaultDate);
 
     msgHeader.appendChild(msgTimestamp);
@@ -302,11 +302,11 @@ function chatboxAddMessage(msg, type, player, ignoreNotify = false, mapId?: unkn
 
   let task = Promise.resolve(shouldScroll);
   if (shouldScroll)
-    task = fastdom.measure(() => Math.abs((messages.scrollHeight - messages.scrollTop) - messages.clientHeight) <= 60);
+    task = Math.abs((messages.scrollHeight - messages.scrollTop) - messages.clientHeight) <= 60;
 
-  const didPopulateMessage = task.then(() => fastdom.mutate(() => {
+  const didPopulateMessage = task.then(() => {
     messages.appendChild(msgContainer);
-  }));
+  });
   Promise.allSettled([didPopulateMessage, systemThemeProm]).then(() => {
     if (player)
       addGameChatMessage(message.innerHTML, type, uuid);
@@ -356,11 +356,11 @@ function chatboxAddMessage(msg, type, player, ignoreNotify = false, mapId?: unkn
     else
       tabMessages = [...messages.querySelectorAll('.messageContainer:not(.global):not(.party)')];
     const oldTask = task;
-    task = fastdom.mutate(() => {
+    task = {
       while (tabMessages.length > tabMessagesLimit)
         tabMessages.shift().replaceWith(tabMessages[0]);
       return oldTask;
-    })
+    }
   }
 
   task.then(shouldScroll => shouldScroll && scrollChatMessages());
@@ -374,9 +374,9 @@ function scrollChatMessages() {
   setTimeout(() => {
     const messages = document.getElementById('messages');
     const scrollHeight = messages.scrollHeight;
-    fastdom.mutate(() => {
+    {
       messages.scrollTop = scrollHeight;
-    });
+    };
   });
 }
 
@@ -410,13 +410,13 @@ function addGameChatMessage(messageHtml, messageType, senderUuid) {
 
   messageContainer.appendChild(message);
 
-  fastdom.mutate(() => {
+  {
     gameChatContainer.insertBefore(messageContainer, gameChatContainer.children[gameChatContainer.childElementCount - 1]);
-
+  
     const typeMessages = Array.from(gameChatContainer.children).filter(m => m.dataset.messageType == messageType);
     if (typeMessages.length > 10)
       typeMessages[0].remove();
-  });
+  };
 
   setTimeout(() => {
     messageContainer.classList.add('fade');

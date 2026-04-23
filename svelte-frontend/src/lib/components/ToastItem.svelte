@@ -1,30 +1,31 @@
 <script lang="ts">
-	import type { Icons } from "$lib/icons";
-	import { themeClass } from "$lib/system";
-	import { onMount } from "svelte";
-	import Icon from "./Icon.svelte";
-	import type { ClassValue } from "svelte/elements";
+	import type { Icons } from '$lib/icons';
+	import { themeClass } from '$lib/system.svelte';
+	import { onMount } from 'svelte';
+	import Icon from './Icon.svelte';
+	import type { ClassValue } from 'svelte/elements';
 
 	export type ToastProps = {
-		message: string
+		message: string;
 		onclose(): void;
 
-		systemName?: string
-		icon?: Icons
-		filledIcon?: boolean
+		systemName?: string;
+		icon?: Icons;
+		filledIcon?: boolean;
 		onmount?(_: ToastController): void;
 		class?: ClassValue;
 		['data-special']?: string;
-	}
+	};
 
 	type ToastController = {
-		element: HTMLDivElement
+		element: HTMLDivElement;
 		scheduleClose(): void;
-	}
+	};
 
 	let fade = $state(false);
 
-	let { message, onclose, systemName, icon, filledIcon, onmount, ...divProps }: ToastProps = $props();
+	let { message, onclose, systemName, icon, filledIcon, onmount, ...divProps }: ToastProps =
+		$props();
 	let element: HTMLDivElement;
 
 	function scheduleClose() {
@@ -40,10 +41,13 @@
 	});
 </script>
 
-
-<div bind:this={element} {...divProps} class={['toast', { fade }, themeClass(systemName), divProps.class]}>
+<div
+	bind:this={element}
+	{...divProps}
+	class={['toast', { fade }, themeClass(systemName), divProps.class]}
+>
 	{#if icon}
-		<Icon {icon} fill={filledIcon}/>
+		<Icon {icon} fill={filledIcon} />
 	{/if}
 	<div class="toastMessageContainer">
 		<div class="toastMessage">{@html message}</div>

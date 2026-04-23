@@ -415,10 +415,8 @@ function initBadgeControls() {
             if ('all' === badgeTabGroup)
               return;
 
-            fastdom.mutate(() => {
-              badgeCategoryTabs.querySelector('.active')?.classList.remove('active');
-              subTab.classList.add('active');
-            });
+            badgeCategoryTabs.querySelector('.active')?.classList.remove('active');
+            subTab.classList.add('active');
 
             const game = tab.dataset.game;
             if (game !== 'ynoproject') {
@@ -430,17 +428,17 @@ function initBadgeControls() {
                   nullBadge.classList.remove(cls);
             }
 
-            fastdom.mutate(() => {
+            {
               badgeModalContent.replaceChildren(nullBadge);
               for (const group in gameBadges[game])
                 badgeModalContent.append(...gameBadges[game][group]);
-            });
+            };
             badgeTabGame = game;
             badgeTabGroup = 'all';
           };
         }
 
-        fastdom.mutate(() => badgeCategoryTabs.replaceChildren(...subTabs)).then(() => {
+        badgeCategoryTabs.replaceChildren(...subTabs).then(() => {
           if (badgeCategoryTabs.querySelector('[data-i18n]')) {
             // accommodates translated tooltips in the format of <element data-i18n='[title]...'/>
             locI18next.init(i18next, { ...locI18nextOptions, document: badgeCategoryTabs })('[data-i18n]');
@@ -459,16 +457,15 @@ function initBadgeControls() {
         });
       }; // tab.onclick
     }
-    let task = fastdom.mutate(() => badgeGameTabs.replaceChildren(...tabs));
-    didUpdateBadgeModal = async (prom) => {
-      await prom;
+    badgeGameTabs.replaceChildren(...tabs);
+    didUpdateBadgeModal = async () => {
       let activeTab;
       if (activeTab = tabs.find(tab => tab.classList.contains('active'))) {
         badgeTabGame = null; // temporarily set to null to populate subtabs
         activeTab.click();
         await updateBadgeVisibility();
         if (badgeModalContent.dataset.lastScrollTop)
-          fastdom.mutate(() => badgeModalContent.scrollTo(0, +badgeModalContent.dataset.lastScrollTop));
+          badgeModalContent.scrollTo(0, +badgeModalContent.dataset.lastScrollTop);
       } else
         await updateBadgeVisibility();
       removeLoader(document.getElementById('badgesModal'));
@@ -476,7 +473,7 @@ function initBadgeControls() {
     if (userSelectedSortOrder)
       updateBadgeModalOnly();
     else
-      await didUpdateBadgeModal(task);
+      await didUpdateBadgeModal();
   };
 
   /** Updates badge elements based on a `cacheIndex` assigned to them in {@linkcode getBadgeItem} */
@@ -484,15 +481,13 @@ function initBadgeControls() {
     const cacheIndexes = Array.from({ length: badgeFilterCache.length }, (_, i) => i);
     cacheIndexes.sort((a, z) => badgeCompareFunc(badgeFilterCache[a], badgeFilterCache[z]));
     setTimeout(async () => {
-      let task = fastdom.mutate(() => {
-        for (let idx = 0; idx < cacheIndexes.length; idx++)
-          badgeFilterCache[cacheIndexes[idx]].el.style.order = idx;
-        if (!badgeModalContent.childElementCount)
-          for (const game in gameBadges)
-            for (const group in gameBadges[game])
-              badgeModalContent.append(...gameBadges[game][group]);
-      });
-      await didUpdateBadgeModal?.(task);
+      for (let idx = 0; idx < cacheIndexes.length; idx++)
+        badgeFilterCache[cacheIndexes[idx]].el.style.order = idx;
+      if (!badgeModalContent.childElementCount)
+        for (const game in gameBadges)
+          for (const group in gameBadges[game])
+            badgeModalContent.append(...gameBadges[game][group]);
+      await didUpdateBadgeModal?.();
     }, 0);
   };
 
@@ -575,7 +570,7 @@ function initBadgeControls() {
 
     badgeModalContent.querySelector('.nullBadgeItem')?.classList.toggle('hidden', exactMatch);
     for (let item of badgeFilterCache) {
-      fastdom.measure(() => {
+      {
         let visible = true;
         if (unlockStatus === 'recentUnlock')
           visible &= newUnlockBadges.has(item.badgeId);
@@ -622,13 +617,13 @@ function initBadgeControls() {
             gameGroupVisibilities[item.game][item.group] = true;
         }
         fastdom.mutate(() => item.el.classList.toggle('hidden', !visible));
-      });
+      };
     }
 
-    fastdom.mutate(() => {
+    {
       for (let header of badgeModalContent.querySelectorAll('.itemCategoryHeader'))
         header.classList.toggle('hidden', !(header.dataset.group ? gameGroupVisibilities[header.dataset.game][header.dataset.group] : gameVisibilities[header.dataset.game]));
-    })
+    }
   };
 
   document.getElementById('badgeUnlockStatus').onchange = updateBadgeVisibility;
@@ -805,13 +800,13 @@ function initBadgeControls() {
 
   /** @param {MouseEvent} ev */
   function highlightRemove(ev) {
-    fastdom.mutate(() => {
+    {
       if (this.dataset.badgeId === 'null') {
         this.classList.remove('removing');
         return;
       }
       this.classList.toggle('removing', ev.shiftKey && ev.type !== 'mouseleave')
-    });
+    };
   }
 
   for (let r = 1; r <= maxBadgeSlotRows; r++) {
@@ -1316,7 +1311,7 @@ function fetchPlayerBadges() {
     })
 };
 
-export function updateBadges(callback) {
+export function updateBadges(callback?: Function) {
   apiFetch('badge?command=list&simple=true')
     .then(response => {
       if (!response.ok)

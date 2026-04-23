@@ -10,7 +10,7 @@
 	let right = $state(false);
 	const fadeToastQueue: any[] = [];
 
-	type ToastRequest = Omit<ToastProps, 'onclose'> & { id: number }
+	type ToastRequest = Omit<ToastProps, 'onclose'> & { id: number };
 
 	let toastContainer: HTMLDivElement = $state(undefined as any);
 	let toasts: ToastRequest[] = $state([]);
@@ -24,7 +24,7 @@
 			filledIcon = false,
 			persist = false,
 			extraClass = undefined as ClassValue | undefined,
-			special = undefined as string | undefined,
+			special = undefined as string | undefined
 		} = {}
 	) {
 		if (!notificationConfig.all) return;
@@ -36,10 +36,13 @@
 			icon,
 			filledIcon,
 			class: extraClass,
-			"data-special": special,
-			onmount: ctrl => {
+			'data-special': special,
+			onmount: (ctrl) => {
 				const rootStyle = toastContainer.style;
-				rootStyle.setProperty('--toast-offset', `-${ctrl.element.getBoundingClientRect().height + 8}px`);
+				rootStyle.setProperty(
+					'--toast-offset',
+					`-${ctrl.element.getBoundingClientRect().height + 8}px`
+				);
 				setTimeout(() => {
 					anim = true;
 					rootStyle.setProperty('--toast-offset', '0');
@@ -51,14 +54,14 @@
 					// NB: moved this block outside of toastAnimEndTimer so it's unconditionally closed
 					if (!persist) {
 						if (document.hidden) {
-							fadeToastQueue.push(ctrl.scheduleClose)
+							fadeToastQueue.push(ctrl.scheduleClose);
 						} else {
 							setTimeout(ctrl.scheduleClose, 10000);
 						}
 					}
-				}, 10)
+				}, 10);
 			}
-		}
+		};
 		toasts = [...toasts, toast];
 
 		if (toastAnimEndTimer) {
@@ -67,10 +70,22 @@
 		}
 	}
 
-	export function showSystemToastMessage(key: Exclude<keyof typeof notificationConfig.system, 'all'>, icon: Icons) {
-	  if (!notificationConfig.system.all || !notificationConfig.system[key] || toastContainer.querySelector(`.systemToast[data-special='${key}']`))
-	    return;
-	  showToastMessage(/* getMassagedLabel(localizedMessages.toast.system[key]) */'', { icon, special: key, persist: true, extraClass: 'systemToast' });
+	export function showSystemToastMessage(
+		key: Exclude<keyof typeof notificationConfig.system, 'all'>,
+		icon: Icons
+	) {
+		if (
+			!notificationConfig.system.all ||
+			!notificationConfig.system[key] ||
+			toastContainer.querySelector(`.systemToast[data-special='${key}']`)
+		)
+			return;
+		showToastMessage(/* getMassagedLabel(localizedMessages.toast.system[key]) */ '', {
+			icon,
+			special: key,
+			persist: true,
+			extraClass: 'systemToast'
+		});
 	}
 
 	function flushToasts() {
@@ -90,11 +105,11 @@
 	});
 </script>
 
-<svelte:document onvisibilitychange={flushToasts}/>
+<svelte:document onvisibilitychange={flushToasts} />
 
 <div id="toastContainer" bind:this={toastContainer} class={{ anim, top, right }}>
 	{#each toasts as toast (toast.id)}
-		<ToastItem {...toast} onclose={() => toasts.splice(toasts.indexOf(toast), 1)}/>
+		<ToastItem {...toast} onclose={() => toasts.splice(toasts.indexOf(toast), 1)} />
 	{/each}
 </div>
 
@@ -134,7 +149,6 @@
 		transition: top 0.5s cubic-bezier(0.7, 0, 0.7, 1.5);
 	}
 
-
 	#toastContainer.top :global(.toast) {
 		margin-top: 8px;
 		margin-bottom: 0;
@@ -143,5 +157,4 @@
 	#toastContainer.right :global(.toast) {
 		margin-inline-start: -8px;
 	}
-
 </style>

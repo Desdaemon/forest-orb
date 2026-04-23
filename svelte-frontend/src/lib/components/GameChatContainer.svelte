@@ -1,7 +1,13 @@
 <script>
 	// @ts-check
-	import { cycleGameChatMode, gameChatModeIndex, trySendMapMessage, trySendGlobalMessage, trySendPartyMessage } from '$lib/chat.svelte'
-	import { playerName } from '$lib/play.svelte'
+	import {
+		cycleGameChatMode,
+		gameChatModeIndex,
+		trySendMapMessage,
+		trySendGlobalMessage,
+		trySendPartyMessage
+	} from '$lib/chat.svelte';
+	import { playerName } from '$lib/play.svelte';
 	let focused = $state(false);
 
 	function focusGameChatInput() {
