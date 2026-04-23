@@ -1,10 +1,12 @@
 import { gameId } from "$lib";
 import type { ClassValue } from 'svelte/elements'
 import { get, writable } from "svelte/store";
+import { addOrUpdatePlayerListEntry, playerData } from "./playerlist.svelte";
+import { getConnStatus } from "./play.svelte";
 
 export const systemName = writable<string | undefined>();
 
-const allGameUiThemes = {
+export const allGameUiThemes = {
   '2kki': [
     'system1',
     'system2',
@@ -452,13 +454,13 @@ const gameEndDates: Record<string, number> = {
 // const contrastRatioThreshold = 2.02;
 const contrastRatioThreshold = 4.5;
 
-export function setSystemName(name) {
+export function setSystemName(name: string) {
   systemName.set(name.replace(/'|\s$/g, ''));
   if (playerData) {
     playerData.systemName = name;
     globalPlayerData[playerData.uuid].systemName = name;
   }
-  if (connStatus == 1 || connStatus == 3)
+  if (getConnStatus() == 1 || getConnStatus() == 3)
     addOrUpdatePlayerListEntry(null, playerData, false, true);
 }
 
@@ -1228,6 +1230,7 @@ function displayGameEndDate() {
   }
 }
 
+// SIDE EFFECT
 if (gameEndDates[gameId]) {
   if (typeof i18next !== 'undefined' && i18next.isInitialized) {
     displayGameEndDate();

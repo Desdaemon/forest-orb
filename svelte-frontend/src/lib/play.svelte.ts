@@ -161,7 +161,8 @@ let locationColorCache;
 
 let ynomojiConfig = {};
 
-let connStatus;
+let connStatus = $state();
+export const getConnStatus = () => connStatus;
 
 // SIDE EFFECT
 if (hasTouchscreen && iOS()) {
@@ -386,31 +387,34 @@ export function updateMapPlayerCount(count: number) {
 }
 
 // SIDE EFFECT
-setSystemName(getDefaultUiTheme());
-populateUiThemes();
-
-// SIDE EFFECT
-const gameLogoUrl = `../images/logo_${gameId}.png`;
-const gameLogoImg = new Image();
-gameLogoImg.setAttribute('crossOrigin', 'anonymous');
-gameLogoImg.onload = function () {
-  let width = gameLogoImg.width;
-  let height = gameLogoImg.height;
-
-  width *= 48 / height;
-  height = 48;
-
-  if (width > 180) {
-    height *= 180 / width;
-    width = 180;
-  }
+if (isBrowser) {
   
-  const gameLogo = document.getElementById('gameLogo');
-  gameLogo.setAttribute('style', `background-image: url('${gameLogoUrl}'); width: ${width}px; height: ${height}px;`);
-  document.getElementById('gameLogoOverlay').setAttribute('style', `-webkit-mask-image: url('${gameLogoUrl}'); mask-image: url('${gameLogoUrl}'); mix-blend-mode: ${gameLogoBlendModeOverrides[gameId] || 'multiply'};`);
-  gameLogo.classList.remove('transparent');
-};
-gameLogoImg.src = gameLogoUrl;
+  setSystemName(getDefaultUiTheme());
+  populateUiThemes();
+
+  // SIDE EFFECT
+  const gameLogoUrl = `../images/logo_${gameId}.png`;
+  const gameLogoImg = new Image();
+  gameLogoImg.setAttribute('crossOrigin', 'anonymous');
+  gameLogoImg.onload = function () {
+    let width = gameLogoImg.width;
+    let height = gameLogoImg.height;
+
+    width *= 48 / height;
+    height = 48;
+
+    if (width > 180) {
+      height *= 180 / width;
+      width = 180;
+    }
+  
+    const gameLogo = document.getElementById('gameLogo');
+    gameLogo.setAttribute('style', `background-image: url('${gameLogoUrl}'); width: ${width}px; height: ${height}px;`);
+    document.getElementById('gameLogoOverlay').setAttribute('style', `-webkit-mask-image: url('${gameLogoUrl}'); mask-image: url('${gameLogoUrl}'); mix-blend-mode: ${gameLogoBlendModeOverrides[gameId] || 'multiply'};`);
+    gameLogo.classList.remove('transparent');
+  };
+  gameLogoImg.src = gameLogoUrl;
+}
 
 let cachedMapId = null;
 let cachedPrevMapId = null;
@@ -579,7 +583,7 @@ function hideLocationDisplay(fast = false) {
 }
 
 // SIDE EFFECT
-{
+if (isBrowser) {
   const cancelKeyCodes = [ 'escape', 'x', 'c', 'v', 'b', 'n', 'numpad0', 'backspace' ];
 
   document.addEventListener('keyup', e => {
@@ -688,7 +692,7 @@ export function preToggle(buttonElement) {
 }
 
 // SIDE EFFECT
-{
+if (isBrowser) {
   function calcTextareaHeight(value) {
     const numberOfLineBreaks = (value.match(/\n/g) || []).length;
     const newHeight = numberOfLineBreaks * 20 + 38;
@@ -816,7 +820,7 @@ export function closeModal() {
 }
 
 // SIDE EFFECT
-{
+if (isBrowser) {
   const modalCloseButtons = document.querySelectorAll('#modalContainer .modalClose');
   for (let button of modalCloseButtons)
     button.onclick = closeModal;
@@ -872,12 +876,14 @@ function closeConfirmModal(callback) {
 }
 
 // SIDE EFFECT
-document.getElementById('enterNameForm').onsubmit = function () {
-  setName(document.getElementById('nameInput').value);
-};
+if (isBrowser) {
+  document.getElementById('enterNameForm').onsubmit = function () {
+    setName(document.getElementById('nameInput').value);
+  };
+}
 
 // SIDE EFFECT
-{
+if (isBrowser) {
   function oninputYnomoji() {
     const ynomojiPattern = /:([a-z0-9_\-]+(?::|$)|$)/gi;
     const ynomojiContainer = document.getElementById('ynomojiContainer');
@@ -945,7 +951,7 @@ document.getElementById('enterNameForm').onsubmit = function () {
 }
 
 // SIDE EFFECT
-{
+if (isBrowser) {
   function initPrivateMode(active) {
     const layout = document.getElementById('layout');
     document.getElementById('privateModeButton').classList.toggle('toggled', active);
@@ -987,6 +993,7 @@ document.getElementById('enterNameForm').onsubmit = function () {
 let reconnectCooldownTimer: number | null;
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('reconnectButton').ondblclick = function () {
   if (reconnectCooldownTimer || connStatus != 2)
     return;
@@ -1011,6 +1018,7 @@ document.getElementById('reconnectButton').ondblclick = function () {
 }
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('reconnectButton').onclick = function () {
   if (reconnectCooldownTimer || connStatus == 2)
     return;
@@ -1036,11 +1044,13 @@ document.getElementById('reconnectButton').onclick = function () {
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('toggleNextLocationButton').onclick = function () {
   document.getElementById('nextLocationContainer').classList.toggle('hideContents');
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('chatButton').onclick = function () {
   this.classList.toggle('toggled');
   document.getElementById('layout').classList.toggle('hideChat');
@@ -1050,6 +1060,7 @@ document.getElementById('chatButton').onclick = function () {
 };
 
 // SIDE EFFECT
+if (isBrowser)
 if (gameId === '2kki') {
   document.getElementById('explorerButton').onclick = function () {
     this.classList.toggle('toggled');
@@ -1061,6 +1072,7 @@ if (gameId === '2kki') {
 }
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('globalMessageButton').onclick = function () {
   this.classList.toggle('toggled');
   const chatInput = document.getElementById('chatInput');
@@ -1083,6 +1095,7 @@ document.getElementById('globalMessageButton').onclick = function () {
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('globalMessageLocationsButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1092,6 +1105,7 @@ document.getElementById('globalMessageLocationsButton').onclick = function () {
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('mentionFilterButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1108,6 +1122,7 @@ document.getElementById('mentionFilterButton').onclick = function () {
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('messageTimestampsButton').onclick = function () {
   this.classList.toggle('toggled');
   const toggled = this.classList.contains('toggled');
@@ -1117,7 +1132,7 @@ document.getElementById('messageTimestampsButton').onclick = function () {
 };
 
 // SIDE EFFECT: init uiThemesModal
-{
+if (isBrowser) {
   config.uiTheme = 'Default';
 
   document.getElementById('uiThemeButton').onclick = () => openModal('uiThemesModal');
@@ -1129,11 +1144,13 @@ document.getElementById('messageTimestampsButton').onclick = function () {
 }
 
 // SIDE EFFECT
+if (isBrowser)
 document.querySelector('.fontStyle').onchange = function () {
   setFontStyle(parseInt(this.value));
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('clearChatButton').onclick = function () {
   const chatbox = document.getElementById('chatbox');
   const messagesElement = document.getElementById('messages');
@@ -1169,63 +1186,71 @@ document.getElementById('clearChatButton').onclick = function () {
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('settingsButton').onclick = () => openModal('settingsModal');
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('muteButton').onclick = function () {
   if (easyrpgPlayer.initialized)
     easyrpgPlayer.api.toggleMute();
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('soundVolume').oninput = function () {
   setSoundVolume(parseInt(this.value), true);
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('soundVolume').onchange = function () {
   setSoundVolume(parseInt(this.value));
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('musicVolume').oninput = function () {
   setMusicVolume(parseInt(this.value), true);
 };
 
 // SIDE EFFECT
+if (isBrowser)
 document.getElementById('musicVolume').onchange = function () {
   setMusicVolume(parseInt(this.value));
 };
 
-const langSelect = document.getElementById('lang');
-let lastAppliedLang = langSelect.value;
-
-const checkLang = () => {
-  let value = null;
-  if (langSelect.selectedIndex >= 0 && langSelect.selectedIndex < langSelect.options.length) {
-    const option = langSelect.options[langSelect.selectedIndex];
-    if (option && option.value) {
-      value = option.value;
-    }
-  }
-
-  if (value === null) {
-    value = langSelect.value;
-  }
-
-  if (value && value !== lastAppliedLang) {
-    lastAppliedLang = value;
-    setLang(value);
-    if (document.fullscreenElement) {
-      updateCanvasFullscreenSize();
-    }
-  }
-};
-
 // SIDE EFFECT
-langSelect.addEventListener('change', checkLang);
+if (isBrowser) {
+  const langSelect = document.getElementById('lang');
+  let lastAppliedLang = langSelect.value;
 
-const nametagModeSelect = document.getElementById('nametagMode');
+  const checkLang = () => {
+    let value = null;
+    if (langSelect.selectedIndex >= 0 && langSelect.selectedIndex < langSelect.options.length) {
+      const option = langSelect.options[langSelect.selectedIndex];
+      if (option && option.value) {
+        value = option.value;
+      }
+    }
+
+    if (value === null) {
+      value = langSelect.value;
+    }
+
+    if (value && value !== lastAppliedLang) {
+      lastAppliedLang = value;
+      setLang(value);
+      if (document.fullscreenElement) {
+        updateCanvasFullscreenSize();
+      }
+    }
+  };
+
+  langSelect.addEventListener('change', checkLang);
+}
+
+const nametagModeSelect = isBrowser && document.getElementById('nametagMode');
 let lastAppliedNametagMode = nametagModeSelect ? parseInt(nametagModeSelect.value, 10) : 1;
 
 const checkNametagMode = () => {
@@ -1251,6 +1276,7 @@ const checkNametagMode = () => {
 
 // SIDE EFFECT
 // Monitor fullscreen changes
+if (isBrowser)
 document.addEventListener('fullscreenchange', () => {
   updateFullscreenPolling();
 });
@@ -1295,9 +1321,10 @@ const stopFullscreenPolling = () => {
 
 // SIDE EFFECT
 // Start polling if already in fullscreen and settings modal is open
+if (isBrowser)
 updateFullscreenPolling();
 
-const wikiLinkModeSelect = document.getElementById('wikiLinkMode');
+const wikiLinkModeSelect = isBrowser && document.getElementById('wikiLinkMode');
 let lastAppliedWikiLinkMode = wikiLinkModeSelect ? parseInt(wikiLinkModeSelect.value, 10) : 1;
 
 const checkWikiLinkMode = () => {
@@ -1326,7 +1353,7 @@ if (wikiLinkModeSelect) {
   wikiLinkModeSelect.addEventListener('change', checkWikiLinkMode);
 }
 
-const saveReminderSelect = document.getElementById('saveReminder');
+const saveReminderSelect = isBrowser && document.getElementById('saveReminder');
 let lastAppliedSaveReminder = saveReminderSelect ? parseInt(saveReminderSelect.value, 10) : 60;
 
 const checkSaveReminder = () => {
@@ -1349,7 +1376,7 @@ const checkSaveReminder = () => {
 };
 
 // SIDE EFFECT
-saveReminderSelect.addEventListener('change', checkSaveReminder);
+saveReminderSelect.addEventListener?.('change', checkSaveReminder);
 
 // SIDE EFFECT
 document.getElementById('playerSoundsButton').onclick = () => {
