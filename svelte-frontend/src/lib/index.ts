@@ -62,3 +62,15 @@ export const gameDefaultSprite = {
 }[gameId];
 
 export const extractCanvas = isBrowser && document.createElement('canvas');
+
+export const loggedInKey = 'ynoproject_loggedIn';
+export const hostBase = 'ynoproject.net';
+export const serverUrlBase = `api.${hostBase}`;
+export const serverUrl = `https://${serverUrlBase}/${ynoGameId}`;
+export const authApiUrl = `https://auth.${hostBase}`;
+export const cdnUrl = `https://cdn.${hostBase}`;
+export const ugcUrl = `https://ugc.${hostBase}`;
+export const rankUrl = `https://rank.${hostBase}`;
+export const apiUrl = `${serverUrl}/api`;
+export const adminApiUrl = `${serverUrl}/admin`;
+export const ynomojiUrlPrefix = 'images/ynomoji/';

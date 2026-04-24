@@ -4,12 +4,6 @@
 	import type { ToastProps } from './ToastItem.svelte';
 	import type { ClassValue } from 'svelte/elements';
 
-	let toastAnimEndTimer: any;
-	let anim = $state(false);
-	let top = $state(false);
-	let right = $state(false);
-	const fadeToastQueue: any[] = [];
-
 	type ToastRequest = Omit<ToastProps, 'onclose'> & { id: number };
 
 	let toastContainer: HTMLDivElement = $state(undefined as any);
@@ -36,37 +30,13 @@
 			icon,
 			filledIcon,
 			class: extraClass,
-			'data-special': special,
-			onmount: (ctrl) => {
-				const rootStyle = toastContainer.style;
-				rootStyle.setProperty(
-					'--toast-offset',
-					`-${ctrl.element.getBoundingClientRect().height + 8}px`
-				);
-				setTimeout(() => {
-					anim = true;
-					rootStyle.setProperty('--toast-offset', '0');
-					toastAnimEndTimer = setTimeout(() => {
-						anim = false;
-						toastAnimEndTimer = undefined;
-					}, 500);
-
-					// NB: moved this block outside of toastAnimEndTimer so it's unconditionally closed
-					if (!persist) {
-						if (document.hidden) {
-							fadeToastQueue.push(ctrl.scheduleClose);
-						} else {
-							setTimeout(ctrl.scheduleClose, 10000);
-						}
-					}
-				}, 10);
-			}
+			'data-special': special
 		};
 		toasts = [...toasts, toast];
 
 		if (toastAnimEndTimer) {
 			clearInterval(toastAnimEndTimer);
-			anim = false;
+			toastState.anim = false;
 		}
 	}
 
@@ -87,19 +57,11 @@
 			extraClass: 'systemToast'
 		});
 	}
-
-	function flushToasts() {
-		if (!document.hidden) {
-			while (fadeToastQueue.length) {
-				setTimeout(fadeToastQueue.shift(), 10000);
-			}
-		}
-	}
 </script>
 
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import ToastItem from './ToastItem.svelte';
+	import ToastItem, { flushToasts, toastAnimEndTimer, toastState } from './ToastItem.svelte';
 	onMount(() => {
 		window.showToastMessage = showToastMessage;
 	});
@@ -107,7 +69,7 @@
 
 <svelte:document onvisibilitychange={flushToasts} />
 
-<div id="toastContainer" bind:this={toastContainer} class={{ anim, top, right }}>
+<div id="toastContainer" bind:this={toastContainer} class={toastState}>
 	{#each toasts as toast (toast.id)}
 		<ToastItem {...toast} onclose={() => toasts.splice(toasts.indexOf(toast), 1)} />
 	{/each}

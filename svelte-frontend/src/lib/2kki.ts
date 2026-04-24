@@ -2,6 +2,7 @@ import { addChatMapLocation } from '$lib/chat.svelte';
 import { checkEventLocations } from './events';
 import { gameId } from '$lib';
 import { addSessionCommandHandler } from './session.svelte';
+import { updateConfig } from './config.svelte';
 
 const is2kki = gameId === '2kki';
 

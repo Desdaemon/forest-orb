@@ -54,7 +54,12 @@ type BaseConfig = { all: boolean; screenPosition: string };
 
 export const notificationConfig: BaseConfig & GeneratedConfig = $state({
 	all: true,
-	screenPosition: 'bottomLeft'
+	screenPosition: 'bottomLeft',
+	...Object.assign({}, ...Object.entries(notificationTypes).map(([category, types]) => {
+		const keys = ['all', ...types];
+		const out = Object.fromEntries(keys.map(key => [key, true]));
+		return { [category]: out }
+	}))
 } as any);
 
 const accountNotificationCategories = ['account', 'events', 'badges', 'timeTrials', 'saveSync'];

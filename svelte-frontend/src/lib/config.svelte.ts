@@ -1,3 +1,6 @@
+import { ynoGameId } from "$lib";
+import { hasTouchscreen } from "./init";
+
 export let globalConfig = {
 	lang: 'en',
 	name: '',
@@ -53,3 +56,116 @@ export let config = {
 	fontStyle: 0,
 	uiTheme: 'Default'
 };
+
+const rtlLangs = ['ar'];
+const latinExLangs = ['vi', 'ru', 'uk'];
+export function setLang(lang, isInit) {
+	if (rtlLangs.includes(lang)) document.documentElement.setAttribute('dir', 'rtl');
+	else document.documentElement.removeAttribute('dir');
+
+	setExtendedLatinFonts(lang);
+
+	globalConfig.lang = lang;
+	initBlocker = initBlocker.then(() =>
+		withTimeout(
+			800,
+			fetchNewest(`${cdnUrl}/${gameId}/Language/${lang}/meta.ini`).then((response) => {
+				// Prevent a crash when the --language argument is used and the game doesn't have a Language folder
+				if (response.ok && response.status < 400 && isInit && gameIds.indexOf(gameId) > -1) {
+					easyrpgPlayer.language = (
+						gameDefaultLangs.hasOwnProperty(gameId)
+							? gameDefaultLangs[gameId] !== lang
+							: lang !== 'en'
+					)
+						? lang
+						: 'default';
+				}
+			})
+		)
+	);
+	initLocalization(isInit);
+	if (!isInit) {
+		updateConfig(globalConfig, true);
+		if (document.fullscreenElement) {
+			updateCanvasFullscreenSize();
+		}
+	}
+}
+
+function setExtendedLatinFonts(lang) {
+	if (latinExLangs.includes(lang) !== globalConfig.unicodeFont)
+		document.documentElement.style.setProperty(
+			'--font-override',
+			'-apple-system, BlinkMacSystemFont, xlatin-sans, PGothic, JF-Dot-Shinonome, sans-serif'
+		);
+	else document.documentElement.style.setProperty('--font-override', 'unset');
+}
+
+function setSaveReminder(saveReminder, isInit) {
+	globalConfig.saveReminder = saveReminder;
+	if (!isInit) updateConfig(globalConfig, true);
+	resetSaveReminder();
+}
+
+export function setName(name, isInit) {
+	globalConfig.name = name;
+	if (!isInit) updateConfig(globalConfig, true);
+}
+
+export function setSoundVolume(value, isInit) {
+	if (isNaN(value)) return;
+	if (easyrpgPlayer.initialized && !config.mute) {
+		easyrpgPlayer.api.setSoundVolume(value);
+		debounce(easyrpgPlayer.api.saveConfig);
+	}
+	globalConfig.soundVolume = value;
+	if (!isInit) updateConfig(globalConfig, true);
+}
+
+export function setMusicVolume(value, isInit) {
+	if (isNaN(value)) return;
+	if (easyrpgPlayer.initialized && !config.mute) {
+		easyrpgPlayer.api.setMusicVolume(value);
+		debounce(easyrpgPlayer.api.saveConfig);
+	}
+	globalConfig.musicVolume = value;
+	if (!isInit) updateConfig(globalConfig, true);
+}
+
+export function setWikiLinkMode(wikiLinkMode, isInit) {
+	globalConfig.wikiLinkMode = wikiLinkMode;
+	if (!isInit) updateConfig(globalConfig, true);
+}
+
+export function setMapChatHistoryLimit(limit, isInit) {
+	globalConfig.mapChatHistoryLimit = limit;
+	if (!isInit) updateConfig(globalConfig, true);
+}
+
+export function setGlobalChatHistoryLimit(limit, isInit) {
+	globalConfig.globalChatHistoryLimit = limit;
+	if (!isInit) updateConfig(globalConfig, true);
+}
+
+export function setPartyChatHistoryLimit(limit, isInit) {
+	globalConfig.partyChatHistoryLimit = limit;
+	if (!isInit) updateConfig(globalConfig, true);
+}
+
+export function setMobileControlType(value, isInit) {
+	if (!hasTouchscreen) return;
+	globalConfig.mobileControlsType = value;
+	if (!isInit) updateConfig(globalConfig, true);
+
+	updateMobileControlType();
+}
+
+export function updateConfig(configObj: unknown = config, global = false, configName?: string) {
+	if (!configName) configName = 'config';
+	try {
+		window.localStorage[global ? configName : `${configName}_${ynoGameId}`] =
+			JSON.stringify(configObj);
+	} catch (error) {
+		console.error(error);
+	}
+}

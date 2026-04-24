@@ -1076,8 +1076,8 @@ export function getCookie(cName) {
 
 // SIDE EFFECT
 (function() {
-  return;
-  initNotificationsConfigAndControls();
+  if (!isBrowser) return;
+  // initNotificationsConfigAndControls();
   loadOrInitConfig(notificationConfig, true, 'notificationConfig');
 
   initSaveSyncControls();

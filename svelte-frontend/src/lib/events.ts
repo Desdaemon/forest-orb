@@ -1,3 +1,4 @@
+import { config, updateConfig } from './config.svelte';
 import { addSessionCommandHandler } from './session.svelte';
 
 const eventExpRanks = [
@@ -136,7 +137,7 @@ function onUpdateEvents(events, ignoreLocationCheck) {
 	if (config.lastEvents !== eventsStr) {
 		showEventsToastMessage('listUpdated', 'expedition');
 		config.lastEvents = eventsStr;
-		updateConfig(config);
+		updateConfig();
 	}
 
 	for (let eventType of eventTypes) {

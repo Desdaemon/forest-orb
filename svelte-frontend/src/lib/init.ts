@@ -1,4 +1,4 @@
-import { gameIds, gameId, ynoGameId } from '$lib';
+import { gameIds, gameId, ynoGameId, serverUrlBase, apiUrl, adminApiUrl, loggedInKey } from '$lib';
 import {
 	initNotificationsConfigAndControls,
 	notificationConfig,
@@ -7,6 +7,7 @@ import {
 import { isBrowser, extractCanvas } from '$lib';
 import { showSystemToastMessage } from '$lib/components/ToastContainer.svelte';
 import '$lib/chat.svelte';
+// import { setLang, setMusicVolume, setName, setSoundVolume } from './play.svelte';
 
 // const gameIds = [ '2kki', 'amillusion', 'braingirl', 'cold', 'unconscious', 'deepdreams', 'flow', 'fog', 'genie', 'if', 'loveyou', 'mikan', 'muma', 'nostalgic', 'oversomnia', 'oneshot', 'prayers', 'sheawaits', 'someday', 'tsushin', 'ultraviolet', 'unaccomplished', 'unevendream', 'yume' ];
 // const gameIdMatch = isBrowser && new RegExp('(?:' + gameIds.join('|') + ')').exec(window.location);
@@ -47,17 +48,6 @@ const playerTooltipCache: Map<string, import('tippy.js').Instance> = new Map();
 //   get() { return this; },
 // })
 
-const loggedInKey = 'ynoproject_loggedIn';
-const hostBase = 'ynoproject.net';
-const serverUrlBase = `api.${hostBase}`;
-const serverUrl = `https://${serverUrlBase}/${ynoGameId}`;
-const authApiUrl = `https://auth.${hostBase}`;
-const cdnUrl = `https://cdn.${hostBase}`;
-const ugcUrl = `https://ugc.${hostBase}`;
-const rankUrl = `https://rank.${hostBase}`;
-const apiUrl = `${serverUrl}/api`;
-const adminApiUrl = `${serverUrl}/admin`;
-const ynomojiUrlPrefix = 'images/ynomoji/';
 
 let easyrpgPlayer = {
 	initialized: false,
@@ -823,6 +813,7 @@ export function addOrUpdateTooltip(
 }
 
 export function loadOrInitConfig(configObj: any, global = false, configName?: string) {
+	return; // TODO
 	if (!configName) configName = 'config';
 	try {
 		const configKey = global ? configName : `${configName}_${ynoGameId}`;
@@ -1086,15 +1077,6 @@ export function loadOrInitConfig(configObj: any, global = false, configName?: st
 	}
 }
 
-export function updateConfig(configObj, global, configName?: string) {
-	if (!configName) configName = 'config';
-	try {
-		window.localStorage[global ? configName : `${configName}_${ynoGameId}`] =
-			JSON.stringify(configObj);
-	} catch (error) {
-		console.error(error);
-	}
-}
 
 export function setCookie(cName, cValue) {
 	const expiration = new Date();
@@ -1117,10 +1099,10 @@ export function getCookie(cName) {
 (function () {
 	if (!isBrowser) return;
 
-	initNotificationsConfigAndControls();
-	loadOrInitConfig(notificationConfig, true, 'notificationConfig');
+	// initNotificationsConfigAndControls();
+	loadOrInitConfig(notificationConfig, true, 'notificationConfig'); // FIXME
 
-	// initSaveSyncControls();
+	// initSaveSyncControls(); // FIXME
 
 	window.addEventListener('error', (event) => {
 		if (event.error.message.includes('side-effect in debug-evaluate') && event.defaultPrevented)
@@ -1128,6 +1110,6 @@ export function getCookie(cName) {
 		showSystemToastMessage('error', 'important');
 	});
 
-	if (!getCookie(loggedInKey)) injectScripts();
-	else trySyncSave().then((_) => injectScripts());
+	// if (!getCookie(loggedInKey)) injectScripts();
+	// else trySyncSave().then((_) => injectScripts());
 })();

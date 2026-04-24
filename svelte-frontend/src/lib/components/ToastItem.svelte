@@ -1,3 +1,21 @@
+<script module lang="ts">
+	export let toastAnimEndTimer: any;
+	export const toastState = $state({
+		anim: false,
+		top: false,
+		right: false
+	});
+	const fadeToastQueue: any[] = [];
+
+	export function flushToasts() {
+		if (!document.hidden) {
+			while (fadeToastQueue.length) {
+				setTimeout(fadeToastQueue.shift(), 10000);
+			}
+		}
+	}
+</script>
+
 <script lang="ts">
 	import type { Icons } from '$lib/icons';
 	import { themeClass } from '$lib/system.svelte';
@@ -12,9 +30,9 @@
 		systemName?: string;
 		icon?: Icons;
 		filledIcon?: boolean;
-		onmount?(_: ToastController): void;
 		class?: ClassValue;
 		['data-special']?: string;
+		persist?: boolean;
 	};
 
 	type ToastController = {
@@ -24,8 +42,15 @@
 
 	let fade = $state(false);
 
-	let { message, onclose, systemName, icon, filledIcon, onmount, ...divProps }: ToastProps =
-		$props();
+	let {
+		message,
+		onclose,
+		systemName,
+		icon,
+		filledIcon,
+		persist = false,
+		...divProps
+	}: ToastProps = $props();
 	let element: HTMLDivElement;
 
 	function scheduleClose() {
@@ -37,7 +62,26 @@
 	}
 
 	onMount(() => {
-		onmount?.({ element, scheduleClose });
+		const toastContainer = element.parentElement!;
+		const rootStyle = toastContainer.style;
+		rootStyle.setProperty('--toast-offset', `-${element.getBoundingClientRect().height + 8}px`);
+		setTimeout(() => {
+			toastState.anim = true;
+			rootStyle.setProperty('--toast-offset', '0');
+			toastAnimEndTimer = setTimeout(() => {
+				toastState.anim = false;
+				toastAnimEndTimer = undefined;
+			}, 500);
+
+			// NB: moved this block outside of toastAnimEndTimer so it's unconditionally closed
+			if (!persist) {
+				if (document.hidden) {
+					fadeToastQueue.push(scheduleClose);
+				} else {
+					setTimeout(scheduleClose, 10510);
+				}
+			}
+		}, 10);
 	});
 </script>
 

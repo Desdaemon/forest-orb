@@ -4,7 +4,7 @@ let toastAnimEndTimer: number | undefined;
 
 let fadetoastqueue = [];
 
-const notificationTypes = {
+export const notificationTypes = {
   system: [
     'siteUpdates',
     'error',
@@ -85,101 +85,6 @@ let notificationConfig: BaseConfig & Partial<GeneratedConfig> = {
 };
 
 const accountNotificationCategories = [ 'account', 'events', 'badges', 'timeTrials', 'saveSync' ];
-
-export function initNotificationsConfigAndControls() {
-  const notificationSettingsControls = document.querySelector('#notificationSettingsModal .formControls');
-
-  for (let category of Object.keys(notificationTypes) as (keyof typeof notificationTypes)[]) {
-    const categoryConfig = { all: true };
-    notificationConfig[category] = categoryConfig;
-
-    const accountRequired = accountNotificationCategories.indexOf(category) > -1;
-
-    const categoryRow = document.createElement('li');
-    categoryRow.classList.add('formControlRow');
-    if (accountRequired)
-      categoryRow.classList.add('accountRequired');
-
-    const categoryButtonId = `notificationsButton_${category}`;
-
-    const categoryLabel = document.createElement('label');
-    categoryLabel.htmlFor = categoryButtonId;
-    categoryLabel.classList.add('unselectable');
-    categoryLabel.dataset.i18n = `[html]modal.notificationSettings.fields.${category}.label`;
-
-    const categoryButtonContainer = document.createElement('div');
-
-    const categoryButton = document.createElement('button');
-    categoryButton.id = categoryButtonId;
-    categoryButton.classList.add('checkboxButton', 'inverseToggle', 'unselectable');
-    categoryButton.onclick = function () {
-      const toggled = !this.classList.contains('toggled');
-      this.classList.toggle('toggled', toggled);
-      const typeRows = notificationSettingsControls.querySelectorAll(`.formControlRow[data-category="${category}"]`);
-      for (let row of typeRows)
-        row.classList.toggle('hidden', toggled);
-      notificationConfig[category].all = !toggled;
-      updateConfig(notificationConfig, true, 'notificationConfig');
-    };
-
-    categoryButton.appendChild(document.createElement('span'));
-
-    categoryRow.appendChild(categoryLabel);
-    
-    categoryButtonContainer.appendChild(categoryButton);
-    categoryRow.appendChild(categoryButtonContainer);
-
-    notificationSettingsControls.appendChild(categoryRow);
-    
-    for (let type of notificationTypes[category]) {
-      categoryConfig[type] = true;
-
-      const typeRow = document.createElement('li');
-      typeRow.classList.add('formControlRow', 'indent');
-      if (accountRequired)
-        typeRow.classList.add('accountRequired');
-      typeRow.dataset.category = category;
-
-      const typeButtonId = `${categoryButtonId}_${type}`;
-
-      const typeLabel = document.createElement('label');
-      typeLabel.classList.add('unselectable');
-      typeLabel.htmlFor = typeButtonId;
-      typeLabel.dataset.i18n = `[html]modal.notificationSettings.fields.${category}.fields.${type}`;
-
-      const typeButtonContainer = document.createElement('div');
-
-      const typeButton = document.createElement('button');
-      typeButton.id = typeButtonId;
-      typeButton.classList.add('checkboxButton', 'inverseToggle', 'unselectable');
-      typeButton.onclick = function () {
-        this.classList.toggle('toggled');
-        notificationConfig[category][type] = !this.classList.contains('toggled');
-        updateConfig(notificationConfig, true, 'notificationConfig');
-        didSetNotificationConfig(category, type, notificationConfig[category][type]);
-      };
-
-      typeButton.appendChild(document.createElement('span'));
-
-      typeRow.appendChild(typeLabel);
-
-      typeButtonContainer.appendChild(typeButton);
-      typeRow.appendChild(typeButtonContainer);
-
-      notificationSettingsControls.appendChild(typeRow);
-    }
-  }
-  
-  document.getElementById('notificationsButton').onclick = function () {
-    const toggled = !this.classList.contains('toggled');
-    this.classList.toggle('toggled', toggled);
-    document.getElementById('notificationSettingsModal').classList.toggle('notificationsOff', toggled);
-    notificationConfig.all = !toggled;
-    updateConfig(notificationConfig, true, 'notificationConfig');
-  };
-
-  document.getElementById('notificationScreenPosition').onclick = function () { setNotificationScreenPosition(this.value); };
-}
 
 export function setNotificationScreenPosition(value) {
   if (value) {

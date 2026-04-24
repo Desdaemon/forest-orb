@@ -12,16 +12,17 @@ import { updateGameChatMessageVisibility } from '$lib/chat.svelte';
 import { initEventControls, onUpdateEventPeriod, updateEventPeriod, updateEvents } from './events';
 import {
 	addTooltip,
-	updateConfig,
 	wikiApiFetch,
 	hasTouchscreen,
 	loadOrInitConfig,
 	loadedUiTheme,
 	loadedFontStyle,
-	loadedLang
+	loadedLang,
+    fetchNewest,
+    setCookie
 } from './init';
 import { addSessionCommandHandler, initSessionWs, getConnStatus } from './session.svelte';
-import { gameId, isBrowser } from '$lib';
+import { gameId, isBrowser, loggedInKey } from '$lib';
 import {
 	getDefaultUiTheme,
 	populateUiThemes,
@@ -31,7 +32,7 @@ import {
 	getSystemName
 } from './system.svelte';
 import { initDefaultSprites } from './playerlist.svelte';
-import { globalConfig, config } from './config.svelte';
+import { globalConfig, config, updateConfig } from './config.svelte';
 
 /**
  * @typedef {object} MapTitle
@@ -349,7 +350,7 @@ export function updateMapPlayerCount(count: number) {
 // SIDE EFFECT
 if (isBrowser) {
 	setSystemName(getDefaultUiTheme());
-	populateUiThemes();
+	// populateUiThemes(); // TODO
 
 	// SIDE EFFECT
 	const gameLogoUrl = `../images/logo_${gameId}.png`;
@@ -2152,49 +2153,7 @@ async function withTimeout(duration, prom) {
 	return res;
 }
 
-const rtlLangs = ['ar'];
-const latinExLangs = ['vi', 'ru', 'uk'];
-export function setLang(lang, isInit) {
-	if (rtlLangs.includes(lang)) document.documentElement.setAttribute('dir', 'rtl');
-	else document.documentElement.removeAttribute('dir');
 
-	setExtendedLatinFonts(lang);
-
-	globalConfig.lang = lang;
-	initBlocker = initBlocker.then(() =>
-		withTimeout(
-			800,
-			fetchNewest(`${cdnUrl}/${gameId}/Language/${lang}/meta.ini`).then((response) => {
-				// Prevent a crash when the --language argument is used and the game doesn't have a Language folder
-				if (response.ok && response.status < 400 && isInit && gameIds.indexOf(gameId) > -1) {
-					easyrpgPlayer.language = (
-						gameDefaultLangs.hasOwnProperty(gameId)
-							? gameDefaultLangs[gameId] !== lang
-							: lang !== 'en'
-					)
-						? lang
-						: 'default';
-				}
-			})
-		)
-	);
-	initLocalization(isInit);
-	if (!isInit) {
-		updateConfig(globalConfig, true);
-		if (document.fullscreenElement) {
-			updateCanvasFullscreenSize();
-		}
-	}
-}
-
-function setExtendedLatinFonts(lang) {
-	if (latinExLangs.includes(lang) !== globalConfig.unicodeFont)
-		document.documentElement.style.setProperty(
-			'--font-override',
-			'-apple-system, BlinkMacSystemFont, xlatin-sans, PGothic, JF-Dot-Shinonome, sans-serif'
-		);
-	else document.documentElement.style.setProperty('--font-override', 'unset');
-}
 
 let saveReminderHandle;
 function resetSaveReminder() {
@@ -2207,64 +2166,6 @@ function resetSaveReminder() {
 	}, globalConfig.saveReminder * 60000);
 }
 
-function setSaveReminder(saveReminder, isInit) {
-	globalConfig.saveReminder = saveReminder;
-	if (!isInit) updateConfig(globalConfig, true);
-	resetSaveReminder();
-}
-
-export function setName(name, isInit) {
-	globalConfig.name = name;
-	if (!isInit) updateConfig(globalConfig, true);
-}
-
-export function setSoundVolume(value, isInit) {
-	if (isNaN(value)) return;
-	if (easyrpgPlayer.initialized && !config.mute) {
-		easyrpgPlayer.api.setSoundVolume(value);
-		debounce(easyrpgPlayer.api.saveConfig);
-	}
-	globalConfig.soundVolume = value;
-	if (!isInit) updateConfig(globalConfig, true);
-}
-
-export function setMusicVolume(value, isInit) {
-	if (isNaN(value)) return;
-	if (easyrpgPlayer.initialized && !config.mute) {
-		easyrpgPlayer.api.setMusicVolume(value);
-		debounce(easyrpgPlayer.api.saveConfig);
-	}
-	globalConfig.musicVolume = value;
-	if (!isInit) updateConfig(globalConfig, true);
-}
-
-export function setWikiLinkMode(wikiLinkMode, isInit) {
-	globalConfig.wikiLinkMode = wikiLinkMode;
-	if (!isInit) updateConfig(globalConfig, true);
-}
-
-export function setMapChatHistoryLimit(limit, isInit) {
-	globalConfig.mapChatHistoryLimit = limit;
-	if (!isInit) updateConfig(globalConfig, true);
-}
-
-export function setGlobalChatHistoryLimit(limit, isInit) {
-	globalConfig.globalChatHistoryLimit = limit;
-	if (!isInit) updateConfig(globalConfig, true);
-}
-
-export function setPartyChatHistoryLimit(limit, isInit) {
-	globalConfig.partyChatHistoryLimit = limit;
-	if (!isInit) updateConfig(globalConfig, true);
-}
-
-export function setMobileControlType(value, isInit) {
-	if (!hasTouchscreen) return;
-	globalConfig.mobileControlsType = value;
-	if (!isInit) updateConfig(globalConfig, true);
-
-	updateMobileControlType();
-}
 
 let availableControlType = 'default';
 function updateMobileControlType() {
@@ -3480,14 +3381,15 @@ if (isBrowser)
 		}
 	});
 
-// SIDE EFFECT
-initDefaultSprites();
-updateBadges();
+// SIDE EFFECT, FIXME
+// initDefaultSprites();
+// updateBadges();
 // if (typeof initBadgeTools === 'function')
 //   initBadgeTools();
-fetchAndPopulateYnomojiConfig();
+// fetchAndPopulateYnomojiConfig();
 
 // SIDE EFFECT
+/*
 if (!loadedUiTheme) setUiTheme('auto', true);
 if (!loadedFontStyle) setFontStyle(0, true);
 if (!loadedLang && isBrowser) {
@@ -3504,9 +3406,10 @@ if (!loadedLang && isBrowser) {
 		true
 	);
 }
+*/
 
 // SIDE EFFECT
-if (isBrowser)
+if (false) // TODO
 	if (!globalConfig.rulesReviewed) {
 		if (!globalConfig.warningsReviewed) {
 			openModal('rulesModal', undefined, 'warningsModal');

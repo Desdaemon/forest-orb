@@ -1,6 +1,6 @@
 import { isBrowser, gameId } from "$lib";
 import { getLocalized2kkiLocations } from "./2kki";
-import { updateConfig } from "./init";
+import { updateConfig } from "./config.svelte";
 import { addSessionCommandHandler } from "./session.svelte";
 
 // SIDE EFFECT
@@ -356,11 +356,9 @@ function chatboxAddMessage(msg, type, player, ignoreNotify = false, mapId?: unkn
     else
       tabMessages = [...messages.querySelectorAll('.messageContainer:not(.global):not(.party)')];
     const oldTask = task;
-    task = {
-      while (tabMessages.length > tabMessagesLimit)
-        tabMessages.shift().replaceWith(tabMessages[0]);
-      return oldTask;
-    }
+    while (tabMessages.length > tabMessagesLimit)
+      tabMessages.shift().replaceWith(tabMessages[0]);
+    return oldTask;
   }
 
   task.then(shouldScroll => shouldScroll && scrollChatMessages());
