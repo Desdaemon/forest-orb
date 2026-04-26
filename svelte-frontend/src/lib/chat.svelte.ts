@@ -5,9 +5,6 @@ import { addSessionCommandHandler } from "./session.svelte";
 
 // SIDE EFFECT
 // easyrpgPlayer["onRuntimeInitialized"] = initChat;
-// if (typeof ENV === "undefined")
-if (isBrowser)
-  initChat();
 
 const MESSAGE_TYPE = {
   SYSTEM: 0,
@@ -500,48 +497,7 @@ function chatInputActionFired() {
   document.getElementById("ynomojiContainer").classList.add("hidden");
 }
 
-/**
- * @param {HTMLInputElement} inputElement
- * @param {number} length
- */
-function constrainByteLength(inputElement, length) {
-  const buf = new Uint8Array(length);
-  const enc = new TextEncoder();
-  const listener = event => {
-    const target = event?.target;
-    if (!target) return;
-    // modifying input contents during composition would interrupt it
-    // and prevent the user from finishing
-    if (event.isComposing) return;
-
-    const sel = target.selectionStart;
-    const v = target.value;
-
-    // length is implicitly constrained by encodeInto
-    // encode the substring after the caret first so it doesn't get
-    // overwritten if the caret is in the middle of the string
-    const e2 = enc.encodeInto(v.substring(sel), buf);
-    // then do the one before the caret
-    const e1 = enc.encodeInto(v.substring(0, sel), buf.subarray(e2.written));
-    target.value = v.substring(0, e1.read) + v.substring(sel, sel+e2.read);
-    target.selectionEnd = e1.read;
-  };
-
-  // some browsers send an input event with isComposing: false after composition
-  // finishes but it's not guaranteed to always fire (and doesn't on e.g. chromium)
-  // so we have to listen for compositionend as well
-  ['input', 'compositionend'].forEach(e => inputElement.addEventListener(e, listener));
-}
-
-// SIDE EFFECT
-if (isBrowser)
-  constrainByteLength(document.getElementById('chatInput'), 150);
-
-function chatNameCheck() {
-  trySetChatName(document.getElementById("nameInput").value);
-}
-
-export function trySetChatName(name) {
+export function trySetChatName(name: string) {
   if (name && !(/^[A-Za-z0-9]+$/.test(name)))
     return;
   playerName = name;
@@ -558,52 +514,6 @@ export function trySetChatName(name) {
     if (!loggedIn)
       sendSessionCommand('name', [ playerName ]);
   }
-}
-
-function initChat() {
-  document.getElementById("chatboxContainer").style.display = "table-cell";
-  
-  const gameChatContainer = document.getElementById('gameChatContainer');
-  const gameChatInput = document.getElementById('gameChatInput');
-  gameChatInput.onfocus = function() {
-    gameChatContainer.classList.add('focused');
-    document.execCommand('selectAll', false, null);
-    document.getSelection().collapseToEnd();
-  };
-  gameChatInput.onblur = () => gameChatContainer.classList.remove('focused');
-  gameChatInput.onkeydown = function (e) {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      cycleGameChatMode();
-    } else if (e.key === 'Enter') {
-      const chatMessageContent = e.target.innerText.trim();
-      if (!chatMessageContent) {
-        document.getElementById('canvas').focus();
-        return;
-      }
-      e.preventDefault();
-      if (!playerName)
-        return;
-      switch (_gameChatModeIndex) {
-        case 0:
-          if (!trySendMapMessage(chatMessageContent))
-            return;
-          break;
-        case 1:
-          if (!trySendGlobalMessage(chatMessageContent))
-            return;
-          break;
-        case 2:
-          if (!trySendPartyMessage(chatMessageContent))
-            return;
-          break;
-      }
-      e.target.innerHTML = '';
-    } else if (e.key === 'Escape') {
-      document.getElementById('canvas').focus();
-      return;
-    }
-  };
 }
 
 export function trySendMapMessage(content: string) {

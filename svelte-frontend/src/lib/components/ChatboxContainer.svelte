@@ -1,5 +1,48 @@
 <script>
 	import { gameId } from '$lib';
+	import { trySetChatName } from '$lib/chat.svelte'
+
+	function chatNameCheck(ev) {
+		ev.preventDefault();
+	  trySetChatName(ev.target.nameInput.value);
+	}
+
+	let nameInput;
+
+	/**
+	 * @param {HTMLInputElement} inputElement
+	 * @param {number} length
+	 */
+	function constrainByteLength(length) {
+		const buf = new Uint8Array(length);
+		const enc = new TextEncoder();
+		const listener = (event) => {
+			const target = event?.target;
+			if (!target) return;
+			// modifying input contents during composition would interrupt it
+			// and prevent the user from finishing
+			if (event.isComposing) return;
+
+			const sel = target.selectionStart;
+			const v = target.value;
+
+			// length is implicitly constrained by encodeInto
+			// encode the substring after the caret first so it doesn't get
+			// overwritten if the caret is in the middle of the string
+			const e2 = enc.encodeInto(v.substring(sel), buf);
+			// then do the one before the caret
+			const e1 = enc.encodeInto(v.substring(0, sel), buf.subarray(e2.written));
+			target.value = v.substring(0, e1.read) + v.substring(sel, sel + e2.read);
+			target.selectionEnd = e1.read;
+		};
+
+		// some browsers send an input event with isComposing: false after composition
+		// finishes but it's not guaranteed to always fire (and doesn't on e.g. chromium)
+		// so we have to listen for compositionend as well
+		// inputElement.addEventListener('input', listener);
+		// inputElement.addEventListener('compositionend', listener);
+		return { oninput: listener, oncompositionend: listener };
+	}
 </script>
 
 <div id="chatboxContainer" class="container" style="display: table-cell">
@@ -264,7 +307,7 @@
 				<div id="partyList" class="partyList chatboxTabContent scrollableContainer"></div>
 			</div>
 		</div>
-		<div id="chatInputContainer" style="display: none">
+		<div id="chatInputContainer" style="display: none" {...constrainByteLength(150)}>
 			<form action="javascript:chatInputActionFired()">
 				<input
 					id="chatInput"
@@ -324,7 +367,7 @@
 					>
 				</small>
 			</span>
-			<form id="enterNameForm" action="javascript:chatNameCheck()">
+			<form id="enterNameForm" onsubmit={chatNameCheck}>
 				<input id="nameInput" type="text" autocomplete="off" maxlength="10" />
 			</form>
 		</div>

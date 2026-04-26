@@ -352,7 +352,6 @@ if (isBrowser) {
 	setSystemName(getDefaultUiTheme());
 	// populateUiThemes(); // TODO
 
-	// SIDE EFFECT
 	const gameLogoUrl = `../images/logo_${gameId}.png`;
 	const gameLogoImg = new Image();
 	gameLogoImg.setAttribute('crossOrigin', 'anonymous');

@@ -29,7 +29,7 @@
 	}
 </script>
 
-<div id="notificationSettingsModal" class={['modal', { notificationsOff }]}>
+<div id="notificationSettingsModal" class={['modal hidden', { notificationsOff }]}>
 	<a href="javascript:void(0);" class="modalClose">✖</a>
 	<div class="modalHeader">
 		<h1 class="modalTitle" data-i18n="[html]modal.notificationSettings.title">

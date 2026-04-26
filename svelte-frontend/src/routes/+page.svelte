@@ -585,7 +585,7 @@
 			</div>
 		</div>
 		<ChatboxContainer />
-		<div id="modalContainer" class="modalContainer">
+		<div id="modalContainer" class="modalContainer hidden">
 			<div id="loginModal" class="modal hidden">
 				<a href="javascript:void(0);" class="modalClose">✖</a>
 				<div class="modalHeader">
