@@ -5,7 +5,7 @@ let partyDescriptionCache = {};
 let joinedPartyCache = null;
 let joinedPartyPendingOfflineMemberUuids = [];
 
-function initPartyControls() {
+export function initPartyControls() {
   document.getElementById('createPartyButton').onclick = () => {
     const partyName = document.getElementById('partyName');
     const partyDescription = document.getElementById('partyDescription');

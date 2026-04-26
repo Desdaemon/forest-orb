@@ -42,15 +42,7 @@
 
 	let fade = $state(false);
 
-	let {
-		message,
-		onclose,
-		systemName,
-		icon,
-		filledIcon,
-		persist = false,
-		...divProps
-	}: ToastProps = $props();
+	let { message, onclose, systemName, icon, filledIcon, persist = false, ...divProps }: ToastProps = $props();
 	let element: HTMLDivElement;
 
 	function scheduleClose() {
@@ -85,11 +77,7 @@
 	});
 </script>
 
-<div
-	bind:this={element}
-	{...divProps}
-	class={['toast', { fade }, themeClass(systemName), divProps.class]}
->
+<div bind:this={element} {...divProps} class={['toast', { fade }, themeClass(systemName), divProps.class]}>
 	{#if icon}
 		<Icon {icon} fill={filledIcon} />
 	{/if}

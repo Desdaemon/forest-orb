@@ -87,8 +87,7 @@ export function onLoad2kkiMap(mapId) {
 		}
 		if (
 			playerData?.badge &&
-			badgeCache.find((b) => b.badgeId === playerData.badge)?.overlayType &
-				BadgeOverlayType.LOCATION
+			badgeCache.find((b) => b.badgeId === playerData.badge)?.overlayType & BadgeOverlayType.LOCATION
 		)
 			updateBadgeButton();
 	} else {
@@ -106,8 +105,7 @@ export function onLoad2kkiMap(mapId) {
 				checkEventLocations();
 				if (
 					playerData?.badge &&
-					badgeCache.find((b) => b.badgeId === playerData.badge)?.overlayType &
-						BadgeOverlayType.LOCATION
+					badgeCache.find((b) => b.badgeId === playerData.badge)?.overlayType & BadgeOverlayType.LOCATION
 				)
 					updateBadgeButton();
 			})
@@ -115,13 +113,7 @@ export function onLoad2kkiMap(mapId) {
 	}
 }
 
-function queryAndSet2kkiLocation(
-	mapId,
-	prevMapId,
-	prevLocations,
-	setLocationFunc,
-	forClient?: boolean
-) {
+function queryAndSet2kkiLocation(mapId, prevMapId, prevLocations, setLocationFunc, forClient?: boolean) {
 	return new Promise((resolve, reject) => {
 		let url = `https://explorer.yume.wiki/getMapLocationNames?mapId=${mapId}`;
 		if (prevMapId) {
@@ -220,21 +212,12 @@ function queryAndSet2kkiLocation(
 	});
 }
 
-function set2kkiClientLocation(
-	mapId,
-	prevMapId,
-	locations,
-	prevLocations,
-	cacheLocation,
-	saveLocation
-) {
+function set2kkiClientLocation(mapId, prevMapId, locations, prevLocations, cacheLocation, saveLocation) {
 	const localizedLocationsHtml = getLocalized2kkiLocationsHtml(locations, '<br>');
 	document.getElementById('locationText').innerHTML = localizedLocationsHtml;
 
 	const width = `${document.querySelector('#locationText > *').offsetWidth}px`;
-	fastdom.mutate(() =>
-		document.getElementById('nextLocationContainer').style.setProperty('--location-width', width)
-	);
+	fastdom.mutate(() => document.getElementById('nextLocationContainer').style.setProperty('--location-width', width));
 
 	onUpdateChatboxInfo();
 	preloadFilesFromMapId(mapId);
@@ -263,9 +246,7 @@ function getLocalized2kkiLocation(title, titleJP, asHtml, forDisplay = false) {
 export function getLocalized2kkiLocations(locations, separator, forDisplay = false) {
 	return locations && locations.length
 		? Array.isArray(locations)
-			? locations
-					.map((l) => getLocalized2kkiLocation(l.title, l.titleJP, false, forDisplay))
-					.join(separator)
+			? locations.map((l) => getLocalized2kkiLocation(l.title, l.titleJP, false, forDisplay)).join(separator)
 			: locations
 		: getMassagedLabel(localizedMessages.location.unknownLocation);
 }
@@ -310,9 +291,7 @@ export function get2kkiLocationHtml(location, showDepth) {
 	const locationHtmlJP = urlTitleJP
 		? `<a href="${gameLocalizedLocationUrlRoots['2kki'] || localizedLocationUrlRoot}${urlTitleJP}" target="_blank" class="wikiLink">${location.titleJP}</a>`
 		: null;
-	return locationHtmlJP
-		? getLocalized2kkiLocation(locationHtml, locationHtmlJP, true)
-		: locationHtml;
+	return locationHtmlJP ? getLocalized2kkiLocation(locationHtml, locationHtmlJP, true) : locationHtml;
 }
 
 export function getLocalized2kkiLocationsHtml(locations, separator, showDepth) {
@@ -324,20 +303,12 @@ export function getLocalized2kkiLocationsHtml(locations, separator, showDepth) {
 }
 
 export function getOrQuery2kkiLocations(mapId, prevMapId, prevLocations, callback) {
-	const callbackFunc = (
-		_mapId,
-		_prevMapId,
-		locations,
-		prevLocations,
-		cacheLocation,
-		saveLocation
-	) => {
+	const callbackFunc = (_mapId, _prevMapId, locations, prevLocations, cacheLocation, saveLocation) => {
 		callback(locations);
 		if (cacheLocation) {
 			const locationKey = `${prevMapId}_${mapId}`;
 			const prevLocationKey = `${mapId}_${prevMapId}`;
-			const cachePrev =
-				Array.isArray(prevLocations) && prevLocations.filter((l) => l.titleJP).length;
+			const cachePrev = Array.isArray(prevLocations) && prevLocations.filter((l) => l.titleJP).length;
 			if (locations) locationCache[locationKey] = locations;
 			if (cachePrev) locationCache[prevLocationKey] = prevLocations;
 			if (saveLocation && (locations || prevLocations)) {
@@ -356,21 +327,13 @@ export function getOrQuery2kkiLocations(mapId, prevMapId, prevLocations, callbac
 		if (locationCache?.hasOwnProperty(locationKey) && Array.isArray(locationCache[locationKey]))
 			callbackFunc(mapId, prevMapId, locationCache[locationKey], prevLocations);
 		else
-			queryAndSet2kkiLocation(
-				mapId,
-				prevMapId !== '0000' ? prevMapId : null,
-				prevLocations,
-				callbackFunc
-			).catch((err) => console.error(err));
+			queryAndSet2kkiLocation(mapId, prevMapId !== '0000' ? prevMapId : null, prevLocations, callbackFunc).catch(
+				(err) => console.error(err)
+			);
 	}
 }
 
-export function set2kkiGlobalChatMessageLocation(
-	globalMessageLocation,
-	mapId,
-	prevMapId,
-	prevLocations
-) {
+export function set2kkiGlobalChatMessageLocation(globalMessageLocation, mapId, prevMapId, prevLocations) {
 	getOrQuery2kkiLocations(mapId, prevMapId, prevLocations, (locations) => {
 		const locationsHtml = getLocalized2kkiLocationsHtml(locations, getInfoLabel('&nbsp;|&nbsp;'));
 		globalMessageLocation.innerHTML = locationsHtml;
@@ -395,14 +358,7 @@ export function getOrQuery2kkiLocationsHtml(mapId, callback) {
 	}
 	let prevMapId = locationKey.slice(0, 4);
 
-	const setLocationFunc = (
-		_mapId,
-		_prevMapId,
-		locations,
-		_prevLocations,
-		cacheLocation,
-		saveLocation
-	) => {
+	const setLocationFunc = (_mapId, _prevMapId, locations, _prevLocations, cacheLocation, saveLocation) => {
 		if (cacheLocation) {
 			const locationKey = `${prevMapId}_${mapId}`;
 			if (locations) locationCache[locationKey] = locations;
@@ -418,9 +374,7 @@ export function getOrQuery2kkiLocationsHtml(mapId, callback) {
 		setLocationFunc(mapId, null, locationCache[locationKey]);
 	else {
 		prevMapId = '0000';
-		queryAndSet2kkiLocation(mapId, prevMapId, null, setLocationFunc).catch((err) =>
-			console.error(err)
-		);
+		queryAndSet2kkiLocation(mapId, prevMapId, null, setLocationFunc).catch((err) => console.error(err));
 	}
 }
 
@@ -479,10 +433,10 @@ function get2kkiExplorerButton(locationName, isMulti) {
 
 	addTooltip(
 		ret,
-		getMassagedLabel(
-			!isMulti ? localizedExplorerLinks.generic : localizedExplorerLinks.multi,
-			true
-		).replace('{LOCATION}', locationName),
+		getMassagedLabel(!isMulti ? localizedExplorerLinks.generic : localizedExplorerLinks.multi, true).replace(
+			'{LOCATION}',
+			locationName
+		),
 		true,
 		true
 	);
@@ -618,8 +572,7 @@ export function getDepthRgba(depth: number, maxDepth: number) {
 	const depthColors = [];
 	const depthHueIncrement = (1 / maxDepth) * 0.6666;
 
-	for (let d = 0; d <= maxDepth; d++)
-		depthColors.push(hueToRGBA(0.6666 - depthHueIncrement * d, 1));
+	for (let d = 0; d <= maxDepth; d++) depthColors.push(hueToRGBA(0.6666 - depthHueIncrement * d, 1));
 
 	return depthColors[Math.min(depth, maxDepth)];
 }
@@ -637,17 +590,13 @@ export function checkShow2kkiVersionUpdate() {
 		};
 
 		const currentVersion = document.querySelector('meta[name="2kkiVersion"]').content;
-		if (!currentVersion || currentVersion === config.last2kkiVersion)
-			return removeUpdateDisplayAndResolve();
+		if (!currentVersion || currentVersion === config.last2kkiVersion) return removeUpdateDisplayAndResolve();
 
 		chatboxContainer.classList.add('hidden');
 
 		const versionText = document.querySelector('.version').innerText;
 
-		const versionPrefixText = versionText.slice(
-			0,
-			versionText.indexOf(getLocalizedVersion(currentVersion))
-		);
+		const versionPrefixText = versionText.slice(0, versionText.indexOf(getLocalizedVersion(currentVersion)));
 		const versionNewSuffixText = versionText.slice(versionPrefixText.length);
 		const versionOldSuffixText = getLocalizedVersion(config.last2kkiVersion);
 
@@ -732,10 +681,11 @@ function reloadExplorer(trackedLocations?: unknown[]) {
 	}
 }
 
-(function () {
+/** Registers the Yume 2kki session command handlers. Called from `<SessionCommands />`. */
+export function register2kkiSessionHandlers() {
 	if (!is2kki) return;
 
-	// SIDE EFFECT, FIXME
+	// FIXME
 	// compareVersionNames = compare2kkiVersionNames;
 
 	addSessionCommandHandler('l', (locationIds) => {
@@ -753,4 +703,4 @@ function reloadExplorer(trackedLocations?: unknown[]) {
 			sendSessionCommand('nl', [config.trackedLocationId], (params) => reloadExplorer(params));
 		} else reloadExplorer();
 	});
-})();
+}

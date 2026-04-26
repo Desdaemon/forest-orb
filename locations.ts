@@ -402,6 +402,7 @@ function updateLocationPlayerCount(locationItem, locationPlayerCounts) {
     : 0;
 }
 
+// SIDE EFFECT
 (function () {
   addSessionCommandHandler('l', locationIds => {
     locationIds.map(id => parseInt(id)).map(id => {

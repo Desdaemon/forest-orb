@@ -29,51 +29,58 @@
 	}
 </script>
 
-<div id="notificationSettingsModal" class={['modal', { notificationsOff }]}>
+<div id="notificationSettingsModal" class={['modal hidden', { notificationsOff }]}>
 	<a href="javascript:void(0);" class="modalClose">✖</a>
 	<div class="modalHeader">
-		<h1 class="modalTitle" data-i18n="[html]modal.notificationSettings.title">
-			Notification Settings
-		</h1>
+		<h1 class="modalTitle" data-i18n="[html]modal.notificationSettings.title">Notification Settings</h1>
 	</div>
 	<div class="modalContent">
 		<ul class="formControls">
 			<li class="formControlRow">
-				<label
-					class="unselectable"
-					data-i18n="[html]modal.notificationSettings.fields.toggleNotifications"
-					>Notifications</label
-				>
+				<label class="unselectable" data-i18n="[html]modal.notificationSettings.fields.toggleNotifications">
+					Notifications
+				</label>
 				<CheckboxButton toggled={notificationConfig.all} onclick={onClickNotificationsButton} />
 			</li>
 			<li class="formControlRow">
 				<label
 					for="notificationScreenPosition"
 					class="unselectable"
-					data-i18n="[html]modal.notificationSettings.fields.screenPosition.label">Screen Position</label
+					data-i18n="[html]modal.notificationSettings.fields.screenPosition.label"
 				>
+					Screen Position
+				</label>
 				<div>
-					<select id="notificationScreenPosition" size="4" value={notificationConfig.screenPosition} onchange={onChangeNotificationPosition}>
+					<select
+						id="notificationScreenPosition"
+						size="4"
+						value={notificationConfig.screenPosition}
+						onchange={onChangeNotificationPosition}
+					>
 						<option
 							value="bottomLeft"
 							data-i18n="[html]modal.notificationSettings.fields.screenPosition.values.bottomLeft"
-							>Bottom Left</option
 						>
+							Bottom Left
+						</option>
 						<option
 							value="bottomRight"
 							data-i18n="[html]modal.notificationSettings.fields.screenPosition.values.bottomRight"
-							>Bottom Right</option
 						>
+							Bottom Right
+						</option>
 						<option
 							value="topLeft"
 							data-i18n="[html]modal.notificationSettings.fields.screenPosition.values.topLeft"
-							>Top Left</option
 						>
+							Top Left
+						</option>
 						<option
 							value="topRight"
 							data-i18n="[html]modal.notificationSettings.fields.screenPosition.values.topRight"
-							>Top Right</option
 						>
+							Top Right
+						</option>
 					</select>
 				</div>
 			</li>
@@ -84,8 +91,10 @@
 					<label
 						for={categoryId}
 						class="unselectable"
-						data-i18n="[html]modal.notificationSettings.fields.{category}.label">{category}</label
+						data-i18n="[html]modal.notificationSettings.fields.{category}.label"
 					>
+						{category}
+					</label>
 					<CheckboxButton
 						toggled={notificationConfig[category].all}
 						id={categoryId}
@@ -98,8 +107,9 @@
 							<label
 								for="{categoryId}_{type}"
 								data-i18n="[html]modal.notificationSettings.fields.{category}.fields.{type}"
-								>{category}:{type}</label
 							>
+								{category}:{type}
+							</label>
 							<CheckboxButton
 								toggled={notificationConfig[category][type]}
 								id="{categoryId}_{type}"

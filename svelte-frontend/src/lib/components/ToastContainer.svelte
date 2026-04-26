@@ -40,17 +40,14 @@
 		}
 	}
 
-	export function showSystemToastMessage(
-		key: Exclude<keyof typeof notificationConfig.system, 'all'>,
-		icon: Icons
-	) {
+	export function showSystemToastMessage(key: Exclude<keyof typeof notificationConfig.system, 'all'>, icon: Icons) {
 		if (
 			!notificationConfig.system.all ||
 			!notificationConfig.system[key] ||
 			toastContainer.querySelector(`.systemToast[data-special='${key}']`)
 		)
 			return;
-		showToastMessage(/* getMassagedLabel(localizedMessages.toast.system[key]) */ '', {
+		showToastMessage('TODO: getMassagedLabel(localizedMessages.toast.system[key])', {
 			icon,
 			special: key,
 			persist: true,

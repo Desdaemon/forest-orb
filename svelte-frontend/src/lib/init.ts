@@ -1,13 +1,22 @@
-import { gameIds, gameId, ynoGameId, serverUrlBase, apiUrl, adminApiUrl, loggedInKey } from '$lib';
-import {
-	initNotificationsConfigAndControls,
-	notificationConfig,
-	notificationTypes
-} from './toast.svelte';
-import { isBrowser, extractCanvas } from '$lib';
+import { gameId, ynoGameId, serverUrlBase, apiUrl, adminApiUrl, loggedInKey } from '$lib';
+import { notificationConfig, notificationTypes } from './toast.svelte';
+import { extractCanvas } from '$lib';
 import { showSystemToastMessage } from '$lib/components/ToastContainer.svelte';
-import '$lib/chat.svelte';
+// import '$lib/chat.svelte';
 // import { setLang, setMusicVolume, setName, setSoundVolume } from './play.svelte';
+// import '$lib/chat.svelte';
+// import '$lib/playerlist.svelte';
+// import '$lib/friends';
+// import '$lib/parties.svelte';
+// import '$lib/system.svelte';
+// import '$lib/preloads';
+// import '$lib/locations.svelte';
+// import '$lib/schedules';
+// import '$lib/report.svelte';
+// import '$lib/notifications';
+// import '$lib/2kki';
+// import '$lib/play.svelte';
+// import '$lib/gamecanvas';
 
 // const gameIds = [ '2kki', 'amillusion', 'braingirl', 'cold', 'unconscious', 'deepdreams', 'flow', 'fog', 'genie', 'if', 'loveyou', 'mikan', 'muma', 'nostalgic', 'oversomnia', 'oneshot', 'prayers', 'sheawaits', 'someday', 'tsushin', 'ultraviolet', 'unaccomplished', 'unevendream', 'yume' ];
 // const gameIdMatch = isBrowser && new RegExp('(?:' + gameIds.join('|') + ')').exec(window.location);
@@ -22,8 +31,6 @@ const gameDefaultLangs = {
 };
 const dependencyFiles = {};
 const dependencyMaps = {};
-export const hasTouchscreen =
-	isBrowser && window.matchMedia('(hover: none), (pointer: coarse)').matches;
 const tippyConfig = {
 	arrow: false,
 	animation: 'scale',
@@ -48,7 +55,6 @@ const playerTooltipCache: Map<string, import('tippy.js').Instance> = new Map();
 //   get() { return this; },
 // })
 
-
 let easyrpgPlayer = {
 	initialized: false,
 	game: ynoGameId,
@@ -59,166 +65,141 @@ let easyrpgPlayerLoadFuncs = [];
 
 let initBlocker = Promise.resolve();
 
-async function injectScripts() {
-	const supportsSimd = true; // await wasmFeatureDetect.simd();
+// async function injectScripts() {
+// 	const supportsSimd = true; // await wasmFeatureDetect.simd();
 
-	let scripts = [
-		'chat.js',
-		'playerlist.js',
-		'friends.js',
-		'parties.js',
-		'system.js',
-		'preloads.js',
-		'locations.js',
-		'schedules.js',
-		'report.js',
-		'notifications.js',
-		'2kki.js',
-		'play.js',
-		'gamecanvas.js',
-		`ynoengine${supportsSimd ? '-simd' : ''}.js`
-	];
+// 	let scripts = [
+// 		'chat.js',
+// 		'playerlist.js',
+// 		'friends.js',
+// 		'parties.js',
+// 		'system.js',
+// 		'preloads.js',
+// 		'locations.js',
+// 		'schedules.js',
+// 		'report.js',
+// 		'notifications.js',
+// 		'2kki.js',
+// 		'play.js',
+// 		'gamecanvas.js',
+// 		`ynoengine${supportsSimd ? '-simd' : ''}.js`
+// 	];
 
-	dependencyFiles['play.css'] = null;
+// 	dependencyFiles['play.css'] = null;
 
-	const scriptTags = document.querySelectorAll('script');
-	for (let tag of scriptTags) {
-		if (tag.src.startsWith(window.location.origin)) dependencyFiles[tag.src] = null;
-	}
-	for (let script of scripts) dependencyFiles[script] = null;
-	dependencyFiles[`${cdnUrl}/${ynoGameId}/index.json`] = null;
-	dependencyFiles[`ynoengine${supportsSimd ? '-simd' : ''}.wasm`] = null;
+// 	const scriptTags = document.querySelectorAll('script');
+// 	for (let tag of scriptTags) {
+// 		if (tag.src.startsWith(window.location.origin)) dependencyFiles[tag.src] = null;
+// 	}
+// 	for (let script of scripts) dependencyFiles[script] = null;
+// 	dependencyFiles[`${cdnUrl}/${ynoGameId}/index.json`] = null;
+// 	dependencyFiles[`ynoengine${supportsSimd ? '-simd' : ''}.wasm`] = null;
 
-	const injectScript = function (index) {
-		const script = scripts[index];
-		const loadFunc =
-			index < scripts.length - 1
-				? () => injectScript(index + 1)
-				: async () => {
-						// Assumes last script is index.js
-						if (typeof ENV !== 'undefined') ENV.SDL_EMSCRIPTEN_KEYBOARD_ELEMENT = '#canvas';
+// 	const injectScript = function (index) {
+// 		const script = scripts[index];
+// 		const loadFunc =
+// 			index < scripts.length - 1
+// 				? () => injectScript(index + 1)
+// 				: async () => {
+// 						// Assumes last script is index.js
+// 						if (typeof ENV !== 'undefined') ENV.SDL_EMSCRIPTEN_KEYBOARD_ELEMENT = '#canvas';
 
-						if (gameId === '2kki') {
-							gameVersion = document
-								.querySelector('meta[name="2kkiVersion"]')
-								?.content?.replace(' Patch ', 'p');
-						}
+// 						if (gameId === '2kki') {
+// 							gameVersion = document
+// 								.querySelector('meta[name="2kkiVersion"]')
+// 								?.content?.replace(' Patch ', 'p');
+// 						}
 
-						easyrpgPlayerLoadFuncs.push(() => {
-							easyrpgPlayer.initialized = true;
-							easyrpgPlayer.api.setNametagMode(config.nametagMode);
-							easyrpgPlayer.api.setSoundVolume(globalConfig.soundVolume);
-							easyrpgPlayer.api.setMusicVolume(globalConfig.musicVolume);
-							const loadingOverlay = document.getElementById('loadingOverlay');
-							removeLoader(loadingOverlay);
-							checkShowVersionUpdate().then(() => loadingOverlay.classList.add('loaded'));
-							fetchAndUpdatePlayerInfo(getCookie(loggedInKey) ? true : undefined);
-							setInterval(checkLogin, 60000);
-							setTimeout(() => {
-								checkDependenciesModified();
-								setInterval(checkDependenciesModified, 300000);
-							}, 10000);
-							window.onbeforeunload = function () {
-								return localizedMessages.leavePage;
-							};
-						});
-						if (typeof onResize !== 'undefined') easyrpgPlayerLoadFuncs.push(onResize);
+// 						easyrpgPlayerLoadFuncs.push(() => {
+// 							easyrpgPlayer.initialized = true;
+// 							easyrpgPlayer.api.setNametagMode(config.nametagMode);
+// 							easyrpgPlayer.api.setSoundVolume(globalConfig.soundVolume);
+// 							easyrpgPlayer.api.setMusicVolume(globalConfig.musicVolume);
+// 							const loadingOverlay = document.getElementById('loadingOverlay');
+// 							removeLoader(loadingOverlay);
+// 							checkShowVersionUpdate().then(() => loadingOverlay.classList.add('loaded'));
+// 							fetchAndUpdatePlayerInfo(getCookie(loggedInKey) ? true : undefined);
+// 							setInterval(checkLogin, 60000);
+// 							setTimeout(() => {
+// 								checkDependenciesModified();
+// 								setInterval(checkDependenciesModified, 300000);
+// 							}, 10000);
+// 							window.onbeforeunload = function () {
+// 								return localizedMessages.leavePage;
+// 							};
+// 						});
+// 						if (typeof onResize !== 'undefined') easyrpgPlayerLoadFuncs.push(onResize);
 
-						await initBlocker;
+// 						await initBlocker;
 
-						createEasyRpgPlayer(easyrpgPlayer).then(function (Module) {
-							// Module is ready
-							easyrpgPlayer = Module;
-							easyrpgPlayer.initApi();
+// 						createEasyRpgPlayer(easyrpgPlayer).then(function (Module) {
+// 							// Module is ready
+// 							easyrpgPlayer = Module;
+// 							easyrpgPlayer.initApi();
 
-							for (let loadFunc of easyrpgPlayerLoadFuncs) loadFunc();
+// 							for (let loadFunc of easyrpgPlayerLoadFuncs) loadFunc();
 
-							canvas.focus();
-						});
-					};
+// 							canvas.focus();
+// 						});
+// 					};
 
-		// const scriptTag = document.createElement('script');
-		// scriptTag.type = 'text/javascript';
-		// scriptTag.src = script;
-		// scriptTag.onload = loadFunc;
+// 		// const scriptTag = document.createElement('script');
+// 		// scriptTag.type = 'text/javascript';
+// 		// scriptTag.src = script;
+// 		// scriptTag.onload = loadFunc;
 
-		// document.body.appendChild(scriptTag);
-	};
+// 		// document.body.appendChild(scriptTag);
+// 	};
 
-	injectScript(0);
-}
+// 	injectScript(0);
+// }
 
-function checkDependencyModified(filename, onLoaded, onChecked) {
-	const xhr = new XMLHttpRequest();
-	xhr.open('get', filename, true);
-	xhr.onreadystatechange = () => {
-		if (xhr.readyState == 4) {
-			if (dependencyFiles.hasOwnProperty(filename)) {
-				if (onChecked) onChecked(xhr);
-			} else {
-				if (onLoaded) onLoaded(xhr);
+// function checkDependencyModified(filename, onLoaded, onChecked) {
+// 	const xhr = new XMLHttpRequest();
+// 	xhr.open('get', filename, true);
+// 	xhr.onreadystatechange = () => {
+// 		if (xhr.readyState == 4) {
+// 			if (dependencyFiles.hasOwnProperty(filename)) {
+// 				if (onChecked) onChecked(xhr);
+// 			} else {
+// 				if (onLoaded) onLoaded(xhr);
 
-				dependencyFiles[filename] = xhr.getResponseHeader('Last-Modified');
+// 				dependencyFiles[filename] = xhr.getResponseHeader('Last-Modified');
 
-				xhr.open('get', filename, true);
-				xhr.setRequestHeader('If-Modified-Since', dependencyFiles[filename]);
-				xhr.send(null);
-			}
-		}
-	};
-	xhr.send(null);
-}
+// 				xhr.open('get', filename, true);
+// 				xhr.setRequestHeader('If-Modified-Since', dependencyFiles[filename]);
+// 				xhr.send(null);
+// 			}
+// 		}
+// 	};
+// 	xhr.send(null);
+// }
 
-function checkDependenciesModified() {
-	let hasChanges = false;
-	const dependencyPaths = Object.keys(dependencyFiles);
-	const checkDependency = function (index) {
-		const dep = dependencyPaths[index];
-		const hasLastModified = !!dependencyFiles[dep];
-		const req = hasLastModified ? { headers: { 'If-Modified-Since': dependencyFiles[dep] } } : {};
+// function checkDependenciesModified() {
+// 	let hasChanges = false;
+// 	const dependencyPaths = Object.keys(dependencyFiles);
+// 	const checkDependency = function (index) {
+// 		const dep = dependencyPaths[index];
+// 		const hasLastModified = !!dependencyFiles[dep];
+// 		const req = hasLastModified ? { headers: { 'If-Modified-Since': dependencyFiles[dep] } } : {};
 
-		fetch(dep, req)
-			.then((response) => {
-				if (!hasLastModified || (response.status === 200 && response.headers.has('Last-Modified')))
-					dependencyFiles[dep] = response.headers.get('Last-Modified');
-				if (hasLastModified && response.status === 200) hasChanges = true;
-			})
-			.catch((err) => {
-				console.error(err);
-			})
-			.finally(() => {
-				if (!hasLastModified && dependencyFiles[dep]) checkDependency(index);
-				else if (index < dependencyPaths.length - 1) checkDependency(index + 1);
-				else if (hasChanges) showSystemToastMessage('siteUpdates', 'info');
-			});
-	};
-	if (dependencyPaths.length) checkDependency(0);
-}
-
-export function fetchNewest(path, important, req) {
-	return new Promise((resolve, reject) => {
-		let ret;
-		if (!req) req = {};
-
-		fetch(path, req)
-			.then((response) => {
-				ret = response;
-				if (response.headers.has('Last-Modified')) {
-					const lastModified = response.headers.get('Last-Modified');
-					if (!req.headers) req.headers = {};
-					req.headers['If-Modified-Since'] = lastModified;
-					if (important) dependencyFiles[path] = lastModified;
-					fetch(path, req)
-						.then((response) => {
-							if (response.status === 200) ret = response;
-							resolve(ret);
-						})
-						.catch((err) => reject(err));
-				} else resolve(ret);
-			})
-			.catch((err) => reject(err));
-	});
-}
+// 		fetch(dep, req)
+// 			.then((response) => {
+// 				if (!hasLastModified || (response.status === 200 && response.headers.has('Last-Modified')))
+// 					dependencyFiles[dep] = response.headers.get('Last-Modified');
+// 				if (hasLastModified && response.status === 200) hasChanges = true;
+// 			})
+// 			.catch((err) => {
+// 				console.error(err);
+// 			})
+// 			.finally(() => {
+// 				if (!hasLastModified && dependencyFiles[dep]) checkDependency(index);
+// 				else if (index < dependencyPaths.length - 1) checkDependency(index + 1);
+// 				else if (hasChanges) showSystemToastMessage('siteUpdates', 'info');
+// 			});
+// 	};
+// 	if (dependencyPaths.length) checkDependency(0);
+// }
 
 export function apiFetch(path, isAdmin?: boolean) {
 	return fetch(`${isAdmin ? adminApiUrl : apiUrl}/${path}`, { credentials: 'include' });
@@ -351,13 +332,7 @@ export function addTooltip(
 	return tippy(target, Object.assign(options, tippyConfig));
 }
 
-export function addPlayerContextMenu(
-	target: HTMLElement,
-	player,
-	uuid,
-	messageType,
-	msgProps: any
-) {
+export function addPlayerContextMenu(target: HTMLElement, player, uuid, messageType, msgProps: any) {
 	if (!player || uuid === playerData?.uuid || uuid === defaultUuid) {
 		target.addEventListener('contextmenu', (event) => event.preventDefault());
 		return;
@@ -494,8 +469,7 @@ function createPlayerTooltip(target, player, uuid, messageType, msgProps) {
 					if (!chatInput.dataset.global) globalMessageButton.click();
 					break;
 				case MESSAGE_TYPE.PARTY:
-					if (!chatbox.classList.contains('partyChat'))
-						document.getElementById('chatTabParty').click();
+					if (!chatbox.classList.contains('partyChat')) document.getElementById('chatTabParty').click();
 					break;
 			}
 
@@ -507,8 +481,7 @@ function createPlayerTooltip(target, player, uuid, messageType, msgProps) {
 	if (loggedIn && player.account) {
 		playerTooltip.popper.querySelector('.addPlayerFriendAction').onclick = function () {
 			let cachedPlayerFriend = playerFriendsCache.find((pf) => pf.uuid === uuid);
-			if (cachedPlayerFriend && (cachedPlayerFriend.accepted || !cachedPlayerFriend.incoming))
-				return;
+			if (cachedPlayerFriend && (cachedPlayerFriend.accepted || !cachedPlayerFriend.incoming)) return;
 			apiFetch(`addplayerfriend?uuid=${uuid}`)
 				.then((response) => {
 					if (!response.ok) throw new Error(response.statusText);
@@ -558,130 +531,111 @@ function createPlayerTooltip(target, player, uuid, messageType, msgProps) {
 		playerTooltip.popper.querySelector('.blockPlayerAction').onclick = function () {
 			if (blockedPlayerUuids.indexOf(uuid) > -1) return;
 
-			showConfirmModal(
-				localizedMessages.context.block.confirm.replace('{PLAYER}', playerName),
-				() => {
-					apiFetch(`blockplayer?uuid=${uuid}`)
-						.then((response) => {
-							if (!response.ok) throw new Error(response.statusText);
-							return response.text();
-						})
-						.then((_) => {
-							blockedPlayerUuids.push(uuid);
-							showPlayerToastMessage('blockPlayer', playerName, 'ban', true, systemName);
-							updateBlocklist(
-								!document.getElementById('blocklistModal').classList.contains('hidden')
-							);
-						})
-						.catch((err) => console.error(err));
-				}
-			);
+			showConfirmModal(localizedMessages.context.block.confirm.replace('{PLAYER}', playerName), () => {
+				apiFetch(`blockplayer?uuid=${uuid}`)
+					.then((response) => {
+						if (!response.ok) throw new Error(response.statusText);
+						return response.text();
+					})
+					.then((_) => {
+						blockedPlayerUuids.push(uuid);
+						showPlayerToastMessage('blockPlayer', playerName, 'ban', true, systemName);
+						updateBlocklist(!document.getElementById('blocklistModal').classList.contains('hidden'));
+					})
+					.catch((err) => console.error(err));
+			});
 		};
 		playerTooltip.popper.querySelector('.unblockPlayerAction').onclick = function () {
 			if (blockedPlayerUuids.indexOf(uuid) === -1) return;
 
-			showConfirmModal(
-				localizedMessages.context.unblock.confirm.replace('{PLAYER}', playerName),
-				() => {
-					// optimistically remove this player from the blocklist, so that we can receive the connect event properly.
-					const blockedPlayerUuidIndex = blockedPlayerUuids.indexOf(uuid);
-					if (blockedPlayerUuidIndex > -1) blockedPlayerUuids.splice(blockedPlayerUuidIndex, 1);
-					apiFetch(`unblockplayer?uuid=${uuid}`)
-						.then((response) => {
-							if (!response.ok) throw new Error(response.statusText);
-							return response.text();
-						})
-						.then((_) => {
-							showPlayerToastMessage('unblockPlayer', playerName, 'info', true, systemName);
-							updateBlocklist(
-								!document.getElementById('blocklistModal').classList.contains('hidden')
-							);
-						})
-						.catch((err) => {
-							// failed to unblock player, so they remain in blocklist.
-							blockedPlayerUuids.push(uuid);
-							console.error(err);
-						});
-				}
-			);
+			showConfirmModal(localizedMessages.context.unblock.confirm.replace('{PLAYER}', playerName), () => {
+				// optimistically remove this player from the blocklist, so that we can receive the connect event properly.
+				const blockedPlayerUuidIndex = blockedPlayerUuids.indexOf(uuid);
+				if (blockedPlayerUuidIndex > -1) blockedPlayerUuids.splice(blockedPlayerUuidIndex, 1);
+				apiFetch(`unblockplayer?uuid=${uuid}`)
+					.then((response) => {
+						if (!response.ok) throw new Error(response.statusText);
+						return response.text();
+					})
+					.then((_) => {
+						showPlayerToastMessage('unblockPlayer', playerName, 'info', true, systemName);
+						updateBlocklist(!document.getElementById('blocklistModal').classList.contains('hidden'));
+					})
+					.catch((err) => {
+						// failed to unblock player, so they remain in blocklist.
+						blockedPlayerUuids.push(uuid);
+						console.error(err);
+					});
+			});
 		};
 	}
 
 	if (isMod) {
 		const playerNamePlain = getPlayerName(player, true, false, false);
 		playerTooltip.popper.querySelector('.banPlayerAction').onclick = function () {
-			showConfirmModal(
-				localizedMessages.context.admin.ban.confirm.replace('{PLAYER}', playerName),
-				() => {
-					apiFetch(`ban?uuid=${uuid}`, true)
-						.then((response) => {
-							if (!response.ok) throw new Error(response.statusText);
-							return response.text();
-						})
-						.then((_) =>
-							showToastMessage(
-								getMassagedLabel(localizedMessages.context.admin.ban.success, true).replace(
-									'{PLAYER}',
-									playerName
-								),
-								'ban',
-								true,
-								systemName
-							)
+			showConfirmModal(localizedMessages.context.admin.ban.confirm.replace('{PLAYER}', playerName), () => {
+				apiFetch(`ban?uuid=${uuid}`, true)
+					.then((response) => {
+						if (!response.ok) throw new Error(response.statusText);
+						return response.text();
+					})
+					.then((_) =>
+						showToastMessage(
+							getMassagedLabel(localizedMessages.context.admin.ban.success, true).replace(
+								'{PLAYER}',
+								playerName
+							),
+							'ban',
+							true,
+							systemName
 						)
-						.catch((err) => console.error(err));
-				}
-			);
+					)
+					.catch((err) => console.error(err));
+			});
 		};
 
 		playerTooltip.popper.querySelector('.mutePlayerAction').onclick = function () {
-			showConfirmModal(
-				localizedMessages.context.admin.mute.confirm.replace('{PLAYER}', playerName),
-				() => {
-					apiFetch(`mute?uuid=${uuid}`, true)
-						.then((response) => {
-							if (!response.ok) throw new Error(response.statusText);
-							return response.text();
-						})
-						.then((_) =>
-							showToastMessage(
-								getMassagedLabel(localizedMessages.context.admin.mute.success, true).replace(
-									'{PLAYER}',
-									playerName
-								),
-								'info',
-								true,
-								systemName
-							)
+			showConfirmModal(localizedMessages.context.admin.mute.confirm.replace('{PLAYER}', playerName), () => {
+				apiFetch(`mute?uuid=${uuid}`, true)
+					.then((response) => {
+						if (!response.ok) throw new Error(response.statusText);
+						return response.text();
+					})
+					.then((_) =>
+						showToastMessage(
+							getMassagedLabel(localizedMessages.context.admin.mute.success, true).replace(
+								'{PLAYER}',
+								playerName
+							),
+							'info',
+							true,
+							systemName
 						)
-						.catch((err) => console.error(err));
-				}
-			);
+					)
+					.catch((err) => console.error(err));
+			});
 		};
 
 		playerTooltip.popper.querySelector('.unmutePlayerAction').onclick = function () {
-			showConfirmModal(
-				localizedMessages.context.admin.unmute.confirm.replace('{PLAYER}', playerName),
-				() => {
-					apiFetch(`unmute?uuid=${uuid}`, true)
-						.then((response) => {
-							if (!response.ok) throw new Error(response.statusText);
-							return response.text();
-						})
-						.then((_) =>
-							showToastMessage(
-								getMassagedLabel(localizedMessages.context.admin.unmute.success, true).replace(
-									'{PLAYER}',
-									playerName
-								),
-								'info',
-								true,
-								systemName
-							)
+			showConfirmModal(localizedMessages.context.admin.unmute.confirm.replace('{PLAYER}', playerName), () => {
+				apiFetch(`unmute?uuid=${uuid}`, true)
+					.then((response) => {
+						if (!response.ok) throw new Error(response.statusText);
+						return response.text();
+					})
+					.then((_) =>
+						showToastMessage(
+							getMassagedLabel(localizedMessages.context.admin.unmute.success, true).replace(
+								'{PLAYER}',
+								playerName
+							),
+							'info',
+							true,
+							systemName
 						)
-						.catch((err) => console.error(err));
-				}
-			);
+					)
+					.catch((err) => console.error(err));
+			});
 		};
 
 		playerTooltip.popper.querySelector('.tempbanPlayerAction').onclick = function () {
@@ -738,11 +692,8 @@ function createPlayerTooltip(target, player, uuid, messageType, msgProps) {
 		for (let badgeAction of badgeActions) {
 			badgeAction.onclick = function () {
 				const isGrant = this.classList.contains('grantBadgeAction');
-				const localizedContextRoot =
-					localizedMessages.context.admin[isGrant ? 'grantBadge' : 'revokeBadge'];
-				const badgeId = prompt(
-					localizedContextRoot.prompt.replace('{PLAYER}', getPlayerName(player))
-				);
+				const localizedContextRoot = localizedMessages.context.admin[isGrant ? 'grantBadge' : 'revokeBadge'];
+				const badgeId = prompt(localizedContextRoot.prompt.replace('{PLAYER}', getPlayerName(player)));
 				if (badgeId) {
 					const badgeGame = Object.keys(localizedBadges).find((game) => {
 						return badgeId in localizedBadges[game];
@@ -790,17 +741,8 @@ function createPlayerTooltip(target, player, uuid, messageType, msgProps) {
 /**
  * @param {import('tippy.js').Instance} [instance]
  */
-export function addOrUpdateTooltip(
-	target,
-	content,
-	asTooltipContent,
-	delayed,
-	interactive,
-	options,
-	instance
-) {
-	if (!instance)
-		return addTooltip(target, content, asTooltipContent, delayed, interactive, options);
+export function addOrUpdateTooltip(target, content, asTooltipContent, delayed, interactive, options, instance) {
+	if (!instance) return addTooltip(target, content, asTooltipContent, delayed, interactive, options);
 
 	if (asTooltipContent) {
 		const tooltipContent = document.createElement('div');
@@ -821,8 +763,7 @@ export function loadOrInitConfig(configObj: any, global = false, configName?: st
 			window.localStorage.setItem(configKey, JSON.stringify(configObj));
 		else {
 			let savedConfig = JSON.parse(window.localStorage.getItem(configKey));
-			if (configName === 'notificationConfig')
-				savedConfig = Object.assign(notificationConfig, savedConfig);
+			if (configName === 'notificationConfig') savedConfig = Object.assign(notificationConfig, savedConfig);
 			const savedConfigKeys = Object.keys(savedConfig);
 			for (let k in savedConfigKeys) {
 				const key = savedConfigKeys[k];
@@ -905,7 +846,8 @@ export function loadOrInitConfig(configObj: any, global = false, configName?: st
 											setPartyChatHistoryLimit(value, true);
 											const partyChatHistoryLimitElement =
 												document.getElementById('partyChatHistoryLimit');
-											if (partyChatHistoryLimitElement) partyChatHistoryLimitElement.value = value;
+											if (partyChatHistoryLimitElement)
+												partyChatHistoryLimitElement.value = value;
 											break;
 										case 'mobileControls':
 											if (!value && hasTouchscreen)
@@ -990,7 +932,9 @@ export function loadOrInitConfig(configObj: any, global = false, configName?: st
 											break;
 										case 'chatTabIndex':
 											if (value) {
-												const chatTab = document.querySelector(`.chatTab:nth-child(${value + 1})`);
+												const chatTab = document.querySelector(
+													`.chatTab:nth-child(${value + 1})`
+												);
 												if (chatTab && value !== 2) setChatTab(chatTab);
 											}
 											break;
@@ -1019,7 +963,9 @@ export function loadOrInitConfig(configObj: any, global = false, configName?: st
 											break;
 										case 'trackedLocationId':
 											if (value)
-												document.getElementById('nextLocationContainer').classList.remove('hidden');
+												document
+													.getElementById('nextLocationContainer')
+													.classList.remove('hidden');
 											break;
 										case 'uiTheme':
 											if (gameUiThemes.indexOf(value) > -1) {
@@ -1057,7 +1003,9 @@ export function loadOrInitConfig(configObj: any, global = false, configName?: st
 														document.getElementById(`notificationsButton_${key}`).click();
 												} else if (notificationTypes[key].indexOf(nkey) > -1) {
 													if (!nvalue)
-														document.getElementById(`notificationsButton_${key}_${nkey}`).click();
+														document
+															.getElementById(`notificationsButton_${key}_${nkey}`)
+															.click();
 												}
 											}
 										} else continue;
@@ -1077,7 +1025,6 @@ export function loadOrInitConfig(configObj: any, global = false, configName?: st
 	}
 }
 
-
 export function setCookie(cName, cValue) {
 	const expiration = new Date();
 	expiration.setTime(new Date().getTime() + 3600000 * 24 * 30);
@@ -1095,21 +1042,44 @@ export function getCookie(cName) {
 	return '';
 }
 
-// SIDE EFFECT
-(function () {
-	if (!isBrowser) return;
-
+/**
+ * Loads the notification config and installs the global error handler.
+ * Called on mount from `+page.svelte`.
+ */
+export async function initApp() {
 	// initNotificationsConfigAndControls();
 	loadOrInitConfig(notificationConfig, true, 'notificationConfig'); // FIXME
 
 	// initSaveSyncControls(); // FIXME
 
 	window.addEventListener('error', (event) => {
-		if (event.error.message.includes('side-effect in debug-evaluate') && event.defaultPrevented)
-			return;
+		if (event.error.message.includes('side-effect in debug-evaluate') && event.defaultPrevented) return;
 		showSystemToastMessage('error', 'important');
 	});
 
 	// if (!getCookie(loggedInKey)) injectScripts();
 	// else trySyncSave().then((_) => injectScripts());
-})();
+	// if (getCookie(loggedInKey)) await trySyncSave(); // TODO
+	// injectScripts();
+
+	await initBlocker;
+
+	easyrpgPlayer = await createEasyRpgPlayer(easyrpgPlayer);
+	easyrpgPlayer.initialized = true;
+	easyrpgPlayer.api.setNametagMode(config.nametagMode);
+	easyrpgPlayer.api.setSoundVolume(globalConfig.soundVolume);
+	easyrpgPlayer.api.setMusicVolume(globalConfig.musicVolume);
+	const loadingOverlay = document.getElementById('loadingOverlay');
+	removeLoader(loadingOverlay);
+	checkShowVersionUpdate().then(() => loadingOverlay.classList.add('loaded'));
+	fetchAndUpdatePlayerInfo(getCookie(loggedInKey) ? true : undefined);
+	setInterval(checkLogin, 60000);
+	// TODO: Think of a better way to detect site updates
+	// setTimeout(() => {
+	// 	checkDependenciesModified();
+	// 	setInterval(checkDependenciesModified, 300000);
+	// }, 10000);
+	window.onbeforeunload = function () {
+		return localizedMessages.leavePage;
+	};
+}

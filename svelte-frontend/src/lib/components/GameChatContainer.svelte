@@ -8,6 +8,7 @@
 		trySendPartyMessage
 	} from '$lib/chat.svelte';
 	import { playerName } from '$lib/play.svelte';
+	import { globalConfig } from '$lib/config.svelte';
 	let focused = $state(false);
 
 	function focusGameChatInput() {
@@ -51,19 +52,14 @@
 	}
 </script>
 
-<div id="gameChatContainer" class={['hidden', { focused }]}>
+<div id="gameChatContainer" class={[{ hidden: !globalConfig.gameChat, focused }]}>
 	<div id="gameChatInputContainer" class="gameChatMessageContainer">
 		<div class="gameChatMessage message">
 			<div class="messageContents">
-				>&nbsp;<span id="gameChatModeIcon"></span>
+				>&nbsp;
+				<span id="gameChatModeIcon"></span>
 				<div class="globalCooldownIcon icon hidden">
-					<svg
-						viewBox="0 0 18 18"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
-						width="18"
-						height="18"
-					>
+					<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
 						<circle class="bgCircle" cx="9" cy="9" r="9" />
 						<circle class="timerCircle" cx="9" cy="9" r="9" />
 					</svg>

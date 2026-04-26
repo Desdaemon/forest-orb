@@ -15,6 +15,6 @@
 
 <div {...props} class={[`${icon}Icon icon`, { fillIcon }, props.class]}>
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
-		<path {d}> </path>
+		<path {d}></path>
 	</svg>
 </div>

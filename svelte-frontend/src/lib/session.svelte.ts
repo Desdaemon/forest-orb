@@ -34,8 +34,7 @@ export function initSessionWs(attempt = 1) {
 			easyrpgPlayer.api.sessionReady();
 			if (config.privateMode) sendSessionCommand('pr', [config.singleplayerMode ? 2 : 1]);
 			if (config.hideLocation) sendSessionCommand('hl', [1]);
-			if (config.hideUnnamedPlayers)
-				sendSessionCommand('hunp', [config.hideUnnamedPlayers ? 1 : 0]);
+			if (config.hideUnnamedPlayers) sendSessionCommand('hunp', [config.hideUnnamedPlayers ? 1 : 0]);
 			if (!hasConnected) {
 				syncChatHistory()
 					.catch((err) => console.error(err))
@@ -69,12 +68,7 @@ export function addSessionCommandHandler(command: string, handler?: Function) {
 	sessionCommandCallbackQueue[command] = [];
 }
 
-function sendSessionCommand(
-	command: string,
-	commandParams?: any[],
-	callbackFunc?: Function,
-	callbackCommand?: string
-) {
+function sendSessionCommand(command: string, commandParams?: any[], callbackFunc?: Function, callbackCommand?: string) {
 	if (!sessionWs) return;
 
 	let args = [command];

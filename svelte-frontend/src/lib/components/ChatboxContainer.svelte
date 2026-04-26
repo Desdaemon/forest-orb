@@ -1,16 +1,82 @@
 <script>
 	import { gameId } from '$lib';
+	import { trySetChatName } from '$lib/chat.svelte';
+	import NextLocationText from '$lib/components/NextLocationText.svelte';
+	import { disbandParty, openCreatePartyModal } from '$lib/parties.svelte';
+	import {
+		hideYnomojiContainer,
+		onClearChat,
+		onClickChatboxTab,
+		onClickChatTab,
+		onClickPlayerCountLabel,
+		onClickPlayersTab,
+		onfocusYnomoji,
+		oninputYnomoji,
+		onReconnectClick,
+		onReconnectDblClick,
+		onToggleGlobalMessage,
+		onToggleGlobalMessageLocations,
+		onToggleMentionFilter,
+		onToggleMessageTimestamps,
+		onToggleNextLocation,
+		openExplorerUndiscoveredLocations
+	} from '$lib/play.svelte';
+
+	function chatNameCheck(ev) {
+		ev.preventDefault();
+		trySetChatName(ev.target.nameInput.value);
+	}
+
+	let nameInput;
+
+	/**
+	 * @param {HTMLInputElement} inputElement
+	 * @param {number} length
+	 */
+	function constrainByteLength(length) {
+		const buf = new Uint8Array(length);
+		const enc = new TextEncoder();
+		const listener = (event) => {
+			const target = event?.target;
+			if (!target) return;
+			// modifying input contents during composition would interrupt it
+			// and prevent the user from finishing
+			if (event.isComposing) return;
+
+			const sel = target.selectionStart;
+			const v = target.value;
+
+			// length is implicitly constrained by encodeInto
+			// encode the substring after the caret first so it doesn't get
+			// overwritten if the caret is in the middle of the string
+			const e2 = enc.encodeInto(v.substring(sel), buf);
+			// then do the one before the caret
+			const e1 = enc.encodeInto(v.substring(0, sel), buf.subarray(e2.written));
+			target.value = v.substring(0, e1.read) + v.substring(sel, sel + e2.read);
+			target.selectionEnd = e1.read;
+		};
+
+		// some browsers send an input event with isComposing: false after composition
+		// finishes but it's not guaranteed to always fire (and doesn't on e.g. chromium)
+		// so we have to listen for compositionend as well
+		// inputElement.addEventListener('input', listener);
+		// inputElement.addEventListener('compositionend', listener);
+		return { oninput: listener, oncompositionend: listener };
+	}
 </script>
 
-<div id="chatboxContainer" class="container" style="display: table-cell">
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div id="chatboxContainer" class="container" style="display: table-cell" onmouseleave={hideYnomojiContainer}>
 	<div id="chatbox" class="allChat">
 		<div id="chatboxInfo">
 			<div id="onlineInfo" class="info hidden">
-				<span id="connStatus" class="infoContainer unselectable"
-					><span id="connStatusIcon" class="punct">●</span>
+				<span id="connStatus" class="infoContainer unselectable">
+					<span id="connStatusIcon" class="punct">●</span>
 					<label id="connStatusText" class="infoText">Disconnected</label>
 					<a
 						id="reconnectButton"
+						onclick={onReconnectClick}
+						ondblclick={onReconnectDblClick}
 						href="javascript:void(0);"
 						class="reconnectLink iconLink unselectable"
 						data-i18n="[title]chatbox.reconnect"
@@ -22,104 +88,124 @@
 								></path>
 							</svg>
 						</div>
-					</a></span
-				><span id="playerCountLabel" class="playerCountLabel infoLabel unselectable"></span><span
+					</a>
+				</span>
+				<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+				<span
+					id="playerCountLabel"
+					class="playerCountLabel infoLabel unselectable"
+					onclick={onClickPlayerCountLabel}
+				></span>
+				<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+				<span
 					id="mapPlayerCountLabel"
 					class="playerCountLabel infoLabel unselectable hidden"
-				></span><span
-					id="immersionModeLabel"
-					class="infoLabel unselectable"
-					data-i18n="[html]chatbox.immersionMode">Immersion Mode</span
-				>
+					onclick={onClickPlayerCountLabel}
+				></span>
+				<span id="immersionModeLabel" class="infoLabel unselectable" data-i18n="[html]chatbox.immersionMode">
+					Immersion Mode
+				</span>
 			</div>
 			<div id="location" class="info hidden">
-				<span id="locationLabel" class="infoLabel nowrap" data-i18n="[html]chatbox.location"
-					>Location:&nbsp;</span
-				><span id="locationText" class="infoText nofilter"></span>
+				<span id="locationLabel" class="infoLabel nowrap" data-i18n="[html]chatbox.location">
+					Location:&nbsp;
+				</span>
+				<span id="locationText" class="infoText nofilter"></span>
 			</div>
 			<div id="nextLocationContainer" class="info hidden">
 				<button
 					id="toggleNextLocationButton"
+					onclick={onToggleNextLocation}
 					class="icon fillIcon iconButton"
 					data-i18n="[title]tooltips.chat.toggleNextLocation"
 				>
-					<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-						><path
+					<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+						<path
 							d="m9 0a1 1 0 0 0 0 18 1 1 0 0 0 0-18m0 2a1 1 0 0 1 0 14 1 1 0 0 1 0-14m4 11-2-6-6-2 2 6 6 2m-4-5a1 1 0 0 1 0 2 1 1 0 0 1 0-2"
-						></path></svg
-					>
+						></path>
+					</svg>
 				</button>
 				<div id="nextLocation" class="info">
-					<span
-						id="nextLocationLabel"
-						class="infoLabel nowrap"
-						data-i18n="[html]chatbox.nextLocation">Next Loc:&nbsp;</span
-					><span id="nextLocationText" class="infoText nofilter"></span>
+					<span id="nextLocationLabel" class="infoLabel nowrap" data-i18n="[html]chatbox.nextLocation">
+						Next Loc:&nbsp;
+					</span>
+					<NextLocationText />
 				</div>
 			</div>
 		</div>
 		<div id="chatboxContent">
 			<div id="chatboxTabs">
-				<div id="chatboxTabChat" class="chatboxTab active" data-tab-section="chat">
-					<label class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.chat">Chat</label
-					>
+				<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+				<div id="chatboxTabChat" class="chatboxTab active" data-tab-section="chat" onclick={onClickChatboxTab}>
+					<label class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.chat">Chat</label>
 					<div id="unreadMessageCountContainer" class="notificationCountContainer hidden">
 						<div class="notificationCount">
 							<label class="notificationCountLabel">0</label>
 						</div>
 					</div>
 				</div>
-				<div id="chatboxTabPlayers" class="chatboxTab" data-tab-section="players">
-					<label class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.players"
-						>Players</label
-					>
+				<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+				<div id="chatboxTabPlayers" class="chatboxTab" data-tab-section="players" onclick={onClickChatboxTab}>
+					<label class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.players">Players</label>
 					<div id="incomingFriendRequestCountContainer" class="notificationCountContainer hidden">
 						<div class="notificationCount">
 							<label class="notificationCountLabel">0</label>
 						</div>
 					</div>
 				</div>
-				<div id="chatboxTabParties" class="chatboxTab" data-tab-section="parties">
-					<label class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.parties"
-						>Parties</label
-					>
+				<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+				<div id="chatboxTabParties" class="chatboxTab" data-tab-section="parties" onclick={onClickChatboxTab}>
+					<label class="chatboxTabLabel unselectable" data-i18n="[html]chatbox.tab.parties">Parties</label>
 				</div>
 			</div>
 			<div id="chat" class="chatboxTabSection">
 				<div id="chatHeader" class="tabHeader">
 					<div id="chatTabs" class="subTabs">
-						<div id="chatTabAll" class="chatTab subTab active">
+						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+						<div id="chatTabAll" class="chatTab subTab active" onclick={onClickChatTab}>
 							<small
 								class="chatTabLabel subTabLabel infoLabel unselectable"
-								data-i18n="[html]chatbox.chat.tab.all">All</small
+								data-i18n="[html]chatbox.chat.tab.all"
 							>
+								All
+							</small>
 							<div class="subTabBg"></div>
 						</div>
-						<div id="chatTabMap" class="chatTab subTab">
+						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+						<div id="chatTabMap" class="chatTab subTab" onclick={onClickChatTab}>
 							<small
 								class="chatTabLabel subTabLabel infoLabel unselectable"
-								data-i18n="[html]chatbox.chat.tab.map">Map</small
+								data-i18n="[html]chatbox.chat.tab.map"
 							>
+								Map
+							</small>
 							<div class="subTabBg"></div>
 						</div>
-						<div id="chatTabGlobal" class="chatTab subTab">
+						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+						<div id="chatTabGlobal" class="chatTab subTab" onclick={onClickChatTab}>
 							<small
 								class="chatTabLabel subTabLabel infoLabel unselectable"
-								data-i18n="[html]chatbox.chat.tab.global">Global</small
+								data-i18n="[html]chatbox.chat.tab.global"
 							>
+								Global
+							</small>
 							<div class="subTabBg"></div>
 						</div>
-						<div id="chatTabParty" class="chatTab partySubTab subTab">
+						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+						<div id="chatTabParty" class="chatTab partySubTab subTab" onclick={onClickChatTab}>
 							<small
 								class="chatTabLabel subTabLabel infoLabel unselectable"
-								data-i18n="[html]chatbox.chat.tab.party">Party</small
+								data-i18n="[html]chatbox.chat.tab.party"
 							>
+								Party
+							</small>
 							<div class="subTabBg"></div>
 						</div>
 					</div>
 					<div id="chatButtons" class="tabButtons">
 						<button
 							id="globalMessageLocationsButton"
+							onclick={onToggleGlobalMessageLocations}
 							class="iconButton toggleButton offToggleButton unselectable"
 							data-i18n="[title]tooltips.chat.toggleGlobalMessageLocations"
 						>
@@ -132,11 +218,13 @@
 							>
 								<path
 									d="m9 0a1 1 0 0 0 0 18 1 1 0 0 0 0-18v18q-10-9 0-18 10 9 0 18m-7.5-4q7.5-3 15 0m-15-10q7.5 2 15 0m-16.5 5h18"
-								/><path d="m-2 16l22-14" />
+								/>
+								<path d="m-2 16l22-14" />
 							</svg>
 						</button>
 						<button
 							id="messageTimestampsButton"
+							onclick={onToggleMessageTimestamps}
 							class="iconButton toggleButton offToggleButton unselectable"
 							data-i18n="[title]tooltips.chat.toggleMessageTimestamps"
 						>
@@ -147,11 +235,13 @@
 								width="15"
 								height="15"
 							>
-								<path d="m9 0a1 1 0 0 0 0 18 1 1 0 0 0 0-18m0 3v6l4 4" /><path d="m-2 16l22-14" />
+								<path d="m9 0a1 1 0 0 0 0 18 1 1 0 0 0 0-18m0 3v6l4 4" />
+								<path d="m-2 16l22-14" />
 							</svg>
 						</button>
 						<button
 							id="mentionFilterButton"
+							onclick={onToggleMentionFilter}
 							class="iconButton toggleButton offToggleButton unselectable"
 							data-i18n="[title]tooltips.chat.filterMentions"
 						>
@@ -164,13 +254,15 @@
 							>
 								<path
 									d="M13.5 9a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0Zc0 1.657 1.007 3 2.25 3S18 10.657 18 9a9 9 0 10-2.636 6.364M13.5 9V5.25"
-								/><path
+								/>
+								<path
 									d="M13.5 9a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0Zc0 1.657 1.007 3 2.25 3S18 10.657 18 9a9 9 0 10-2.636 6.364M13.5 9V5.25"
 								/>
 							</svg>
 						</button>
 						<button
 							id="clearChatButton"
+							onclick={onClearChat}
 							class="iconButton unselectable"
 							data-i18n="[title]tooltips.chat.clearChat"
 						>
@@ -193,25 +285,34 @@
 			<div id="players" class="chatboxTabSection hidden">
 				<div id="playersHeader" class="tabHeader">
 					<div id="playersTabs" class="subTabs">
-						<div id="playersTabMap" class="playersTab subTab active">
+						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+						<div id="playersTabMap" class="playersTab subTab active" onclick={onClickPlayersTab}>
 							<small
 								class="playersTabLabel subTabLabel infoLabel unselectable"
-								data-i18n="[html]chatbox.players.tab.map">Map</small
+								data-i18n="[html]chatbox.players.tab.map"
 							>
+								Map
+							</small>
 							<div class="subTabBg"></div>
 						</div>
-						<div id="playersTabFriends" class="playersTab friendsSubTab subTab">
+						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+						<div id="playersTabFriends" class="playersTab friendsSubTab subTab" onclick={onClickPlayersTab}>
 							<small
 								class="playersTabLabel subTabLabel infoLabel unselectable"
-								data-i18n="[html]chatbox.players.tab.friends">Friends</small
+								data-i18n="[html]chatbox.players.tab.friends"
 							>
+								Friends
+							</small>
 							<div class="subTabBg"></div>
 						</div>
-						<div id="playersTabParty" class="playersTab partySubTab subTab">
+						<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+						<div id="playersTabParty" class="playersTab partySubTab subTab" onclick={onClickPlayersTab}>
 							<small
 								class="playersTabLabel subTabLabel infoLabel unselectable"
-								data-i18n="[html]chatbox.players.tab.party">Party</small
+								data-i18n="[html]chatbox.players.tab.party"
 							>
+								Party
+							</small>
 							<div class="subTabBg"></div>
 						</div>
 					</div>
@@ -229,6 +330,7 @@
 							id="createPartyButton"
 							class="iconButton unselectable"
 							data-i18n="[title]tooltips.parties.createParty"
+							onclick={openCreatePartyModal}
 						>
 							<svg
 								viewBox="0 0 18 18"
@@ -246,6 +348,7 @@
 							id="disbandPartyButton"
 							class="iconButton unselectable"
 							data-i18n="[title]tooltips.parties.disbandParty"
+							onclick={disbandParty}
 						>
 							<svg
 								viewBox="0 0 18 18"
@@ -264,10 +367,12 @@
 				<div id="partyList" class="partyList chatboxTabContent scrollableContainer"></div>
 			</div>
 		</div>
-		<div id="chatInputContainer" style="display: none">
+		<div id="chatInputContainer" style="display: none" {...constrainByteLength(150)}>
 			<form action="javascript:chatInputActionFired()">
 				<input
 					id="chatInput"
+					oninput={oninputYnomoji}
+					onfocus={onfocusYnomoji}
 					data-ynomoji="true"
 					type="text"
 					autocomplete="off"
@@ -278,29 +383,18 @@
 				<div id="chatBorder"></div>
 			</form>
 			<div class="globalCooldownIcon icon">
-				<svg
-					viewBox="0 0 18 18"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-					width="18"
-					height="18"
-				>
+				<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
 					<circle class="bgCircle" cx="9" cy="9" r="9" />
 					<circle class="timerCircle" cx="9" cy="9" r="9" />
 				</svg>
 			</div>
 			<button
 				id="globalMessageButton"
+				onclick={onToggleGlobalMessage}
 				class="iconButton fadeToggle unselectable"
 				data-i18n="[title]tooltips.toggleGlobalMessage"
 			>
-				<svg
-					viewBox="0 0 18 18"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-					width="18"
-					height="18"
-				>
+				<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
 					<path
 						d="m9 0a1 1 0 0 0 0 18 1 1 0 0 0 0-18v18q-10-9 0-18 10 9 0 18m-7.5-4q7.5-3 15 0m-15-10q7.5 2 15 0m-16.5 5h18"
 					/>
@@ -311,20 +405,17 @@
 		<div id="ynomojiContainer" class="scrollableContainer hidden"></div>
 		<div id="enterNameContainer">
 			<span id="enterNameInstruction">
-				<span data-i18n="[html]chatbox.chat.nickname.header"
-					>You must set a nickname before you can chat.</span
-				>
+				<span data-i18n="[html]chatbox.chat.nickname.header">You must set a nickname before you can chat.</span>
 				<br />
 				<small>
-					<span data-i18n="[html]chatbox.chat.nickname.rule.maxLength">* Maximum 12 characters</span
-					>
+					<span data-i18n="[html]chatbox.chat.nickname.rule.maxLength">* Maximum 12 characters</span>
 					<br />
-					<span data-i18n="[html]chatbox.chat.nickname.rule.alphanumeric"
-						>* Alphanumeric characters only</span
-					>
+					<span data-i18n="[html]chatbox.chat.nickname.rule.alphanumeric">
+						* Alphanumeric characters only
+					</span>
 				</small>
 			</span>
-			<form id="enterNameForm" action="javascript:chatNameCheck()">
+			<form id="enterNameForm" onsubmit={chatNameCheck}>
 				<input id="nameInput" type="text" autocomplete="off" maxlength="10" />
 			</form>
 		</div>
@@ -337,6 +428,7 @@
 				href="javascript:void(0);"
 				class="iconLink hidden"
 				data-i18n="[title]tooltips.explorerUndiscoveredLocations"
+				onclick={openExplorerUndiscoveredLocations}
 			>
 				<div class="helpIcon icon fillIcon invertFillIcon altIcon">
 					<svg viewBox="0 0 18 18">

@@ -98,8 +98,7 @@ function getPlayerName(player, includeMarkers, includeBadge, asHtml) {
 			badgeEl.classList.add('badge', 'nameBadge');
 
 			badgeOverlayEl = badge?.overlayType ? document.createElement('div') : null;
-			badgeOverlay2El =
-				badge?.overlayType & BadgeOverlayType.DUAL ? document.createElement('div') : null;
+			badgeOverlay2El = badge?.overlayType & BadgeOverlayType.DUAL ? document.createElement('div') : null;
 
 			const badgeUrl = getBadgeUrl(badge || player.badge, true);
 			badgeEl.style.backgroundImage = `url('${badgeUrl}')`;
@@ -108,17 +107,13 @@ function getPlayerName(player, includeMarkers, includeBadge, asHtml) {
 				badgeEl.classList.add('overlayBadge');
 
 				badgeOverlayEl.classList.add('badgeOverlay');
-				if (badge.overlayType & BadgeOverlayType.MULTIPLY)
-					badgeOverlayEl.classList.add('badgeOverlayMultiply');
+				if (badge.overlayType & BadgeOverlayType.MULTIPLY) badgeOverlayEl.classList.add('badgeOverlayMultiply');
 
 				badgeEl.appendChild(badgeOverlayEl);
 
 				const badgeMaskUrl =
 					badge.overlayType & BadgeOverlayType.MASK
-						? badgeUrl.replace(
-								'.',
-								badge.overlayType & BadgeOverlayType.DUAL ? '_mask_fg.' : '_mask.'
-							)
+						? badgeUrl.replace('.', badge.overlayType & BadgeOverlayType.DUAL ? '_mask_fg.' : '_mask.')
 						: badgeUrl;
 
 				badgeOverlayEl.setAttribute(
@@ -128,9 +123,7 @@ function getPlayerName(player, includeMarkers, includeBadge, asHtml) {
 
 				if (badgeOverlay2El) {
 					const badgeMask2Url =
-						badge.overlayType & BadgeOverlayType.MASK
-							? badgeUrl.replace('.', '_mask_bg.')
-							: badgeUrl;
+						badge.overlayType & BadgeOverlayType.MASK ? badgeUrl.replace('.', '_mask_bg.') : badgeUrl;
 
 					badgeOverlay2El.classList.add('badgeOverlay', 'badgeOverlay2');
 					if (badge.overlayType & BadgeOverlayType.MULTIPLY)
@@ -221,32 +214,26 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 	}
 
 	if (spriteName) {
-		getSpriteProfileImg(spriteName, spriteIndex, undefined, undefined, spriteGameId).then(
-			(spriteImg) => {
-				if (!spriteImg) return;
-				if (!playerList) playerList = document.getElementById('playerList');
-				const sprite = playerList.querySelector(
-					`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`
-				);
-				if (sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
-			}
-		);
+		getSpriteProfileImg(spriteName, spriteIndex, undefined, undefined, spriteGameId).then((spriteImg) => {
+			if (!spriteImg) return;
+			if (!playerList) playerList = document.getElementById('playerList');
+			const sprite = playerList.querySelector(`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`);
+			if (sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
+		});
 	} else {
 		let playerSpriteCacheEntry = playerSpriteCache[spriteGameId + ':' + uuid];
 		if (!playerSpriteCacheEntry && uuid !== defaultUuid)
 			playerSpriteCacheEntry = playerSpriteCache[spriteGameId + ':' + defaultUuid];
 		if (playerSpriteCacheEntry) {
 			const entry = playerSpriteCacheEntry;
-			getSpriteProfileImg(entry.sprite, entry.idx, undefined, undefined, spriteGameId).then(
-				(spriteImg) => {
-					if (!spriteImg) return;
-					if (!playerList) playerList = document.getElementById('playerList');
-					const sprite = playerList.querySelector(
-						`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`
-					);
-					if (sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
-				}
-			);
+			getSpriteProfileImg(entry.sprite, entry.idx, undefined, undefined, spriteGameId).then((spriteImg) => {
+				if (!spriteImg) return;
+				if (!playerList) playerList = document.getElementById('playerList');
+				const sprite = playerList.querySelector(
+					`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`
+				);
+				if (sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
+			});
 			if (uuid === defaultUuid) updatePlayerSprite(entry.sprite, entry.idx, spriteGameId);
 		} else {
 			const isObjectSprite = typeof gameDefaultSprite === 'object';
@@ -255,9 +242,7 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 			if (isObjectSprite && gameDefaultSprite[spriteGameId]) {
 				defaultSprite = gameDefaultSprite[spriteGameId].sprite;
 				defaultIdx =
-					typeof gameDefaultSprite[spriteGameId].idx === 'number'
-						? gameDefaultSprite[spriteGameId].idx
-						: 0;
+					typeof gameDefaultSprite[spriteGameId].idx === 'number' ? gameDefaultSprite[spriteGameId].idx : 0;
 			} else if (!isObjectSprite) {
 				defaultSprite = gameDefaultSprite[spriteGameId] || gameDefaultSprite;
 			} else {
@@ -266,16 +251,14 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 				defaultIdx = defaultSpriteObj.idx;
 			}
 			if (defaultSprite) {
-				getSpriteProfileImg(defaultSprite, defaultIdx, undefined, undefined, spriteGameId).then(
-					(spriteImg) => {
-						if (!spriteImg) return;
-						if (!playerList) playerList = document.getElementById('playerList');
-						const sprite = playerList.querySelector(
-							`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`
-						);
-						if (sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
-					}
-				);
+				getSpriteProfileImg(defaultSprite, defaultIdx, undefined, undefined, spriteGameId).then((spriteImg) => {
+					if (!spriteImg) return;
+					if (!playerList) playerList = document.getElementById('playerList');
+					const sprite = playerList.querySelector(
+						`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`
+					);
+					if (sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
+				});
 			}
 		}
 	}
@@ -285,9 +268,7 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 	let playerListEntry = playerList.querySelector(`.playerListEntry[data-uuid="${uuid}"]`);
 
 	/** @type {HTMLSpanElement} */
-	const nameText = playerListEntry
-		? playerListEntry.querySelector('.nameText')
-		: document.createElement('span');
+	const nameText = playerListEntry ? playerListEntry.querySelector('.nameText') : document.createElement('span');
 	const playerListEntrySprite = playerListEntry
 		? playerListEntry.querySelector('.playerListEntrySprite')
 		: document.createElement('img');
@@ -310,17 +291,11 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 	let friendIcon = playerListEntry?._friendIcon; // playerListEntry ? playerListEntry.querySelector('.friendIcon') : null;
 	let rankIcon = playerListEntry ? playerListEntry.querySelector('.rankIcon') : null;
 	let mutedIcon = playerListEntry ? playerListEntry.querySelector('.mutedIcon') : null;
-	let acceptFriendAction = playerListEntry
-		? playerListEntry.querySelector('.acceptFriendAction')
-		: null;
-	let rejectCancelFriendAction = playerListEntry
-		? playerListEntry.querySelector('.rejectCancelFriendAction')
-		: null;
+	let acceptFriendAction = playerListEntry ? playerListEntry.querySelector('.acceptFriendAction') : null;
+	let rejectCancelFriendAction = playerListEntry ? playerListEntry.querySelector('.rejectCancelFriendAction') : null;
 	let partyOwnerIcon = playerListEntry ? playerListEntry.querySelector('.partyOwnerIcon') : null;
 	let partyKickAction = playerListEntry ? playerListEntry.querySelector('.partyKickAction') : null;
-	let transferPartyOwnerAction = playerListEntry
-		? playerListEntry.querySelector('.transferPartyOwnerAction')
-		: null;
+	let transferPartyOwnerAction = playerListEntry ? playerListEntry.querySelector('.transferPartyOwnerAction') : null;
 
 	if (!playerListEntry) {
 		playerListEntry = document.createElement('div');
@@ -378,20 +353,13 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 
 		playerListEntryBadgeOverlay.classList.add('playerListEntryBadgeOverlay', 'badgeOverlay');
 
-		playerListEntryBadgeOverlay2.classList.add(
-			'playerListEntryBadgeOverlay2',
-			'badgeOverlay',
-			'badgeOverlay2'
-		);
+		playerListEntryBadgeOverlay2.classList.add('playerListEntryBadgeOverlay2', 'badgeOverlay', 'badgeOverlay2');
 
 		playerListEntryBadge.appendChild(playerListEntryBadgeOverlay);
 		playerListEntryBadge.appendChild(playerListEntryBadgeOverlay2);
 		playerListEntry.appendChild(playerListEntryBadge);
 
-		playerListEntryActionContainer.classList.add(
-			'playerListEntryActionContainer',
-			'listEntryActionContainer'
-		);
+		playerListEntryActionContainer.classList.add('playerListEntryActionContainer', 'listEntryActionContainer');
 
 		addPlayerContextMenu(
 			playerListEntry,
@@ -469,45 +437,35 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 	}
 
 	if (spriteName) {
-		getSpriteProfileImg(spriteName, spriteIndex, undefined, undefined, playerGameId).then(
-			(spriteImg) => {
-				const sprite = playerList.querySelector(
-					`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`
-				);
-				if (spriteImg && sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
-			}
-		);
+		getSpriteProfileImg(spriteName, spriteIndex, undefined, undefined, playerGameId).then((spriteImg) => {
+			const sprite = playerList.querySelector(`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`);
+			if (spriteImg && sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
+		});
 	} else {
 		let playerSpriteCacheEntry = playerSpriteCache[playerGameId + ':' + uuid];
 		if (!playerSpriteCacheEntry && uuid !== defaultUuid)
 			playerSpriteCacheEntry = playerSpriteCache[playerGameId + ':' + defaultUuid];
 		if (playerSpriteCacheEntry) {
 			const entry = playerSpriteCacheEntry;
-			getSpriteProfileImg(entry.sprite, entry.idx, undefined, undefined, playerGameId).then(
+			getSpriteProfileImg(entry.sprite, entry.idx, undefined, undefined, playerGameId).then((spriteImg) => {
+				const sprite = playerList.querySelector(
+					`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`
+				);
+				if (spriteImg && sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
+			});
+			if (uuid === defaultUuid) updatePlayerSprite(entry.sprite, entry.idx, playerGameId);
+		} else {
+			const defaultSpriteObj = getDefaultSprite();
+			getSpriteProfileImg(defaultSpriteObj.sprite, defaultSpriteObj.idx, undefined, undefined, playerGameId).then(
 				(spriteImg) => {
 					const sprite = playerList.querySelector(
 						`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`
 					);
-					if (spriteImg && sprite && sprite.src !== spriteImg) sprite.src = spriteImg;
+					if (spriteImg && sprite && sprite.src !== spriteImg) {
+						sprite.src = spriteImg;
+					}
 				}
 			);
-			if (uuid === defaultUuid) updatePlayerSprite(entry.sprite, entry.idx, playerGameId);
-		} else {
-			const defaultSpriteObj = getDefaultSprite();
-			getSpriteProfileImg(
-				defaultSpriteObj.sprite,
-				defaultSpriteObj.idx,
-				undefined,
-				undefined,
-				playerGameId
-			).then((spriteImg) => {
-				const sprite = playerList.querySelector(
-					`.playerListEntry[data-uuid="${uuid}"] img.playerListEntrySprite`
-				);
-				if (spriteImg && sprite && sprite.src !== spriteImg) {
-					sprite.src = spriteImg;
-				}
-			});
 		}
 	}
 
@@ -593,9 +551,7 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 					playerListEntryBadge._badgeTippy
 				);
 				if (!badge || badge.hidden)
-					playerListEntryBadge._badgeTippy.popper
-						.querySelector('.tooltipContent')
-						.classList.add('altText');
+					playerListEntryBadge._badgeTippy.popper.querySelector('.tooltipContent').classList.add('altText');
 			}
 		}
 		if (player.name) {
@@ -677,9 +633,7 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 			addTooltip(
 				rejectCancelFriendAction,
 				getMassagedLabel(
-					localizedMessages.playerList.actions[
-						playerFriend.incoming ? 'rejectFriend' : 'cancelFriend'
-					],
+					localizedMessages.playerList.actions[playerFriend.incoming ? 'rejectFriend' : 'cancelFriend'],
 					true
 				),
 				true,
@@ -696,17 +650,9 @@ export function addOrUpdatePlayerListEntry(playerList, player, showLocation, sor
 		}
 
 		if (party) {
-			if (
-				uuid === party.ownerUuid ||
-				(uuid === defaultUuid && playerData?.uuid === party.ownerUuid)
-			) {
+			if (uuid === party.ownerUuid || (uuid === defaultUuid && playerData?.uuid === party.ownerUuid)) {
 				partyOwnerIcon = getSvgIcon('partyOwner', true);
-				addTooltip(
-					partyOwnerIcon,
-					getMassagedLabel(localizedMessages.parties.partyOwner, true),
-					true,
-					true
-				);
+				addTooltip(partyOwnerIcon, getMassagedLabel(localizedMessages.parties.partyOwner, true), true, true);
 				if (party.systemName) {
 					const parsedPartySystemName = party.systemName.replace(/ /g, '_');
 					partyOwnerIcon
@@ -819,10 +765,7 @@ function addOrUpdatePlayerListEntryLocation(locationVisible, player, entry) {
 
 	let playerGameId = player.game || gameId;
 	const shouldDisplayLocation = isValidMap || playerGameId !== gameId;
-	playerLocation.classList.toggle(
-		'hidden',
-		(!locationVisible || !shouldDisplayLocation) && !showLastOnline
-	);
+	playerLocation.classList.toggle('hidden', (!locationVisible || !shouldDisplayLocation) && !showLastOnline);
 
 	if (locationVisible && player.online && shouldDisplayLocation) {
 		if (!(playerGameId in allGameUiThemes)) playerGameId = gameId;
@@ -843,12 +786,7 @@ function addOrUpdatePlayerListEntryLocation(locationVisible, player, entry) {
 									return { title: l };
 								})
 						: null;
-				set2kkiGlobalChatMessageLocation(
-					playerLocation,
-					player.mapId,
-					player.prevMapId,
-					prevLocations
-				);
+				set2kkiGlobalChatMessageLocation(playerLocation, player.mapId, player.prevMapId, prevLocations);
 			} else {
 				const locationsHtml = getLocalizedMapLocationsHtml(
 					gameId,
@@ -965,8 +903,7 @@ function removePlayerListEntry(playerList, uuid) {
 
 	const playerListEntry = playerList.querySelector(`.playerListEntry[data-uuid="${uuid}"]`);
 	if (playerListEntry) playerListEntry.remove();
-	if (playerList.id === 'playerList')
-		updateMapPlayerCount(document.getElementById('playerList').childElementCount);
+	if (playerList.id === 'playerList') updateMapPlayerCount(document.getElementById('playerList').childElementCount);
 }
 
 function clearPlayerList(playerList) {
@@ -993,8 +930,7 @@ function getPlayerListIdEntrySortFunc(playerListId) {
 					const playerA = globalPlayerData[a.dataset.uuid];
 					const playerB = globalPlayerData[b.dataset.uuid];
 					if (playerA?.rank !== playerB?.rank) return playerA?.rank < playerB?.rank ? 1 : -1;
-					if (a.dataset.name && b.dataset.name)
-						return collator.compare(a.dataset.name, b.dataset.name);
+					if (a.dataset.name && b.dataset.name) return collator.compare(a.dataset.name, b.dataset.name);
 					if (a.dataset.unnamed) {
 						if (b.dataset.unnamed) return a.dataset.uuid >= b.dataset.uuid ? 1 : -1;
 						return 1;
@@ -1132,9 +1068,7 @@ function updateBlocklist(updateModal) {
 				});
 
 				if (updateModal)
-					document
-						.getElementById('blocklistModalEmptyLabel')
-						.classList.toggle('hidden', !!blocklist.length);
+					document.getElementById('blocklistModalEmptyLabel').classList.toggle('hidden', !!blocklist.length);
 
 				resolve();
 			});
@@ -1153,24 +1087,12 @@ function getLastOnlineInterval(date) {
 		);
 	const timeDiffHours = Math.floor(timeDiffMinutes / 60);
 	if (timeDiffHours < 24)
-		return localizedInterval.hours[timeDiffHours === 1 ? 'singular' : 'plural'].replace(
-			'{VALUE}',
-			timeDiffHours
-		);
+		return localizedInterval.hours[timeDiffHours === 1 ? 'singular' : 'plural'].replace('{VALUE}', timeDiffHours);
 	const timeDiffDays = Math.floor(timeDiffHours / 24);
-	return localizedInterval.days[timeDiffDays === 1 ? 'singular' : 'plural'].replace(
-		'{VALUE}',
-		timeDiffDays
-	);
+	return localizedInterval.days[timeDiffDays === 1 ? 'singular' : 'plural'].replace('{VALUE}', timeDiffDays);
 }
 
-async function getSpriteProfileImg(
-	sprite: string,
-	idx,
-	favicon = false,
-	dir?: unknown,
-	gameId?: string
-) {
+async function getSpriteProfileImg(sprite: string, idx, favicon = false, dir?: unknown, gameId?: string) {
 	const isBrave = (navigator.brave && (await navigator.brave.isBrave())) || false;
 	if (!gameId) gameId = ynoGameId;
 	let spriteData = favicon ? faviconCache : spriteCache;
@@ -1186,13 +1108,12 @@ async function getSpriteProfileImg(
 		const defaultIdx = defaultSpriteObj.idx;
 		const getDefaultSpriteImg = new Promise((resolve) => {
 			if (sprite !== defaultSprite || idx !== defaultIdx)
-				getSpriteProfileImg(defaultSprite, defaultIdx, favicon, undefined, gameId).then(
-					(defaultSpriteImg) => resolve(defaultSpriteImg)
+				getSpriteProfileImg(defaultSprite, defaultIdx, favicon, undefined, gameId).then((defaultSpriteImg) =>
+					resolve(defaultSpriteImg)
 				);
 			else resolve(null);
 		});
-		if (!sprite || idx === -1)
-			return getDefaultSpriteImg.then((defaultSpriteImg) => resolve(defaultSpriteImg));
+		if (!sprite || idx === -1) return getDefaultSpriteImg.then((defaultSpriteImg) => resolve(defaultSpriteImg));
 		const img = new Image();
 		img.setAttribute('crossOrigin', 'anonymous');
 		img.onload = function () {
@@ -1212,8 +1133,8 @@ async function getSpriteProfileImg(
 		if (!dir) {
 			dir = `${cdnUrl}/${gameId}/CharSet/`;
 			img.onerror = () =>
-				getSpriteProfileImg(sprite, idx, favicon, `images/charsets/${gameId}/`, gameId).then(
-					(url) => resolve(url)
+				getSpriteProfileImg(sprite, idx, favicon, `images/charsets/${gameId}/`, gameId).then((url) =>
+					resolve(url)
 				);
 		} else {
 			img.onerror = () => {
@@ -1306,20 +1227,12 @@ function onPlayerConnectedOrUpdated(systemName, name, id) {
 		if (name) globalPlayerData[uuid].name = name;
 		if (systemName) globalPlayerData[uuid].systemName = systemName;
 	}
-	setTimeout(() =>
-		addOrUpdatePlayerListEntry(null, Object.assign({ uuid }, globalPlayerData[uuid]), false, true)
-	);
+	setTimeout(() => addOrUpdatePlayerListEntry(null, Object.assign({ uuid }, globalPlayerData[uuid]), false, true));
 }
 
 // EXTERNAL
 function onPlayerSpriteUpdated(sprite, idx, id) {
-	updatePlayerListEntrySprite(
-		null,
-		sprite,
-		idx,
-		id !== -1 ? playerUuids[id] : defaultUuid,
-		ynoGameId
-	);
+	updatePlayerListEntrySprite(null, sprite, idx, id !== -1 ? playerUuids[id] : defaultUuid, ynoGameId);
 }
 
 // EXTERNAL
@@ -1333,15 +1246,12 @@ function onPlayerDisconnected(id) {
 
 function showPlayerToastMessage(key, playerName, icon, iconFill, systemName, persist) {
 	if (!notificationConfig.players.all || !notificationConfig.players[key]) return;
-	const message = getMassagedLabel(localizedMessages.toast.players[key], true).replace(
-		'{PLAYER}',
-		playerName
-	);
+	const message = getMassagedLabel(localizedMessages.toast.players[key], true).replace('{PLAYER}', playerName);
 	showToastMessage(message, icon, iconFill, systemName, persist);
 }
 
-// SIDE EFFECT
-(function () {
+/** Registers the player list session command handlers. Called from `<SessionCommands />`. */
+export function registerPlayerListSessionHandlers() {
 	addSessionCommandHandler('p', (args) => {
 		const uuid = args[0];
 		const name = args[1];
@@ -1357,13 +1267,7 @@ function showPlayerToastMessage(key, playerName, icon, iconFill, systemName, per
 			rank: rank,
 			account: account,
 			badge: badge,
-			medals: [
-				parseInt(args[6]),
-				parseInt(args[7]),
-				parseInt(args[8]),
-				parseInt(args[9]),
-				parseInt(args[10])
-			]
+			medals: [parseInt(args[6]), parseInt(args[7]), parseInt(args[8]), parseInt(args[9]), parseInt(args[10])]
 		};
 	});
-})();
+}

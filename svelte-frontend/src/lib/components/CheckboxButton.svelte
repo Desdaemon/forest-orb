@@ -25,5 +25,6 @@
 	{...props}
 	{onclick}
 	class={['checkboxButton unselectable', { inverseToggle, toggled }, props.class]}
-	><span role="presentation"></span></button
 >
+	<span role="presentation"></span>
+</button>

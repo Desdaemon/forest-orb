@@ -1,7 +1,6 @@
-import { ynoGameId } from "$lib";
-import { hasTouchscreen } from "./init";
+import { ynoGameId, hasTouchscreen } from '$lib';
 
-export let globalConfig = {
+export const globalConfig = $state({
 	lang: 'en',
 	name: '',
 	soundVolume: 100,
@@ -34,9 +33,9 @@ export let globalConfig = {
 	badgeToolsData: null,
 	pushNotificationToastDismissed: false,
 	unicodeFont: false
-};
+});
 
-export let config = {
+export const config = $state({
 	privateMode: false,
 	singleplayerMode: false,
 	disableChat: false,
@@ -54,8 +53,12 @@ export let config = {
 	hideUnnamedPlayers: false,
 
 	fontStyle: 0,
-	uiTheme: 'Default'
-};
+	uiTheme: 'Default',
+
+	last2kkiVersion: undefined,
+	explorer: false,
+	enableExplorer: false
+});
 
 const rtlLangs = ['ar'];
 const latinExLangs = ['vi', 'ru', 'uk'];
@@ -73,9 +76,7 @@ export function setLang(lang, isInit) {
 				// Prevent a crash when the --language argument is used and the game doesn't have a Language folder
 				if (response.ok && response.status < 400 && isInit && gameIds.indexOf(gameId) > -1) {
 					easyrpgPlayer.language = (
-						gameDefaultLangs.hasOwnProperty(gameId)
-							? gameDefaultLangs[gameId] !== lang
-							: lang !== 'en'
+						gameDefaultLangs.hasOwnProperty(gameId) ? gameDefaultLangs[gameId] !== lang : lang !== 'en'
 					)
 						? lang
 						: 'default';
@@ -163,8 +164,7 @@ export function setMobileControlType(value, isInit) {
 export function updateConfig(configObj: unknown = config, global = false, configName?: string) {
 	if (!configName) configName = 'config';
 	try {
-		window.localStorage[global ? configName : `${configName}_${ynoGameId}`] =
-			JSON.stringify(configObj);
+		window.localStorage[global ? configName : `${configName}_${ynoGameId}`] = JSON.stringify(configObj);
 	} catch (error) {
 		console.error(error);
 	}

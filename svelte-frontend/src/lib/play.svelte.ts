@@ -7,20 +7,20 @@
  */
 
 import { get, writable } from 'svelte/store';
-import { updateBadges, viewBadgeLocationInModal } from './badges';
+import { updateBadges, viewBadgeLocationInModal } from './badges.svelte';
 import { updateGameChatMessageVisibility } from '$lib/chat.svelte';
-import { initEventControls, onUpdateEventPeriod, updateEventPeriod, updateEvents } from './events';
+import { onUpdateEventPeriod, updateEventPeriod, updateEvents } from './events';
 import {
 	addTooltip,
 	wikiApiFetch,
-	hasTouchscreen,
 	loadOrInitConfig,
 	loadedUiTheme,
 	loadedFontStyle,
 	loadedLang,
-    fetchNewest,
-    setCookie
+	fetchNewest,
+	setCookie
 } from './init';
+import { hasTouchscreen } from '$lib';
 import { addSessionCommandHandler, initSessionWs, getConnStatus } from './session.svelte';
 import { gameId, isBrowser, loggedInKey } from '$lib';
 import {
@@ -34,43 +34,33 @@ import {
 import { initDefaultSprites } from './playerlist.svelte';
 import { globalConfig, config, updateConfig } from './config.svelte';
 
-/**
- * @typedef {object} MapTitle
- * @property {string} title
- * @property {string} [urlTitle]
- * @property {Coords} [coords]
- * @property {boolean} [explorer]
- */
+interface MapTitle {
+	title: string;
+	urlTitle?: string;
+	coords?: Coords;
+	explorer?: boolean;
+}
 
-/**
- * @typedef {string | MapTitle | (string | MapTitle)[] | Record<'else' | number | `0${number}`, string | MapTitle | (string | MapTitle)[]>} MapDescriptor
- * In the array form, the last element is customarily the fallback title.
- *
- * The third object form allows matching the correct world for map IDs shared between worlds:
- * a mapping from the previous map ID the player came from, to the matching map title.
- */
+type MapDescriptor =
+	| string
+	| MapTitle
+	| (string | MapTitle)[]
+	| Record<'else' | number | `0${number}`, string | MapTitle | (string | MapTitle)[]>;
 
-/**
- * @typedef {Record<string, Record<string, MapDescriptor>>} MapDescriptorRecord
- * game -> map-id
- */
+type MapDescriptorRecord = Record<string, Record<string, MapDescriptor>>;
 
 let localizedVersion;
 /** @type {import('./lang/en.json')['messages']?} */
 let localizedMessages;
 
-/** @type {Record<string, MapDescriptor>?} */
-let localizedMapLocations;
-/** @type {Record<string, MapDescriptor>?} */
-let mapLocations;
+let localizedMapLocations: Record<string, MapDescriptor> | null;
+let mapLocations: Record<string, MapDescriptor> | null;
 let localizedLocationUrlRoot;
 let locationUrlRoot;
 
-/** @type {MapDescriptorRecord} */
-let gameLocalizedMapLocations = {};
+let gameLocalizedMapLocations: MapDescriptorRecord = {};
 
-/** @type {MapDescriptorRecord} */
-let gameMapLocations = {};
+let gameMapLocations: MapDescriptorRecord = {};
 let gameLocalizedLocationUrlRoots = {};
 let gameLocationUrlRoots = {};
 let gameLocalizedLocationsMap = {};
@@ -105,10 +95,10 @@ const locI18nextOptions = {
 	useOptionsAttr: true
 };
 
-// SIDE EFFECT
-if (gameId === '2kki') {
-	if (isBrowser)
-		config.last2kkiVersion = document.querySelector('meta[name="2kkiVersion"]').content;
+/** Seeds the Yume 2kki specific config from the page. Called on mount from `+page.svelte`. */
+export function init2kkiConfig() {
+	if (gameId !== '2kki') return;
+	config.last2kkiVersion = document.querySelector('meta[name="2kkiVersion"]').content;
 	config.explorer = false;
 	config.enableExplorer = false;
 }
@@ -127,15 +117,7 @@ let locationColorCache;
 
 let ynomojiConfig = {};
 
-// SIDE EFFECT
-if (hasTouchscreen && iOS()) {
-	let crashFix = document.querySelector('#crashFix');
-	crashFix.style.cssText += 'display: block; opacity: 0%;';
-	crashFix.style.width = window.getComputedStyle(document.querySelector('#canvas')).width;
-	crashFix.style.height = window.getComputedStyle(document.querySelector('#canvas')).height;
-}
-
-function iOS() {
+export function iOS() {
 	return (
 		['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(
 			navigator.platform
@@ -154,8 +136,7 @@ function onUpdateConnectionStatus(status: number) {
 		connStatusIcon.classList.toggle('connecting', status === 2);
 		connStatusIcon.classList.toggle('connected', status === 1);
 		connStatusIcon.classList.toggle('privateMode', status === 3 || status === 4);
-		if (localizedMessages)
-			connStatusText.innerHTML = getMassagedLabel(localizedMessages.connStatus[status]);
+		if (localizedMessages) connStatusText.innerHTML = getMassagedLabel(localizedMessages.connStatus[status]);
 		connStatusText.classList.toggle('altText', !status);
 	};
 	if (connStatus !== undefined && (!status || status === 2))
@@ -234,11 +215,7 @@ export function fetchAndUpdatePlayerInfo(forLogin) {
 						trySetChatName(get(playerName));
 						updatePlayerFriends();
 						updateParty();
-						showAccountToastMessage(
-							'loggedIn',
-							'join',
-							getPlayerName(playerData, true, false, true)
-						);
+						showAccountToastMessage('loggedIn', 'join', getPlayerName(playerData, true, false, true));
 						updateBadges(() => {
 							updateBadgeButton();
 							// Initialize event period after initial badge cache population due to ExP rank badge dependency
@@ -291,12 +268,12 @@ export function checkLogin() {
 
 let playerCount;
 
-// SIDE EFFECT
-(function () {
+/** Registers the general play session command handlers. Called from `<SessionCommands />`. */
+export function registerPlaySessionHandlers() {
 	addSessionCommandHandler('pc', (args) => updatePlayerCount(parseInt(args[0])));
 	addSessionCommandHandler('lcol');
 	addSessionCommandHandler('ttr', handleTimeTrialsRecord);
-})();
+}
 
 function handleTimeTrialsRecord(args) {
 	if (!notificationConfig.timeTrials.all || !notificationConfig.timeTrials.goalReached) {
@@ -347,12 +324,14 @@ export function updateMapPlayerCount(count: number) {
 		);
 }
 
-// SIDE EFFECT
-if (isBrowser) {
+/** Applies the default UI theme. Called on mount from `+page.svelte`. */
+export function initUiTheme() {
 	setSystemName(getDefaultUiTheme());
 	// populateUiThemes(); // TODO
+}
 
-	// SIDE EFFECT
+/** Loads and sizes the game logo. Called on mount from `<GameLogo />`. */
+export function initGameLogo() {
 	const gameLogoUrl = `../images/logo_${gameId}.png`;
 	const gameLogoImg = new Image();
 	gameLogoImg.setAttribute('crossOrigin', 'anonymous');
@@ -407,10 +386,7 @@ function onLoadMap(mapName) {
 
 			markMapUpdateInChat();
 
-			if (
-				gameId === '2kki' &&
-				(!localizedMapLocations || !localizedMapLocations.hasOwnProperty(mapId))
-			)
+			if (gameId === '2kki' && (!localizedMapLocations || !localizedMapLocations.hasOwnProperty(mapId)))
 				onLoad2kkiMap(mapId);
 			else checkUpdateLocation(mapId, true);
 		}
@@ -419,29 +395,19 @@ function onLoadMap(mapName) {
 
 function checkUpdateLocation(mapId, mapChanged) {
 	preloadFilesFromMapId(mapId);
-	if (!mapChanged && (!localizedMapLocations || !localizedMapLocations.hasOwnProperty(mapId)))
-		return;
+	if (!mapChanged && (!localizedMapLocations || !localizedMapLocations.hasOwnProperty(mapId))) return;
 
 	const is2kki = gameId === '2kki';
 
 	if (localizedMapLocations) {
 		if (!cachedMapId) document.getElementById('location').classList.remove('hidden');
 
-		const localizedLocationHtml = getLocalizedMapLocationsHtml(
-			gameId,
-			mapId,
-			cachedMapId,
-			tpX,
-			tpY,
-			'<br>'
-		);
+		const localizedLocationHtml = getLocalizedMapLocationsHtml(gameId, mapId, cachedMapId, tpX, tpY, '<br>');
 		document.getElementById('locationText').innerHTML = localizedLocationHtml.then(() => {
 			{
 				const width = `${document.querySelector('#locationText > *').offsetWidth}px`;
 				fastdom.mutate(() =>
-					document
-						.getElementById('nextLocationContainer')
-						.style.setProperty('--location-width', width)
+					document.getElementById('nextLocationContainer').style.setProperty('--location-width', width)
 				);
 			}
 		});
@@ -457,11 +423,9 @@ function checkUpdateLocation(mapId, mapChanged) {
 	cachedMapId = mapId;
 
 	if (localizedMapLocations) {
-		const locations =
-			getMapLocationsArray(mapLocations, cachedMapId, cachedPrevMapId, tpX, tpY) || [];
+		const locations = getMapLocationsArray(mapLocations, cachedMapId, cachedPrevMapId, tpX, tpY) || [];
 		const locationsUpdated =
-			!locations !== !cachedLocations ||
-			JSON.stringify(locations) !== JSON.stringify(cachedLocations);
+			!locations !== !cachedLocations || JSON.stringify(locations) !== JSON.stringify(cachedLocations);
 		if (locationsUpdated) {
 			if (!mapChanged) markMapUpdateInChat();
 			addChatMapLocation(locations);
@@ -473,8 +437,7 @@ function checkUpdateLocation(mapId, mapChanged) {
 					.filter((l) => !l.hasOwnProperty('explorer') || l.explorer)
 					.map((l) => l.title);
 				set2kkiExplorerLinks(locationNames);
-				if (locationNames.length)
-					queryAndSet2kkiMaps(locationNames).catch((err) => console.error(err));
+				if (locationNames.length) queryAndSet2kkiMaps(locationNames).catch((err) => console.error(err));
 				else {
 					setMaps([], null);
 					set2kkiExplorerLinks(null);
@@ -500,8 +463,7 @@ function checkUpdateLocation(mapId, mapChanged) {
 			if (
 				yumeWikiSupported &&
 				playerData?.badge &&
-				badgeCache?.find((b) => b.badgeId === playerData.badge)?.overlayType &
-					BadgeOverlayType.LOCATION
+				badgeCache?.find((b) => b.badgeId === playerData.badge)?.overlayType & BadgeOverlayType.LOCATION
 			)
 				updateBadgeButton();
 		}
@@ -517,9 +479,7 @@ export function updateLocationDisplay(locationHtml, colors) {
 	const locationDisplayContainer = document.getElementById('locationDisplayContainer');
 	const locationDisplayLabel = document.getElementById('locationDisplayLabel');
 	const locationDisplayLabelOverlay = document.getElementById('locationDisplayLabelOverlay');
-	const locationDisplayLabelContainerOverlay = document.getElementById(
-		'locationDisplayLabelContainerOverlay'
-	);
+	const locationDisplayLabelContainerOverlay = document.getElementById('locationDisplayLabelContainerOverlay');
 
 	if (locationDisplayLabel.innerHTML == locationHtml) return;
 
@@ -569,25 +529,23 @@ function hideLocationDisplay(fast = false) {
 	);
 }
 
-// SIDE EFFECT
-if (isBrowser) {
-	const cancelKeyCodes = ['escape', 'x', 'c', 'v', 'b', 'n', 'numpad0', 'backspace'];
+const locationDisplayCancelKeys = ['escape', 'x', 'c', 'v', 'b', 'n', 'numpad0', 'backspace'];
 
-	document.addEventListener('keyup', (e) => {
-		const keyLc = e.key?.toLowerCase();
-		if (
-			globalConfig.locationDisplay &&
-			(locationDisplayTimer || locationDisplayQueue.length) &&
-			cancelKeyCodes.includes(keyLc)
-		) {
-			locationDisplayQueue.splice(0, locationDisplayQueue.length);
-			hideLocationDisplay(true);
-		}
+/** Dismisses the location display and handles alt+enter. Bound to the document in `+page.svelte`. */
+export function onDocumentKeyup(e: KeyboardEvent) {
+	const keyLc = e.key?.toLowerCase();
+	if (
+		globalConfig.locationDisplay &&
+		(locationDisplayTimer || locationDisplayQueue.length) &&
+		locationDisplayCancelKeys.includes(keyLc)
+	) {
+		locationDisplayQueue.splice(0, locationDisplayQueue.length);
+		hideLocationDisplay(true);
+	}
 
-		if (keyLc === 'enter' && e.altKey) {
-			document.getElementById('controls-fullscreen')?.click();
-		}
-	});
+	if (keyLc === 'enter' && e.altKey) {
+		document.getElementById('controls-fullscreen')?.click();
+	}
 }
 
 function syncPrevLocation() {
@@ -599,9 +557,7 @@ function syncPrevLocation() {
 }
 
 export function syncLocationChange() {
-	const locationNames = cachedLocations
-		? cachedLocations.map((l) => get2kkiWikiLocationName(l))
-		: [];
+	const locationNames = cachedLocations ? cachedLocations.map((l) => get2kkiWikiLocationName(l)) : [];
 
 	sendSessionCommand('l', locationNames);
 }
@@ -617,11 +573,7 @@ function onPlayerTeleported(mapId, x, y) {
 
 	const mapChanged = +cachedMapId !== mapId;
 
-	if (
-		mapChanged &&
-		gameId === '2kki' &&
-		(!localizedMapLocations || !localizedMapLocations.hasOwnProperty(mapIdStr))
-	)
+	if (mapChanged && gameId === '2kki' && (!localizedMapLocations || !localizedMapLocations.hasOwnProperty(mapIdStr)))
 		onLoad2kkiMap(mapIdStr);
 	else checkUpdateLocation(mapIdStr, mapChanged);
 }
@@ -687,19 +639,22 @@ export function preToggle(buttonElement) {
 	}, 500);
 }
 
-// SIDE EFFECT
-if (isBrowser) {
-	function calcTextareaHeight(value) {
-		const numberOfLineBreaks = (value.match(/\n/g) || []).length;
-		const newHeight = numberOfLineBreaks * 20 + 38;
-		return newHeight;
-	}
+function calcTextareaHeight(value) {
+	const numberOfLineBreaks = (value.match(/\n/g) || []).length;
+	const newHeight = numberOfLineBreaks * 20 + 38;
+	return newHeight;
+}
 
-	const autoExpandTextareas = document.querySelectorAll('textarea.autoExpand');
-	for (let textarea of autoExpandTextareas)
-		textarea.addEventListener('keyup', function () {
-			this.style.height = `${calcTextareaHeight(textarea.value)}px`;
-		});
+/**
+ * Svelte attachment that grows a textarea to fit its contents.
+ * Use as `<textarea class="autoExpand" {@attach autoExpandTextarea}>`.
+ */
+export function autoExpandTextarea(textarea: HTMLTextAreaElement) {
+	const onkeyup = () => {
+		textarea.style.height = `${calcTextareaHeight(textarea.value)}px`;
+	};
+	textarea.addEventListener('keyup', onkeyup);
+	return () => textarea.removeEventListener('keyup', onkeyup);
 }
 
 /**
@@ -709,12 +664,7 @@ if (isBrowser) {
  * @param [lastModalId] The previously-opened modal, used when opening sub-modals.
  * @param [modalData] Data to be passed to the modal.
  */
-export function openModal(
-	modalId: string,
-	theme?: string,
-	lastModalId?: string,
-	modalData?: object
-) {
+export function openModal(modalId: string, theme?: string, lastModalId?: string, modalData?: object) {
 	const modalContainer = document.getElementById('modalContainer');
 	modalContainer.classList.remove('fadeOut', 'hidden');
 	modalContainer.classList.add('fadeIn');
@@ -735,10 +685,7 @@ export function openModal(
 			delete modalContainer.dataset.lastModalId;
 			delete modalContainer.dataset.lastModalTheme;
 		} else {
-			modalContainer.dataset.lastModalId = modalContainer.dataset.lastModalId.slice(
-				0,
-				lastModalIdSeparatorIndex
-			);
+			modalContainer.dataset.lastModalId = modalContainer.dataset.lastModalId.slice(0, lastModalIdSeparatorIndex);
 			modalContainer.dataset.lastModalTheme = modalContainer.dataset.lastModalTheme.slice(
 				0,
 				modalContainer.dataset.lastModalTheme.lastIndexOf(',')
@@ -762,10 +709,7 @@ export function openModal(
 		}, modalTransitionDuration);
 	}
 
-	setModalUiTheme(
-		modalId,
-		theme || (config.uiTheme === 'auto' ? get(getSystemName()) : config.uiTheme)
-	);
+	setModalUiTheme(modalId, theme || (config.uiTheme === 'auto' ? get(getSystemName()) : config.uiTheme));
 
 	const modal = document.getElementById(modalId);
 
@@ -831,11 +775,13 @@ export function closeModal() {
 	}
 }
 
-// SIDE EFFECT
-if (isBrowser) {
-	const modalCloseButtons = document.querySelectorAll('#modalContainer .modalClose');
-	for (let button of modalCloseButtons) button.onclick = closeModal;
-	document.querySelector('#modalContainer .modalOverlay').onclick = closeModal;
+/**
+ * Closes the active modal when its close button (or the overlay) is clicked.
+ * Delegated from `#modalContainer` in `+page.svelte` so modals added later are covered too.
+ */
+export function onModalContainerClick(e: MouseEvent) {
+	const target = (e.target as HTMLElement)?.closest('.modalClose, .modalOverlay');
+	if (target) closeModal();
 }
 
 export function showConfirmModal(message: string, okCallback, cancelCallback) {
@@ -844,10 +790,7 @@ export function showConfirmModal(message: string, okCallback, cancelCallback) {
 	const modal = document.getElementById('confirmModal');
 
 	if (!modal.classList.contains('hidden')) {
-		setTimeout(
-			() => showConfirmModal(message, okCallback, cancelCallback),
-			modalTransitionDuration
-		);
+		setTimeout(() => showConfirmModal(message, okCallback, cancelCallback), modalTransitionDuration);
 		return;
 	}
 
@@ -888,356 +831,303 @@ function closeConfirmModal(callback) {
 	if (callback) callback();
 }
 
-// SIDE EFFECT
-if (isBrowser) {
-	document.getElementById('enterNameForm').onsubmit = function () {
-		setName(document.getElementById('nameInput').value);
-	};
+/** Bound to the ynomoji-enabled inputs (`#chatInput`, `#editScheduleDescription`). */
+export function oninputYnomoji(this: HTMLInputElement) {
+	const ynomojiPattern = /:([a-z0-9_\-]+(?::|$)|$)/gi;
+	const ynomojiContainer = document.getElementById('ynomojiContainer');
+	const detachedYnomoji = ynomojiContainer.parentElement.removeChild(ynomojiContainer);
+	switch (this.id) {
+		case 'chatInput':
+			const enterNameContainer = document.getElementById('enterNameContainer');
+			enterNameContainer.parentElement.insertBefore(detachedYnomoji, enterNameContainer);
+			break;
+		case 'editScheduleDescription':
+			this.parentElement.appendChild(detachedYnomoji);
+			break;
+	}
+	let currentMatch;
+	let match;
+	while ((currentMatch = ynomojiPattern.exec(this.value.slice(0, this.selectionEnd)))) match = currentMatch;
+	if (match && !match[1].endsWith(':')) {
+		const ynomojis = document.getElementsByClassName('ynomojiButton');
+		const lcMatch = match[1].toLowerCase();
+		let hasMatch = false;
+		for (let ynomoji of ynomojis) {
+			const ynomojiId = ynomoji.dataset.ynomojiId;
+			const matchStrings = [ynomojiId];
+			const matchPattern = /[A-Z0-9]+/g;
+			let matchResult;
+			while ((matchResult = matchPattern.exec(ynomojiId)) !== null) {
+				if (matchResult.index > 0) matchStrings.push(ynomojiId.slice(matchResult.index));
+			}
+			let visible = false;
+			for (let matchString of matchStrings) {
+				if (matchString.toLowerCase().startsWith(lcMatch)) {
+					visible = true;
+					break;
+				}
+			}
+			ynomoji.classList.toggle('hidden', !visible);
+			hasMatch |= visible;
+		}
+		if (lcMatch) ynomojiContainer.classList.toggle('hidden', !hasMatch);
+		else {
+			const currentInputValue = this.value;
+			setTimeout(() => {
+				if (this.value === currentInputValue) ynomojiContainer.classList.remove('hidden');
+			}, 1000);
+		}
+	} else ynomojiContainer.classList.add('hidden');
 }
 
-// SIDE EFFECT
-if (isBrowser) {
-	function oninputYnomoji() {
-		const ynomojiPattern = /:([a-z0-9_\-]+(?::|$)|$)/gi;
-		const ynomojiContainer = document.getElementById('ynomojiContainer');
-		const detachedYnomoji = ynomojiContainer.parentElement.removeChild(ynomojiContainer);
-		switch (this.id) {
-			case 'chatInput':
-				const enterNameContainer = document.getElementById('enterNameContainer');
-				enterNameContainer.parentElement.insertBefore(detachedYnomoji, enterNameContainer);
-				break;
-			case 'editScheduleDescription':
-				this.parentElement.appendChild(detachedYnomoji);
-				break;
-		}
-		let currentMatch;
-		let match;
-		while ((currentMatch = ynomojiPattern.exec(this.value.slice(0, this.selectionEnd))))
-			match = currentMatch;
-		if (match && !match[1].endsWith(':')) {
-			const ynomojis = document.getElementsByClassName('ynomojiButton');
-			const lcMatch = match[1].toLowerCase();
-			let hasMatch = false;
-			for (let ynomoji of ynomojis) {
-				const ynomojiId = ynomoji.dataset.ynomojiId;
-				const matchStrings = [ynomojiId];
-				const matchPattern = /[A-Z0-9]+/g;
-				let matchResult;
-				while ((matchResult = matchPattern.exec(ynomojiId)) !== null) {
-					if (matchResult.index > 0) matchStrings.push(ynomojiId.slice(matchResult.index));
-				}
-				let visible = false;
-				for (let matchString of matchStrings) {
-					if (matchString.toLowerCase().startsWith(lcMatch)) {
-						visible = true;
-						break;
-					}
-				}
-				ynomoji.classList.toggle('hidden', !visible);
-				hasMatch |= visible;
-			}
-			if (lcMatch) ynomojiContainer.classList.toggle('hidden', !hasMatch);
-			else {
-				const currentInputValue = this.value;
-				setTimeout(() => {
-					if (this.value === currentInputValue) ynomojiContainer.classList.remove('hidden');
-				}, 1000);
-			}
-		} else ynomojiContainer.classList.add('hidden');
-	}
-
-	function onfocusYnomoji() {
-		this.oninput();
-		ynomojiElement = this;
-	}
-
-	for (const inputElement of ['chatInput', 'editScheduleDescription']) {
-		const element = document.getElementById(inputElement);
-		element.oninput = oninputYnomoji;
-		element.onfocus = onfocusYnomoji;
-	}
-	document.getElementById('chatboxContainer').onmouseleave = document.getElementById(
-		'scheduleEditModal'
-	).onmouseleave = function () {
-		document.getElementById('ynomojiContainer').classList.add('hidden');
-	};
+/** Bound to the ynomoji-enabled inputs alongside {@link oninputYnomoji}. */
+export function onfocusYnomoji(this: HTMLInputElement) {
+	oninputYnomoji.call(this);
+	ynomojiElement = this;
 }
 
-// SIDE EFFECT
-if (isBrowser) {
-	function initPrivateMode(active) {
-		const layout = document.getElementById('layout');
-		document.getElementById('privateModeButton').classList.toggle('toggled', active);
-		layout.classList.toggle('privateMode', active);
+/** Hides the ynomoji picker; bound to the mouseleave of the containers holding those inputs. */
+export function hideYnomojiContainer() {
+	document.getElementById('ynomojiContainer').classList.add('hidden');
+}
 
-		if (config.singleplayerMode) {
-			layout.classList.add('singleplayerMode');
-		} else {
-			layout.classList.remove('singleplayerMode');
-		}
+/** Applies private (or singleplayer) mode. Bound to `#privateModeButton` in `+page.svelte`. */
+export function initPrivateMode(active) {
+	const layout = document.getElementById('layout');
+	document.getElementById('privateModeButton').classList.toggle('toggled', active);
+	layout.classList.toggle('privateMode', active);
 
-		config.privateMode = active;
-		updateConfig(config);
-
-		if (!sessionWs) return;
-
-		sendSessionCommand('pr', [config.privateMode ? (config.singleplayerMode ? 2 : 1) : 0]);
-		if (config.hideLocation) {
-			sendSessionCommand('hl', [config.singleplayerMode ? 1 : 0]);
-		}
-
-		if (connStatus == 1 || connStatus == 3 || connStatus == 4)
-			onUpdateConnectionStatus(config.privateMode ? (config.singleplayerMode ? 4 : 3) : 1);
-
-		easyrpgPlayer.api.sessionReady();
+	if (config.singleplayerMode) {
+		layout.classList.add('singleplayerMode');
+	} else {
+		layout.classList.remove('singleplayerMode');
 	}
 
-	document.getElementById('privateModeButton').onclick = function () {
-		initPrivateMode(this.classList.toggle('toggled'));
-	};
+	config.privateMode = active;
+	updateConfig(config);
 
-	document.getElementById('singleplayerModeButton').onclick = function () {
-		config.singleplayerMode = this.classList.toggle('toggled');
-		initPrivateMode(config.privateMode);
-	};
+	if (!sessionWs) return;
+
+	sendSessionCommand('pr', [config.privateMode ? (config.singleplayerMode ? 2 : 1) : 0]);
+	if (config.hideLocation) {
+		sendSessionCommand('hl', [config.singleplayerMode ? 1 : 0]);
+	}
+
+	if (connStatus == 1 || connStatus == 3 || connStatus == 4)
+		onUpdateConnectionStatus(config.privateMode ? (config.singleplayerMode ? 4 : 3) : 1);
+
+	easyrpgPlayer.api.sessionReady();
+}
+
+/** Bound to `#privateModeButton` in `+page.svelte`. */
+export function onTogglePrivateMode(ev) {
+	initPrivateMode(ev.currentTarget.classList.toggle('toggled'));
+}
+
+/** Bound to `#singleplayerModeButton` in `<SettingsModal />`. */
+export function onToggleSingleplayerMode(ev) {
+	config.singleplayerMode = ev.currentTarget.classList.toggle('toggled');
+	initPrivateMode(config.privateMode);
 }
 
 let reconnectCooldownTimer: number | null;
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('reconnectButton').ondblclick = function () {
-		if (reconnectCooldownTimer || connStatus != 2) return;
+function reconnect(reconnectButton: HTMLElement) {
+	reconnectButton.classList.add('active', 'disabled');
 
-		this.classList.add('active', 'disabled');
+	initSessionWs().then(() => {
+		reconnectButton.classList.remove('active');
+		if (!reconnectCooldownTimer) reconnectButton.classList.remove('disabled');
+	});
 
-		const reconnectButton = this;
-		let reconnected;
-
-		initSessionWs().then(() => {
-			reconnected = true;
-			reconnectButton.classList.remove('active');
-			if (!reconnectCooldownTimer) reconnectButton.classList.remove('disabled');
-		});
-
-		reconnectCooldownTimer = setTimeout(() => {
-			reconnectCooldownTimer = null;
-			if (!reconnectButton.classList.contains('active'))
-				reconnectButton.classList.remove('disabled');
-		}, 5000);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('reconnectButton').onclick = function () {
-		if (reconnectCooldownTimer || connStatus == 2) return;
-
-		this.classList.add('active', 'disabled');
-
-		const reconnectButton = this;
-		let reconnected;
-
-		closeSessionWs();
-		initSessionWs().then(() => {
-			reconnected = true;
-			reconnectButton.classList.remove('active');
-			if (!reconnectCooldownTimer) reconnectButton.classList.remove('disabled');
-		});
-
-		reconnectCooldownTimer = setTimeout(() => {
-			reconnectCooldownTimer = null;
-			if (!reconnectButton.classList.contains('active'))
-				reconnectButton.classList.remove('disabled');
-		}, 5000);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('toggleNextLocationButton').onclick = function () {
-		document.getElementById('nextLocationContainer').classList.toggle('hideContents');
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('chatButton').onclick = function () {
-		this.classList.toggle('toggled');
-		document.getElementById('layout').classList.toggle('hideChat');
-		onResize();
-		config.disableChat = this.classList.contains('toggled');
-		updateConfig(config);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	if (gameId === '2kki') {
-		document.getElementById('explorerButton').onclick = function () {
-			this.classList.toggle('toggled');
-			document.getElementById('layout').classList.toggle('explorer');
-			onResize();
-			config.explorer = this.classList.contains('toggled');
-			updateConfig(config);
-		};
-	}
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('globalMessageButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const chatInput = document.getElementById('chatInput');
-		const toggled = this.classList.contains('toggled');
-
-		// Only let globe change message destination if all chat is actually
-		// selected, otherwise this only updates the visuals of the button,
-		// since this function is over-used by the config loader for that.
-		const active = document.getElementById('chatTabAll').classList.contains('active');
-		if (active) {
-			if (toggled) chatInput.dataset.global = true;
-			else delete chatInput.dataset.global;
-		}
-
-		chatInput.disabled =
-			toggled && document.getElementById('chatInputContainer').classList.contains('globalCooldown');
-		config.globalMessage = toggled;
-		updateConfig(config);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('globalMessageLocationsButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = this.classList.contains('toggled');
-		document.getElementById('messages').classList.toggle('hideLocations', toggled);
-		config.hideGlobalMessageLocations = toggled;
-		updateConfig(config);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('mentionFilterButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = this.classList.contains('toggled');
-		const messages = document.getElementById('messages');
-		if (toggled) saveScrollPosition();
-		document.getElementById('messages').classList.toggle('mentionsOnly', toggled);
-		config.filterMentions = toggled;
-		updateConfig(config);
-		if (toggled) messages.scrollTop = messages.scrollHeight;
-		else messages.scrollTop = savedChatScrollTop;
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('messageTimestampsButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = this.classList.contains('toggled');
-		document.getElementById('messages').classList.toggle('hideTimestamps', toggled);
-		config.hideMessageTimestamps = toggled;
-		updateConfig(config);
-	};
-
-// SIDE EFFECT: init uiThemesModal
-if (isBrowser) {
-	config.uiTheme = 'Default';
-
-	document.getElementById('uiThemeButton').onclick = () => openModal('uiThemesModal');
-
-	const uiThemes = document.querySelectorAll('#uiThemesModal .uiTheme');
-
-	for (const uiTheme of uiThemes) uiTheme.onclick = onSelectUiTheme;
+	reconnectCooldownTimer = setTimeout(() => {
+		reconnectCooldownTimer = null;
+		if (!reconnectButton.classList.contains('active')) reconnectButton.classList.remove('disabled');
+	}, 5000);
 }
 
-// SIDE EFFECT
-if (isBrowser)
-	document.querySelector('.fontStyle').onchange = function () {
-		setFontStyle(parseInt(this.value));
-	};
+/** Bound to `#reconnectButton` in `<ChatboxContainer />`; retries an in-progress connection. */
+export function onReconnectDblClick(ev) {
+	if (reconnectCooldownTimer || connStatus != 2) return;
+	reconnect(ev.currentTarget);
+}
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('clearChatButton').onclick = function () {
-		const chatbox = document.getElementById('chatbox');
-		const messagesElement = document.getElementById('messages');
-		const mapFiltered = chatbox.classList.contains('mapChat');
-		const globalFiltered = chatbox.classList.contains('globalChat');
-		const partyFiltered = chatbox.classList.contains('partyChat');
-		const idGlobalMessages = messagesElement.querySelectorAll(
-			'.messageContainer.global[data-msg-id]'
+/** Bound to `#reconnectButton` in `<ChatboxContainer />`; starts a fresh connection. */
+export function onReconnectClick(ev) {
+	if (reconnectCooldownTimer || connStatus == 2) return;
+	closeSessionWs();
+	reconnect(ev.currentTarget);
+}
+
+/** Bound to `#toggleNextLocationButton` in `<ChatboxContainer />`. */
+export function onToggleNextLocation() {
+	document.getElementById('nextLocationContainer').classList.toggle('hideContents');
+}
+
+/** Bound to `#chatButton` in `+page.svelte`. */
+export function onToggleChat(ev) {
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+	document.getElementById('layout').classList.toggle('hideChat');
+	onResize();
+	config.disableChat = toggled;
+	updateConfig(config);
+}
+
+/** Bound to `#explorerButton` in `+page.svelte` (Yume 2kki only). */
+export function onToggleExplorer(ev) {
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+	document.getElementById('layout').classList.toggle('explorer');
+	onResize();
+	config.explorer = toggled;
+	updateConfig(config);
+}
+
+/** Bound to `#globalMessageButton` in `<ChatboxContainer />`. */
+export function onToggleGlobalMessage(ev) {
+	const chatInput = document.getElementById('chatInput');
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+
+	// Only let globe change message destination if all chat is actually
+	// selected, otherwise this only updates the visuals of the button,
+	// since this function is over-used by the config loader for that.
+	const active = document.getElementById('chatTabAll').classList.contains('active');
+	if (active) {
+		if (toggled) chatInput.dataset.global = true;
+		else delete chatInput.dataset.global;
+	}
+
+	chatInput.disabled = toggled && document.getElementById('chatInputContainer').classList.contains('globalCooldown');
+	config.globalMessage = toggled;
+	updateConfig(config);
+}
+
+/** Bound to `#globalMessageLocationsButton` in `<ChatboxContainer />`. */
+export function onToggleGlobalMessageLocations(ev) {
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+	document.getElementById('messages').classList.toggle('hideLocations', toggled);
+	config.hideGlobalMessageLocations = toggled;
+	updateConfig(config);
+}
+
+/** Bound to `#mentionFilterButton` in `<ChatboxContainer />`. */
+export function onToggleMentionFilter(ev) {
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+	const messages = document.getElementById('messages');
+	if (toggled) saveScrollPosition();
+	messages.classList.toggle('mentionsOnly', toggled);
+	config.filterMentions = toggled;
+	updateConfig(config);
+	if (toggled) messages.scrollTop = messages.scrollHeight;
+	else messages.scrollTop = savedChatScrollTop;
+}
+
+/** Bound to `#messageTimestampsButton` in `<ChatboxContainer />`. */
+export function onToggleMessageTimestamps(ev) {
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+	document.getElementById('messages').classList.toggle('hideTimestamps', toggled);
+	config.hideMessageTimestamps = toggled;
+	updateConfig(config);
+}
+
+/** Bound to `#uiThemeButton` in `+page.svelte`. */
+export function openUiThemesModal() {
+	openModal('uiThemesModal');
+}
+
+/**
+ * Delegated from the theme list in `<UiThemesModal />` — the themes are populated at runtime,
+ * so each one can't be bound up front.
+ */
+export function onClickUiThemeList(e: MouseEvent) {
+	const uiTheme = (e.target as HTMLElement)?.closest('.uiTheme');
+	if (uiTheme) onSelectUiTheme(e);
+}
+
+/** Bound to `.fontStyle` in `<UiThemesModal />`. */
+export function onChangeFontStyle(ev) {
+	setFontStyle(parseInt(ev.currentTarget.value));
+}
+
+/** Bound to `#clearChatButton` in `<ChatboxContainer />`. */
+export function onClearChat() {
+	const chatbox = document.getElementById('chatbox');
+	const messagesElement = document.getElementById('messages');
+	const mapFiltered = chatbox.classList.contains('mapChat');
+	const globalFiltered = chatbox.classList.contains('globalChat');
+	const partyFiltered = chatbox.classList.contains('partyChat');
+	const idGlobalMessages = messagesElement.querySelectorAll('.messageContainer.global[data-msg-id]');
+	const idPartyMessages = messagesElement.querySelectorAll('.messageContainer.party[data-msg-id]');
+	const lastGlobalMessageId =
+		!mapFiltered && !partyFiltered && idGlobalMessages.length
+			? idGlobalMessages[idGlobalMessages.length - 1].dataset.msgId
+			: null;
+	const lastPartyMessageId =
+		!mapFiltered && !globalFiltered && idPartyMessages.length
+			? idPartyMessages[idPartyMessages.length - 1].dataset.msgId
+			: null;
+	if (mapFiltered || globalFiltered || partyFiltered) {
+		const messages = messagesElement.querySelectorAll(
+			`.messageContainer${globalFiltered ? '.global' : partyFiltered ? '.party' : ':not(.global):not(.party)'}`
 		);
-		const idPartyMessages = messagesElement.querySelectorAll(
-			'.messageContainer.party[data-msg-id]'
-		);
-		const lastGlobalMessageId =
-			!mapFiltered && !partyFiltered && idGlobalMessages.length
-				? idGlobalMessages[idGlobalMessages.length - 1].dataset.msgId
-				: null;
-		const lastPartyMessageId =
-			!mapFiltered && !globalFiltered && idPartyMessages.length
-				? idPartyMessages[idPartyMessages.length - 1].dataset.msgId
-				: null;
-		if (mapFiltered || globalFiltered || partyFiltered) {
-			const messages = messagesElement.querySelectorAll(
-				`.messageContainer${globalFiltered ? '.global' : partyFiltered ? '.party' : ':not(.global):not(.party)'}`
-			);
-			for (let message of messages) message.remove();
-		} else {
-			messagesElement.innerHTML = '';
+		for (let message of messages) message.remove();
+	} else {
+		messagesElement.innerHTML = '';
 
-			const unreadChatTab = document.querySelector('.chatTab.unread');
-			if (unreadChatTab) unreadChatTab.classList.remove('unread');
-		}
+		const unreadChatTab = document.querySelector('.chatTab.unread');
+		if (unreadChatTab) unreadChatTab.classList.remove('unread');
+	}
 
-		if (lastGlobalMessageId || lastPartyMessageId) {
-			// Sync last message ID so subsequent reconnects don't repopulate cleared chat history
-			apiFetch(
-				`clearchathistory?lastGlobalMsgId=${lastGlobalMessageId || ''}&lastPartyMsgId=${lastPartyMessageId || ''}`
-			)
-				.then((response) => {
-					if (!response.ok) console.error(response.statusText);
-					return response.text();
-				})
-				.catch((err) => console.error(err));
-		}
-	};
+	if (lastGlobalMessageId || lastPartyMessageId) {
+		// Sync last message ID so subsequent reconnects don't repopulate cleared chat history
+		apiFetch(
+			`clearchathistory?lastGlobalMsgId=${lastGlobalMessageId || ''}&lastPartyMsgId=${lastPartyMessageId || ''}`
+		)
+			.then((response) => {
+				if (!response.ok) console.error(response.statusText);
+				return response.text();
+			})
+			.catch((err) => console.error(err));
+	}
+}
 
-// SIDE EFFECT
-if (isBrowser) document.getElementById('settingsButton').onclick = () => openModal('settingsModal');
+/** Bound to `#settingsButton` in `+page.svelte`. */
+export function openSettingsModal() {
+	openModal('settingsModal');
+}
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('muteButton').onclick = function () {
-		if (easyrpgPlayer.initialized) easyrpgPlayer.api.toggleMute();
-	};
+/** Bound to `#muteButton` in `+page.svelte`. */
+export function onToggleMute() {
+	if (easyrpgPlayer.initialized) easyrpgPlayer.api.toggleMute();
+}
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('soundVolume').oninput = function () {
-		setSoundVolume(parseInt(this.value), true);
-	};
+/** Bound to `#soundVolume` in `<SettingsModal />`. */
+export function onInputSoundVolume(ev) {
+	setSoundVolume(parseInt(ev.currentTarget.value), true);
+}
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('soundVolume').onchange = function () {
-		setSoundVolume(parseInt(this.value));
-	};
+/** Bound to `#soundVolume` in `<SettingsModal />`. */
+export function onChangeSoundVolume(ev) {
+	setSoundVolume(parseInt(ev.currentTarget.value));
+}
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('musicVolume').oninput = function () {
-		setMusicVolume(parseInt(this.value), true);
-	};
+/** Bound to `#musicVolume` in `<SettingsModal />`. */
+export function onInputMusicVolume(ev) {
+	setMusicVolume(parseInt(ev.currentTarget.value), true);
+}
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('musicVolume').onchange = function () {
-		setMusicVolume(parseInt(this.value));
-	};
+/** Bound to `#musicVolume` in `<SettingsModal />`. */
+export function onChangeMusicVolume(ev) {
+	setMusicVolume(parseInt(ev.currentTarget.value));
+}
 
-// SIDE EFFECT
-if (isBrowser) {
-	const langSelect = document.getElementById('lang');
-	let lastAppliedLang = langSelect.value;
+let lastAppliedLang;
 
-	const checkLang = () => {
+/** Bound to `#lang` in `<SettingsModal />`; also polled while fullscreen. */
+export const checkLang = () => {
+	const langSelect = document.getElementById('lang') as HTMLSelectElement | null;
+	if (!langSelect) return;
+	lastAppliedLang ??= langSelect.value;
+	{
 		let value = null;
 		if (langSelect.selectedIndex >= 0 && langSelect.selectedIndex < langSelect.options.length) {
 			const option = langSelect.options[langSelect.selectedIndex];
@@ -1257,22 +1147,20 @@ if (isBrowser) {
 				updateCanvasFullscreenSize();
 			}
 		}
-	};
+	}
+};
 
-	langSelect.addEventListener('change', checkLang);
-}
+let lastAppliedNametagMode = 1;
 
-const nametagModeSelect = isBrowser && document.getElementById('nametagMode');
-let lastAppliedNametagMode = nametagModeSelect ? parseInt(nametagModeSelect.value, 10) : 1;
-
-const checkNametagMode = () => {
+/** Bound to `#nametagMode` in `<SettingsModal />`; also polled while fullscreen. */
+export const checkNametagMode = () => {
 	if (!easyrpgPlayer.initialized) return;
 
+	const nametagModeSelect = document.getElementById('nametagMode') as HTMLSelectElement | null;
+	if (!nametagModeSelect) return;
+
 	let value = null;
-	if (
-		nametagModeSelect.selectedIndex >= 0 &&
-		nametagModeSelect.selectedIndex < nametagModeSelect.options.length
-	) {
+	if (nametagModeSelect.selectedIndex >= 0 && nametagModeSelect.selectedIndex < nametagModeSelect.options.length) {
 		const option = nametagModeSelect.options[nametagModeSelect.selectedIndex];
 		if (option && option.value) {
 			value = parseInt(option.value, 10);
@@ -1288,16 +1176,6 @@ const checkNametagMode = () => {
 		easyrpgPlayer.api.setNametagMode(value);
 	}
 };
-
-// SIDE EFFECT
-// Monitor fullscreen changes
-if (isBrowser)
-	document.addEventListener('fullscreenchange', () => {
-		updateFullscreenPolling();
-	});
-
-// SIDE EFFECT
-if (nametagModeSelect) nametagModeSelect.addEventListener('change', checkNametagMode);
 
 // Chromium fullscreen workaround
 let fullscreenCheckInterval = null;
@@ -1333,21 +1211,21 @@ const stopFullscreenPolling = () => {
 	updateFullscreenPolling();
 };
 
-// SIDE EFFECT
-// Start polling if already in fullscreen and settings modal is open
-if (isBrowser) updateFullscreenPolling();
+/**
+ * Keeps the fullscreen select polling in sync. Bound to the document's `fullscreenchange` in
+ * `+page.svelte`, which also runs it on mount in case we start out fullscreen.
+ */
+export { updateFullscreenPolling };
 
-const wikiLinkModeSelect = isBrowser && document.getElementById('wikiLinkMode');
-let lastAppliedWikiLinkMode = wikiLinkModeSelect ? parseInt(wikiLinkModeSelect.value, 10) : 1;
+let lastAppliedWikiLinkMode = 1;
 
-const checkWikiLinkMode = () => {
+/** Bound to `#wikiLinkMode` in `<SettingsModal />`; also polled while fullscreen. */
+export const checkWikiLinkMode = () => {
+	const wikiLinkModeSelect = document.getElementById('wikiLinkMode') as HTMLSelectElement | null;
 	if (!wikiLinkModeSelect) return;
 
 	let value = null;
-	if (
-		wikiLinkModeSelect.selectedIndex >= 0 &&
-		wikiLinkModeSelect.selectedIndex < wikiLinkModeSelect.options.length
-	) {
+	if (wikiLinkModeSelect.selectedIndex >= 0 && wikiLinkModeSelect.selectedIndex < wikiLinkModeSelect.options.length) {
 		const option = wikiLinkModeSelect.options[wikiLinkModeSelect.selectedIndex];
 		if (option && option.value) {
 			value = parseInt(option.value, 10);
@@ -1364,20 +1242,15 @@ const checkWikiLinkMode = () => {
 	}
 };
 
-// SIDE EFFECT
-if (wikiLinkModeSelect) {
-	wikiLinkModeSelect.addEventListener('change', checkWikiLinkMode);
-}
+let lastAppliedSaveReminder = 60;
 
-const saveReminderSelect = isBrowser && document.getElementById('saveReminder');
-let lastAppliedSaveReminder = saveReminderSelect ? parseInt(saveReminderSelect.value, 10) : 60;
+/** Bound to `#saveReminder` in `<SettingsModal />`; also polled while fullscreen. */
+export const checkSaveReminder = () => {
+	const saveReminderSelect = document.getElementById('saveReminder') as HTMLSelectElement | null;
+	if (!saveReminderSelect) return;
 
-const checkSaveReminder = () => {
 	let value = null;
-	if (
-		saveReminderSelect.selectedIndex >= 0 &&
-		saveReminderSelect.selectedIndex < saveReminderSelect.options.length
-	) {
+	if (saveReminderSelect.selectedIndex >= 0 && saveReminderSelect.selectedIndex < saveReminderSelect.options.length) {
 		const option = saveReminderSelect.options[saveReminderSelect.selectedIndex];
 		if (option && option.value) {
 			value = parseInt(option.value, 10);
@@ -1394,426 +1267,108 @@ const checkSaveReminder = () => {
 	}
 };
 
-// SIDE EFFECT
-saveReminderSelect.addEventListener?.('change', checkSaveReminder);
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('playerSoundsButton').onclick = () => {
-		if (easyrpgPlayer.initialized) easyrpgPlayer.api.togglePlayerSounds();
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('badgeHintsButton').onclick = function () {
-		const enabled = !this.classList.toggle('toggled');
-		globalConfig.badgeHints = enabled;
-		for (const elm of document.getElementsByClassName('badgeHintRow'))
-			elm.classList.toggle('hidden', !enabled);
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('playBadgeHintSoundButton').onclick = function () {
-		this.classList.toggle('toggled');
-		globalConfig.playBadgeHintSound = !this.classList.contains('toggled');
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('hideLocationButton').onclick = function () {
-		config.hideLocation = !config.hideLocation;
-		this.classList.toggle('toggled', config.hideLocation);
-		updateConfig(config);
-
-		if (sessionWs && config.singleplayerMode)
-			sendSessionCommand('hl', [config.hideLocation ? 1 : 0]);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	if (gameId === '2kki') {
-		document.getElementById('enableExplorerButton').onclick = function () {
-			this.classList.toggle('toggled');
-			const toggled = this.classList.contains('toggled');
-			[
-				document.getElementById('explorerButton'),
-				document.getElementById('explorerContainer')
-			].forEach((el) => {
-				if (!el) return;
-				el.style.display = toggled ? null : 'none';
-			});
-			if (!toggled && config.explorer) document.getElementById('explorerButton').click();
-			onResize();
-			config.enableExplorer = toggled;
-			updateConfig(config);
-		};
-
-		document.getElementById('toggleQuestionablePreloadsButton').onclick = function () {
-			this.classList.toggle('toggled');
-			globalConfig.questionablePreloads = this.classList.contains('toggled');
-			updateConfig(globalConfig, true);
-		};
-	}
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('immersionModeButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = this.classList.contains('toggled');
-		if (toggled) {
-			document.querySelector('.chatboxTab[data-tab-section="chat"]').click();
-			document.getElementById('chatTabMap').click();
-		}
-		document.getElementById('layout').classList.toggle('immersionMode', toggled);
-		if (toggled && config.explorer) document.getElementById('explorerButton').click();
-		else onResize();
-		config.immersionMode = toggled;
-		updateConfig(config);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('mobileControlsButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = !this.classList.contains('toggled');
-		globalConfig.mobileControls = toggled;
-		for (const elem of document.querySelectorAll('#dpad, #apad'))
-			elem.classList.toggle('hidden', !toggled);
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('mobileControl').oninput = function () {
-		setMobileControlType(this.value);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('locationDisplayButton').onclick = function () {
-		this.classList.toggle('toggled');
-		globalConfig.locationDisplay = this.classList.contains('toggled');
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('toggleRankingsButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = this.classList.contains('toggled');
-		document.getElementById('rankingsButton').classList.toggle('hidden', toggled);
-		document.getElementById('fsRankingsButton')?.classList.toggle('hidden', toggled);
-		globalConfig.hideRankings = toggled;
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('toggleSchedulesButton').onclick = function () {
-		const toggled = this.classList.toggle('toggled');
-		document.getElementById('schedulesButton').classList.toggle('hidden', toggled);
-		document.getElementById('fsSchedulesButton')?.classList.toggle('hidden', toggled);
-		globalConfig.hideSchedules = toggled;
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('hideUnnamedPlayersButton').onclick = function () {
-		const toggled = this.classList.toggle('toggled');
-		config.hideUnnamedPlayers = toggled;
-		updateConfig(config);
-		if (sessionWs && toggled) sendSessionCommand('hunp', [1]);
-		else if (sessionWs && !toggled) sendSessionCommand('hunp', [0]);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('togglePreloadsButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = this.classList.contains('toggled');
-		for (let row of document.getElementsByClassName('preloadRow'))
-			row.classList.toggle('hidden', !toggled);
-		globalConfig.preloads = toggled;
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('toggleUnicodeFont').onclick = function () {
-		const toggled = this.classList.toggle('toggled');
-		globalConfig.unicodeFont = toggled;
-		setExtendedLatinFonts(globalConfig.lang);
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('gameChatButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = this.classList.contains('toggled');
-		globalConfig.gameChat = toggled;
-		document.getElementById('gameChatContainer').classList.toggle('hidden', !toggled);
-		const gameChatRows = document.getElementsByClassName('gameChatRow');
-		for (let row of gameChatRows) row.classList.toggle('hidden', !toggled);
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('gameChatGlobalButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = this.classList.contains('toggled');
-		globalConfig.gameChatGlobal = toggled;
-		if (!toggled && gameChatModeIndex === 1) cycleGameChatMode();
-		updateGameChatMessageVisibility();
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('gameChatPartyButton').onclick = function () {
-		this.classList.toggle('toggled');
-		const toggled = this.classList.contains('toggled');
-		globalConfig.gameChatParty = toggled;
-		if (!toggled && gameChatModeIndex === 2) cycleGameChatMode();
-		updateGameChatMessageVisibility();
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('tabToChatButton').onclick = function () {
-		this.classList.toggle('toggled');
-		globalConfig.tabToChat = !this.classList.contains('toggled');
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('playMentionSoundButton').onclick = function () {
-		this.classList.toggle('toggled');
-		globalConfig.playMentionSound = !this.classList.contains('toggled');
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('blurScreenshotEmbedsButton').onclick = function () {
-		globalConfig.blurScreenshotEmbeds = this.classList.toggle('toggled');
-		updateConfig(globalConfig, true);
-	};
-
-// SIDE EFFECT
-const mapChatHistoryLimitElement = isBrowser && document.getElementById('mapChatHistoryLimit');
-if (mapChatHistoryLimitElement) {
-	mapChatHistoryLimitElement.onchange = function () {
-		setMapChatHistoryLimit(this.value);
-	};
+/** Bound to `#playerSoundsButton` in `<SettingsModal />`. */
+export function onTogglePlayerSounds() {
+	if (easyrpgPlayer.initialized) easyrpgPlayer.api.togglePlayerSounds();
 }
 
-// SIDE EFFECT
-const globalChatHistoryLimitElement =
-	isBrowser && document.getElementById('globalChatHistoryLimit');
-if (globalChatHistoryLimitElement) {
-	globalChatHistoryLimitElement.onchange = function () {
-		setGlobalChatHistoryLimit(this.value);
-	};
+/** Bound to `#badgeHintsButton` in `<SettingsModal />`. */
+export function onToggleBadgeHints(ev) {
+	const enabled = !ev.currentTarget.classList.toggle('toggled');
+	globalConfig.badgeHints = enabled;
+	for (const elm of document.getElementsByClassName('badgeHintRow')) elm.classList.toggle('hidden', !enabled);
+	updateConfig(globalConfig, true);
 }
 
-// SIDE EFFECT
-const partyChatHistoryLimitElement = isBrowser && document.getElementById('partyChatHistoryLimit');
-if (partyChatHistoryLimitElement) {
-	partyChatHistoryLimitElement.onchange = function () {
-		setPartyChatHistoryLimit(this.value);
-	};
+/** Bound to `#playBadgeHintSoundButton` in `<SettingsModal />`. */
+export function onTogglePlayBadgeHintSound(ev) {
+	globalConfig.playBadgeHintSound = !ev.currentTarget.classList.toggle('toggled');
+	updateConfig(globalConfig, true);
 }
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('blocklistButton').onclick = function () {
-		updateBlocklist(true);
-		openModal('blocklistModal', null, 'settingsModal');
-	};
+/** Bound to `#hideLocationButton` in `+page.svelte`. */
+export function onToggleHideLocation(ev) {
+	config.hideLocation = !config.hideLocation;
+	ev.currentTarget.classList.toggle('toggled', config.hideLocation);
+	updateConfig(config);
 
-// SIDE EFFECT
-// initAccountControls();
-// initSaveSyncControls();
-// initLocationControls();
-// initBadgeControls();
-// initSaveDataControls();
-// initPartyControls();
-// initScreenshotControls();
-// initEventControls();
-// initRankingControls();
-// initReportControls();
+	if (sessionWs && config.singleplayerMode) sendSessionCommand('hl', [config.hideLocation ? 1 : 0]);
+}
 
-// SIDE EFFECT
-if (isBrowser) document.getElementById('nexusButton').onclick = () => (window.location = '../');
-
-// SIDE EFFECT
-if (isBrowser)
-	if (gameId === '2kki') {
-		document.getElementById('2kkiVersion').innerText =
-			document.querySelector('meta[name="2kkiVersion"]').content || '?';
-		// Yume 2kki Explorer doesn't support mobile
-		if (hasTouchscreen) document.getElementById('explorerControls').remove();
-
-		document.getElementById('explorerUndiscoveredLocationsLink').onclick = async () => {
-			const modal = document.getElementById('explorerUndiscoveredLocationsModal');
-			const undiscoveredLocations = document.getElementById('explorerUndiscoveredLocations');
-			undiscoveredLocations.innerHTML = '';
-			openModal(modal.id);
-			addLoader(modal);
-
-			try {
-				const respNames = await apiFetch('explorerlocations');
-				if (!respNames.ok) throw new Error(respNames.statusText);
-				const names = await respNames.json();
-				removeLoader(modal);
-
-				if (!Array.isArray(names) || names.length === 0) {
-					undiscoveredLocations.classList.add('hidden');
-					document
-						.getElementById('explorerUndiscoveredLocationsEmptyLabel')
-						.classList.remove('hidden');
-					return;
-				}
-				undiscoveredLocations.classList.remove('hidden');
-				document.getElementById('explorerUndiscoveredLocationsEmptyLabel').classList.add('hidden');
-
-				const mapLocs = gameLocationsMap[gameId] || {};
-				const localizedLocs = gameLocalizedLocationsMap[gameId] || {};
-
-				if (['ja', 'ko', 'zh'].includes(globalConfig.lang)) {
-					const missing = names.filter((en) => !localizedLocs.hasOwnProperty(en));
-					if (missing.length > 0) {
-						const respAll = await apiFetch('gamelocations');
-						if (respAll.ok) {
-							const allLocs = await respAll.json();
-							allLocs.forEach((loc) => {
-								if (missing.includes(loc.title)) {
-									mapLocs[loc.title] = { title: loc.title, urlTitle: loc.title };
-									const jpName = loc.originalTitle || loc.title;
-									localizedLocs[loc.title] = { title: jpName, urlTitle: jpName };
-								}
-							});
-						} else {
-							console.error('gamelocations API error:', respAll.statusText);
-						}
-					}
-				}
-
-				const sorted = names
-					.slice()
-					.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-
-				const itemsHtml = sorted
-					.map((enName) => {
-						const fallback = mapLocs[enName] || { title: enName, urlTitle: enName };
-						const localized = localizedLocs[enName] || fallback;
-						return `<li>${getLocalizedLocation(gameId, localized, fallback, true)}</li>`;
-					})
-					.join('');
-
-				undiscoveredLocations.innerHTML = itemsHtml;
-			} catch (err) {
-				console.error(err);
-				removeLoader(modal);
-				closeModal(modal);
-			}
-		};
-	}
-
-// SIDE EFFECT
-if (isBrowser)
-	Array.from(document.querySelectorAll('.playerCountLabel')).forEach((pc) => {
-		pc.onclick = function () {
-			if (config.privateMode) return;
-			const playerCountLabels = document.querySelectorAll('.playerCountLabel');
-			for (let pcl of playerCountLabels) pcl.classList.toggle('hidden');
-			onUpdateChatboxInfo();
-		};
+/** Bound to `#enableExplorerButton` in `<SettingsModal />` (Yume 2kki only). */
+export function onToggleEnableExplorer(ev) {
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+	[document.getElementById('explorerButton'), document.getElementById('explorerContainer')].forEach((el) => {
+		if (!el) return;
+		el.style.display = toggled ? null : 'none';
 	});
-
-let activeChatboxTabSection = 'chat';
-
-function onClickChatboxTab() {
-	if (this.dataset.tabSection !== activeChatboxTabSection) {
-		activeChatboxTabSection = this.dataset.tabSection;
-		if (activeChatboxTabSection === 'chat')
-			document.getElementById('unreadMessageCountContainer').classList.add('hidden');
-		else if (activeChatboxTabSection === 'players')
-			document.getElementById('incomingFriendRequestCountContainer').classList.add('hidden');
-		else if (activeChatboxTabSection === 'parties') {
-			updatePartyList();
-		}
-		for (let tab of document.getElementsByClassName('chatboxTab'))
-			tab.classList.toggle('active', tab === this);
-		for (let tabSection of document.getElementsByClassName('chatboxTabSection'))
-			tabSection.classList.toggle('hidden', tabSection.id !== activeChatboxTabSection);
-	}
+	if (!toggled && config.explorer) document.getElementById('explorerButton').click();
+	onResize();
+	config.enableExplorer = toggled;
+	updateConfig(config);
 }
 
-if (isBrowser)
-	// SIDE EFFECT
-	for (let tab of document.getElementsByClassName('chatboxTab')) tab.onclick = onClickChatboxTab;
-
-function setChatTab(tab, saveConfig) {
-	const chatTabs = document.getElementById('chatTabs');
-	const tabIndex = Array.prototype.indexOf.call(chatTabs.children, tab);
-	const activeTabIndex = Array.prototype.indexOf.call(
-		chatTabs.children,
-		chatTabs.querySelector('.active')
-	);
-	if (tabIndex !== activeTabIndex) {
-		const chatbox = document.getElementById('chatbox');
-		const messages = document.getElementById('messages');
-		const chatInput = document.getElementById('chatInput');
-		for (let chatTab of document.getElementsByClassName('chatTab')) {
-			const active = chatTab === tab;
-			chatTab.classList.toggle('active', active);
-			if (active || !tabIndex) chatTab.classList.remove('unread');
-		}
-		const global = (!tabIndex && config.globalMessage) || tabIndex === 2;
-		if (global) chatInput.dataset.global = true;
-		else delete chatInput.dataset.global;
-		chatInput.disabled =
-			global && document.getElementById('chatInputContainer').classList.contains('globalCooldown');
-		chatbox.classList.toggle('allChat', !tabIndex);
-		chatbox.classList.toggle('mapChat', tabIndex === 1);
-		chatbox.classList.toggle('globalChat', tabIndex === 2);
-		chatbox.classList.toggle('partyChat', tabIndex === 3);
-		messages.classList.toggle(
-			'fullBg',
-			tabIndex === 3 && gameFullBgUiThemes.indexOf(joinedPartyUiTheme) > -1
-		);
-		messages.scrollTop = messages.scrollHeight;
-
-		if (saveConfig) {
-			config.chatTabIndex = tabIndex;
-			updateConfig(config);
-		}
-	}
+/** Bound to `#toggleQuestionablePreloadsButton` in `<SettingsModal />` (Yume 2kki only). */
+export function onToggleQuestionablePreloads(ev) {
+	globalConfig.questionablePreloads = ev.currentTarget.classList.toggle('toggled');
+	updateConfig(globalConfig, true);
 }
 
-// SIDE EFFECT
-if (isBrowser)
-	for (let chatTab of document.getElementsByClassName('chatTab'))
-		chatTab.onclick = function () {
-			setChatTab(this, true);
-		};
+/** Bound to `#immersionModeButton` in `<SettingsModal />`. */
+export function onToggleImmersionMode(ev) {
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+	if (toggled) {
+		document.querySelector('.chatboxTab[data-tab-section="chat"]').click();
+		document.getElementById('chatTabMap').click();
+	}
+	document.getElementById('layout').classList.toggle('immersionMode', toggled);
+	if (toggled && config.explorer) document.getElementById('explorerButton').click();
+	else onResize();
+	config.immersionMode = toggled;
+	updateConfig(config);
+}
+
+/** Bound to `#mobileControlsButton` in `<SettingsModal />`. */
+export function onToggleMobileControls(ev) {
+	const toggled = !ev.currentTarget.classList.toggle('toggled');
+	globalConfig.mobileControls = toggled;
+	for (const elem of document.querySelectorAll('#dpad, #apad')) elem.classList.toggle('hidden', !toggled);
+	updateConfig(globalConfig, true);
+}
+
+/** Bound to `#mobileControl` in `<SettingsModal />`. */
+export function onInputMobileControl(ev) {
+	setMobileControlType(ev.currentTarget.value);
+}
+
+/** Bound to `#locationDisplayButton` in `<SettingsModal />`. */
+export function onToggleLocationDisplay(ev) {
+	globalConfig.locationDisplay = ev.currentTarget.classList.toggle('toggled');
+	updateConfig(globalConfig, true);
+}
+
+/** Bound to `#toggleRankingsButton` in `<SettingsModal />`. */
+export function onToggleRankings(ev) {
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+	document.getElementById('rankingsButton').classList.toggle('hidden', toggled);
+	document.getElementById('fsRankingsButton')?.classList.toggle('hidden', toggled);
+	globalConfig.hideRankings = toggled;
+	updateConfig(globalConfig, true);
+}
+
+/** Bound to `#toggleSchedulesButton` in `<SettingsModal />`. */
+export function onToggleSchedules(ev) {
+	const toggled = ev.currentTarget.classList.toggle('toggled');
+	document.getElementById('schedulesButton').classList.toggle('hidden', toggled);
+	document.getElementById('fsSchedulesButton')?.classList.toggle('hidden', toggled);
+	globalConfig.hideSchedules = toggled;
+	updateConfig(globalConfig, true);
+}
 
 export function setPlayersTab(tab, saveConfig) {
 	const playersTabs = document.getElementById('playersTabs');
 	const tabIndex = Array.prototype.indexOf.call(playersTabs.children, tab);
-	const activeTabIndex = Array.prototype.indexOf.call(
-		playersTabs.children,
-		playersTabs.querySelector('.active')
-	);
+	const activeTabIndex = Array.prototype.indexOf.call(playersTabs.children, playersTabs.querySelector('.active'));
 	if (tabIndex !== activeTabIndex) {
 		for (let playersTab of document.getElementsByClassName('playersTab')) {
 			const active = playersTab === tab;
@@ -1825,10 +1380,7 @@ export function setPlayersTab(tab, saveConfig) {
 		document.getElementById('chatbox').classList.toggle('partyPlayers', tabIndex === 2);
 		document
 			.getElementById('partyPlayerList')
-			.classList.toggle(
-				'fullBg',
-				tabIndex === 2 && gameFullBgUiThemes.indexOf(joinedPartyUiTheme) > -1
-			);
+			.classList.toggle('fullBg', tabIndex === 2 && gameFullBgUiThemes.indexOf(joinedPartyUiTheme) > -1);
 
 		if (saveConfig) {
 			config.playersTabIndex = tabIndex;
@@ -1838,15 +1390,6 @@ export function setPlayersTab(tab, saveConfig) {
 		if (tabIndex === 2 && joinedPartyId) updateJoinedParty();
 	}
 }
-
-// SIDE EFFECT
-if (isBrowser)
-	for (let tab of document.getElementsByClassName('playersTab'))
-		tab.onclick = function () {
-			setPlayersTab(this, true);
-		};
-
-let ignoreSizeChanged = false;
 
 export function onResize() {
 	const content = document.getElementById('content');
@@ -1859,10 +1402,7 @@ export function onResize() {
 
 	onUpdateChatboxInfo();
 
-	document.documentElement.style.setProperty(
-		'--content-height',
-		`${document.getElementById('bottom').offsetTop}px`
-	);
+	document.documentElement.style.setProperty('--content-height', `${document.getElementById('bottom').offsetTop}px`);
 
 	if (window.innerWidth < window.innerHeight) {
 		content.classList.toggle('downscale', downscale);
@@ -1886,57 +1426,16 @@ export function onResize() {
 		}
 	}
 
-	if (
-		gameId === '2kki' &&
-		content.classList.contains('loggedIn') &&
-		layout.classList.contains('explorer')
-	) {
+	if (gameId === '2kki' && content.classList.contains('loggedIn') && layout.classList.contains('explorer')) {
 		const explorerContainer = document.getElementById('explorerContainer');
 		const explorerParent =
 			window.innerWidth >= 1051 && window.innerHeight >= 1000 && !document.fullscreenElement
 				? document.getElementById('mainContainer')
 				: document.getElementById('chatboxContainer');
-		if (explorerContainer.parentElement !== explorerParent)
-			explorerParent.appendChild(explorerContainer);
+		if (explorerContainer.parentElement !== explorerParent) explorerParent.appendChild(explorerContainer);
 	}
 
 	updateCanvasFullscreenSize();
-}
-
-function updateCanvasOverlays() {
-	const contentElement = document.getElementById('content');
-	const canvasElement = document.getElementById('canvas');
-	const gameChatContainer = document.getElementById('gameChatContainer');
-	const locationDisplayContainer = document.getElementById('locationDisplayContainer');
-
-	if (document.fullscreenElement) {
-		const canvasRect = canvas.getBoundingClientRect();
-		gameChatContainer.style.top = locationDisplayContainer.style.top = `${canvasRect.y}px`;
-		gameChatContainer.style.left = locationDisplayContainer.style.left = `${canvasRect.x}px`;
-	} else {
-		gameChatContainer.style.top =
-			locationDisplayContainer.style.top = `${canvasElement.offsetTop - contentElement.scrollTop}px`;
-		gameChatContainer.style.left =
-			locationDisplayContainer.style.left = `${canvasElement.offsetLeft}px`;
-	}
-
-	let mapChatWidth = canvasElement.offsetWidth;
-	let mapChatHeight = canvasElement.offsetHeight / 2;
-
-	if (!document.fullscreenElement && contentElement.classList.contains('downscale')) {
-		if (contentElement.classList.contains('downscale2')) {
-			mapChatWidth *= 2;
-			mapChatHeight *= 2;
-		} else {
-			mapChatWidth *= 1 / 0.75;
-			mapChatHeight *= 1 / 0.75;
-		}
-	}
-
-	locationDisplayContainer.style.maxWidth = `${canvasElement.offsetWidth}px`;
-	gameChatContainer.style.width = `${mapChatWidth}px`;
-	gameChatContainer.style.height = `${mapChatHeight}px`;
-	gameChatContainer.style.marginTop = `calc(${canvasElement.offsetHeight / 2}px * var(--canvas-scale))`;
 }
 
 export function updateYnomojiContainerPos(isScrollUpdate, chatInput) {
@@ -1999,8 +1498,7 @@ export function onUpdateChatboxInfo() {
 		tab.style.backgroundPositionY = posy;
 	}
 
-	messages.style.backgroundPositionY = partyPlayerList.style.backgroundPositionY =
-		backgroundPositionY;
+	messages.style.backgroundPositionY = partyPlayerList.style.backgroundPositionY = backgroundPositionY;
 	if (!layout.classList.contains('immersionMode') && !document.fullscreenElement && hasFlexWrap) {
 		const offsetLeft = `${lastTabOffset - 24}px`;
 		chatboxInfo.style.marginInlineStart = offsetLeft;
@@ -2009,14 +1507,581 @@ export function onUpdateChatboxInfo() {
 	} else chatboxInfo.setAttribute('style', '');
 }
 
+export function onSelectUiTheme(e) {
+	const modalContainer = document.getElementById('modalContainer');
+	if (modalContainer.dataset.lastModalId?.endsWith('createPartyModal')) setPartyTheme(e.target.dataset.uiTheme);
+	else if (modalContainer.dataset.lastModalId?.endsWith('scheduleEditModal'))
+		setScheduleTheme(e.target.dataset.uiTheme);
+	else setUiTheme(e.target.dataset.uiTheme);
+	setModalUiTheme(null, e.target.dataset.uiTheme === 'auto' ? getSystemName() : e.target.dataset.uiTheme, true);
+}
+
+export function fetchAndInitLocations(lang, game) {
+	return new Promise((resolve) => {
+		fetchNewest(`locations/${game}/config.json`)
+			.then((response) => {
+				if (!response.ok) throw new Error(response.statusText);
+				return response.json();
+			})
+			.then((jsonResponse) => {
+				gameLocationUrlRoots[game] = jsonResponse.urlRoot;
+				gameLocalizedLocationUrlRoots[game] = gameLocationUrlRoots[game];
+				gameMapLocations[game] = jsonResponse.mapLocations || null;
+				if (gameMapLocations[game] && !Object.keys(gameMapLocations[game]).length)
+					gameMapLocations[game] = null;
+				if (gameMapLocations[game]) {
+					massageMapLocations(gameMapLocations[game], jsonResponse.locationUrlTitles || null);
+					if (lang === 'en') {
+						gameLocalizedMapLocations[game] = gameMapLocations[game];
+						initLocalizedLocations(game);
+					} else fetchAndInitLocalizedMapLocations(lang, game).then(resolve);
+				}
+				if (game === gameId) {
+					ignoredMapIds = jsonResponse.ignoredMapIds || [];
+					locationUrlRoot = gameLocationUrlRoots[game];
+					localizedLocationUrlRoot = gameLocalizedLocationUrlRoots[game];
+					mapLocations = gameMapLocations[game];
+					localizedMapLocations = gameLocalizedMapLocations[game];
+					yumeWikiSupported = locationUrlRoot === `https://yume.wiki/${ynoGameId}/`;
+				}
+				if (!gameMapLocations[game] || lang === 'en') resolve();
+			})
+			.catch((err) => {
+				gameLocalizedMapLocations[game] = null;
+				if (game === gameId) {
+					ignoredMapIds = [];
+					localizedMapLocations = null;
+				}
+				console.error(err);
+				resolve();
+			});
+	});
+}
+
+export function getLocalizedMapLocations(game, mapId, prevMapId, x, y, separator, forDisplay) {
+	const localizedLocations = gameLocalizedMapLocations[game]?.[mapId];
+	if (localizedLocations) {
+		// locations have the same type as localizedLocations
+		const locations = gameMapLocations[game][mapId];
+		if (localizedLocations.hasTitle())
+			// Text location
+			return getLocalizedLocation(game, localizedLocations, locations, false, forDisplay);
+		if (Array.isArray(localizedLocations))
+			// Multiple locations
+			return getMapLocationsFromArray(localizedLocations, x, y)
+				.map((l, i) =>
+					getLocalizedLocation(game, l, getMapLocationsFromArray(locations, x, y)[i], false, forDisplay)
+				)
+				.join(separator);
+		if (prevMapId in localizedLocations) {
+			// Previous map ID matches a key
+			if (Array.isArray(localizedLocations[prevMapId]))
+				return getMapLocationsFromArray(localizedLocations[prevMapId], x, y)
+					.map((l, i) =>
+						getLocalizedLocation(
+							game,
+							l,
+							getMapLocationsFromArray(locations[prevMapId], x, y)[i],
+							false,
+							forDisplay
+						)
+					)
+					.join(separator);
+			return getLocalizedLocation(game, localizedLocations[prevMapId], locations[prevMapId]);
+		}
+		if ('else' in localizedLocations) {
+			// Else case
+			if (localizedLocations.else.hasTitle())
+				return getLocalizedLocation(game, localizedLocations.else, locations.else, false, forDisplay);
+			return getMapLocationsFromArray(localizedLocations.else, x, y)
+				.map((l, i) =>
+					getLocalizedLocation(game, l, getMapLocationsFromArray(locations.else, x, y)[i], false, forDisplay)
+				)
+				.join(separator);
+		}
+	}
+
+	return localizedMessages.location.unknownLocation;
+}
+
+export function getLocalizedMapLocationsHtml(game, mapId, prevMapId: number | `0${number}`, x, y, separator) {
+	if (gameLocalizedMapLocations[game]?.hasOwnProperty(mapId)) {
+		const localizedLocations = gameLocalizedMapLocations[game][mapId];
+		const locations = gameMapLocations[game][mapId];
+		let locationsHtml;
+		if (localizedLocations.hasTitle())
+			// Text location
+			locationsHtml = getLocalizedLocation(game, localizedLocations, locations, true);
+		else if (Array.isArray(localizedLocations))
+			// Multiple locations
+			locationsHtml = getMapLocationsFromArray(localizedLocations, x, y)
+				.map((l, i) => getLocalizedLocation(game, l, getMapLocationsFromArray(locations, x, y)[i], true))
+				.join(separator);
+		else if (prevMapId in localizedLocations) {
+			// Previous map ID matches a key
+			if (Array.isArray(localizedLocations[prevMapId]))
+				locationsHtml = getMapLocationsFromArray(localizedLocations[prevMapId], x, y)
+					.map((l, i) =>
+						getLocalizedLocation(game, l, getMapLocationsFromArray(locations[prevMapId], x, y)[i], true)
+					)
+					.join(separator);
+			else locationsHtml = getLocalizedLocation(game, localizedLocations[prevMapId], locations[prevMapId], true);
+		} else if ('else' in localizedLocations) {
+			// Else case
+			if (localizedLocations.else.hasTitle())
+				locationsHtml = getLocalizedLocation(game, localizedLocations.else, locations.else, true);
+			else
+				locationsHtml = getMapLocationsFromArray(localizedLocations.else, x, y)
+					.map((l, i) =>
+						getLocalizedLocation(game, l, getMapLocationsFromArray(locations.else, x, y)[i], true)
+					)
+					.join(separator);
+		}
+
+		if (locationsHtml) return locationsHtml;
+	}
+
+	return getInfoLabel(getMassagedLabel(localizedMessages.location.unknownLocation));
+}
+
+export function getLocalizedLocation(game, location: MapTitle, locationEn: MapTitle, asHtml, forDisplay = false) {
+	let template = getMassagedLabel(localizedMessages[forDisplay ? 'locationDisplay' : 'location'].template);
+	let ret;
+	let locationValue;
+
+	if (asHtml) {
+		template = template.replace(/}([^{]+)/g, '}<span class="infoLabel">$1</span>');
+		if (gameLocalizedLocationUrlRoots[game] && location.urlTitle !== null)
+			locationValue = `<a href="${gameLocalizedLocationUrlRoots[game]}${location.urlTitle || location.title}" target="_blank" class="wikiLink">${location.title}</a>`;
+		else if (
+			gameLocationUrlRoots[game] &&
+			gameLocalizedLocationUrlRoots[game] !== null &&
+			locationEn.urlTitle !== null
+		)
+			locationValue = `<a href="${gameLocationUrlRoots[game]}${locationEn.urlTitle || locationEn.title}" target="_blank" class="wikiLink">${location.title}</a>`;
+		else locationValue = getInfoLabel(location.title);
+	} else locationValue = location.title;
+
+	ret = template.replace('{LOCATION}', locationValue);
+
+	if (template.indexOf('{LOCATION_EN}') > -1) {
+		let locationValueEn;
+		if (asHtml) {
+			if (gameLocationUrlRoots[game] && locationEn.urlTitle !== null)
+				locationValueEn = `<a href="${gameLocationUrlRoots[game]}${locationEn.urlTitle || locationEn.title}" target="_blank" class="wikiLink">${locationEn.title}</a>`;
+			else locationValueEn = getInfoLabel(locationEn.title);
+		} else locationValueEn = locationEn.title;
+
+		ret = locationValue !== locationValueEn ? ret.replace('{LOCATION_EN}', locationValueEn) : locationValue; // Just use location value alone if values match
+	}
+
+	return ret;
+}
+
+export function getMassagedLabel(label, isUI) {
+	if (label) label = label.replaceAll('\n', '<br>');
+	if (langLabelMassageFunctions.hasOwnProperty(globalConfig.lang) && label)
+		return langLabelMassageFunctions[globalConfig.lang](label, isUI);
+	return label;
+}
+
+export function getInfoLabel(label) {
+	return `<span class="infoLabel">${label}</span>`;
+}
+
+export function getOrQueryLocationColors(locationName) {
+	return new Promise((resolve, _reject) => {
+		if (Array.isArray(locationName) && locationName.length && locationName[0].hasTitle())
+			locationName = locationName[0].title;
+		else if (locationName?.hasTitle()) locationName = locationName.title;
+		else if (!locationName) {
+			resolve(['#FFFFFF', '#FFFFFF']);
+			return;
+		}
+		const colonIndex = locationName.indexOf(':');
+		if (colonIndex > -1) locationName = locationName.slice(0, colonIndex);
+		if (locationColorCache.hasOwnProperty(locationName)) {
+			resolve(locationColorCache[locationName]);
+			return;
+		}
+
+		if (gameId === '2kki') {
+			const url = `https://explorer.yume.wiki/getLocationColors?locationName=${locationName}`;
+			send2kkiApiRequest(url, (response) => {
+				let errCode = null;
+
+				if (response && !response.err_code)
+					cacheLocationColors(locationName, response.fgColor, response.bgColor);
+				else errCode = response?.err_code;
+
+				if (errCode) console.error({ error: response.error, errCode: errCode });
+
+				resolve([response?.fgColor, response?.bgColor]);
+			});
+		} else {
+			sendSessionCommand('lcol', [locationName], (params) => {
+				if (params.length === 2) {
+					cacheLocationColors(locationName, params[0], params[1]);
+					resolve([params[0], params[1]]);
+					return;
+				}
+				resolve(['#FFFFFF', '#FFFFFF']);
+			});
+		}
+	});
+}
+
+export function handleBadgeOverlayLocationColorOverride(
+	badgeOverlay,
+	badgeOverlay2,
+	locations,
+	playerName?: string,
+	mapId?: unknown,
+	prevMapId?: unknown,
+	prevLocationsStr?: string,
+	x?: number,
+	y?: number
+) {
+	const setOverlayColors = (fgColor, bgColor) => {
+		badgeOverlay.style.background = fgColor;
+		if (badgeOverlay2) badgeOverlay2.style.background = bgColor;
+	};
+	const queryColorsFunc = (locations) => {
+		if (!locations) return;
+		getOrQueryLocationColors(locations).then((colors) => {
+			if (Array.isArray(colors) && colors.length === 2) setOverlayColors(colors[0], colors[1]);
+		});
+	};
+	if (locations) queryColorsFunc(locations);
+	else if (gameId === '2kki') {
+		const queryLocationsFunc = (mapId, prevMapId, prevLocations) => {
+			if (
+				!mapLocations ||
+				!mapLocations.hasOwnProperty(mapId) ||
+				!mapLocations[mapId].hasOwnProperty('explorer') ||
+				mapLocations[mapId].explorer
+			)
+				getOrQuery2kkiLocations(mapId, prevMapId, prevLocations, queryColorsFunc);
+		};
+		const getPrevLocationsFunc = (prevLocationsStr, prevMapId) =>
+			prevLocationsStr && (prevMapId || '0000') !== '0000'
+				? decodeURIComponent(window.atob(prevLocationsStr))
+						.split('|')
+						.map((l) => {
+							return { title: l };
+						})
+				: null;
+
+		let foundPlayer;
+		if (playerName) {
+			const playerEntry = Object.entries(globalPlayerData).find((p) => p[1].account && p[1].name === playerName);
+			if (playerEntry) {
+				if (Object.values(playerUuids).indexOf(playerEntry[0]) > -1) {
+					queryColorsFunc(cachedLocations);
+					foundPlayer = true;
+				} else if (joinedPartyCache) {
+					const member = joinedPartyCache.members.find((m) => m.account && m.name === playerName);
+					if (member) {
+						queryLocationsFunc(
+							member.mapId,
+							member.prevMapId,
+							getPrevLocationsFunc(member.prevLocations, member.prevMapId)
+						);
+						foundPlayer = true;
+					}
+				}
+			}
+		}
+
+		if (!foundPlayer && mapId && mapId !== '0000')
+			queryLocationsFunc(mapId, prevMapId, getPrevLocationsFunc(prevLocationsStr, prevMapId));
+	} else if (mapLocations && mapLocations.hasOwnProperty(mapId || cachedMapId))
+		queryColorsFunc(
+			getMapLocationsArray(mapLocations, mapId || cachedMapId, prevMapId || cachedPrevMapId, x || tpX, y || tpY)
+		);
+}
+
+export function addFilterInputs(modalPrefix, modalInitFunc, ...checkboxes) {
+	const modal = document.getElementById(`${modalPrefix}Modal`);
+
+	if (modal.querySelector('.filterInput')) return;
+
+	const container = document.getElementById(`${modalPrefix}Controls`);
+
+	const filterInput = createInputElement(
+		'text',
+		`${modalPrefix}FilterInput`,
+		'Filter...',
+		modalInitFunc,
+		undefined,
+		'filterInput'
+	);
+	filterInput.style = 'margin-left: 10px';
+	container.appendChild(filterInput);
+
+	const checkboxContainer = document.createElement('div');
+	checkboxContainer.classList.add('filterInputCheckboxContainer');
+
+	for (let c = 0; c < checkboxes.length; c++) {
+		const checkboxInfo = checkboxes[c];
+
+		if (c) checkboxContainer.appendChild(document.createElement('br'));
+		checkboxContainer.appendChild(
+			createCheckbox(checkboxInfo.id, ` ${checkboxInfo.label}`, modalInitFunc, true, `filterInputCheck${c + 1}`)
+		);
+	}
+
+	if (checkboxContainer.children.length) container.appendChild(checkboxContainer);
+}
+
+export function updateCache(cacheType) {
+	if (cache.hasOwnProperty(cacheType)) {
+		const request = indexedDB.open(gameId);
+
+		request.onsuccess = function (_e) {
+			const db = request.result;
+			const transaction = db.transaction(['CACHE'], 'readwrite');
+			transaction.objectStore('CACHE').put(cache[cacheType], cacheType.toUpperCase());
+		};
+	}
+}
+
+export function setCacheValue(cacheType, key, value) {
+	if (!cache.hasOwnProperty(cacheType)) return;
+
+	cache[cacheType][key] = { time: new Date().getTime(), value: value };
+}
+
+/** Bound to `#hideUnnamedPlayersButton` in `<SettingsModal />`. */
+export function onToggleHideUnnamedPlayers() {
+	updateConfig(config);
+	if (sessionWs) sendSessionCommand('hunp', [config.hideUnnamedPlayers ? 1 : 0]);
+}
+
+/** Bound to `#toggleUnicodeFont` in `<SettingsModal />`. */
+export function onToggleUnicodeFont() {
+	setExtendedLatinFonts(globalConfig.lang);
+	updateConfig(globalConfig, true);
+}
+
+/** Bound to `#gameChatGlobalButton` in `<ChatSettingsModal />`. */
+export function onToggleGameChatGlobal() {
+	if (!globalConfig.gameChatGlobal && gameChatModeIndex === 1) cycleGameChatMode();
+	updateGameChatMessageVisibility();
+	updateConfig(globalConfig, true);
+}
+
+/** Bound to `#gameChatPartyButton` in `<ChatSettingsModal />`. */
+export function onToggleGameChatParty() {
+	if (!globalConfig.gameChatParty && gameChatModeIndex === 2) cycleGameChatMode();
+	updateGameChatMessageVisibility();
+	updateConfig(globalConfig, true);
+}
+
+/** Bound to `#mapChatHistoryLimit` in `<ChatSettingsModal />`. */
+export function onChangeMapChatHistoryLimit(ev) {
+	setMapChatHistoryLimit(ev.currentTarget.value);
+}
+
+/** Bound to `#globalChatHistoryLimit` in `<ChatSettingsModal />`. */
+export function onChangeGlobalChatHistoryLimit(ev) {
+	setGlobalChatHistoryLimit(ev.currentTarget.value);
+}
+
+/** Bound to `#partyChatHistoryLimit` in `<ChatSettingsModal />`. */
+export function onChangePartyChatHistoryLimit(ev) {
+	setPartyChatHistoryLimit(ev.currentTarget.value);
+}
+
+/** Bound to `#blocklistButton` in `<SettingsModal />`. */
+export function openBlocklistModal() {
+	updateBlocklist(true);
+	openModal('blocklistModal', null, 'settingsModal');
+}
+
+/** The Yume 2kki version this page was served with. Rendered by `+page.svelte`. */
+export function get2kkiVersion() {
+	if (!isBrowser) return '';
+	return document.querySelector('meta[name="2kkiVersion"]')?.content || '?';
+}
+
+/** Bound to `#explorerUndiscoveredLocationsLink` in `<ChatboxContainer />` (Yume 2kki only). */
+export const openExplorerUndiscoveredLocations = async () => {
+	const modal = document.getElementById('explorerUndiscoveredLocationsModal');
+	const undiscoveredLocations = document.getElementById('explorerUndiscoveredLocations');
+	undiscoveredLocations.innerHTML = '';
+	openModal(modal.id);
+	addLoader(modal);
+
+	try {
+		const respNames = await apiFetch('explorerlocations');
+		if (!respNames.ok) throw new Error(respNames.statusText);
+		const names = await respNames.json();
+		removeLoader(modal);
+
+		if (!Array.isArray(names) || names.length === 0) {
+			undiscoveredLocations.classList.add('hidden');
+			document.getElementById('explorerUndiscoveredLocationsEmptyLabel').classList.remove('hidden');
+			return;
+		}
+		undiscoveredLocations.classList.remove('hidden');
+		document.getElementById('explorerUndiscoveredLocationsEmptyLabel').classList.add('hidden');
+
+		const mapLocs = gameLocationsMap[gameId] || {};
+		const localizedLocs = gameLocalizedLocationsMap[gameId] || {};
+
+		if (['ja', 'ko', 'zh'].includes(globalConfig.lang)) {
+			const missing = names.filter((en) => !localizedLocs.hasOwnProperty(en));
+			if (missing.length > 0) {
+				const respAll = await apiFetch('gamelocations');
+				if (respAll.ok) {
+					const allLocs = await respAll.json();
+					allLocs.forEach((loc) => {
+						if (missing.includes(loc.title)) {
+							mapLocs[loc.title] = { title: loc.title, urlTitle: loc.title };
+							const jpName = loc.originalTitle || loc.title;
+							localizedLocs[loc.title] = { title: jpName, urlTitle: jpName };
+						}
+					});
+				} else {
+					console.error('gamelocations API error:', respAll.statusText);
+				}
+			}
+		}
+
+		const sorted = names.slice().sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+		const itemsHtml = sorted
+			.map((enName) => {
+				const fallback = mapLocs[enName] || { title: enName, urlTitle: enName };
+				const localized = localizedLocs[enName] || fallback;
+				return `<li>${getLocalizedLocation(gameId, localized, fallback, true)}</li>`;
+			})
+			.join('');
+
+		undiscoveredLocations.innerHTML = itemsHtml;
+	} catch (err) {
+		console.error(err);
+		removeLoader(modal);
+		closeModal(modal);
+	}
+};
+
+/** Bound to the player count labels in `<ChatboxContainer />`; swaps global for map count. */
+export function onClickPlayerCountLabel() {
+	if (config.privateMode) return;
+	const playerCountLabels = document.querySelectorAll('.playerCountLabel');
+	for (let pcl of playerCountLabels) pcl.classList.toggle('hidden');
+	onUpdateChatboxInfo();
+}
+
+let activeChatboxTabSection = 'chat';
+
+/** Bound to the chatbox tabs in `<ChatboxContainer />`. */
+export function onClickChatboxTab(ev) {
+	const tab = ev.currentTarget;
+	if (tab.dataset.tabSection !== activeChatboxTabSection) {
+		activeChatboxTabSection = tab.dataset.tabSection;
+		if (activeChatboxTabSection === 'chat')
+			document.getElementById('unreadMessageCountContainer').classList.add('hidden');
+		else if (activeChatboxTabSection === 'players')
+			document.getElementById('incomingFriendRequestCountContainer').classList.add('hidden');
+		else if (activeChatboxTabSection === 'parties') {
+			updatePartyList();
+		}
+		for (let chatboxTab of document.getElementsByClassName('chatboxTab'))
+			chatboxTab.classList.toggle('active', chatboxTab === tab);
+		for (let tabSection of document.getElementsByClassName('chatboxTabSection'))
+			tabSection.classList.toggle('hidden', tabSection.id !== activeChatboxTabSection);
+	}
+}
+
+function setChatTab(tab, saveConfig) {
+	const chatTabs = document.getElementById('chatTabs');
+	const tabIndex = Array.prototype.indexOf.call(chatTabs.children, tab);
+	const activeTabIndex = Array.prototype.indexOf.call(chatTabs.children, chatTabs.querySelector('.active'));
+	if (tabIndex !== activeTabIndex) {
+		const chatbox = document.getElementById('chatbox');
+		const messages = document.getElementById('messages');
+		const chatInput = document.getElementById('chatInput');
+		for (let chatTab of document.getElementsByClassName('chatTab')) {
+			const active = chatTab === tab;
+			chatTab.classList.toggle('active', active);
+			if (active || !tabIndex) chatTab.classList.remove('unread');
+		}
+		const global = (!tabIndex && config.globalMessage) || tabIndex === 2;
+		if (global) chatInput.dataset.global = true;
+		else delete chatInput.dataset.global;
+		chatInput.disabled =
+			global && document.getElementById('chatInputContainer').classList.contains('globalCooldown');
+		chatbox.classList.toggle('allChat', !tabIndex);
+		chatbox.classList.toggle('mapChat', tabIndex === 1);
+		chatbox.classList.toggle('globalChat', tabIndex === 2);
+		chatbox.classList.toggle('partyChat', tabIndex === 3);
+		messages.classList.toggle('fullBg', tabIndex === 3 && gameFullBgUiThemes.indexOf(joinedPartyUiTheme) > -1);
+		messages.scrollTop = messages.scrollHeight;
+
+		if (saveConfig) {
+			config.chatTabIndex = tabIndex;
+			updateConfig(config);
+		}
+	}
+}
+
+/** Bound to the chat sub-tabs in `<ChatboxContainer />`. */
+export function onClickChatTab(ev) {
+	setChatTab(ev.currentTarget, true);
+}
+
+/** Bound to the player list sub-tabs in `<ChatboxContainer />`. */
+export function onClickPlayersTab(ev) {
+	setPlayersTab(ev.currentTarget, true);
+}
+
+let ignoreSizeChanged = false;
+
+function updateCanvasOverlays() {
+	const contentElement = document.getElementById('content');
+	const canvasElement = document.getElementById('canvas');
+	const gameChatContainer = document.getElementById('gameChatContainer');
+	const locationDisplayContainer = document.getElementById('locationDisplayContainer');
+
+	if (document.fullscreenElement) {
+		const canvasRect = canvas.getBoundingClientRect();
+		gameChatContainer.style.top = locationDisplayContainer.style.top = `${canvasRect.y}px`;
+		gameChatContainer.style.left = locationDisplayContainer.style.left = `${canvasRect.x}px`;
+	} else {
+		gameChatContainer.style.top =
+			locationDisplayContainer.style.top = `${canvasElement.offsetTop - contentElement.scrollTop}px`;
+		gameChatContainer.style.left = locationDisplayContainer.style.left = `${canvasElement.offsetLeft}px`;
+	}
+
+	let mapChatWidth = canvasElement.offsetWidth;
+	let mapChatHeight = canvasElement.offsetHeight / 2;
+
+	if (!document.fullscreenElement && contentElement.classList.contains('downscale')) {
+		if (contentElement.classList.contains('downscale2')) {
+			mapChatWidth *= 2;
+			mapChatHeight *= 2;
+		} else {
+			mapChatWidth *= 1 / 0.75;
+			mapChatHeight *= 1 / 0.75;
+		}
+	}
+
+	locationDisplayContainer.style.maxWidth = `${canvasElement.offsetWidth}px`;
+	gameChatContainer.style.width = `${mapChatWidth}px`;
+	gameChatContainer.style.height = `${mapChatHeight}px`;
+	gameChatContainer.style.marginTop = `calc(${canvasElement.offsetHeight / 2}px * var(--canvas-scale))`;
+}
+
 function isOverflow(scale) {
 	return (
 		window.innerWidth < 984 &&
 		window.innerHeight <= 594 &&
 		(window.innerWidth <= 704 ||
 			document.getElementById('gameContainer').offsetWidth <
-				640 * (scale || 1) +
-					(document.getElementById('layout').classList.contains('overflow') ? 288 : 0))
+				640 * (scale || 1) + (document.getElementById('layout').classList.contains('overflow') ? 288 : 0))
 	);
 }
 
@@ -2054,8 +2119,7 @@ function updateCanvasFullscreenSize() {
 		if (window.innerWidth > 1050 || window.innerHeight < 595) {
 			const chatboxContainerWidth = chatboxContainerElement.offsetWidth - 24;
 			chatboxContainerMarginTop = '24px';
-			const freeWidth =
-				window.innerWidth - canvasElement.offsetWidth * scale - chatboxContainerWidth;
+			const freeWidth = window.innerWidth - canvasElement.offsetWidth * scale - chatboxContainerWidth;
 			if (freeWidth >= 16) {
 				if (showChat) {
 					// if we haven't much width left, use all we have so that the chatbox is not so close
@@ -2068,8 +2132,7 @@ function updateCanvasFullscreenSize() {
 			const canvasScaledHeight = canvasElement.offsetHeight * scale;
 			const unusedHeight = window.innerHeight - (canvasScaledHeight + 32);
 			let chatboxActualHeight = unusedHeight;
-			if (showExplorer)
-				chatboxActualHeight -= document.getElementById('explorerFrame').offsetHeight + 12;
+			if (showExplorer) chatboxActualHeight -= document.getElementById('explorerFrame').offsetHeight + 12;
 			if (unusedHeight >= 376 && showChat) {
 				canvasContainerMarginTop = `-${(window.innerHeight - canvasScaledHeight) / 2}px`;
 				chatboxContainerMarginTop = `${window.innerHeight - unusedHeight - 40}px`;
@@ -2099,22 +2162,23 @@ function updateCanvasFullscreenSize() {
 	updateCanvasOverlays();
 }
 
-// SIDE EFFECT
-if (isBrowser)
-	window.onresize = function () {
-		setTimeout(onResize, 0);
-	};
+/** Bound to `<svelte:window onresize>` in `+page.svelte`. */
+export function onWindowResize() {
+	setTimeout(onResize, 0);
+}
 
-// SIDE EFFECT
-if (isBrowser) document.addEventListener('fullscreenchange', updateCanvasFullscreenSize);
+/** Bound to `<svelte:document onfullscreenchange>` in `+page.svelte`. */
+export function onFullscreenChange() {
+	updateCanvasFullscreenSize();
+	updateFullscreenPolling();
+}
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('content').addEventListener('scroll', function () {
-		document.documentElement.style.setProperty('--content-scroll', `${this.scrollTop}px`);
-		if (hasTouchscreen) updateYnomojiContainerPos(true);
-		updateCanvasOverlays();
-	});
+/** Bound to `#content`'s scroll in `+page.svelte`. */
+export function onContentScroll(ev) {
+	document.documentElement.style.setProperty('--content-scroll', `${ev.currentTarget.scrollTop}px`);
+	if (hasTouchscreen) updateYnomojiContainerPos(true);
+	updateCanvasOverlays();
+}
 
 function toggleControls(show) {
 	document.getElementById('canvas').classList.toggle('fsnocursor', !show);
@@ -2131,20 +2195,17 @@ function setFullscreenControlsHideTimer() {
 	}, 5000);
 }
 
-// SIDE EFFECT
-if (isBrowser)
-	document.onmousemove = function (ev) {
-		if (document.fullscreenElement && !ev.dataTransfer) {
-			toggleControls(true);
-			setFullscreenControlsHideTimer();
-		}
-	};
+/** Bound to `<svelte:document onmousemove>` in `+page.svelte`; reveals the fullscreen controls. */
+export function onDocumentMouseMove(ev) {
+	if (document.fullscreenElement && !ev.dataTransfer) {
+		toggleControls(true);
+		setFullscreenControlsHideTimer();
+	}
+}
 
 async function withTimeout(duration, prom) {
 	let handle;
-	const timeout = new Promise(
-		(resolve) => (handle = setTimeout(() => resolve('__timeout__'), duration))
-	);
+	const timeout = new Promise((resolve) => (handle = setTimeout(() => resolve('__timeout__'), duration)));
 	const res = await Promise.race([timeout, prom]);
 	if (res === '__timeout__') {
 		console.warn(`timed out after ${duration} ms`, prom);
@@ -2152,8 +2213,6 @@ async function withTimeout(duration, prom) {
 	clearTimeout(handle);
 	return res;
 }
-
-
 
 let saveReminderHandle;
 function resetSaveReminder() {
@@ -2166,9 +2225,8 @@ function resetSaveReminder() {
 	}, globalConfig.saveReminder * 60000);
 }
 
-
 let availableControlType = 'default';
-function updateMobileControlType() {
+export function updateMobileControlType() {
 	if (!hasTouchscreen) return;
 	const isHorizontal = !((screen.orientation.angle - 90) % 180);
 
@@ -2183,23 +2241,6 @@ function updateMobileControlType() {
 	for (const control of joystick.querySelectorAll('[data-style]')) {
 		control.classList.toggle('hidden', control.dataset.style !== availableControlType);
 	}
-}
-
-// SIDE EFFECT
-if (hasTouchscreen) screen.orientation.addEventListener('change', updateMobileControlType);
-
-export function onSelectUiTheme(e) {
-	const modalContainer = document.getElementById('modalContainer');
-	if (modalContainer.dataset.lastModalId?.endsWith('createPartyModal'))
-		setPartyTheme(e.target.dataset.uiTheme);
-	else if (modalContainer.dataset.lastModalId?.endsWith('scheduleEditModal'))
-		setScheduleTheme(e.target.dataset.uiTheme);
-	else setUiTheme(e.target.dataset.uiTheme);
-	setModalUiTheme(
-		null,
-		e.target.dataset.uiTheme === 'auto' ? getSystemName() : e.target.dataset.uiTheme,
-		true
-	);
 }
 
 function initLocalization(isInitial) {
@@ -2388,11 +2429,7 @@ function initLocalization(isInitial) {
 				const languages = document.getElementById('lang').children;
 				for (let langOpt of languages) {
 					const lang = langOpt.value;
-					if (
-						gameDefaultLangs.hasOwnProperty(gameId)
-							? gameDefaultLangs[gameId] !== lang
-							: lang !== 'en'
-					)
+					if (gameDefaultLangs.hasOwnProperty(gameId) ? gameDefaultLangs[gameId] !== lang : lang !== 'en')
 						fetchNewest(`${cdnUrl}/${gameId}/Language/${lang}/meta.ini`).then((response) => {
 							if (!response.ok && response.status === 404 && gameId !== 'tsushin') {
 								// Don't display that the game is not localized for Yume Tsushin since it uses a conlang
@@ -2453,51 +2490,8 @@ function getLocalizedVersion(versionText) {
 	if (gameId !== '2kki') return versionLabel;
 	if (!localizedVersion?.substitutes) return versionLabel;
 	const substituteKeys = Object.keys(localizedVersion.substitutes);
-	for (let sk of substituteKeys)
-		versionLabel = versionLabel.replace(sk, localizedVersion.substitutes[sk]);
+	for (let sk of substituteKeys) versionLabel = versionLabel.replace(sk, localizedVersion.substitutes[sk]);
 	return versionLabel;
-}
-
-export function fetchAndInitLocations(lang, game) {
-	return new Promise((resolve) => {
-		fetchNewest(`locations/${game}/config.json`)
-			.then((response) => {
-				if (!response.ok) throw new Error(response.statusText);
-				return response.json();
-			})
-			.then((jsonResponse) => {
-				gameLocationUrlRoots[game] = jsonResponse.urlRoot;
-				gameLocalizedLocationUrlRoots[game] = gameLocationUrlRoots[game];
-				gameMapLocations[game] = jsonResponse.mapLocations || null;
-				if (gameMapLocations[game] && !Object.keys(gameMapLocations[game]).length)
-					gameMapLocations[game] = null;
-				if (gameMapLocations[game]) {
-					massageMapLocations(gameMapLocations[game], jsonResponse.locationUrlTitles || null);
-					if (lang === 'en') {
-						gameLocalizedMapLocations[game] = gameMapLocations[game];
-						initLocalizedLocations(game);
-					} else fetchAndInitLocalizedMapLocations(lang, game).then(resolve);
-				}
-				if (game === gameId) {
-					ignoredMapIds = jsonResponse.ignoredMapIds || [];
-					locationUrlRoot = gameLocationUrlRoots[game];
-					localizedLocationUrlRoot = gameLocalizedLocationUrlRoots[game];
-					mapLocations = gameMapLocations[game];
-					localizedMapLocations = gameLocalizedMapLocations[game];
-					yumeWikiSupported = locationUrlRoot === `https://yume.wiki/${ynoGameId}/`;
-				}
-				if (!gameMapLocations[game] || lang === 'en') resolve();
-			})
-			.catch((err) => {
-				gameLocalizedMapLocations[game] = null;
-				if (game === gameId) {
-					ignoredMapIds = [];
-					localizedMapLocations = null;
-				}
-				console.error(err);
-				resolve();
-			});
-	});
 }
 
 function fetchAndInitLocalizedMapLocations(lang, game) {
@@ -2583,13 +2577,7 @@ function initLocalizedLocations(game) {
 	}
 }
 
-function getMapLocationsArray(
-	mapLocations: Record<string, MapDescriptor>,
-	mapId,
-	prevMapId,
-	x,
-	y
-): MapTitle[] {
+function getMapLocationsArray(mapLocations: Record<string, MapDescriptor>, mapId, prevMapId, x, y): MapTitle[] {
 	if (mapId in mapLocations) {
 		const locations = mapLocations[mapId];
 		if (locations.hasTitle())
@@ -2600,8 +2588,7 @@ function getMapLocationsArray(
 			return getMapLocationsFromArray(locations, x, y);
 		if (prevMapId in locations) {
 			// Previous map ID matches a key
-			if (Array.isArray(locations[prevMapId]))
-				return getMapLocationsFromArray(locations[prevMapId], x, y);
+			if (Array.isArray(locations[prevMapId])) return getMapLocationsFromArray(locations[prevMapId], x, y);
 			return [locations[prevMapId]];
 		}
 		if ('else' in locations) {
@@ -2613,12 +2600,7 @@ function getMapLocationsArray(
 }
 
 function getMapLocationsFromArray(locations: MapTitle[], x, y): MapTitle[] {
-	if (
-		Array.isArray(locations) &&
-		locations[0].hasOwnProperty('coords') &&
-		x !== null &&
-		y !== null
-	) {
+	if (Array.isArray(locations) && locations[0].hasOwnProperty('coords') && x !== null && y !== null) {
 		const coordLocation = locations.find(
 			(l) =>
 				l.hasOwnProperty('coords') &&
@@ -2630,130 +2612,6 @@ function getMapLocationsFromArray(locations: MapTitle[], x, y): MapTitle[] {
 		if (noCoordLocations.length) return noCoordLocations;
 	}
 	return locations;
-}
-
-export function getLocalizedMapLocations(game, mapId, prevMapId, x, y, separator, forDisplay) {
-	const localizedLocations = gameLocalizedMapLocations[game]?.[mapId];
-	if (localizedLocations) {
-		// locations have the same type as localizedLocations
-		const locations = gameMapLocations[game][mapId];
-		if (localizedLocations.hasTitle())
-			// Text location
-			return getLocalizedLocation(game, localizedLocations, locations, false, forDisplay);
-		if (Array.isArray(localizedLocations))
-			// Multiple locations
-			return getMapLocationsFromArray(localizedLocations, x, y)
-				.map((l, i) =>
-					getLocalizedLocation(
-						game,
-						l,
-						getMapLocationsFromArray(locations, x, y)[i],
-						false,
-						forDisplay
-					)
-				)
-				.join(separator);
-		if (prevMapId in localizedLocations) {
-			// Previous map ID matches a key
-			if (Array.isArray(localizedLocations[prevMapId]))
-				return getMapLocationsFromArray(localizedLocations[prevMapId], x, y)
-					.map((l, i) =>
-						getLocalizedLocation(
-							game,
-							l,
-							getMapLocationsFromArray(locations[prevMapId], x, y)[i],
-							false,
-							forDisplay
-						)
-					)
-					.join(separator);
-			return getLocalizedLocation(game, localizedLocations[prevMapId], locations[prevMapId]);
-		}
-		if ('else' in localizedLocations) {
-			// Else case
-			if (localizedLocations.else.hasTitle())
-				return getLocalizedLocation(
-					game,
-					localizedLocations.else,
-					locations.else,
-					false,
-					forDisplay
-				);
-			return getMapLocationsFromArray(localizedLocations.else, x, y)
-				.map((l, i) =>
-					getLocalizedLocation(
-						game,
-						l,
-						getMapLocationsFromArray(locations.else, x, y)[i],
-						false,
-						forDisplay
-					)
-				)
-				.join(separator);
-		}
-	}
-
-	return localizedMessages.location.unknownLocation;
-}
-
-export function getLocalizedMapLocationsHtml(
-	game,
-	mapId,
-	prevMapId: number | `0${number}`,
-	x,
-	y,
-	separator
-) {
-	if (gameLocalizedMapLocations[game]?.hasOwnProperty(mapId)) {
-		const localizedLocations = gameLocalizedMapLocations[game][mapId];
-		const locations = gameMapLocations[game][mapId];
-		let locationsHtml;
-		if (localizedLocations.hasTitle())
-			// Text location
-			locationsHtml = getLocalizedLocation(game, localizedLocations, locations, true);
-		else if (Array.isArray(localizedLocations))
-			// Multiple locations
-			locationsHtml = getMapLocationsFromArray(localizedLocations, x, y)
-				.map((l, i) =>
-					getLocalizedLocation(game, l, getMapLocationsFromArray(locations, x, y)[i], true)
-				)
-				.join(separator);
-		else if (prevMapId in localizedLocations) {
-			// Previous map ID matches a key
-			if (Array.isArray(localizedLocations[prevMapId]))
-				locationsHtml = getMapLocationsFromArray(localizedLocations[prevMapId], x, y)
-					.map((l, i) =>
-						getLocalizedLocation(
-							game,
-							l,
-							getMapLocationsFromArray(locations[prevMapId], x, y)[i],
-							true
-						)
-					)
-					.join(separator);
-			else
-				locationsHtml = getLocalizedLocation(
-					game,
-					localizedLocations[prevMapId],
-					locations[prevMapId],
-					true
-				);
-		} else if ('else' in localizedLocations) {
-			// Else case
-			if (localizedLocations.else.hasTitle())
-				locationsHtml = getLocalizedLocation(game, localizedLocations.else, locations.else, true);
-			else
-				locationsHtml = getMapLocationsFromArray(localizedLocations.else, x, y)
-					.map((l, i) =>
-						getLocalizedLocation(game, l, getMapLocationsFromArray(locations.else, x, y)[i], true)
-					)
-					.join(separator);
-		}
-
-		if (locationsHtml) return locationsHtml;
-	}
-
-	return getInfoLabel(getMassagedLabel(localizedMessages.location.unknownLocation));
 }
 
 function massageMapLocations(mapLocations, locationUrlTitles) {
@@ -2783,51 +2641,6 @@ function massageMapLocations(mapLocations, locationUrlTitles) {
 	}
 }
 
-export function getLocalizedLocation(
-	game,
-	location: MapTitle,
-	locationEn: MapTitle,
-	asHtml,
-	forDisplay = false
-) {
-	let template = getMassagedLabel(
-		localizedMessages[forDisplay ? 'locationDisplay' : 'location'].template
-	);
-	let ret;
-	let locationValue;
-
-	if (asHtml) {
-		template = template.replace(/}([^{]+)/g, '}<span class="infoLabel">$1</span>');
-		if (gameLocalizedLocationUrlRoots[game] && location.urlTitle !== null)
-			locationValue = `<a href="${gameLocalizedLocationUrlRoots[game]}${location.urlTitle || location.title}" target="_blank" class="wikiLink">${location.title}</a>`;
-		else if (
-			gameLocationUrlRoots[game] &&
-			gameLocalizedLocationUrlRoots[game] !== null &&
-			locationEn.urlTitle !== null
-		)
-			locationValue = `<a href="${gameLocationUrlRoots[game]}${locationEn.urlTitle || locationEn.title}" target="_blank" class="wikiLink">${location.title}</a>`;
-		else locationValue = getInfoLabel(location.title);
-	} else locationValue = location.title;
-
-	ret = template.replace('{LOCATION}', locationValue);
-
-	if (template.indexOf('{LOCATION_EN}') > -1) {
-		let locationValueEn;
-		if (asHtml) {
-			if (gameLocationUrlRoots[game] && locationEn.urlTitle !== null)
-				locationValueEn = `<a href="${gameLocationUrlRoots[game]}${locationEn.urlTitle || locationEn.title}" target="_blank" class="wikiLink">${locationEn.title}</a>`;
-			else locationValueEn = getInfoLabel(locationEn.title);
-		} else locationValueEn = locationEn.title;
-
-		ret =
-			locationValue !== locationValueEn
-				? ret.replace('{LOCATION_EN}', locationValueEn)
-				: locationValue; // Just use location value alone if values match
-	}
-
-	return ret;
-}
-
 function massageLabels(data) {
 	if (langLabelMassageFunctions.hasOwnProperty(globalConfig.lang) && data) {
 		Object.keys(data).forEach(function (key) {
@@ -2845,17 +2658,6 @@ function massageLabels(data) {
 			}
 		});
 	}
-}
-
-export function getMassagedLabel(label, isUI) {
-	if (label) label = label.replaceAll('\n', '<br>');
-	if (langLabelMassageFunctions.hasOwnProperty(globalConfig.lang) && label)
-		return langLabelMassageFunctions[globalConfig.lang](label, isUI);
-	return label;
-}
-
-export function getInfoLabel(label) {
-	return `<span class="infoLabel">${label}</span>`;
 }
 
 function queryAndSetWikiMaps(locations: unknown[]) {
@@ -2936,8 +2738,7 @@ function updateBadgeHint(locationNames: string[]) {
 	const badgeHintControls = document.getElementById('badgeHintControls');
 	badgeHintControls.innerHTML = '';
 
-	if (!globalConfig.badgeHints || !badgeCache.find((b) => b.badgeId == 'badge_amulet_2')?.unlocked)
-		return;
+	if (!globalConfig.badgeHints || !badgeCache.find((b) => b.badgeId == 'badge_amulet_2')?.unlocked) return;
 
 	let matchedLocationName = null;
 	let matchedBadgeIds = [];
@@ -2985,57 +2786,13 @@ function getBadgeHintButton(locationName: string) {
 	return ret;
 }
 
-// SIDE EFFECT
-if (isBrowser)
-	document.getElementById('canvas').addEventListener('keydown', function (ev) {
-		if (ev.key.toLowerCase() === 'f') {
-			ev.preventDefault();
-			if (document.getElementById('wikiModal').classList.contains('hidden'))
-				gameMapHandle.deref()?.click?.();
-			else closeModal();
-		}
-	});
-
-export function getOrQueryLocationColors(locationName) {
-	return new Promise((resolve, _reject) => {
-		if (Array.isArray(locationName) && locationName.length && locationName[0].hasTitle())
-			locationName = locationName[0].title;
-		else if (locationName?.hasTitle()) locationName = locationName.title;
-		else if (!locationName) {
-			resolve(['#FFFFFF', '#FFFFFF']);
-			return;
-		}
-		const colonIndex = locationName.indexOf(':');
-		if (colonIndex > -1) locationName = locationName.slice(0, colonIndex);
-		if (locationColorCache.hasOwnProperty(locationName)) {
-			resolve(locationColorCache[locationName]);
-			return;
-		}
-
-		if (gameId === '2kki') {
-			const url = `https://explorer.yume.wiki/getLocationColors?locationName=${locationName}`;
-			send2kkiApiRequest(url, (response) => {
-				let errCode = null;
-
-				if (response && !response.err_code)
-					cacheLocationColors(locationName, response.fgColor, response.bgColor);
-				else errCode = response?.err_code;
-
-				if (errCode) console.error({ error: response.error, errCode: errCode });
-
-				resolve([response?.fgColor, response?.bgColor]);
-			});
-		} else {
-			sendSessionCommand('lcol', [locationName], (params) => {
-				if (params.length === 2) {
-					cacheLocationColors(locationName, params[0], params[1]);
-					resolve([params[0], params[1]]);
-					return;
-				}
-				resolve(['#FFFFFF', '#FFFFFF']);
-			});
-		}
-	});
+/** `f` opens (or closes) the map for the current location. Bound to the canvas in `<GameCanvas />`. */
+export function onCanvasKeydown(ev: KeyboardEvent) {
+	if (ev.key.toLowerCase() === 'f') {
+		ev.preventDefault();
+		if (document.getElementById('wikiModal').classList.contains('hidden')) gameMapHandle.deref()?.click?.();
+		else closeModal();
+	}
 }
 
 function cacheLocationColors(locationName, fgColor, bgColor) {
@@ -3047,84 +2804,6 @@ function cacheLocationColors(locationName, fgColor, bgColor) {
 			updateCache(CACHE_TYPE.locationColor);
 		}
 	}
-}
-
-export function handleBadgeOverlayLocationColorOverride(
-	badgeOverlay,
-	badgeOverlay2,
-	locations,
-	playerName?: string,
-	mapId?: unknown,
-	prevMapId?: unknown,
-	prevLocationsStr?: string,
-	x?: number,
-	y?: number
-) {
-	const setOverlayColors = (fgColor, bgColor) => {
-		badgeOverlay.style.background = fgColor;
-		if (badgeOverlay2) badgeOverlay2.style.background = bgColor;
-	};
-	const queryColorsFunc = (locations) => {
-		if (!locations) return;
-		getOrQueryLocationColors(locations).then((colors) => {
-			if (Array.isArray(colors) && colors.length === 2) setOverlayColors(colors[0], colors[1]);
-		});
-	};
-	if (locations) queryColorsFunc(locations);
-	else if (gameId === '2kki') {
-		const queryLocationsFunc = (mapId, prevMapId, prevLocations) => {
-			if (
-				!mapLocations ||
-				!mapLocations.hasOwnProperty(mapId) ||
-				!mapLocations[mapId].hasOwnProperty('explorer') ||
-				mapLocations[mapId].explorer
-			)
-				getOrQuery2kkiLocations(mapId, prevMapId, prevLocations, queryColorsFunc);
-		};
-		const getPrevLocationsFunc = (prevLocationsStr, prevMapId) =>
-			prevLocationsStr && (prevMapId || '0000') !== '0000'
-				? decodeURIComponent(window.atob(prevLocationsStr))
-						.split('|')
-						.map((l) => {
-							return { title: l };
-						})
-				: null;
-
-		let foundPlayer;
-		if (playerName) {
-			const playerEntry = Object.entries(globalPlayerData).find(
-				(p) => p[1].account && p[1].name === playerName
-			);
-			if (playerEntry) {
-				if (Object.values(playerUuids).indexOf(playerEntry[0]) > -1) {
-					queryColorsFunc(cachedLocations);
-					foundPlayer = true;
-				} else if (joinedPartyCache) {
-					const member = joinedPartyCache.members.find((m) => m.account && m.name === playerName);
-					if (member) {
-						queryLocationsFunc(
-							member.mapId,
-							member.prevMapId,
-							getPrevLocationsFunc(member.prevLocations, member.prevMapId)
-						);
-						foundPlayer = true;
-					}
-				}
-			}
-		}
-
-		if (!foundPlayer && mapId && mapId !== '0000')
-			queryLocationsFunc(mapId, prevMapId, getPrevLocationsFunc(prevLocationsStr, prevMapId));
-	} else if (mapLocations && mapLocations.hasOwnProperty(mapId || cachedMapId))
-		queryColorsFunc(
-			getMapLocationsArray(
-				mapLocations,
-				mapId || cachedMapId,
-				prevMapId || cachedPrevMapId,
-				x || tpX,
-				y || tpY
-			)
-		);
 }
 
 function fetchAndPopulateYnomojiConfig() {
@@ -3161,7 +2840,7 @@ function insertYnomoji(ynomojiId) {
 	if (ynomojiMatch)
 		chatInput.value = `${chatInput.value.slice(0, ynomojiMatch.index)}:${ynomojiId}:${chatInput.value.slice(chatInput.selectionEnd)}`;
 	else chatInput.value += `:${ynomojiId}:`;
-	chatInput.oninput();
+	oninputYnomoji.call(chatInput);
 }
 
 function createInputElement(type, id, placeholder, onUpdate, checked = false, ...classes) {
@@ -3185,45 +2864,6 @@ function createCheckbox(id, labelText, onUpdate, checked = false, ...classes) {
 
 function handleFilterInputs(modalInitFunc) {
 	setTimeout(modalInitFunc, 250);
-}
-
-export function addFilterInputs(modalPrefix, modalInitFunc, ...checkboxes) {
-	const modal = document.getElementById(`${modalPrefix}Modal`);
-
-	if (modal.querySelector('.filterInput')) return;
-
-	const container = document.getElementById(`${modalPrefix}Controls`);
-
-	const filterInput = createInputElement(
-		'text',
-		`${modalPrefix}FilterInput`,
-		'Filter...',
-		modalInitFunc,
-		undefined,
-		'filterInput'
-	);
-	filterInput.style = 'margin-left: 10px';
-	container.appendChild(filterInput);
-
-	const checkboxContainer = document.createElement('div');
-	checkboxContainer.classList.add('filterInputCheckboxContainer');
-
-	for (let c = 0; c < checkboxes.length; c++) {
-		const checkboxInfo = checkboxes[c];
-
-		if (c) checkboxContainer.appendChild(document.createElement('br'));
-		checkboxContainer.appendChild(
-			createCheckbox(
-				checkboxInfo.id,
-				` ${checkboxInfo.label}`,
-				modalInitFunc,
-				true,
-				`filterInputCheck${c + 1}`
-			)
-		);
-	}
-
-	if (checkboxContainer.children.length) container.appendChild(checkboxContainer);
 }
 
 function openWikiLink(url, useDefault, asImage = false) {
@@ -3322,24 +2962,6 @@ function loadOrInitCache() {
 	};
 }
 
-export function updateCache(cacheType) {
-	if (cache.hasOwnProperty(cacheType)) {
-		const request = indexedDB.open(gameId);
-
-		request.onsuccess = function (_e) {
-			const db = request.result;
-			const transaction = db.transaction(['CACHE'], 'readwrite');
-			transaction.objectStore('CACHE').put(cache[cacheType], cacheType.toUpperCase());
-		};
-	}
-}
-
-export function setCacheValue(cacheType, key, value) {
-	if (!cache.hasOwnProperty(cacheType)) return;
-
-	cache[cacheType][key] = { time: new Date().getTime(), value: value };
-}
-
 function clearCache(cacheType, el: HTMLElement | null) {
 	if (el) el.setAttribute('disabled', '');
 	cache[cacheType] = {};
@@ -3357,59 +2979,66 @@ function clearCache(cacheType, el: HTMLElement | null) {
 	}
 }
 
-function openCacheSettingsModal(prevModal) {
+export function openCacheSettingsModal(prevModal) {
 	for (const button of document.getElementById('cacheSettingsModal').querySelectorAll('button'))
 		button.removeAttribute('disabled');
 	openModal('cacheSettingsModal', null, prevModal);
 }
 
-// SIDE EFFECT
-if (isBrowser) onResize();
+/** Bound to `<svelte:document onclick>` in `+page.svelte`; routes wiki links to the wiki modal. */
+export function onDocumentClick(e: MouseEvent) {
+	const target = (e.target as HTMLElement)?.closest('a');
+	if (target && target.classList.contains('wikiLink') && openWikiLink(target.href, true)) {
+		// document.getElementById('modalContainer').style.opacity = '';
+		e.preventDefault();
+	}
+}
 
-// SIDE EFFECT
-loadOrInitConfig(globalConfig, true);
-loadOrInitConfig(config);
-loadOrInitCache();
+/**
+ * Restores the persisted config and cache, lays the page out and applies the saved
+ * locale/theme. Called on mount from `+page.svelte`.
+ */
+export function initPlay() {
+	loadOrInitConfig(globalConfig, true);
+	loadOrInitConfig(config);
+	loadOrInitCache();
+	onResize();
 
-// SIDE EFFECT
-if (isBrowser)
-	document.addEventListener('click', (e) => {
-		const target = e.target.closest('a');
-		if (target && target.classList.contains('wikiLink') && openWikiLink(target.href, true)) {
-			// document.getElementById('modalContainer').style.opacity = '';
-			e.preventDefault();
-		}
-	});
+	// FIXME
+	// initDefaultSprites();
+	// updateBadges();
+	// if (typeof initBadgeTools === 'function')
+	//   initBadgeTools();
+	// fetchAndPopulateYnomojiConfig();
 
-// SIDE EFFECT, FIXME
-// initDefaultSprites();
-// updateBadges();
-// if (typeof initBadgeTools === 'function')
-//   initBadgeTools();
-// fetchAndPopulateYnomojiConfig();
-
-// SIDE EFFECT
-/*
-if (!loadedUiTheme) setUiTheme('auto', true);
-if (!loadedFontStyle) setFontStyle(0, true);
-if (!loadedLang && isBrowser) {
+	/*
+	if (!loadedUiTheme) setUiTheme('auto', true);
+	if (!loadedFontStyle) setFontStyle(0, true);
 	const browserLang =
 		navigator.language.indexOf('-') === -1
 			? navigator.language
 			: navigator.language.slice(0, navigator.language.indexOf('-'));
-	setLang(
-		Array.from(document.getElementById('lang').children)
-			.map((e) => e.value)
-			.indexOf(browserLang) > -1
-			? browserLang
-			: 'en',
-		true
-	);
+	if (!loadedLang)
+		setLang(
+			Array.from(document.getElementById('lang').children)
+				.map((e) => e.value)
+				.indexOf(browserLang) > -1
+				? browserLang
+				: 'en',
+			true
+		);
+	*/
 }
-*/
 
-// SIDE EFFECT
-if (false) // TODO
+/** TODO: flip once the rules and warnings modals are mounted. */
+const FIRST_VISIT_MODALS_ENABLED = false;
+
+/**
+ * Shows the rules and warnings modals on a player's first visit.
+ * Called on mount from `+page.svelte`.
+ */
+export function showFirstVisitModals() {
+	if (!FIRST_VISIT_MODALS_ENABLED) return;
 	if (!globalConfig.rulesReviewed) {
 		if (!globalConfig.warningsReviewed) {
 			openModal('rulesModal', undefined, 'warningsModal');
@@ -3438,3 +3067,4 @@ if (false) // TODO
 		globalConfig.warningsReviewed = true;
 		updateConfig(globalConfig, true);
 	}
+}

@@ -5,16 +5,7 @@ export const notificationTypes = {
 	system: ['siteUpdates', 'error', 'pushNotifications'],
 	account: ['loggedIn', 'loggedOut', 'passwordUpdate'],
 	players: ['playerBlocked', 'playerUnblocked'],
-	friends: [
-		'add',
-		'remove',
-		'accept',
-		'reject',
-		'cancel',
-		'incoming',
-		'playerOnline',
-		'playerOffline'
-	],
+	friends: ['add', 'remove', 'accept', 'reject', 'cancel', 'incoming', 'playerOnline', 'playerOffline'],
 	parties: [
 		'create',
 		'update',
@@ -55,19 +46,20 @@ type BaseConfig = { all: boolean; screenPosition: string };
 export const notificationConfig: BaseConfig & GeneratedConfig = $state({
 	all: true,
 	screenPosition: 'bottomLeft',
-	...Object.assign({}, ...Object.entries(notificationTypes).map(([category, types]) => {
-		const keys = ['all', ...types];
-		const out = Object.fromEntries(keys.map(key => [key, true]));
-		return { [category]: out }
-	}))
+	...Object.assign(
+		{},
+		...Object.entries(notificationTypes).map(([category, types]) => {
+			const keys = ['all', ...types];
+			const out = Object.fromEntries(keys.map((key) => [key, true]));
+			return { [category]: out };
+		})
+	)
 } as any);
 
 const accountNotificationCategories = ['account', 'events', 'badges', 'timeTrials', 'saveSync'];
 
 export function initNotificationsConfigAndControls() {
-	const notificationSettingsControls = document.querySelector(
-		'#notificationSettingsModal .formControls'
-	);
+	const notificationSettingsControls = document.querySelector('#notificationSettingsModal .formControls');
 
 	for (let category of Object.keys(notificationTypes) as (keyof typeof notificationTypes)[]) {
 		const categoryConfig = { all: true };
@@ -152,9 +144,7 @@ export function initNotificationsConfigAndControls() {
 	document.getElementById('notificationsButton').onclick = function () {
 		const toggled = !this.classList.contains('toggled');
 		this.classList.toggle('toggled', toggled);
-		document
-			.getElementById('notificationSettingsModal')
-			.classList.toggle('notificationsOff', toggled);
+		document.getElementById('notificationSettingsModal').classList.toggle('notificationsOff', toggled);
 		notificationConfig.all = !toggled;
 		updateConfig(notificationConfig, true, 'notificationConfig');
 	};

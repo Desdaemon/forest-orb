@@ -303,17 +303,7 @@ export const allGameUiThemes = {
 		'monochrome_mk2',
 		'monochrome'
 	],
-	tsushin: [
-		'SystemM',
-		'System',
-		'SystemB',
-		'SystemC',
-		'SystemD',
-		'SystemF',
-		'SystemP',
-		'SystemS',
-		'SystemW'
-	],
+	tsushin: ['SystemM', 'System', 'SystemB', 'SystemC', 'SystemD', 'SystemF', 'SystemP', 'SystemS', 'SystemW'],
 	ultraviolet: [
 		'ss-システムviolet',
 		'ss-システムmonochrome',
@@ -417,8 +407,7 @@ export function setSystemName(name: string) {
 		playerData.systemName = name;
 		globalPlayerData[playerData.uuid].systemName = name;
 	}
-	if (getConnStatus() == 1 || getConnStatus() == 3)
-		addOrUpdatePlayerListEntry(null, playerData, false, true);
+	if (getConnStatus() == 1 || getConnStatus() == 3) addOrUpdatePlayerListEntry(null, playerData, false, true);
 }
 
 // EXTERNAL
@@ -431,9 +420,7 @@ function onUpdateSystemGraphic(name) {
 		const autoUiThemeOption = getUiThemeOption('auto');
 		autoUiThemeOption.onclick = onSelectUiTheme;
 		uiThemeModalContent.prepend(autoUiThemeOption);
-		locI18next.init(i18next, { ...locI18nextOptions, document: uiThemeModalContent })(
-			'.uiThemeItem.auto label'
-		);
+		locI18next.init(i18next, { ...locI18nextOptions, document: uiThemeModalContent })('.uiThemeItem.auto label');
 		if (config.uiTheme === 'auto') setUiTheme('auto');
 	}
 }
@@ -537,10 +524,7 @@ function initUiThemeContainerStyles(uiTheme, themeGameId, setTheme, callback) {
 					containerBgImageUrlProp,
 					`url('images/ui/${themeGameId}/${uiTheme}/containerbg.png')`
 				);
-				rootStyle.setProperty(
-					borderImageUrlProp,
-					`url('images/ui/${themeGameId}/${uiTheme}/border.png')`
-				);
+				rootStyle.setProperty(borderImageUrlProp, `url('images/ui/${themeGameId}/${uiTheme}/border.png')`);
 			}
 
 			if (setTheme && themeGameId === gameId) {
@@ -590,9 +574,7 @@ function initUiThemeFontStyles(uiTheme, themeGameId, fontStyle, setTheme, callba
 
 	getFontColors(uiTheme, themeGameId, fontStyle, function (baseColors) {
 		const altFontStyle =
-			fontStyle !== defaultAltFontStyleIndex
-				? defaultAltFontStyleIndex
-				: defaultAltFontStyleIndex - 1;
+			fontStyle !== defaultAltFontStyleIndex ? defaultAltFontStyleIndex : defaultAltFontStyleIndex - 1;
 		const altColorCallback = function (altColors) {
 			const rootStyle = document.documentElement.style;
 
@@ -601,18 +583,12 @@ function initUiThemeFontStyles(uiTheme, themeGameId, fontStyle, setTheme, callba
 				addSystemSvgGradient(uiTheme, themeGameId, altColors, true);
 				rootStyle.setProperty(baseColorProp, getColorRgb(baseColors[8]));
 				rootStyle.setProperty(altColorProp, getColorRgb(altColors[8]));
-				rootStyle.setProperty(
-					baseGradientProp,
-					`linear-gradient(to bottom, ${getGradientText(baseColors)})`
-				);
+				rootStyle.setProperty(baseGradientProp, `linear-gradient(to bottom, ${getGradientText(baseColors)})`);
 				rootStyle.setProperty(
 					baseGradientBProp,
 					`linear-gradient(to bottom, ${getGradientText(baseColors, true)})`
 				);
-				rootStyle.setProperty(
-					altGradientProp,
-					`linear-gradient(to bottom, ${getGradientText(altColors)})`
-				);
+				rootStyle.setProperty(altGradientProp, `linear-gradient(to bottom, ${getGradientText(altColors)})`);
 				rootStyle.setProperty(
 					altGradientBProp,
 					`linear-gradient(to bottom, ${getGradientText(altColors, true)})`
@@ -671,10 +647,7 @@ export let applyThemeStyles;
 /**
  * Replaces: applyThemeStyles and updateThemedContainer
  */
-export function themeClass(
-	uiTheme?: string,
-	themeGameId?: keyof typeof allGameFullBgUiThemes
-): ClassValue | undefined {
+export function themeClass(uiTheme?: string, themeGameId?: keyof typeof allGameFullBgUiThemes): ClassValue | undefined {
 	if (!uiTheme) return undefined;
 	if (!themeGameId) themeGameId = gameId;
 	const themeSuffix = `_${themeGameId !== gameId ? `${themeGameId}___` : ''}${uiTheme}`;
@@ -735,35 +708,35 @@ export function themeClass(
     .itemContainer .badgeItem.theme{THEME} > .badgeContainer {
       background-color: rgb(var(--base-bg-color{THEME_PROP})) !important;
     }
-    
+
     .modalContent.itemContainer .badgeItem.theme{THEME} > .badgeContainer {
       background-color: rgb(var(--base-bg-color{THEME_PROP})) !important;
     }
-    
+
     .modalContent.itemContainer .badgeItem.theme{THEME} > .badgeContainer.special {
       background-image: var(--alt-gradient-b{THEME_PROP});
     }
-    
+
     .itemContainer .badgeItem.theme{THEME} > .badgeContainer > div, .imageItem.theme{THEME} > .imageThumbnailContainer {
       border-image-source: var(--border-image-url{THEME_PROP}) !important;
     }
-    
+
     .modalContent.itemContainer .badgeItem.locked.theme{THEME} > .badgeContainer > div:first-child {
       border-image-source: var(--border-image-url{THEME_PROP}) !important;
     }
-    
+
     .badge.theme{THEME} > .badgeOverlay, .theme{THEME} .badge > .badgeOverlay {
       background: var(--base-gradient{THEME_PROP});
     }
-    
+
     .badge.theme{THEME} > .badgeOverlayBase, .theme{THEME} .badge > .badgeOverlayBase {
       background: rgb(var(--base-color{THEME_PROP}));
     }
-    
+
     .badge.theme{THEME} > .badgeOverlayAlt, .theme{THEME} .badge > .badgeOverlayAlt {
       background: rgb(var(--alt-color{THEME_PROP}));
     }
-    
+
     .badge.theme{THEME} > .badgeOverlayBg, .theme{THEME} .badge > .badgeOverlayBg {
       background: rgb(var(--base-bg-color{THEME_PROP}));
     }
@@ -777,7 +750,7 @@ export function themeClass(
       background-image: var(--container-bg-image-url{THEME_PROP}) !important;
       {FULL_BG|background-origin: border-box; background-size: cover;}
     }
-    
+
     .tippy-box.theme{THEME} .tippy-content .tooltipContent {
       background-image: var(--base-gradient{THEME_PROP}) !important;
       filter: drop-shadow(1.5px 1.5px rgb(var(--shadow-color{THEME_PROP})));
@@ -786,7 +759,7 @@ export function themeClass(
     .tippy-box.theme{THEME} .tippy-content .tooltipContent.noShadow {
       filter: unset;
     }
-    
+
     .tippy-box.theme{THEME} .tippy-content .tooltipContent.altText {
       background-image: var(--alt-gradient{THEME_PROP}) !important;
     }
@@ -851,20 +824,16 @@ function setModalUiTheme(modalId, uiTheme, setData) {
 		'border-image-url'
 	];
 	const propThemeSuffix = uiTheme ? `-${uiTheme.replace(/[ ()]/g, '_')}` : '';
-	for (let prop of styleProps)
-		rootStyle.setProperty(`--modal-${prop}`, `var(--${prop}${propThemeSuffix})`);
+	for (let prop of styleProps) rootStyle.setProperty(`--modal-${prop}`, `var(--${prop}${propThemeSuffix})`);
 
-	const modal = modalId
-		? document.getElementById(modalId)
-		: document.querySelector('.modal:not(.hidden)');
+	const modal = modalId ? document.getElementById(modalId) : document.querySelector('.modal:not(.hidden)');
 	if (modal) modal.classList.toggle('fullBg', gameFullBgUiThemes.indexOf(uiTheme) > -1);
 
 	if (setData) {
 		const modalContainer = document.getElementById('modalContainer');
 		if (modalContainer.dataset.lastModalId) {
 			const lastModalThemeSeparatorIndex = modalContainer.dataset.lastModalTheme.lastIndexOf(',');
-			if (lastModalThemeSeparatorIndex === -1)
-				modalContainer.dataset.lastModalTheme = uiTheme || '';
+			if (lastModalThemeSeparatorIndex === -1) modalContainer.dataset.lastModalTheme = uiTheme || '';
 			else
 				modalContainer.dataset.lastModalTheme = `${modalContainer.dataset.lastModalTheme.slice(0, lastModalThemeSeparatorIndex + 1)}${uiTheme || ''}`;
 		}
@@ -884,8 +853,7 @@ function setPartyUiTheme(uiTheme) {
 			'border-image-url'
 		];
 		const propThemeSuffix = uiTheme ? `-${uiTheme.replace(/[ ()]/g, '_')}` : '';
-		for (let prop of styleProps)
-			rootStyle.setProperty(`--party-${prop}`, `var(--${prop}${propThemeSuffix})`);
+		for (let prop of styleProps) rootStyle.setProperty(`--party-${prop}`, `var(--${prop}${propThemeSuffix})`);
 	};
 	const fontCallback = () => {
 		const styleProps = [
@@ -897,8 +865,7 @@ function setPartyUiTheme(uiTheme) {
 			'svg-alt-gradient'
 		];
 		const propThemeSuffix = uiTheme ? `-${uiTheme.replace(/[ ()]/g, '_')}` : '';
-		for (let prop of styleProps)
-			rootStyle.setProperty(`--party-${prop}`, `var(--${prop}${propThemeSuffix})`);
+		for (let prop of styleProps) rootStyle.setProperty(`--party-${prop}`, `var(--${prop}${propThemeSuffix})`);
 	};
 	if (uiTheme) {
 		initUiThemeContainerStyles(uiTheme, null, false, containerCallback);
@@ -974,10 +941,7 @@ export function updateThemedContainer(themedContainer: HTMLElement) {
 		}
 	}
 
-	themedContainer.classList.toggle(
-		'fullBg',
-		(allGameFullBgUiThemes[themeGameId] || []).indexOf(themeName) > -1
-	);
+	themedContainer.classList.toggle('fullBg', (allGameFullBgUiThemes[themeGameId] || []).indexOf(themeName) > -1);
 }
 
 let uiThemeBgColors = {};
@@ -1012,10 +976,7 @@ async function getFontColorsImgLoaded(img, themeGameId, uiTheme, fontStyle, call
 			let tc = getTinyColor(rgbArray);
 			let lum = tc.getLuminance();
 			const lighten = lum >= shadowLum;
-			let lastContrastRatio = getContrastRatio(
-				lighten ? lum : shadowLum,
-				lighten ? shadowLum : lum
-			);
+			let lastContrastRatio = getContrastRatio(lighten ? lum : shadowLum, lighten ? shadowLum : lum);
 			if (lastContrastRatio < contrastRatioThreshold) {
 				let contrastRatio;
 				do {
@@ -1241,27 +1202,26 @@ function displayGameEndDate() {
 	}
 }
 
-// SIDE EFFECT
-if (gameEndDates[gameId]) {
-	if (typeof i18next !== 'undefined' && i18next.isInitialized) {
-		displayGameEndDate();
-	} else {
-		document.addEventListener('DOMContentLoaded', function () {
-			let attempts = 0;
-			const maxAttempts = 50;
-			const checkI18next = setInterval(function () {
-				attempts++;
-				if (typeof i18next !== 'undefined' && i18next.isInitialized) {
-					clearInterval(checkI18next);
-					displayGameEndDate();
-				} else if (attempts >= maxAttempts) {
-					clearInterval(checkI18next);
-				}
-			}, 100);
-		});
-	}
+// if (gameEndDates[gameId]) {
+// 	if (typeof i18next !== 'undefined' && i18next.isInitialized) {
+// 		displayGameEndDate();
+// 	} else {
+// 		document.addEventListener('DOMContentLoaded', function () {
+// 			let attempts = 0;
+// 			const maxAttempts = 50;
+// 			const checkI18next = setInterval(function () {
+// 				attempts++;
+// 				if (typeof i18next !== 'undefined' && i18next.isInitialized) {
+// 					clearInterval(checkI18next);
+// 					displayGameEndDate();
+// 				} else if (attempts >= maxAttempts) {
+// 					clearInterval(checkI18next);
+// 				}
+// 			}, 100);
+// 		});
+// 	}
 
-	if (typeof i18next !== 'undefined') {
-		i18next.on('languageChanged', displayGameEndDate);
-	}
-}
+// 	if (typeof i18next !== 'undefined') {
+// 		i18next.on('languageChanged', displayGameEndDate);
+// 	}
+// }

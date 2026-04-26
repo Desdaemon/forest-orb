@@ -1,5 +1,6 @@
 import { config, updateConfig } from './config.svelte';
 import { addSessionCommandHandler } from './session.svelte';
+import { nextLocations } from './nextLocations.svelte';
 
 const eventExpRanks = [
 	{
@@ -34,29 +35,9 @@ const eventExpRanks = [
 let eventPeriodCache;
 let eventsCache = {};
 
-export function initEventControls() {
-	const openEvents = () => openModal('eventsModal');
-	document.getElementById('eventsButton').onclick = openEvents;
-	for (let tab of document.getElementsByClassName('eventTab')) tab.onclick = onClickEventTab;
-}
-
-function onClickEventTab() {
-	const eventTabs = document.getElementById('eventTabs');
-	const tabIndex = Array.prototype.indexOf.call(eventTabs.children, this);
-	const activeTabIndex = Array.prototype.indexOf.call(
-		eventTabs.children,
-		eventTabs.querySelector('.active')
-	);
-	if (tabIndex !== activeTabIndex) {
-		for (let eventTab of document.getElementsByClassName('eventTab')) {
-			eventTab.classList.toggle('active', eventTab === this);
-			document
-				.getElementById(
-					`event${eventTab.dataset.tabList.slice(0, 1).toUpperCase()}${eventTab.dataset.tabList.slice(1)}List`
-				)
-				.classList.toggle('hidden', eventTab !== this);
-		}
-	}
+/** Bound to `#eventsButton` in `+page.svelte`. The tab switching lives in `<ExpeditionsModal />`. */
+export function openEventsModal() {
+	openModal('eventsModal');
 }
 
 export function updateEventPeriod() {
@@ -122,9 +103,7 @@ function onUpdateEvents(events, ignoreLocationCheck) {
 	}
 
 	if (eventNewGameIds.length) {
-		const fetchLocationTasks = eventNewGameIds.map((gameId) =>
-			fetchAndInitLocations(globalConfig.lang, gameId)
-		);
+		const fetchLocationTasks = eventNewGameIds.map((gameId) => fetchAndInitLocations(globalConfig.lang, gameId));
 		Promise.allSettled(fetchLocationTasks).then(() => onUpdateEvents(events, ignoreLocationCheck));
 		return;
 	}
@@ -288,12 +267,7 @@ function onUpdateEvents(events, ignoreLocationCheck) {
 
 					if (config.trackedLocationId === event.locationId) trackButton.classList.add('toggled');
 
-					addTooltip(
-						trackButton,
-						getMassagedLabel(localizedMessages.events.toggleTracked, true),
-						true,
-						true
-					);
+					addTooltip(trackButton, getMassagedLabel(localizedMessages.events.toggleTracked, true), true, true);
 
 					trackContainer.appendChild(trackButton);
 
@@ -337,10 +311,7 @@ function onUpdateEvents(events, ignoreLocationCheck) {
 
 			const endDateLabel = document.createElement('label');
 			endDateLabel.classList.add('nowrap');
-			endDateLabel.innerHTML = getMassagedLabel(
-				localizedMessages.events.availableUntilDate,
-				true
-			).replace(
+			endDateLabel.innerHTML = getMassagedLabel(localizedMessages.events.availableUntilDate, true).replace(
 				'{DATE}',
 				event.endDate.toLocaleString(globalConfig.lang === 'en' ? [] : globalConfig.lang, {
 					dateStyle: 'short',
@@ -383,11 +354,7 @@ function onUpdateEvents(events, ignoreLocationCheck) {
 }
 
 export function updateNextLocations(locations) {
-	const nextLocationText = document.getElementById('nextLocationText');
-	nextLocationText.innerHTML = getLocalized2kkiLocationsHtml(locations, '<br>', true);
-	Array.from(nextLocationText.querySelectorAll('.connTypeIcon')).map((i) =>
-		addTooltip(i, i.dataset.tooltip, true, true)
-	);
+	nextLocations.set(locations);
 }
 
 function updatePlayerExp() {
@@ -417,10 +384,7 @@ function onUpdatePlayerExp(exp) {
 	const rankBadge = document.getElementById('expRankBadge');
 
 	document.getElementById('expRank').innerHTML = getMassagedLabel(
-		localizedMessages.events.expRank.replace(
-			'{RANK}',
-			localizedMessages.events.expRanks[rankIndex]
-		),
+		localizedMessages.events.expRank.replace('{RANK}', localizedMessages.events.expRanks[rankIndex]),
 		true
 	);
 	rankBadge.src = rank.badge ? getBadgeUrl(rank.badge) : '';
@@ -443,8 +407,7 @@ function claimEventLocationPoints(location, free, retryCount) {
 		if (ok) onClaimEventLocationPoints(location, free, parseInt(params[0]));
 		else {
 			if (!retryCount) retryCount = 0;
-			if (retryCount < 10)
-				setTimeout(() => claimEventLocationPoints(location, free, ++retryCount), 500);
+			if (retryCount < 10) setTimeout(() => claimEventLocationPoints(location, free, ++retryCount), 500);
 			else console.error(err);
 		}
 	});
@@ -463,9 +426,7 @@ function onClaimEventLocationPoints(location, free, result) {
 
 export function checkEventLocations() {
 	if (loggedIn && cachedLocations && eventsCache.locations?.length) {
-		const incompleteEventLocations = eventsCache.locations.filter(
-			(el) => !el.complete && el.game === gameId
-		);
+		const incompleteEventLocations = eventsCache.locations.filter((el) => !el.complete && el.game === gameId);
 		const incompleteEventLocationNames = incompleteEventLocations.map((el) => el.title);
 		const eventLocationMatch = cachedLocations
 			.map((l) => {
@@ -498,21 +459,17 @@ function showEventsToastMessage(key, icon, location, exp) {
 	let message = getMassagedLabel(localizedMessages.toast.events[key], true);
 	if (location) {
 		const locationObj = eventsCache.locations.find((el) => el.title === location);
-		message = message.replace(
-			'{LOCATION}',
-			gameId === '2kki' ? get2kkiLocationHtml(locationObj) : location
-		);
+		message = message.replace('{LOCATION}', gameId === '2kki' ? get2kkiLocationHtml(locationObj) : location);
 	}
-	if (exp !== undefined)
-		message = message.replace('{EXP}', localizedMessages.events.exp.replace('{POINTS}', exp));
+	if (exp !== undefined) message = message.replace('{EXP}', localizedMessages.events.exp.replace('{POINTS}', exp));
 	showToastMessage(message, icon);
 }
 
-// SIDE EFFECT
-(function () {
+/** Registers the event-related session command handlers. Called from `<SessionCommands />`. */
+export function registerEventSessionHandlers() {
 	addSessionCommandHandler('ep', (args) => onUpdateEventPeriod(JSON.parse(args[0])));
 	addSessionCommandHandler('e', (args) => onUpdateEvents(JSON.parse(args[0])));
 	addSessionCommandHandler('eexp', (args) => onUpdatePlayerExp(JSON.parse(args[0])));
 	addSessionCommandHandler('eec');
 	addSessionCommandHandler('vm', (args) => onClaimEventVmPoints(parseInt(args[0])));
-})();
+}
