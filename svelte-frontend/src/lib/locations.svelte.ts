@@ -53,6 +53,7 @@ function updateGameLocations() {
       versionNames.push(l.versionAdded);
       return true;
     }).map(l => l.versionAdded).sort(compareVersionNames).reverse();
+    // SIDE EFFECT TODO: locationsButton 
     document.getElementById('locationsButton').classList.remove('hidden');
   });
 }
@@ -402,15 +403,19 @@ function updateLocationPlayerCount(locationItem, locationPlayerCounts) {
     : 0;
 }
 
+// SIDE EFFECT
 (function () {
+  // ACK
   addSessionCommandHandler('l', locationIds => {
     locationIds.map(id => parseInt(id)).map(id => {
       if (!visitedLocationIds.includes(id))
         visitedLocationIds.push(id);
     });
   });
+  // ACK
   addSessionCommandHandler('lp');
   if (gameId === '2kki')
+    // ACK
     addSessionCommandHandler('nl', args => {
       const locationNames = [];
       const locations = JSON.parse(args).filter(l => {
@@ -419,8 +424,9 @@ function updateLocationPlayerCount(locationItem, locationPlayerCounts) {
         locationNames.push(l.title);
         return true;
       });
-      updateNextLocations(locations);
+      updateNextLocations(locations); // SKIP
     })
   
-  updateGameLocations();
+  // TODO
+  // updateGameLocations();
 })();

@@ -62,7 +62,7 @@ const platformAuthorities = Object.freeze({
 
 let editingScheduleId;
 
-function sanitizeLink(platform, link, pathOnly = false) {
+export function sanitizeLink(platform, link, pathOnly = false) {
   try {
     let parsed = new URL(link, 'https://' + platformAuthorities[platform]);
     let parsedHostname = parsed.hostname.replace('www.', '');
@@ -324,9 +324,11 @@ function openScheduleEditModal(schedule = {}) {
   updateYnomojiContainerPos(false, document.getElementById('editScheduleDescription'));
 }
 
+// SIDE EFFECT
 document.getElementById('schedulesButton').addEventListener('click', () => openSchedulesModal());
 document.getElementById('fsSchedulesButton')?.addEventListener('click', () => openSchedulesModal());
 
+// SIDE EFFECT
 {
   let toggleButton = elm => {
     const enabled = !elm.classList.contains('toggled');
@@ -346,6 +348,7 @@ document.getElementById('fsSchedulesButton')?.addEventListener('click', () => op
     document.getElementById(elmid).addEventListener('click', function () { toggleButton(this); });
 }
 
+// SIDE EFFECT
 document.getElementById('scheduleForm').addEventListener('submit', function editSchedule() {
   if (!playerData?.account) return;
   const form = document.getElementById('scheduleForm');
@@ -383,6 +386,7 @@ document.getElementById('scheduleForm').addEventListener('submit', function edit
   return false;
 });
 
+// SIDE EFFECT
 document.getElementById('cancelSchedule').addEventListener('click', function () {
   if (!editingScheduleId) {
     openSchedulesModal();
@@ -398,10 +402,12 @@ document.getElementById('cancelSchedule').addEventListener('click', function () 
   });
 });
 
+// SIDE EFFECT
 document.getElementById('scheduleThemeButton').addEventListener('click', function () {
   openModal('uiThemesModal', this.nextElementSibling.value, 'scheduleEditModal');
 });
 
+// SIDE EFFECT
 for (const platformInput of document.querySelectorAll('input[data-platform]')) {
   platformInput.addEventListener('change', function () {
     const sanitized = sanitizeLink(platformInput.name, this.value, true);

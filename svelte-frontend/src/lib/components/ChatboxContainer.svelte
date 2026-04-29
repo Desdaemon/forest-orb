@@ -1,6 +1,7 @@
 <script>
 	import { gameId } from '$lib';
 	import { trySetChatName } from '$lib/chat.svelte'
+	import NextLocationText from '$lib/components/NextLocationText.svelte'
 
 	function chatNameCheck(ev) {
 		ev.preventDefault();
@@ -97,8 +98,9 @@
 						id="nextLocationLabel"
 						class="infoLabel nowrap"
 						data-i18n="[html]chatbox.nextLocation">Next Loc:&nbsp;</span
-					><span id="nextLocationText" class="infoText nofilter"></span>
+					><NextLocationText />
 				</div>
+
 			</div>
 		</div>
 		<div id="chatboxContent">

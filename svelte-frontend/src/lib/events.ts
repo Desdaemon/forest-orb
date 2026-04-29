@@ -1,5 +1,6 @@
 import { config, updateConfig } from './config.svelte';
 import { addSessionCommandHandler } from './session.svelte';
+import { nextLocations } from './nextLocations.svelte';
 
 const eventExpRanks = [
 	{
@@ -383,11 +384,7 @@ function onUpdateEvents(events, ignoreLocationCheck) {
 }
 
 export function updateNextLocations(locations) {
-	const nextLocationText = document.getElementById('nextLocationText');
-	nextLocationText.innerHTML = getLocalized2kkiLocationsHtml(locations, '<br>', true);
-	Array.from(nextLocationText.querySelectorAll('.connTypeIcon')).map((i) =>
-		addTooltip(i, i.dataset.tooltip, true, true)
-	);
+	nextLocations.set(locations);
 }
 
 function updatePlayerExp() {
